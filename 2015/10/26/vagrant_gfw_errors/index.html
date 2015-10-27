@@ -5,22 +5,22 @@
   
   <title>How to modify puphpet file to avoid vagrant up errors | Lyn&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Error code when run vagrant up:recently  when I want to use vagrant to build PHP environment on my Mac,I got three Errors :
+  <meta name="description" content="Error code when run vagrant up:recently when I want to use vagrant to build PHP environment on my Mac,I got three Errors :
 
-12error: /Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: ch">
+12error: /Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: cha">
 <meta property="og:type" content="article">
 <meta property="og:title" content="How to modify puphpet file to avoid vagrant up errors">
 <meta property="og:url" content="http://yoursite.com/2015/10/26/vagrant_gfw_errors/index.html">
 <meta property="og:site_name" content="Lyn's Blog">
-<meta property="og:description" content="Error code when run vagrant up:recently  when I want to use vagrant to build PHP environment on my Mac,I got three Errors :
+<meta property="og:description" content="Error code when run vagrant up:recently when I want to use vagrant to build PHP environment on my Mac,I got three Errors :
 
-12error: /Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: ch">
-<meta property="og:updated_time" content="2015-10-27T03:10:52.000Z">
+12error: /Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: cha">
+<meta property="og:updated_time" content="2015-10-27T03:30:49.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="How to modify puphpet file to avoid vagrant up errors">
-<meta name="twitter:description" content="Error code when run vagrant up:recently  when I want to use vagrant to build PHP environment on my Mac,I got three Errors :
+<meta name="twitter:description" content="Error code when run vagrant up:recently when I want to use vagrant to build PHP environment on my Mac,I got three Errors :
 
-12error: /Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: ch">
+12error: /Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: cha">
   
     <link rel="alternative" href="/atom.xml" title="Lyn&#39;s Blog" type="application/atom+xml">
   
@@ -241,7 +241,7 @@
           <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Error_code_when_run_vagrant_up:"><span class="toc-number">1.</span> <span class="toc-text">Error code when run vagrant up:</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Walkaround:"><span class="toc-number">2.</span> <span class="toc-text">Walkaround:</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Replace_gem_sources_in_initial-setup-sh"><span class="toc-number">2.1.</span> <span class="toc-text">Replace gem sources in initial-setup.sh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Add_douban_pypi_source_in_puphpet/manifests/python/pip-pp"><span class="toc-number">2.2.</span> <span class="toc-text">Add douban pypi source in  puphpet/manifests/python/pip.pp</span></a></li></ol></li></ol>
           </div>
         
-        <h1 id="Error_code_when_run_vagrant_up:">Error code when run vagrant up:</h1><p>recently  when I want to use vagrant to build PHP environment on my Mac,<br>I got three Errors :</p>
+        <h1 id="Error_code_when_run_vagrant_up:">Error code when run vagrant up:</h1><p>recently when I want to use vagrant to build PHP environment on my Mac,<br>I got three Errors :</p>
 <ol>
 <li><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">error:</span> <span class="regexp">/Stage[main]/</span><span class="string">Supervisord:</span>:Pip<span class="regexp">/Exec[install_setuptools]/</span><span class="string">returns:</span> change from notrun to <span class="number">0</span> <span class="string">failed:</span> Command exceeded timeout</span><br><span class="line"><span class="string">Warning:</span> <span class="regexp">/Stage[main]/</span><span class="string">Supervisord:</span>:Reload/Exec[supervisorctl_update]: Skipping because of failed dependencies</span><br></pre></td></tr></table></figure>
 </li>
@@ -270,15 +270,11 @@
     
 <nav id="article-nav">
   
-    <a href="/2015/10/26/hello-world/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          My first blog post launched with my new blog
-        
-      </div>
-    </a>
   
+    <a href="/2015/03/05/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">My first blog post launched with my new blog</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
   
 </nav>
 
