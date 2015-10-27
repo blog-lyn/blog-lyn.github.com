@@ -8,22 +8,22 @@
   <meta name="description" content="#Error code when run vagrant up:
 recently  when I want to use vagrant to build PHP environment on my Mac,I got three Errors :
 
-/Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: change fr">
+12error: /Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns:">
 <meta property="og:type" content="article">
 <meta property="og:title" content="How to modify puphpet file to avoid vagrant up errors">
-<meta property="og:url" content="http://yoursite.com/2015/10/26/test/index.html">
+<meta property="og:url" content="http://yoursite.com/2015/10/26/vagrant_gfw_errors/index.html">
 <meta property="og:site_name" content="Lyn's Blog">
 <meta property="og:description" content="#Error code when run vagrant up:
 recently  when I want to use vagrant to build PHP environment on my Mac,I got three Errors :
 
-/Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: change fr">
-<meta property="og:updated_time" content="2015-10-27T02:58:15.000Z">
+12error: /Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns:">
+<meta property="og:updated_time" content="2015-10-27T03:02:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="How to modify puphpet file to avoid vagrant up errors">
 <meta name="twitter:description" content="#Error code when run vagrant up:
 recently  when I want to use vagrant to build PHP environment on my Mac,I got three Errors :
 
-/Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: change fr">
+12error: /Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns:">
   
     <link rel="alternative" href="/atom.xml" title="Lyn&#39;s Blog" type="application/atom+xml">
   
@@ -200,10 +200,10 @@ recently  when I want to use vagrant to build PHP environment on my Mac,I got th
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="hello-test" class="article article-type-hello" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="hello-vagrant_gfw_errors" class="article article-type-hello" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/10/26/test/" class="article-date">
+      <a href="/2015/10/26/vagrant_gfw_errors/" class="article-date">
   	<time datetime="2015-10-26T08:46:25.000Z" itemprop="datePublished">2015-10-26</time>
 </a>
     </div>
@@ -242,9 +242,11 @@ recently  when I want to use vagrant to build PHP environment on my Mac,I got th
         <p>#Error code when run vagrant up:</p>
 <p>recently  when I want to use vagrant to build PHP environment on my Mac,<br>I got three Errors :</p>
 <ol>
-<li><figure class="highlight"><figcaption><span>/Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: change from notrun to 0 failed: Command exceeded timeout</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Warning: /Stage[main]/Supervisord::Reload/Exec[supervisorctl_update]: Skipping because of failed dependencies</span><br></pre></td></tr></table></figure>
+<li><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">error:</span> <span class="regexp">/Stage[main]/</span><span class="string">Supervisord:</span>:Pip<span class="regexp">/Exec[install_setuptools]/</span><span class="string">returns:</span> change from notrun to <span class="number">0</span> <span class="string">failed:</span> Command exceeded timeout</span><br><span class="line"><span class="string">Warning:</span> <span class="regexp">/Stage[main]/</span><span class="string">Supervisord:</span>:Reload/Exec[supervisorctl_update]: Skipping because of failed dependencies</span><br></pre></td></tr></table></figure>
 </li>
-<li><figure class="highlight"><figcaption><span>While executing gem ... (Gem::RemoteFetcher::FetchError) ==> default: SSL_connect SYSCALL returned=5 errno=0 state=unknown state (https://rubygems.global.ssl.fastly.net/quick/Marshal.4.8/deep_merge-1.0.1.gemspec.rz)```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;3. ```Error: &#34;false&#34; is not a boolean. It looks to be a String at /tmp/vagrant-puppet/modules-b7f682531389374ec63e7be34e57b9e6/nginx/manifests/resource/location.pp:198 on node 1</span><br></pre></td></tr></table></figure>
+<li><figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERROR: While executing gem ... (Gem::RemoteFetcher::FetchError) ==&gt; <span class="keyword">default</span>: SSL_connect SYSCALL returned=<span class="number">5</span> errno=<span class="number">0</span> <span class="keyword">state</span>=<span class="literal">unknown</span> <span class="keyword">state</span> (https://rubygems.<span class="keyword">global</span>.ssl.fastly.net/<span class="keyword">quick</span>/Marshal.<span class="number">4.8</span>/deep_merge-<span class="number">1.0</span>.<span class="number">1</span>.gemspec.rz)</span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Error: <span class="string">"false"</span> <span class="keyword">is</span> <span class="keyword">not</span> a <span class="type">boolean</span>. It looks <span class="keyword">to</span> be a String <span class="keyword">at</span> /tmp/vagrant-puppet/modules-b7f682531389374ec63e7be34e57b9e6/nginx/manifests/resource/location.pp:<span class="number">198</span> <span class="function_start"><span class="keyword">on</span></span> node <span class="number">1</span></span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <p>After investgating,I found the  root cause of the first two is  the same. The network between Mac and the ruby/pip servers is blocked by China GFW(as I am using Chinatelecom broadband).</p>
@@ -305,7 +307,7 @@ recently  when I want to use vagrant to build PHP environment on my Mac,I got th
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="test" data-title="How to modify puphpet file to avoid vagrant up errors" data-url="http://yoursite.com/2015/10/26/test/"></div>
+	<div class="ds-thread" data-thread-key="vagrant_gfw_errors" data-title="How to modify puphpet file to avoid vagrant up errors" data-url="http://yoursite.com/2015/10/26/vagrant_gfw_errors/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
