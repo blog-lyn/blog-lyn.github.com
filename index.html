@@ -112,7 +112,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						
+						<a href="/tags/vagrant-gfw-error/" style="font-size: 10px;">vagrant gfw error</a>
 					</div>
 				</section>
 				
@@ -209,7 +209,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/26/hello-world/">Hello World</a>
+      <a class="article-title" href="/2015/10/26/hello-world/">My first blog post launched with my new blog</a>
     </h1>
   
 
@@ -218,15 +218,22 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+
+                
+        <p>Finally I launched my personal blog after years of delay.</p>
+<p>#why?</p>
+<p>Sereral years ago when I was opreating some websites in compus,</p>
+<p>I was thinking to launch my personal blog someday in the future,</p>
+<p>however after the social websites developing  these years, my most time was comsumed on Weibo.com(Chinese twiter) and Weixin.</p>
+<p>but after time as the social network in China is no longer as popular as it used to be(as be regulated heavily by Gov) and I think a place can be used to recording my ideas as part of my knowledge bases is realy useful.</p>
+<p>Now, here we go, a wholly new blog, afetr I compared hexo, ghost blog, Jekyll, I finanly chose ghost blog to launch my blog. because nodejs now is really hot in github. secondly, Ghost blog  can be edited on smartphone. I spend some time to rewrite theme files. I will keep adding new features on this current version.</p>
+<p>meanwhile I chose to host ghostblog on my VPS to keep updating my server opreating skills.</p>
+<p>#Wishes for the future</p>
+<p>I hope this blog would become a dual-lingual blog.</p>
+<p>so that I could get in touch with people around the world. </p>
+<p>hope I could have a  nice time here and  write and update my posts as much as possible. </p>
+<p>Looking forward that I could meet some friends who share mutral intrests and values. </p>
+<p>any good advise is highly welcomed, please feel free to contact me :D</p>
 
       
     </div>
@@ -268,7 +275,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/26/test/">test</a>
+      <a class="article-title" href="/2015/10/26/test/">How to modify puphpet file to avoid vagrant up errors</a>
     </h1>
   
 
@@ -277,13 +284,41 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+
+                
+        <p>#Error code when run vagrant up:</p>
+<p>recently  when I want to use vagrant to build PHP environment on my Mac,<br>I got three Errors :</p>
+<ol>
+<li><figure class="highlight"><figcaption><span>/Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: change from notrun to 0 failed: Command exceeded timeout</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Warning: /Stage[main]/Supervisord::Reload/Exec[supervisorctl_update]: Skipping because of failed dependencies</span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight"><figcaption><span>While executing gem ... (Gem::RemoteFetcher::FetchError) ==> default: SSL_connect SYSCALL returned=5 errno=0 state=unknown state (https://rubygems.global.ssl.fastly.net/quick/Marshal.4.8/deep_merge-1.0.1.gemspec.rz)```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;3. ```Error: &#34;false&#34; is not a boolean. It looks to be a String at /tmp/vagrant-puppet/modules-b7f682531389374ec63e7be34e57b9e6/nginx/manifests/resource/location.pp:198 on node 1</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>After investgating,I found the  root cause of the first two is  the same. The network between Mac and the ruby/pip servers is blocked by China GFW(as I am using Chinatelecom broadband).</p>
+<p>Therefore, I have to introduce China domestic ruby and pip sources to puphprt configuraions as followed:</p>
+<p>#Walkaround:</p>
+<p>##Replce config.yaml nginx config </p>
+<p>the syntax should be :</p>
+<p>internal: off or internal :”false”</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">locations:</span><br><span class="line">                nxvl_6x40k3ysb0yt:</span><br><span class="line">                    location: /</span><br><span class="line">                    autoindex: <span class="string">'off'</span></span><br><span class="line">                    internal: off</span><br><span class="line">                    try_files:</span><br><span class="line">                        - <span class="variable">$uri</span></span><br><span class="line">                        - <span class="variable">$uri</span>/</span><br><span class="line">                        - /index.php<span class="variable">$is</span>_args<span class="variable">$args</span></span><br><span class="line">                    fastcgi: <span class="string">''</span></span><br><span class="line">                    fastcgi_index: <span class="string">''</span></span><br><span class="line">                    fastcgi_split_path: <span class="string">''</span></span><br><span class="line">                nxvl_6punkjmd4tp3:</span><br><span class="line">                    location: <span class="string">'~ \.php$'</span></span><br><span class="line">                    autoindex: <span class="string">'off'</span></span><br><span class="line">                    internal: off</span><br><span class="line">                    try_files:</span><br><span class="line">                        - <span class="variable">$uri</span></span><br><span class="line">                        - <span class="variable">$uri</span>/</span><br><span class="line">                        - /index.php<span class="variable">$is</span>_args<span class="variable">$args</span></span><br><span class="line">                    fastcgi: <span class="string">'127.0.0.1:9000'</span></span><br><span class="line">                    fastcgi_index: index.php</span><br><span class="line">                    fastcgi_split_path: <span class="string">'^(.+\.php)(/.*)$'</span></span><br><span class="line">                    fast_cgi_params_extra:</span><br><span class="line">                        - <span class="string">'SCRIPT_FILENAME $request_filename'</span></span><br><span class="line">                        - <span class="string">'APP_ENV dev'</span></span><br></pre></td></tr></table></figure>
+<p>##Replace gem sources in initial-setup.sh</p>
+<p>gem sources –remove <a href="https://rubygems.org/" target="_blank" rel="external">https://rubygems.org/</a><br>gem sources -a <a href="http://ruby.taobao.org/" target="_blank" rel="external">http://ruby.taobao.org/</a></p>
+<p>##Add douban pypi source in  puphpet/manifests/python/pip.pp</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">class puphpet::python::pip &#123;</span><br><span class="line"></span><br><span class="line">  Exec &#123; path =&gt; [ <span class="string">'/usr/bin/'</span>, <span class="string">'/usr/local/bin'</span>, <span class="string">'/bin'</span>, <span class="string">'/usr/local/sbin'</span>, <span class="string">'/usr/sbin'</span>, <span class="string">'/sbin'</span> ] &#125;</span><br><span class="line"></span><br><span class="line">  <span class="variable">$url</span> = <span class="string">'https://bootstrap.pypa.io/ez_setup.py'</span></span><br><span class="line">  <span class="variable">$download</span>_location = <span class="string">'/.puphpet-stuff/ez_setup.py'</span></span><br><span class="line"></span><br><span class="line">  exec &#123; <span class="string">"Download and install ez_setup"</span>:</span><br><span class="line">    creates =&gt; <span class="variable">$download</span>_location,</span><br><span class="line">    command =&gt; <span class="string">"wget $&#123;url&#125; -O $&#123;download_location&#125; &amp;&amp; \</span><br><span class="line">                python $&#123;download_location&#125;"</span>,</span><br><span class="line">    timeout =&gt; <span class="number">30</span>,</span><br><span class="line">    path    =&gt; <span class="string">'/usr/bin'</span></span><br><span class="line">  &#125;</span><br><span class="line">  -&gt; exec &#123; <span class="string">'easy_install pip -i http://pypi.douban.com/simple '</span>:</span><br><span class="line">    unless =&gt; <span class="string">'which pip'</span>,</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  if $::osfamily == <span class="string">'RedHat'</span> &#123;</span><br><span class="line">    exec &#123; <span class="string">'rhel pip_provider_name_fix'</span>:</span><br><span class="line">      command   =&gt; <span class="string">'alternatives --install /usr/bin/pip-python pip-python /usr/bin/pip 1'</span>,</span><br><span class="line">      subscribe =&gt; Exec[<span class="string">'easy_install pip'</span>],</span><br><span class="line">      unless    =&gt; <span class="string">'which pip-python'</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>hope these help :D</p>
+<p>if there is any mistake,please contact me to update! </p>
+<p>thank you</p>
+
       
     </div>
     
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vagrant-gfw-error/">vagrant gfw error</a></li></ul>
+	</div>
+
       
 
       
@@ -310,7 +345,7 @@
     		&copy; 2015 Lyn
     	</div>
       	<div class="footer-right">
-      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  
       	</div>
     </div>
   </div>
