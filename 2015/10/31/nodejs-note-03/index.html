@@ -41,7 +41,7 @@
 
 
 
-  <meta name="keywords" content="vagrant gfw error," />
+  <meta name="keywords" content="Lyn's blog" />
 
 
 
@@ -57,22 +57,16 @@
 
 
 
-<meta name="description" content="Error code when run vagrant up:recently when I want to use vagrant to build PHP environment on my Mac,I got three Errors :
-
-12error: /Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: cha">
+<meta name="description">
 <meta property="og:type" content="article">
-<meta property="og:title" content="How to modify puphpet file to avoid vagrant up errors">
-<meta property="og:url" content="http://blog-lyn.github.io/2015/10/26/vagrant_gfw_errors/index.html">
+<meta property="og:title" content="nodejs-note-03">
+<meta property="og:url" content="http://blog-lyn.github.io/2015/10/31/nodejs-note-03/index.html">
 <meta property="og:site_name" content="Lyn's Blog">
-<meta property="og:description" content="Error code when run vagrant up:recently when I want to use vagrant to build PHP environment on my Mac,I got three Errors :
-
-12error: /Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: cha">
-<meta property="og:updated_time" content="2015-10-27T03:30:49.000Z">
+<meta property="og:description">
+<meta property="og:updated_time" content="2015-10-31T03:49:21.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="How to modify puphpet file to avoid vagrant up errors">
-<meta name="twitter:description" content="Error code when run vagrant up:recently when I want to use vagrant to build PHP environment on my Mac,I got three Errors :
-
-12error: /Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: cha">
+<meta name="twitter:title" content="nodejs-note-03">
+<meta name="twitter:description">
 
 
 
@@ -84,7 +78,7 @@
   };
 </script>
 
-  <title> How to modify puphpet file to avoid vagrant up errors | Lyn's Blog </title>
+  <title> nodejs-note-03 | Lyn's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
@@ -210,7 +204,7 @@
             
             
               
-                How to modify puphpet file to avoid vagrant up errors
+                nodejs-note-03
               
             
           </h1>
@@ -219,8 +213,8 @@
         <div class="post-meta">
           <span class="post-time">
             發表於
-            <time itemprop="dateCreated" datetime="2015-10-26T16:46:25+08:00" content="2015-10-26">
-              2015-10-26
+            <time itemprop="dateCreated" datetime="2015-10-31T11:49:21+08:00" content="2015-10-31">
+              2015-10-31
             </time>
           </span>
 
@@ -243,54 +237,24 @@
       
 
       
-        <span itemprop="articleBody"><h1 id="Error_code_when_run_vagrant_up:">Error code when run vagrant up:</h1><p>recently when I want to use vagrant to build PHP environment on my Mac,<br>I got three Errors :</p>
-<ol>
-<li><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">error:</span> <span class="regexp">/Stage[main]/</span><span class="string">Supervisord:</span>:Pip<span class="regexp">/Exec[install_setuptools]/</span><span class="string">returns:</span> change from notrun to <span class="number">0</span> <span class="string">failed:</span> Command exceeded timeout</span><br><span class="line"><span class="string">Warning:</span> <span class="regexp">/Stage[main]/</span><span class="string">Supervisord:</span>:Reload/Exec[supervisorctl_update]: Skipping because of failed dependencies</span><br></pre></td></tr></table></figure>
-</li>
-<li><figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERROR: While executing gem ... (Gem::RemoteFetcher::FetchError) ==&gt; <span class="keyword">default</span>: SSL_connect SYSCALL returned=<span class="number">5</span> errno=<span class="number">0</span> <span class="keyword">state</span>=<span class="literal">unknown</span> <span class="keyword">state</span> (https://rubygems.<span class="keyword">global</span>.ssl.fastly.net/<span class="keyword">quick</span>/Marshal.<span class="number">4.8</span>/deep_merge-<span class="number">1.0</span>.<span class="number">1</span>.gemspec.rz)</span><br></pre></td></tr></table></figure>
-</li>
-<li><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Error: <span class="string">"false"</span> <span class="keyword">is</span> <span class="keyword">not</span> a <span class="type">boolean</span>. It looks <span class="keyword">to</span> be a String <span class="keyword">at</span> /tmp/vagrant-puppet/modules-b7f682531389374ec63e7be34e57b9e6/nginx/manifests/resource/location.pp:<span class="number">198</span> <span class="function_start"><span class="keyword">on</span></span> node <span class="number">1</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>After investgating,I found the  root cause of the first two is  the same. The network between Mac and the ruby/pip servers is blocked by China GFW(as I am using Chinatelecom broadband).</p>
-<p>Therefore, I have to introduce China domestic ruby and pip sources to puphprt configuraions as followed:</p>
-<h1 id="Walkaround:">Walkaround:</h1><p>##Replce config.yaml nginx config </p>
-<p>the syntax should be :</p>
-<p>internal: off or internal :”false”</p>
-<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">locations:</span><br><span class="line">                nxvl_6x40k3ysb0yt:</span><br><span class="line">                    location: /</span><br><span class="line">                    autoindex: <span class="string">'off'</span></span><br><span class="line">                    internal: off</span><br><span class="line">                    try_files:</span><br><span class="line">                        - <span class="variable">$uri</span></span><br><span class="line">                        - <span class="variable">$uri</span>/</span><br><span class="line">                        - /index.php<span class="variable">$is</span>_args<span class="variable">$args</span></span><br><span class="line">                    fastcgi: <span class="string">''</span></span><br><span class="line">                    fastcgi_index: <span class="string">''</span></span><br><span class="line">                    fastcgi_split_path: <span class="string">''</span></span><br><span class="line">                nxvl_6punkjmd4tp3:</span><br><span class="line">                    location: <span class="string">'~ \.php$'</span></span><br><span class="line">                    autoindex: <span class="string">'off'</span></span><br><span class="line">                    internal: off</span><br><span class="line">                    try_files:</span><br><span class="line">                        - <span class="variable">$uri</span></span><br><span class="line">                        - <span class="variable">$uri</span>/</span><br><span class="line">                        - /index.php<span class="variable">$is</span>_args<span class="variable">$args</span></span><br><span class="line">                    fastcgi: <span class="string">'127.0.0.1:9000'</span></span><br><span class="line">                    fastcgi_index: index.php</span><br><span class="line">                    fastcgi_split_path: <span class="string">'^(.+\.php)(/.*)$'</span></span><br><span class="line">                    fast_cgi_params_extra:</span><br><span class="line">                        - <span class="string">'SCRIPT_FILENAME $request_filename'</span></span><br><span class="line">                        - <span class="string">'APP_ENV dev'</span></span><br></pre></td></tr></table></figure>
-<h2 id="Replace_gem_sources_in_initial-setup-sh">Replace gem sources in initial-setup.sh</h2><p>gem sources –remove <a href="https://rubygems.org/" target="_blank" rel="external">https://rubygems.org/</a><br>gem sources -a <a href="http://ruby.taobao.org/" target="_blank" rel="external">http://ruby.taobao.org/</a></p>
-<h2 id="Add_douban_pypi_source_in_puphpet/manifests/python/pip-pp">Add douban pypi source in  puphpet/manifests/python/pip.pp</h2><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">class puphpet::python::pip &#123;</span><br><span class="line"></span><br><span class="line">  Exec &#123; path =&gt; [ <span class="string">'/usr/bin/'</span>, <span class="string">'/usr/local/bin'</span>, <span class="string">'/bin'</span>, <span class="string">'/usr/local/sbin'</span>, <span class="string">'/usr/sbin'</span>, <span class="string">'/sbin'</span> ] &#125;</span><br><span class="line"></span><br><span class="line">  <span class="variable">$url</span> = <span class="string">'https://bootstrap.pypa.io/ez_setup.py'</span></span><br><span class="line">  <span class="variable">$download</span>_location = <span class="string">'/.puphpet-stuff/ez_setup.py'</span></span><br><span class="line"></span><br><span class="line">  exec &#123; <span class="string">"Download and install ez_setup"</span>:</span><br><span class="line">    creates =&gt; <span class="variable">$download</span>_location,</span><br><span class="line">    command =&gt; <span class="string">"wget $&#123;url&#125; -O $&#123;download_location&#125; &amp;&amp; \</span><br><span class="line">                python $&#123;download_location&#125;"</span>,</span><br><span class="line">    timeout =&gt; <span class="number">30</span>,</span><br><span class="line">    path    =&gt; <span class="string">'/usr/bin'</span></span><br><span class="line">  &#125;</span><br><span class="line">  -&gt; exec &#123; <span class="string">'easy_install pip -i http://pypi.douban.com/simple '</span>:</span><br><span class="line">    unless =&gt; <span class="string">'which pip'</span>,</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  if $::osfamily == <span class="string">'RedHat'</span> &#123;</span><br><span class="line">    exec &#123; <span class="string">'rhel pip_provider_name_fix'</span>:</span><br><span class="line">      command   =&gt; <span class="string">'alternatives --install /usr/bin/pip-python pip-python /usr/bin/pip 1'</span>,</span><br><span class="line">      subscribe =&gt; Exec[<span class="string">'easy_install pip'</span>],</span><br><span class="line">      unless    =&gt; <span class="string">'which pip-python'</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>hope these help :D</p>
-<p>if there is any mistake,please contact me to update! </p>
-<p>thank you</p>
-</span>
+        <span itemprop="articleBody"></span>
       
     </div>
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/vagrant-gfw-error/" rel="tag">#vagrant gfw error</a>
-          
-        </div>
       
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/03/05/hello-world/" rel="next" title="My first blog post launched with my new blog">
-                <i class="fa fa-chevron-left"></i> My first blog post launched with my new blog
+              <a href="/2015/10/29/nodejs-note-02/" rel="next" title="how to learn Node.js - 02 how to handle Url request">
+                <i class="fa fa-chevron-left"></i> how to learn Node.js - 02 how to handle Url request
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/10/28/hellowordnodejs/" rel="prev" title="How to learn Node.js - 01 hello world !">
-                How to learn Node.js - 01 hello world ! <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -402,7 +366,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Error_code_when_run_vagrant_up:"><span class="nav-number">1.</span> <span class="nav-text">Error code when run vagrant up:</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Walkaround:"><span class="nav-number">2.</span> <span class="nav-text">Walkaround:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Replace_gem_sources_in_initial-setup-sh"><span class="nav-number">2.1.</span> <span class="nav-text">Replace gem sources in initial-setup.sh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Add_douban_pypi_source_in_puphpet/manifests/python/pip-pp"><span class="nav-number">2.2.</span> <span class="nav-text">Add douban pypi source in  puphpet/manifests/python/pip.pp</span></a></li></ol></li></ol></div>
+              <p class="post-toc-empty">此文章未包含目錄</p>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
