@@ -243,7 +243,15 @@
         
           <span itemprop="articleBody">
             
-              <h1 id="Middleware">Middleware</h1><h2 id="method-Overide">method-Overide</h2><p>Lets you use HTTP verbs such as PUT or DELETE in places where the client doesn’t support it.</p>
+              <h1 id="Middleware">Middleware</h1><p>Middleware is a function with access to the request object (req), the response object (res), and the next middleware in the application’s request-response cycle, commonly denoted by a variable named next.</p>
+<p>Middleware can:</p>
+<ul>
+<li>Execute any code.</li>
+<li>Make changes to the request and the response objects.</li>
+<li>End the request-response cycle.</li>
+<li>Call the next middleware in the stack.</li>
+</ul>
+<h2 id="method-Overide">method-Overide</h2><p>Lets you use HTTP verbs such as PUT or DELETE in places where the client doesn’t support it.</p>
 <p>this middleware help to catch ‘_method= post’  in the form, so that we can return a different response. </p>
 <h3 id="methodOverride(getter,_options)">methodOverride(getter, options)</h3><p>Create a new middleware function to override the req.method property with a new value. This value will be pulled from the provided getter.</p>
 <p>getter - The getter to use to look up the overridden request method for the request. (default: X-HTTP-Method-Override)<br>options.methods - The allowed methods the original request must be in to check for a method override value. (default: [‘POST’])<br>If the found method is supported by node.js core, then req.method will be set to this value, as if it has originally been that value. The previous req.method value will be stored in req.originalMethod.</p>
