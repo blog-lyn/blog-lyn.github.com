@@ -1,0 +1,640 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+  <meta name="keywords" content="require and exports," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="Require and  Exports12345exports.theAnswerVal = 41module.exports = function theAnswer() &amp;#123; console.log(theAnswerVal) &amp;#125;exports.theAnswer = 43
+123handlers= require(&apos;./handlers&apos;)console.log(hand">
+<meta property="og:type" content="article">
+<meta property="og:title" content="how to learn Node.js -- organize your code by using require and exports">
+<meta property="og:url" content="http://blog-lyn.github.io/2015/11/05/nodejs-note-06/index.html">
+<meta property="og:site_name" content="Lyn's Blog">
+<meta property="og:description" content="Require and  Exports12345exports.theAnswerVal = 41module.exports = function theAnswer() &amp;#123; console.log(theAnswerVal) &amp;#125;exports.theAnswer = 43
+123handlers= require(&apos;./handlers&apos;)console.log(hand">
+<meta property="og:updated_time" content="2015-11-05T16:14:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="how to learn Node.js -- organize your code by using require and exports">
+<meta name="twitter:description" content="Require and  Exports12345exports.theAnswerVal = 41module.exports = function theAnswer() &amp;#123; console.log(theAnswerVal) &amp;#125;exports.theAnswer = 43
+123handlers= require(&apos;./handlers&apos;)console.log(hand">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> how to learn Node.js -- organize your code by using require and exports | Lyn's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e1a1e7f61eef21fbacf4a67a19789441";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lyn's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                how to learn Node.js -- organize your code by using require and exports
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-11-05T18:19:05+08:00" content="2015-11-05">
+              2015-11-05
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="Require_and_Exports">Require and  Exports</h1><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">exports.theAnswerVal = <span class="number">41</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">module</span>.<span class="title">exports</span> =</span> <span class="function"><span class="keyword">function</span> <span class="title">theAnswer</span><span class="params">()</span> &#123;</span> console.<span class="built_in">log</span>(theAnswerVal) &#125;</span><br><span class="line"></span><br><span class="line">exports.theAnswer = <span class="number">43</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">handlers= <span class="function"><span class="title">require</span><span class="params">(<span class="string">'./handlers'</span>)</span></span></span><br><span class="line"></span><br><span class="line">console.<span class="function"><span class="title">log</span><span class="params">(handlers)</span></span></span><br></pre></td></tr></table></figure>
+<p>The result is :[function: theAnswer]</p>
+<p>because exports is only a helper to collect exports iterms and trans them to module.exports,</p>
+<p>if the module.exports is  defined, then the exports function will be ignored.</p>
+<h1 id="Split_codes_into_different_files">Split codes into  different  files</h1><h2 id="first_split_handlers_into_handlers-js">first split handlers into handlers.js</h2><p>handlers.js</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">exports.home = function home (req, res)&#123;</span><br><span class="line">	//console.log("Hi! I was called at: ", req.originalUrl)</span><br><span class="line">	res.setHeader("Conetent-Type", 'text/html');</span><br><span class="line">	res.send("<span class="tag">&lt;<span class="title">html</span>&gt;</span><span class="tag">&lt;<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">title</span>&gt;</span>Node Slash<span class="tag">&lt;/<span class="title">title</span>&gt;</span><span class="tag">&lt;/<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">body</span>&gt;</span><span class="tag">&lt;<span class="title">h1</span>&gt;</span> Browser Game<span class="tag">&lt;/<span class="title">h1</span>&gt;</span><span class="tag">&lt;<span class="title">form</span> <span class="attribute">action</span>=<span class="value">\"</span>/<span class="attribute">login</span>\" <span class="attribute">method</span>=<span class="value">\"POST\"</span>&gt;</span><span class="tag">&lt;<span class="title">label</span> <span class="attribute">for</span>=<span class="value">\"username\"</span>&gt;</span>Username<span class="tag">&lt;/<span class="title">label</span>&gt;</span><span class="tag">&lt;<span class="title">input</span> <span class="attribute">id</span>=<span class="value">\"username\"</span> <span class="attribute">type</span>=<span class="value">\"text\"</span> <span class="attribute">name</span>=<span class="value">\"username\"</span>&gt;</span><span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">\"submit\"</span>&gt;</span>Start ye adventures!<span class="tag">&lt;/<span class="title">button</span>&gt;</span><span class="tag">&lt;/<span class="title">form</span>&gt;</span><span class="tag">&lt;<span class="title">img</span> <span class="attribute">src</span>=<span class="value">\"</span>/<span class="attribute">images</span>/<span class="attribute">logo.jpg</span>\"&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">'/adventures'</span>&gt;</span> Go to adventures <span class="tag">&lt;/<span class="title">a</span>&gt;</span><span class="tag">&lt;/<span class="title">body</span>&gt;</span><span class="tag">&lt;/<span class="title">html</span>&gt;</span>");</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">exports.adventuresIndex =function adventuresIndex(req, res)&#123;</span><br><span class="line">	res.setHeader("Content-Type",'text/html');</span><br><span class="line">	res.send("<span class="tag">&lt;<span class="title">html</span>&gt;</span><span class="tag">&lt;<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">title</span>&gt;</span>adventures <span class="tag">&lt;/<span class="title">title</span>&gt;</span><span class="tag">&lt;/<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">body</span>&gt;</span><span class="tag">&lt;<span class="title">h1</span>&gt;</span> Are you brave " + req.session.username + " ?<span class="tag">&lt;/<span class="title">h1</span>&gt;</span><span class="tag">&lt;<span class="title">form</span> <span class="attribute">action</span>=<span class="value">'/adventures'</span> <span class="attribute">method</span>=<span class="value">'POST'</span>&gt;</span> <span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">'submit'</span>&gt;</span> Yes! i am !<span class="tag">&lt;/<span class="title">button</span>&gt;</span><span class="tag">&lt;/<span class="title">form</span>&gt;</span><span class="tag">&lt;/<span class="title">body</span>&gt;</span><span class="tag">&lt;/<span class="title">html</span>&gt;</span>")</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">exports.createAdventure = function createAdventure(req, res)&#123;</span><br><span class="line">	console.log(req.body);</span><br><span class="line">	res.setHeader("Content-Type",'text/html');</span><br><span class="line">	res.send("<span class="tag">&lt;<span class="title">html</span>&gt;</span><span class="tag">&lt;<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">title</span>&gt;</span>adventures<span class="tag">&lt;/<span class="title">title</span>&gt;</span><span class="tag">&lt;/<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">body</span>&gt;</span><span class="tag">&lt;<span class="title">h1</span>&gt;</span> So  you are brave!<span class="tag">&lt;/<span class="title">h1</span>&gt;</span><span class="tag">&lt;<span class="title">form</span> <span class="attribute">action</span>=<span class="value">'/adventures/?_method=PUT'</span> <span class="attribute">method</span>=<span class="value">'POST'</span>&gt;</span>  <span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">'submit'</span>&gt;</span> Cheat <span class="tag">&lt;/<span class="title">button</span>&gt;</span><span class="tag">&lt;/<span class="title">form</span>&gt;</span><span class="tag">&lt;<span class="title">form</span> <span class="attribute">action</span>=<span class="value">'/adventures'</span> <span class="attribute">method</span>=<span class="value">'POST'</span>&gt;</span>  <span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">'submit'</span>&gt;</span> again !<span class="tag">&lt;/<span class="title">button</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>you have found some <span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">'/loot/1'</span>&gt;</span>loot <span class="tag">&lt;/<span class="title">a</span>&gt;</span> here<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">form</span>&gt;</span><span class="tag">&lt;/<span class="title">body</span>&gt;</span><span class="tag">&lt;/<span class="title">html</span>&gt;</span>" );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">exports.updateAdventure = function updateAdventure(req, res)&#123;</span><br><span class="line">	res.setHeader("Content-Type",'text/html');</span><br><span class="line">	res.send("<span class="tag">&lt;<span class="title">html</span>&gt;</span><span class="tag">&lt;<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">title</span>&gt;</span>adventures <span class="tag">&lt;/<span class="title">title</span>&gt;</span><span class="tag">&lt;/<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">body</span>&gt;</span> <span class="tag">&lt;<span class="title">H1</span>&gt;</span>Method override help you to change method from post to put ! <span class="tag">&lt;/<span class="title">H1</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>It's a secret to everybody <span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">body</span>&gt;</span><span class="tag">&lt;/<span class="title">html</span>&gt;</span>");</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">exports.showLoot = function showLoot(req, res)&#123;</span><br><span class="line">	var id = req.params.id</span><br><span class="line">	res.setHeader("Content-Type", 'text/html')</span><br><span class="line">	res.send("<span class="tag">&lt;<span class="title">html</span>&gt;</span> <span class="tag">&lt;<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">title</span>&gt;</span>adventures <span class="tag">&lt;/<span class="title">title</span>&gt;</span><span class="tag">&lt;/<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">body</span>&gt;</span> <span class="tag">&lt;<span class="title">h1</span>&gt;</span> Ogre-slaying knife<span class="tag">&lt;/<span class="title">h1</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span> it has 9 orges,  it was" + id + " <span class="tag">&lt;/<span class="title">p</span>&gt;</span> <span class="tag">&lt;/<span class="title">body</span>&gt;</span><span class="tag">&lt;/<span class="title">html</span>&gt;</span>")</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">exports.login = function login(req, res)&#123;</span><br><span class="line"></span><br><span class="line">	if(req.body.username)&#123;</span><br><span class="line">		console.log(req.body.username);</span><br><span class="line">		req.session.username = req.body.username</span><br><span class="line">	</span><br><span class="line">		res.redirect("/adventures")</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		res.redirect("/")</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>index.js</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*!</span><br><span class="line"> * express</span><br><span class="line"> * Copyright(c) 2009-2013 TJ Holowaychuk</span><br><span class="line"> * Copyright(c) 2013 Roman Shtylman</span><br><span class="line"> * Copyright(c) 2014-2015 Douglas Christopher Wilson</span><br><span class="line"> * MIT Licensed</span><br><span class="line"></span><br><span class="line"> */</span></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span>  express = <span class="keyword">require</span>(<span class="string">"express"</span>)</span><br><span class="line">	  app    = express() </span><br><span class="line">	  port   = process.env[<span class="string">'port'</span>] || <span class="number">3000</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> handlers       = <span class="keyword">require</span>(<span class="string">'./handlers.js'</span>)</span><br><span class="line"><span class="keyword">var</span> bodyParser     = <span class="keyword">require</span>(<span class="string">'body-parser'</span>)</span><br><span class="line"><span class="keyword">var</span> methodOverride = <span class="keyword">require</span>(<span class="string">'method-override'</span>)</span><br><span class="line"><span class="keyword">var</span> cookieParser   = <span class="keyword">require</span>(<span class="string">'cookie-parser'</span>)</span><br><span class="line"><span class="keyword">var</span> cookieSession  = <span class="keyword">require</span>(<span class="string">'cookie-session'</span>) </span><br><span class="line"> </span><br><span class="line"><span class="comment">//console.log(handlers);</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//Middlewares</span></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">stoopidLogger</span><span class="params">(options)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="title">stoopidLoggerInner</span><span class="params">(req,res,next)</span> </span>&#123;</span><br><span class="line">    console.log(<span class="string">"Hello! I was called at: "</span>, req.path)</span><br><span class="line">     </span><br><span class="line">    next()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ensureAuthenticated</span><span class="params">(req, res, next)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (req.session.username)&#123;</span><br><span class="line">		console.log(req.session.username)</span><br><span class="line">		next()</span><br><span class="line">	&#125; <span class="keyword">else</span>&#123;</span><br><span class="line">		console.log(req.session.username)</span><br><span class="line">		res.redirect(<span class="string">"/"</span>)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">notFound</span><span class="params">(req, res)</span></span>&#123;</span><br><span class="line">	res.setHeader(<span class="string">"Conetent-Type"</span>, <span class="string">'text/html'</span>)</span><br><span class="line">	res.send(<span class="number">404</span>, <span class="string">"&lt;h1&gt;confound it all! We could not find your page!&lt;/h1&gt;"</span>)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">catchError</span><span class="params">(err, req, res, next)</span></span>&#123;</span><br><span class="line">	console.log(<span class="string">"there was  an error! In the real world, I might be alerting the engineering team."</span>)</span><br><span class="line">	next(err)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">showErroPage</span><span class="params">(err,req,res,next)</span></span>&#123;</span><br><span class="line">	res.setHeader(<span class="string">"Content-Type"</span>,<span class="string">'text/html'</span>)</span><br><span class="line">	res.send(<span class="number">500</span>,<span class="string">"&lt;h1&gt;confound it all! it's a 500 error!&lt;/h1&gt;"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">readFromDB</span><span class="params">(req,res,next)</span></span>&#123;</span><br><span class="line">	next(<span class="keyword">new</span> Error(<span class="string">"we dont have DB!"</span>))</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//Routes</span></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> indexRouter  = express.Router()</span><br><span class="line">indexRouter.get(<span class="string">'/'</span>, handlers.home)</span><br><span class="line">indexRouter.get(<span class="string">'/read_from_db'</span>, readFromDB)</span><br><span class="line">indexRouter.post(<span class="string">'/login'</span>, handlers.login)</span><br><span class="line">indexRouter.all(<span class="string">'*'</span>,  ensureAuthenticated)</span><br><span class="line">indexRouter.route(<span class="string">'/adventures'</span>)</span><br><span class="line">	 </span><br><span class="line">	.get(handlers.adventuresIndex)</span><br><span class="line">	.post(handlers.createAdventure)</span><br><span class="line">	.put(handlers.updateAdventure)</span><br><span class="line">indexRouter.get(<span class="string">'/loot/:id'</span>, handlers.showLoot)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">app.<span class="keyword">use</span>(bodyParser.urlencoded(&#123;     <span class="comment">// to support URL-encoded bodies</span></span><br><span class="line">  extended: <span class="keyword">false</span></span><br><span class="line">&#125;)); </span><br><span class="line">app.<span class="keyword">use</span>(methodOverride(<span class="string">'_method'</span>));</span><br><span class="line">app.<span class="keyword">use</span>(cookieParser())</span><br><span class="line">app.<span class="keyword">use</span>(cookieSession(&#123;secret: <span class="string">"it's a secret to  everybody"</span>, key:<span class="string">"session"</span>&#125;))</span><br><span class="line">app.<span class="keyword">use</span>(<span class="string">"/"</span>, stoopidLogger())</span><br><span class="line">app.<span class="keyword">use</span>(<span class="string">'/images'</span>, express.<span class="keyword">static</span>(__dirname + <span class="string">'/images'</span>));</span><br><span class="line">app.<span class="keyword">use</span>(<span class="string">'/'</span>,indexRouter)</span><br><span class="line">app.<span class="keyword">use</span>(notFound)</span><br><span class="line">app.<span class="keyword">use</span>(catchError)</span><br><span class="line">app.<span class="keyword">use</span>(showErroPage)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">app.listen(port);</span><br><span class="line"></span><br><span class="line">console.log(<span class="string">'Server running at http://127.0.0.1:'</span> + port + <span class="string">'/'</span>);</span><br></pre></td></tr></table></figure>
+<h1 id="Second,_split_routes_into_routes-js_file">Second, split routes into  routes.js file</h1><p>routes.js</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">var</span> express       = <span class="function"><span class="title">require</span><span class="params">(<span class="string">"express"</span>)</span></span></span><br><span class="line"><span class="tag">var</span> handlers      = <span class="function"><span class="title">require</span><span class="params">(<span class="string">'./handlers.js'</span>)</span></span></span><br><span class="line"><span class="tag">var</span> indexRouter   =  express.<span class="function"><span class="title">Router</span><span class="params">()</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">indexRouter.<span class="function"><span class="title">get</span><span class="params">(<span class="string">'/'</span>, handlers.home)</span></span></span><br><span class="line">indexRouter.<span class="function"><span class="title">get</span><span class="params">(<span class="string">'/read_from_db'</span>, handlers.readFromDB)</span></span></span><br><span class="line">indexRouter.<span class="function"><span class="title">post</span><span class="params">(<span class="string">'/login'</span>, handlers.login)</span></span></span><br><span class="line">indexRouter.<span class="function"><span class="title">all</span><span class="params">(<span class="string">'*'</span>,  handlers.ensureAuthenticated)</span></span></span><br><span class="line">indexRouter.<span class="function"><span class="title">route</span><span class="params">(<span class="string">'/adventures'</span>)</span></span></span><br><span class="line">	 </span><br><span class="line">	.<span class="function"><span class="title">get</span><span class="params">(handlers.adventuresIndex)</span></span></span><br><span class="line">	.<span class="function"><span class="title">post</span><span class="params">(handlers.createAdventure)</span></span></span><br><span class="line">	.<span class="function"><span class="title">put</span><span class="params">(handlers.updateAdventure)</span></span></span><br><span class="line"></span><br><span class="line">indexRouter.<span class="function"><span class="title">get</span><span class="params">(<span class="string">'/loot/:id'</span>, handlers.showLoot)</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">module<span class="class">.exports</span> = indexRouter</span><br></pre></td></tr></table></figure>
+<h1 id="Third,_split_middlewares_into_middlewares-js">Third, split middlewares into middlewares.js</h1><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Middlewares</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> express = <span class="keyword">require</span>(<span class="string">"express"</span>)</span><br><span class="line"><span class="keyword">var</span> bodyParser     = <span class="keyword">require</span>(<span class="string">'body-parser'</span>)</span><br><span class="line"><span class="keyword">var</span> methodOverride = <span class="keyword">require</span>(<span class="string">'method-override'</span>)</span><br><span class="line"><span class="keyword">var</span> cookieParser   = <span class="keyword">require</span>(<span class="string">'cookie-parser'</span>)</span><br><span class="line"><span class="keyword">var</span> cookieSession  = <span class="keyword">require</span>(<span class="string">'cookie-session'</span>) </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">stoopidLogger</span><span class="params">(options)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  	<span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="title">stoopidLoggerInner</span><span class="params">(req,res,next)</span> </span>&#123;</span><br><span class="line">    console.log(<span class="string">"Hello! I was called at: "</span>, req.path)</span><br><span class="line">    next()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">notFound</span><span class="params">(req, res)</span></span>&#123;</span><br><span class="line">	res.setHeader(<span class="string">"Conetent-Type"</span>, <span class="string">'text/html'</span>)</span><br><span class="line">	res.send(<span class="number">404</span>, <span class="string">"&lt;h1&gt;confound it all! We could not find your page!&lt;/h1&gt;"</span>)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">catchError</span><span class="params">(err, req, res, next)</span></span>&#123;</span><br><span class="line">	console.log(<span class="string">"there was  an error! In the real world, I might be alerting the engineering team."</span>)</span><br><span class="line">	next(err)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">showErroPage</span><span class="params">(err,req,res,next)</span></span>&#123;</span><br><span class="line">	res.setHeader(<span class="string">"Content-Type"</span>,<span class="string">'text/html'</span>)</span><br><span class="line">	res.send(<span class="number">500</span>,<span class="string">"&lt;h1&gt;confound it all! it's a 500 error!&lt;/h1&gt;"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> module.exports = <span class="function"><span class="keyword">function</span><span class="params">(indexRouter)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	app.<span class="keyword">use</span>(bodyParser.urlencoded(&#123;     <span class="comment">// to support URL-encoded bodies</span></span><br><span class="line">	  extended: <span class="keyword">false</span></span><br><span class="line">	&#125;)); </span><br><span class="line">	app.<span class="keyword">use</span>(methodOverride(<span class="string">'_method'</span>));</span><br><span class="line">	app.<span class="keyword">use</span>(cookieParser())</span><br><span class="line">	app.<span class="keyword">use</span>(cookieSession(&#123;secret: <span class="string">"it's a secret to  everybody"</span>, key:<span class="string">"session"</span>&#125;))</span><br><span class="line">	app.<span class="keyword">use</span>(<span class="string">"/"</span>, stoopidLogger())</span><br><span class="line">	 </span><br><span class="line">	app.<span class="keyword">use</span>(<span class="string">'/images'</span>, express.<span class="keyword">static</span>(__dirname + <span class="string">'/images'</span>));</span><br><span class="line">	app.<span class="keyword">use</span>(<span class="string">'/'</span>,indexRouter)</span><br><span class="line"></span><br><span class="line">	app.<span class="keyword">use</span>(notFound)</span><br><span class="line">	app.<span class="keyword">use</span>(catchError)</span><br><span class="line">	app.<span class="keyword">use</span>(showErroPage)</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>index.js file </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*!</span><br><span class="line"> * express</span><br><span class="line"> * Copyright(c) 2009-2013 TJ Holowaychuk</span><br><span class="line"> * Copyright(c) 2013 Roman Shtylman</span><br><span class="line"> * Copyright(c) 2014-2015 Douglas Christopher Wilson</span><br><span class="line"> * MIT Licensed</span><br><span class="line"></span><br><span class="line"> */</span></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span>  express = <span class="built_in">require</span>(<span class="string">"express"</span>)</span><br><span class="line">	  app    = express() </span><br><span class="line">	  port   = process.env[<span class="string">'port'</span>] || <span class="number">3000</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//var bodyParser     = require('body-parser')</span></span><br><span class="line">	<span class="comment">//var methodOverride = require('method-override')</span></span><br><span class="line">	<span class="comment">//var cookieParser   = require('cookie-parser')</span></span><br><span class="line">	<span class="comment">//var cookieSession  = require('cookie-session') </span></span><br><span class="line"></span><br><span class="line"><span class="comment">//Routes</span></span><br><span class="line"><span class="keyword">var</span> handlers       = <span class="built_in">require</span>(<span class="string">'./handlers.js'</span>)</span><br><span class="line"><span class="keyword">var</span> indexRouter	   = <span class="built_in">require</span>(<span class="string">'./routes.js'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//middlewares</span></span><br><span class="line"><span class="keyword">var</span> middlewares    = <span class="built_in">require</span>(<span class="string">'./middlewares.js'</span>)</span><br><span class="line">   </span><br><span class="line">    middlewares(indexRouter)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">app.listen(port);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'Server running at http://127.0.0.1:'</span> + port + <span class="string">'/'</span>);</span><br></pre></td></tr></table></figure>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/require-and-exports/" rel="tag">#require and exports</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/05/nodejs-note-05/" rel="next" title="How to learn Node.js -- usages of express.Router(), middleware, cookieParser, cookieSession, create 404 control and catchError function">
+                <i class="fa fa-chevron-left"></i> How to learn Node.js -- usages of express.Router(), middleware, cookieParser, cookieSession, create 404 control and catchError function
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/author.png" alt="Lyn" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Lyn</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Require_and_Exports"><span class="nav-number">1.</span> <span class="nav-text">Require and  Exports</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Split_codes_into_different_files"><span class="nav-number">2.</span> <span class="nav-text">Split codes into  different  files</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#first_split_handlers_into_handlers-js"><span class="nav-number">2.1.</span> <span class="nav-text">first split handlers into handlers.js</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Second,_split_routes_into_routes-js_file"><span class="nav-number">3.</span> <span class="nav-text">Second, split routes into  routes.js file</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Third,_split_middlewares_into_middlewares-js"><span class="nav-number">4.</span> <span class="nav-text">Third, split middlewares into middlewares.js</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2011 - 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lyn</span>
+</div>
+
+<div class="powered-by">
+  <a class="theme-link" href="http://hexo.io">Powered by Hexo
+  </a>
+</div>
+
+<div class="theme-info">
+  
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
