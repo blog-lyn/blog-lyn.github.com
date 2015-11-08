@@ -1,0 +1,647 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+  <meta name="keywords" content="production App," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="write a bacic and pratical server function in a production way.
+application.js
+1234567891011121314151617181920212223242526272829303132333435var env         = process.env.NODE_ENV || &apos;development&apos;var p">
+<meta property="og:type" content="article">
+<meta property="og:title" content="how to learn nodejs - wirte app code in production mode">
+<meta property="og:url" content="http://blog-lyn.github.io/2015/11/07/nodejs-note-07/index.html">
+<meta property="og:site_name" content="Lyn's Blog">
+<meta property="og:description" content="write a bacic and pratical server function in a production way.
+application.js
+1234567891011121314151617181920212223242526272829303132333435var env         = process.env.NODE_ENV || &apos;development&apos;var p">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/15-11-9/73981430.jpg">
+<meta property="og:updated_time" content="2015-11-08T16:44:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="how to learn nodejs - wirte app code in production mode">
+<meta name="twitter:description" content="write a bacic and pratical server function in a production way.
+application.js
+1234567891011121314151617181920212223242526272829303132333435var env         = process.env.NODE_ENV || &apos;development&apos;var p">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> how to learn nodejs - wirte app code in production mode | Lyn's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e1a1e7f61eef21fbacf4a67a19789441";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lyn's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                how to learn nodejs - wirte app code in production mode
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-11-07T17:02:22+08:00" content="2015-11-07">
+              2015-11-07
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>write a bacic and pratical server function in a production way.</p>
+<p>application.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> env         = process.env.NODE_ENV || <span class="string">'development'</span></span><br><span class="line"><span class="keyword">var</span> packageJson = <span class="built_in">require</span>(<span class="string">'../package.json'</span>)</span><br><span class="line"><span class="keyword">var</span> path        = <span class="built_in">require</span>(<span class="string">'path'</span>)</span><br><span class="line"><span class="keyword">var</span> express     = <span class="built_in">require</span>(<span class="string">'express'</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'loading App in '</span> + env + <span class="string">'node.'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">global.App = &#123;</span><br><span class="line"></span><br><span class="line">	app: express()</span><br><span class="line">,   port: process.env.PORT || <span class="number">3000</span></span><br><span class="line">,   version: packageJson.version</span><br><span class="line">,   root: path.join(__dirname, <span class="string">'..'</span>)</span><br><span class="line">,   appPath: <span class="function"><span class="keyword">function</span>(<span class="params">path</span>)</span>&#123;</span><br><span class="line">	  <span class="keyword">return</span> <span class="keyword">this</span>.root + <span class="string">'/'</span> + path</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">,   <span class="built_in">require</span>: <span class="function"><span class="keyword">function</span>(<span class="params">path</span>)</span>&#123;</span><br><span class="line">	  <span class="keyword">return</span> <span class="built_in">require</span>(<span class="keyword">this</span>.app_path(path))	</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">,   env: env</span><br><span class="line"></span><br><span class="line">,  start: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span>(!<span class="keyword">this</span>.started)&#123;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">this</span>.started = <span class="literal">true</span></span><br><span class="line">			<span class="keyword">this</span>.app.listen(<span class="keyword">this</span>.port)</span><br><span class="line">			<span class="built_in">console</span>.log( <span class="string">"running App version"</span> + App.version + <span class="string">" on port:"</span> + App.port + <span class="string">" in "</span>  + App.env + <span class="string">" mode"</span> )</span><br><span class="line">		</span><br><span class="line">			&#125;</span><br><span class="line">	  	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>index.js</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">require</span><span class="params">(<span class="string">'./config/application'</span>)</span></span></span><br><span class="line">App.<span class="function"><span class="title">start</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Lyn-Cheung-MBP:<span class="keyword">node</span><span class="identifier"></span><span class="title">-06</span> Lyn$ <span class="keyword">node</span><span class="identifier"> </span><span class="title">index</span>.js</span><br><span class="line">loading App <span class="operator">in</span> developmentnode.</span><br><span class="line">running App version1.<span class="number">0.0</span> on port:<span class="number">3000</span> <span class="operator">in</span> development mode</span><br></pre></td></tr></table></figure>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/15-11-9/73981430.jpg" alt=""></p>
+<p>We can put our code in structrue displayed above.</p>
+<p>application.js</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> env         = process.env.NODE_ENV || <span class="string">'development'</span></span><br><span class="line"><span class="keyword">var</span> packageJson = <span class="keyword">require</span>(<span class="string">'../package.json'</span>)</span><br><span class="line"><span class="keyword">var</span> path        = <span class="keyword">require</span>(<span class="string">'path'</span>)</span><br><span class="line"><span class="keyword">var</span> express     = <span class="keyword">require</span>(<span class="string">'express'</span>)</span><br><span class="line"><span class="keyword">var</span> bodyParser     = <span class="keyword">require</span>(<span class="string">'body-parser'</span>)</span><br><span class="line"><span class="keyword">var</span> methodOverride = <span class="keyword">require</span>(<span class="string">'method-override'</span>)</span><br><span class="line"><span class="keyword">var</span> cookieParser   = <span class="keyword">require</span>(<span class="string">'cookie-parser'</span>)</span><br><span class="line"><span class="keyword">var</span> cookieSession  = <span class="keyword">require</span>(<span class="string">'cookie-session'</span>) </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">console.log(<span class="string">'loading App in '</span> + env + <span class="string">'node.'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">global</span>.App = &#123;</span><br><span class="line"></span><br><span class="line">	app: express()</span><br><span class="line">,   port: process.env.PORT || <span class="number">3000</span></span><br><span class="line">,   version: packageJson.version</span><br><span class="line">,   root: path.join(__dirname, <span class="string">'..'</span>)</span><br><span class="line">,   appPath: <span class="function"><span class="keyword">function</span><span class="params">(path)</span></span>&#123;</span><br><span class="line">	  <span class="keyword">return</span> this.root + <span class="string">'/'</span> + path</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">,   <span class="keyword">require</span>: <span class="function"><span class="keyword">function</span><span class="params">(path)</span></span>&#123;</span><br><span class="line">	  <span class="keyword">return</span> <span class="keyword">require</span>(this.appPath(path))	</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">,   env: env</span><br><span class="line"></span><br><span class="line">,  start: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span>(!this.started)&#123;</span><br><span class="line"></span><br><span class="line">			this.started = <span class="keyword">true</span></span><br><span class="line">			this.app.listen(this.port)</span><br><span class="line">			console.log( <span class="string">"running App version"</span> + App.version + <span class="string">" on port:"</span> + App.port + <span class="string">" in "</span>  + App.env + <span class="string">" mode"</span> )</span><br><span class="line">		</span><br><span class="line">			&#125;</span><br><span class="line">	  	&#125;</span><br><span class="line"></span><br><span class="line">,	routes: <span class="function"><span class="keyword">function</span><span class="params">(path)</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> this.<span class="keyword">require</span>(<span class="string">"app/routes/"</span> + path)</span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//middlewares</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> indexRouter =  App.<span class="keyword">require</span>(<span class="string">"./config/routes.js"</span>)</span><br><span class="line">App.app.<span class="keyword">use</span>(bodyParser.urlencoded(&#123;     <span class="comment">// to support URL-encoded bodies</span></span><br><span class="line">	  extended: <span class="keyword">false</span></span><br><span class="line">	&#125;)); </span><br><span class="line">App.app.<span class="keyword">use</span>(methodOverride(<span class="string">'_method'</span>));</span><br><span class="line">App.app.<span class="keyword">use</span>(cookieParser())</span><br><span class="line">App.app.<span class="keyword">use</span>(cookieSession(&#123;secret: <span class="string">"it's a secret to  everybody"</span>, key:<span class="string">"session"</span>&#125;))</span><br><span class="line">App.app.<span class="keyword">use</span>(<span class="string">'/images'</span>, express.<span class="keyword">static</span>( App.appPath(<span class="string">'images'</span>)));</span><br><span class="line"></span><br><span class="line">App.app.<span class="keyword">use</span>(<span class="string">'/'</span>,indexRouter)</span><br></pre></td></tr></table></figure>
+<p>route.js</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="stylus"><span class="tag">var</span> express       =  <span class="function"><span class="title">require</span><span class="params">(<span class="string">"express"</span>)</span></span></span><br><span class="line"><span class="tag">var</span> indexRouter   =  express.<span class="function"><span class="title">Router</span><span class="params">()</span></span></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="tag">var</span> homeRoutes    =  App.<span class="function"><span class="title">routes</span><span class="params">(<span class="string">'homeRoutes'</span>)</span></span>	</span><br><span class="line">indexRouter.<span class="function"><span class="title">get</span><span class="params">(<span class="string">'/'</span>, homeRoutes.home)</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">var</span> adventuresRoutes = App.<span class="function"><span class="title">routes</span><span class="params">(<span class="string">'adventruesRoutes'</span>)</span></span></span><br><span class="line"></span><br><span class="line">indexRouter.<span class="function"><span class="title">route</span><span class="params">(<span class="string">'/adventures'</span>)</span></span></span><br><span class="line">	.<span class="function"><span class="title">get</span><span class="params">(adventuresRoutes.index)</span></span></span><br><span class="line">	.<span class="function"><span class="title">post</span><span class="params">(adventuresRoutes.create)</span></span></span><br><span class="line">	.<span class="function"><span class="title">put</span><span class="params">(adventuresRoutes.update)</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">var</span> lootRoutes = App.<span class="function"><span class="title">routes</span><span class="params">(<span class="string">'lootRoutes'</span>)</span></span></span><br><span class="line">indexRouter.<span class="function"><span class="title">get</span><span class="params">(<span class="string">'/loot/:id'</span>, lootRoutes.show)</span></span></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line">module<span class="class">.exports</span> = indexRouter</span></span><br></pre></td></tr></table></figure>
+<p>lootRoutes.js</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">exports.show = function showLoot(req, res)&#123;</span><br><span class="line">	var id = req.params.id</span><br><span class="line">	res.setHeader("Content-Type", 'text/html')</span><br><span class="line">	res.send("<span class="tag">&lt;<span class="title">html</span>&gt;</span> <span class="tag">&lt;<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">title</span>&gt;</span>adventures <span class="tag">&lt;/<span class="title">title</span>&gt;</span><span class="tag">&lt;/<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">body</span>&gt;</span> <span class="tag">&lt;<span class="title">h1</span>&gt;</span> Ogre-slaying knife<span class="tag">&lt;/<span class="title">h1</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span> it has 9 orges,  it was" + id + " <span class="tag">&lt;/<span class="title">p</span>&gt;</span> <span class="tag">&lt;/<span class="title">body</span>&gt;</span><span class="tag">&lt;/<span class="title">html</span>&gt;</span>")</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>adventuresRoutes.js</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">exports.index =function adventuresIndex(req, res)&#123;</span><br><span class="line">	res.setHeader("Content-Type",'text/html');</span><br><span class="line">	res.send("<span class="tag">&lt;<span class="title">html</span>&gt;</span><span class="tag">&lt;<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">title</span>&gt;</span>adventures <span class="tag">&lt;/<span class="title">title</span>&gt;</span><span class="tag">&lt;/<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">body</span>&gt;</span><span class="tag">&lt;<span class="title">h1</span>&gt;</span> Are you brave " + req.session.username + " ?<span class="tag">&lt;/<span class="title">h1</span>&gt;</span><span class="tag">&lt;<span class="title">form</span> <span class="attribute">action</span>=<span class="value">'/adventures'</span> <span class="attribute">method</span>=<span class="value">'POST'</span>&gt;</span> <span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">'submit'</span>&gt;</span> Yes! i am !<span class="tag">&lt;/<span class="title">button</span>&gt;</span><span class="tag">&lt;/<span class="title">form</span>&gt;</span><span class="tag">&lt;/<span class="title">body</span>&gt;</span><span class="tag">&lt;/<span class="title">html</span>&gt;</span>")</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">exports.create = function createAdventure(req, res)&#123;</span><br><span class="line">	console.log(req.body);</span><br><span class="line">	res.setHeader("Content-Type",'text/html');</span><br><span class="line">	res.send("<span class="tag">&lt;<span class="title">html</span>&gt;</span><span class="tag">&lt;<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">title</span>&gt;</span>adventures<span class="tag">&lt;/<span class="title">title</span>&gt;</span><span class="tag">&lt;/<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">body</span>&gt;</span><span class="tag">&lt;<span class="title">h1</span>&gt;</span> So  you are brave!<span class="tag">&lt;/<span class="title">h1</span>&gt;</span><span class="tag">&lt;<span class="title">form</span> <span class="attribute">action</span>=<span class="value">'/adventures/?_method=PUT'</span> <span class="attribute">method</span>=<span class="value">'POST'</span>&gt;</span>  <span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">'submit'</span>&gt;</span> Cheat <span class="tag">&lt;/<span class="title">button</span>&gt;</span><span class="tag">&lt;/<span class="title">form</span>&gt;</span><span class="tag">&lt;<span class="title">form</span> <span class="attribute">action</span>=<span class="value">'/adventures'</span> <span class="attribute">method</span>=<span class="value">'POST'</span>&gt;</span>  <span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">'submit'</span>&gt;</span> again !<span class="tag">&lt;/<span class="title">button</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>you have found some <span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">'/loot/1'</span>&gt;</span>loot <span class="tag">&lt;/<span class="title">a</span>&gt;</span> here<span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">form</span>&gt;</span><span class="tag">&lt;/<span class="title">body</span>&gt;</span><span class="tag">&lt;/<span class="title">html</span>&gt;</span>" );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">exports.update = function updateAdventure(req, res)&#123;</span><br><span class="line">	res.setHeader("Content-Type",'text/html');</span><br><span class="line">	res.send("<span class="tag">&lt;<span class="title">html</span>&gt;</span><span class="tag">&lt;<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">title</span>&gt;</span>adventures <span class="tag">&lt;/<span class="title">title</span>&gt;</span><span class="tag">&lt;/<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">body</span>&gt;</span> <span class="tag">&lt;<span class="title">H1</span>&gt;</span>Method override help you to change method from post to put ! <span class="tag">&lt;/<span class="title">H1</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>It's a secret to everybody <span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">body</span>&gt;</span><span class="tag">&lt;/<span class="title">html</span>&gt;</span>");</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>homeRoutes.js</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">exports.home = function home (req, res)&#123;</span><br><span class="line">	//console.log("Hi! I was called at: ", req.originalUrl)</span><br><span class="line">	res.setHeader("Conetent-Type", 'text/html');</span><br><span class="line">	res.send("<span class="tag">&lt;<span class="title">html</span>&gt;</span><span class="tag">&lt;<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">title</span>&gt;</span>Node Slash<span class="tag">&lt;/<span class="title">title</span>&gt;</span><span class="tag">&lt;/<span class="title">head</span>&gt;</span> <span class="tag">&lt;<span class="title">body</span>&gt;</span><span class="tag">&lt;<span class="title">h1</span>&gt;</span> Browser Game<span class="tag">&lt;/<span class="title">h1</span>&gt;</span><span class="tag">&lt;<span class="title">form</span> <span class="attribute">action</span>=<span class="value">\"</span>/<span class="attribute">login</span>\" <span class="attribute">method</span>=<span class="value">\"POST\"</span>&gt;</span><span class="tag">&lt;<span class="title">label</span> <span class="attribute">for</span>=<span class="value">\"username\"</span>&gt;</span>Username<span class="tag">&lt;/<span class="title">label</span>&gt;</span><span class="tag">&lt;<span class="title">input</span> <span class="attribute">id</span>=<span class="value">\"username\"</span> <span class="attribute">type</span>=<span class="value">\"text\"</span> <span class="attribute">name</span>=<span class="value">\"username\"</span>&gt;</span><span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">\"submit\"</span>&gt;</span>Start ye adventures!<span class="tag">&lt;/<span class="title">button</span>&gt;</span><span class="tag">&lt;/<span class="title">form</span>&gt;</span><span class="tag">&lt;<span class="title">img</span> <span class="attribute">src</span>=<span class="value">\"</span>/<span class="attribute">images</span>/<span class="attribute">logo.jpg</span>\"&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">'/adventures'</span>&gt;</span> Go to adventures <span class="tag">&lt;/<span class="title">a</span>&gt;</span><span class="tag">&lt;/<span class="title">body</span>&gt;</span><span class="tag">&lt;/<span class="title">html</span>&gt;</span>");</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/production-App/" rel="tag">#production App</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/05/nodejs-note-06/" rel="next" title="how to learn Node.js -- organize your code by using require and exports">
+                <i class="fa fa-chevron-left"></i> how to learn Node.js -- organize your code by using require and exports
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/author.png" alt="Lyn" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Lyn</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目錄</p>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2011 - 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lyn</span>
+</div>
+
+<div class="powered-by">
+  <a class="theme-link" href="http://hexo.io">Powered by Hexo
+  </a>
+</div>
+
+<div class="theme-info">
+  
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
