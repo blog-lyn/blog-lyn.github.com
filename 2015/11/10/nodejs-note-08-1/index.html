@@ -41,7 +41,7 @@
 
 
 
-  <meta name="keywords" content="vagrant gfw error," />
+  <meta name="keywords" content="template engine handlerbars hbs," />
 
 
 
@@ -57,22 +57,20 @@
 
 
 
-<meta name="description" content="Error code when run vagrant up:recently when I want to use vagrant to build PHP environment on my Mac,I got three Errors :
-
-12error: /Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: cha">
+<meta name="description" content="epxress template: Jade vs HbsJade is  something more like python, but I like Hbs as the syntax is easy to  transit from raw html file to template.hbs file
+viewsAs we choose handlerbars as our template">
 <meta property="og:type" content="article">
-<meta property="og:title" content="How to modify puphpet file to avoid vagrant up errors">
-<meta property="og:url" content="http://blog-lyn.github.io/2015/10/26/vagrant_gfw_errors/index.html">
+<meta property="og:title" content="How to learn Node.js - express with template engine">
+<meta property="og:url" content="http://blog-lyn.github.io/2015/11/10/nodejs-note-08-1/index.html">
 <meta property="og:site_name" content="Lyn's Blog">
-<meta property="og:description" content="Error code when run vagrant up:recently when I want to use vagrant to build PHP environment on my Mac,I got three Errors :
-
-12error: /Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: cha">
-<meta property="og:updated_time" content="2015-10-27T03:30:49.000Z">
+<meta property="og:description" content="epxress template: Jade vs HbsJade is  something more like python, but I like Hbs as the syntax is easy to  transit from raw html file to template.hbs file
+viewsAs we choose handlerbars as our template">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/15-11-10/87116763.jpg">
+<meta property="og:updated_time" content="2015-11-10T16:20:52.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="How to modify puphpet file to avoid vagrant up errors">
-<meta name="twitter:description" content="Error code when run vagrant up:recently when I want to use vagrant to build PHP environment on my Mac,I got three Errors :
-
-12error: /Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: cha">
+<meta name="twitter:title" content="How to learn Node.js - express with template engine">
+<meta name="twitter:description" content="epxress template: Jade vs HbsJade is  something more like python, but I like Hbs as the syntax is easy to  transit from raw html file to template.hbs file
+viewsAs we choose handlerbars as our template">
 
 
 
@@ -84,7 +82,7 @@
   };
 </script>
 
-  <title> How to modify puphpet file to avoid vagrant up errors | Lyn's Blog </title>
+  <title> How to learn Node.js - express with template engine | Lyn's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
@@ -210,7 +208,7 @@
             
             
               
-                How to modify puphpet file to avoid vagrant up errors
+                How to learn Node.js - express with template engine
               
             
           </h1>
@@ -219,8 +217,8 @@
         <div class="post-meta">
           <span class="post-time">
             發表於
-            <time itemprop="dateCreated" datetime="2015-10-26T16:46:25+08:00" content="2015-10-26">
-              2015-10-26
+            <time itemprop="dateCreated" datetime="2015-11-10T23:17:04+08:00" content="2015-11-10">
+              2015-11-10
             </time>
           </span>
 
@@ -243,27 +241,35 @@
       
 
       
-        <span itemprop="articleBody"><h1 id="Error_code_when_run_vagrant_up:">Error code when run vagrant up:</h1><p>recently when I want to use vagrant to build PHP environment on my Mac,<br>I got three Errors :</p>
-<ol>
-<li><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">error:</span> <span class="regexp">/Stage[main]/</span><span class="string">Supervisord:</span>:Pip<span class="regexp">/Exec[install_setuptools]/</span><span class="string">returns:</span> change from notrun to <span class="number">0</span> <span class="string">failed:</span> Command exceeded timeout</span><br><span class="line"><span class="string">Warning:</span> <span class="regexp">/Stage[main]/</span><span class="string">Supervisord:</span>:Reload/Exec[supervisorctl_update]: Skipping because of failed dependencies</span><br></pre></td></tr></table></figure>
-</li>
-<li><figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERROR: While executing gem ... (Gem::RemoteFetcher::FetchError) ==&gt; <span class="keyword">default</span>: SSL_connect SYSCALL returned=<span class="number">5</span> errno=<span class="number">0</span> <span class="keyword">state</span>=<span class="literal">unknown</span> <span class="keyword">state</span> (https://rubygems.<span class="keyword">global</span>.ssl.fastly.net/<span class="keyword">quick</span>/Marshal.<span class="number">4.8</span>/deep_merge-<span class="number">1.0</span>.<span class="number">1</span>.gemspec.rz)</span><br></pre></td></tr></table></figure>
-</li>
-<li><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Error: <span class="string">"false"</span> <span class="keyword">is</span> <span class="keyword">not</span> a <span class="type">boolean</span>. It looks <span class="keyword">to</span> be a String <span class="keyword">at</span> /tmp/vagrant-puppet/modules-b7f682531389374ec63e7be34e57b9e6/nginx/manifests/resource/location.pp:<span class="number">198</span> <span class="function_start"><span class="keyword">on</span></span> node <span class="number">1</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>After investgating,I found the  root cause of the first two is  the same. The network between Mac and the ruby/pip servers is blocked by China GFW(as I am using Chinatelecom broadband).</p>
-<p>Therefore, I have to introduce China domestic ruby and pip sources to puphprt configuraions as followed:</p>
-<h1 id="Walkaround:">Walkaround:</h1><p>##Replce config.yaml nginx config </p>
-<p>the syntax should be :</p>
-<p>internal: off or internal :”false”</p>
-<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">locations:</span><br><span class="line">                nxvl_6x40k3ysb0yt:</span><br><span class="line">                    location: /</span><br><span class="line">                    autoindex: <span class="string">'off'</span></span><br><span class="line">                    internal: off</span><br><span class="line">                    try_files:</span><br><span class="line">                        - <span class="variable">$uri</span></span><br><span class="line">                        - <span class="variable">$uri</span>/</span><br><span class="line">                        - /index.php<span class="variable">$is</span>_args<span class="variable">$args</span></span><br><span class="line">                    fastcgi: <span class="string">''</span></span><br><span class="line">                    fastcgi_index: <span class="string">''</span></span><br><span class="line">                    fastcgi_split_path: <span class="string">''</span></span><br><span class="line">                nxvl_6punkjmd4tp3:</span><br><span class="line">                    location: <span class="string">'~ \.php$'</span></span><br><span class="line">                    autoindex: <span class="string">'off'</span></span><br><span class="line">                    internal: off</span><br><span class="line">                    try_files:</span><br><span class="line">                        - <span class="variable">$uri</span></span><br><span class="line">                        - <span class="variable">$uri</span>/</span><br><span class="line">                        - /index.php<span class="variable">$is</span>_args<span class="variable">$args</span></span><br><span class="line">                    fastcgi: <span class="string">'127.0.0.1:9000'</span></span><br><span class="line">                    fastcgi_index: index.php</span><br><span class="line">                    fastcgi_split_path: <span class="string">'^(.+\.php)(/.*)$'</span></span><br><span class="line">                    fast_cgi_params_extra:</span><br><span class="line">                        - <span class="string">'SCRIPT_FILENAME $request_filename'</span></span><br><span class="line">                        - <span class="string">'APP_ENV dev'</span></span><br></pre></td></tr></table></figure>
-<h2 id="Replace_gem_sources_in_initial-setup-sh">Replace gem sources in initial-setup.sh</h2><p>gem sources –remove <a href="https://rubygems.org/" target="_blank" rel="external">https://rubygems.org/</a><br>gem sources -a <a href="http://ruby.taobao.org/" target="_blank" rel="external">http://ruby.taobao.org/</a></p>
-<h2 id="Add_douban_pypi_source_in_puphpet/manifests/python/pip-pp">Add douban pypi source in  puphpet/manifests/python/pip.pp</h2><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">class puphpet::python::pip &#123;</span><br><span class="line"></span><br><span class="line">  Exec &#123; path =&gt; [ <span class="string">'/usr/bin/'</span>, <span class="string">'/usr/local/bin'</span>, <span class="string">'/bin'</span>, <span class="string">'/usr/local/sbin'</span>, <span class="string">'/usr/sbin'</span>, <span class="string">'/sbin'</span> ] &#125;</span><br><span class="line"></span><br><span class="line">  <span class="variable">$url</span> = <span class="string">'https://bootstrap.pypa.io/ez_setup.py'</span></span><br><span class="line">  <span class="variable">$download</span>_location = <span class="string">'/.puphpet-stuff/ez_setup.py'</span></span><br><span class="line"></span><br><span class="line">  exec &#123; <span class="string">"Download and install ez_setup"</span>:</span><br><span class="line">    creates =&gt; <span class="variable">$download</span>_location,</span><br><span class="line">    command =&gt; <span class="string">"wget $&#123;url&#125; -O $&#123;download_location&#125; &amp;&amp; \</span><br><span class="line">                python $&#123;download_location&#125;"</span>,</span><br><span class="line">    timeout =&gt; <span class="number">30</span>,</span><br><span class="line">    path    =&gt; <span class="string">'/usr/bin'</span></span><br><span class="line">  &#125;</span><br><span class="line">  -&gt; exec &#123; <span class="string">'easy_install pip -i http://pypi.douban.com/simple '</span>:</span><br><span class="line">    unless =&gt; <span class="string">'which pip'</span>,</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  if $::osfamily == <span class="string">'RedHat'</span> &#123;</span><br><span class="line">    exec &#123; <span class="string">'rhel pip_provider_name_fix'</span>:</span><br><span class="line">      command   =&gt; <span class="string">'alternatives --install /usr/bin/pip-python pip-python /usr/bin/pip 1'</span>,</span><br><span class="line">      subscribe =&gt; Exec[<span class="string">'easy_install pip'</span>],</span><br><span class="line">      unless    =&gt; <span class="string">'which pip-python'</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>hope these help :D</p>
-<p>if there is any mistake,please contact me to update! </p>
-<p>thank you</p>
-</span>
+        <span itemprop="articleBody"><h1 id="epxress_template:_Jade_vs_Hbs">epxress template: Jade vs Hbs</h1><p>Jade is  something more like python, but I like Hbs as the syntax is easy to  transit from raw html file to template.hbs file</p>
+<h1 id="views">views</h1><p>As we choose handlerbars as our template engine, we need use a npm helper express-handlerbars</p>
+<p>So, we need to update our  package.json first</p>
+<p>we can check the helper version by </p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Lyn-Cheung-MBP:<span class="keyword">node</span><span class="identifier"></span><span class="title">-06</span> Lyn$ npm  show express-handlebars  <span class="operator">version</span></span><br><span class="line"></span><br><span class="line"><span class="number">2.0</span>.<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>package.json </p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "<span class="attribute">name</span>": <span class="value"><span class="string">"node-slash"</span></span>,</span><br><span class="line">  "<span class="attribute">version</span>": <span class="value"><span class="string">"1.0.0"</span></span>,</span><br><span class="line">  "<span class="attribute">description</span>": <span class="value"><span class="string">"first express app"</span></span>,</span><br><span class="line">  "<span class="attribute">main</span>": <span class="value"><span class="string">"index.js"</span></span>,</span><br><span class="line">  "<span class="attribute">scripts</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">test</span>": <span class="value"><span class="string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span></span><br><span class="line">  </span>&#125;</span>,</span><br><span class="line">  "<span class="attribute">author</span>": <span class="value"><span class="string">"lyn"</span></span>,</span><br><span class="line">  "<span class="attribute">license</span>": <span class="value"><span class="string">"MIT"</span></span>,</span><br><span class="line">  "<span class="attribute">dependencies</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">method-override</span>": <span class="value"><span class="string">"2.3.5"</span></span>,</span><br><span class="line">    "<span class="attribute">express</span>": <span class="value"><span class="string">"^4.13.3"</span></span>,</span><br><span class="line">    "<span class="attribute">body-parser</span>":<span class="value"><span class="string">"1.14.1"</span></span>,</span><br><span class="line">    "<span class="attribute">cookie-session</span>":<span class="value"><span class="string">"2.0.0-alpha.1"</span></span>,</span><br><span class="line">    "<span class="attribute">cookie-parser</span>":<span class="value"><span class="string">"1.4.0"</span></span>,</span><br><span class="line">    "<span class="attribute">express-handlebars</span>":<span class="value"><span class="string">"2.0.1"</span></span><br><span class="line"></span><br><span class="line">  </span>&#125;</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+<p>then we need to create vies direction </p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/15-11-10/87116763.jpg" alt=""></p>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> views </span><br><span class="line"><span class="built_in">cd</span>  views</span><br><span class="line"><span class="built_in">mkdir</span> layout</span><br><span class="line"><span class="built_in">mkdir</span> home</span><br><span class="line"><span class="built_in">mkdir</span> adventures</span><br><span class="line"><span class="built_in">mkdir</span> loot</span><br></pre></td></tr></table></figure>
+<p>import  template engine in application.js  by add:</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">var</span> exphbs  	   = <span class="keyword">require</span>(<span class="string">'express-handlebars'</span>); </span><br><span class="line">App<span class="built_in">.</span>app<span class="built_in">.</span>engine(<span class="string">'hbs'</span>, exphbs(&#123;extname:<span class="string">'hbs'</span>, defaultLayout:<span class="string">'main.hbs'</span>&#125;));</span><br><span class="line">App<span class="built_in">.</span>app<span class="built_in">.</span><span class="built_in">set</span>(<span class="string">'view engine'</span>, <span class="string">'hbs'</span>);</span><br></pre></td></tr></table></figure>
+<p>then we need create our layout,</p>
+ 
+
+ {{{body}}} is placeholder of each content
+ 
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;meta charset=<span class="string">"utf-8"</span>&gt;</span><br><span class="line"></span><br><span class="line">&lt;head&gt; &lt;title&gt;<span class="constant">Node</span> <span class="constant">Slash</span>&lt;<span class="regexp">/title&gt;&lt;/head</span>&gt; </span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="expansion">&#123;&#123;&#123;body&#125;&#125;</span>&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;<span class="regexp">/body&gt;</span><br><span class="line">&lt;/html</span>&gt;</span><br></pre></td></tr></table></figure>
+<p>then we need to update our homeRoutes.js</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">exports.home = <span class="function"><span class="keyword">function</span> <span class="title">home</span> <span class="params">(req, res)</span></span>&#123;</span><br><span class="line">	res.render(<span class="string">'home/home'</span>)</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>/views/home/home.hbs</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;h1&gt; Browser Game&lt;/h1&gt;</span><br><span class="line"></span><br><span class="line">&lt;<span class="tag">form</span> action=<span class="string">"/login"</span> method=<span class="string">"POST"</span>&gt;&lt;<span class="tag">label</span> <span class="keyword">for</span>=<span class="string">"username"</span>&gt;Username&lt;/label&gt;</span><br><span class="line">&lt;<span class="tag">input</span> id=<span class="string">"username"</span> type=<span class="string">"text"</span> name=<span class="string">"username"</span>&gt;</span><br><span class="line">&lt;<span class="tag">button</span> type=<span class="string">"submit"</span>&gt;Start ye adventures!&lt;/button&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line"></span><br><span class="line">&lt;<span class="tag">img</span> src=<span class="string">"/images/logo.jpg"</span>&gt;</span><br><span class="line">&lt;<span class="tag">a</span> href=<span class="string">'/adventures'</span>&gt; Go to adventures &lt;/a&gt;</span><br></pre></td></tr></table></figure>
+<p>That’s it  </p>
+<p>if you want to qoute value in the template,</p>
+<p>for example: showloot function </p>
+<p>edit the lootRoutes.js</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">exports.show = <span class="function"><span class="keyword">function</span> <span class="title">showLoot</span><span class="params">(req, res)</span></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> id   = req.params.id</span><br><span class="line">	<span class="keyword">var</span> data =&#123;id: id&#125;</span><br><span class="line">	res.render(<span class="string">'loot/show'</span>,data)</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  show.hbs template use {{id}} to display the value.
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><br><span class="line"><span class="tag">&lt;<span class="title">h1</span>&gt;</span> Ogre-slaying knife<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">p</span>&gt;</span> it has 9 orges,  it was </span><span class="expression">&#123;&#123;<span class="variable">id</span>&#125;&#125;</span><span class="xml"><span class="tag">&lt;/<span class="title">p</span>&gt;</span></span></span><br></pre></td></tr></table></figure></span>
       
     </div>
 
@@ -271,7 +277,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/vagrant-gfw-error/" rel="tag">#vagrant gfw error</a>
+            <a href="/tags/template-engine-handlerbars-hbs/" rel="tag">#template engine handlerbars hbs</a>
           
         </div>
       
@@ -280,17 +286,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/03/05/hello-world/" rel="next" title="My first blog post launched with my new blog">
-                <i class="fa fa-chevron-left"></i> My first blog post launched with my new blog
+              <a href="/2015/11/07/nodejs-note-07/" rel="next" title="How to learn Node.js - wirte app code in production mode">
+                <i class="fa fa-chevron-left"></i> How to learn Node.js - wirte app code in production mode
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/10/28/hellowordnodejs/" rel="prev" title="How to learn Node.js - 01 hello world !">
-                How to learn Node.js - 01 hello world ! <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -402,7 +404,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Error_code_when_run_vagrant_up:"><span class="nav-number">1.</span> <span class="nav-text">Error code when run vagrant up:</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Walkaround:"><span class="nav-number">2.</span> <span class="nav-text">Walkaround:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Replace_gem_sources_in_initial-setup-sh"><span class="nav-number">2.1.</span> <span class="nav-text">Replace gem sources in initial-setup.sh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Add_douban_pypi_source_in_puphpet/manifests/python/pip-pp"><span class="nav-number">2.2.</span> <span class="nav-text">Add douban pypi source in  puphpet/manifests/python/pip.pp</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#epxress_template:_Jade_vs_Hbs"><span class="nav-number">1.</span> <span class="nav-text">epxress template: Jade vs Hbs</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#views"><span class="nav-number">2.</span> <span class="nav-text">views</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
