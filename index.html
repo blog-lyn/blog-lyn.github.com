@@ -205,6 +205,87 @@
             
             
               
+                <a class="post-title-link" href="/2015/11/13/nodejs-note-09/" itemprop="url">
+                  How to learn Node.js - Node work with Mongodb
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-11-13T14:44:51+08:00" content="2015-11-13">
+              2015-11-13
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="Installation_of_Mongodb">Installation of Mongodb</h1><p>install homebrew first</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">Lyn</span>-<span class="constant">Cheung</span>-<span class="constant">MBP</span><span class="symbol">:~</span> <span class="constant">Lyn</span><span class="variable">$ </span>ruby -e <span class="string">"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"</span></span><br><span class="line"></span><br><span class="line"><span class="constant">Lyn</span>-<span class="constant">Cheung</span>-<span class="constant">MBP</span><span class="symbol">:~</span> <span class="constant">Lyn</span><span class="variable">$ </span>brew doctor</span><br><span class="line"></span><br><span class="line"><span class="constant">Lyn</span>-<span class="constant">Cheung</span>-<span class="constant">MBP</span><span class="symbol">:~</span> <span class="constant">Lyn</span><span class="variable">$ </span>brew update</span><br><span class="line"></span><br><span class="line"><span class="constant">Lyn</span>-<span class="constant">Cheung</span>-<span class="constant">MBP</span><span class="symbol">:~</span> <span class="constant">Lyn</span><span class="variable">$ </span>brew install mongodb</span><br></pre></td></tr></table></figure>
+<h1 id="Start_mongodb">Start mongodb</h1><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Lyn-Cheung-MBP:<span class="keyword">node</span><span class="identifier"></span><span class="title">-08</span> Lyn$ mongod</span><br></pre></td></tr></table></figure>
+<h1 id="Install_mongoose">Install  mongoose</h1><p> edit package.json add mongoose dependenices</p>
+ <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> &#123;</span><br><span class="line">  "<span class="attribute">name</span>": <span class="value"><span class="string">"node-mongodb"</span></span>,</span><br><span class="line">  "<span class="attribute">version</span>": <span class="value"><span class="string">"1.0.0"</span></span>,</span><br><span class="line">  "<span class="attribute">description</span>": <span class="value"><span class="string">"first express app"</span></span>,</span><br><span class="line">  "<span class="attribute">main</span>": <span class="value"><span class="string">"index.js"</span></span>,</span><br><span class="line">  "<span class="attribute">scripts</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">test</span>": <span class="value"><span class="string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span></span><br><span class="line">  </span>&#125;</span>,</span><br><span class="line">  "<span class="attribute">author</span>": <span class="value"><span class="string">"lyn"</span></span>,</span><br><span class="line">  "<span class="attribute">license</span>": <span class="value"><span class="string">"MIT"</span></span>,</span><br><span class="line">  "<span class="attribute">dependencies</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">method-override</span>": <span class="value"><span class="string">"2.3.5"</span></span>,</span><br><span class="line">    "<span class="attribute">express</span>": <span class="value"><span class="string">"^4.13.3"</span></span>,</span><br><span class="line">    "<span class="attribute">body-parser</span>":<span class="value"><span class="string">"1.14.1"</span></span>,</span><br><span class="line">    "<span class="attribute">cookie-session</span>":<span class="value"><span class="string">"2.0.0-alpha.1"</span></span>,</span><br><span class="line">    "<span class="attribute">cookie-parser</span>":<span class="value"><span class="string">"1.4.0"</span></span>,</span><br><span class="line">    "<span class="attribute">express-handlebars</span>":<span class="value"><span class="string">"2.0.1"</span></span>,</span><br><span class="line">    "<span class="attribute">mongoose</span>":<span class="value"><span class="string">"4.2.*"</span></span><br><span class="line">  </span>&#125;</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="Test_connection_with_Mongodb">Test connection with Mongodb</h1><p>create a test connection file : ./config/database.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mongoose = <span class="built_in">require</span> (<span class="string">'mongoose'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">connect</span>(<span class="params">connectionString</span>)</span>&#123;</span><br><span class="line">	mongoose.connect(connectionString)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> db= mongoose.connection</span><br><span class="line">	db.on(<span class="string">'error'</span>, <span class="built_in">console</span>.error.bind(<span class="built_in">console</span>, <span class="string">'connection error'</span>))</span><br><span class="line">	db.once(<span class="string">'open'</span>, <span class="function"><span class="keyword">function</span> <span class="title">callback</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'Mongoose connected at:'</span>, connectionString)</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = connect</span><br><span class="line"></span><br><span class="line">connect(<span class="string">'mongodb://localhost/nodemongodb_development'</span>)</span><br></pre></td></tr></table></figure>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2015/11/10/nodejs-note-08-1/" itemprop="url">
                   How to learn Node.js - express with template engine
                 </a>
@@ -1106,96 +1187,13 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2015/03/05/hello-world/" itemprop="url">
-                  My first blog post launched with my new blog
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2015-03-05T16:46:25+08:00" content="2015-03-05">
-              2015-03-05
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <p>Finally I launched my personal blog after years of delay.</p>
-<h1 id="why?">why?</h1><p>Sereral years ago when I was opreating some websites in compus,</p>
-<p>I was thinking to launch my personal blog someday in the future,</p>
-<p>however after the social websites developing  these years, my most time was comsumed on Weibo.com(Chinese twiter) and Weixin.</p>
-<p>but after time as the social network in China is no longer as popular as it used to be(as be regulated heavily by Gov) and I think a place can be used to recording my ideas as part of my knowledge bases is realy useful.</p>
-<p>Now, here we go, a wholly new blog, afetr I compared hexo, ghost blog, Jekyll, I finanly chose ghost blog to launch my blog. because nodejs now is really hot in github. secondly, Ghost blog  can be edited on smartphone. I spend some time to rewrite theme files. I will keep adding new features on this current version.</p>
-<p>meanwhile I chose to host ghostblog on my VPS to keep updating my server opreating skills.</p>
-<h1 id="Wishes_for_the_future">Wishes for the future</h1><p>I hope this blog would become a dual-lingual blog.</p>
-<p>so that I could get in touch with people around the world. </p>
-<p>hope I could have a  nice time here and  write and update my posts as much as possible. </p>
-<p>Looking forward that I could meet some friends who share mutral intrests and values. </p>
-<p>any good advise is highly welcomed, please feel free to contact me :D</p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
         </div>
@@ -1234,7 +1232,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-count">11</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1248,7 +1246,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
