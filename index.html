@@ -205,6 +205,122 @@
             
             
               
+                <a class="post-title-link" href="/2015/11/15/nodejs-note-10/" itemprop="url">
+                  how to learn Node.js -- mongoose validation &unique records in mongodb
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-11-15T00:49:39+08:00" content="2015-11-15">
+              2015-11-15
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="Concepts:">Concepts:</h1><h2 id="Unique_value_in_mongodb:_Changing_the_email_type_to_an_object_with_type_rather_than_just_string">Unique value in mongodb: Changing the email type to an object with type rather than just string</h2><h3 id="example:">example:</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var s = <span class="keyword">new</span> Schema(&#123; <span class="string">name:</span> &#123; <span class="string">type:</span> String, <span class="string">unique:</span> <span class="literal">true</span> &#125;&#125;);</span><br><span class="line">Schema.path(<span class="string">'name'</span>).index(&#123; <span class="string">unique:</span> <span class="literal">true</span> &#125;);</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="validation">validation</h2><pre><code>SchemaType#<span class="function"><span class="title">validate</span><span class="params">(obj, [errorMsg], [type])</span></span>
+
+Adds <span class="function"><span class="title">validator</span><span class="params">(s)</span></span> <span class="keyword">for</span> this document path.
+</code></pre><h3 id="Parameters:">Parameters:</h3><pre><code>- obj &lt;<span class="built_in">RegExp</span>, <span class="built_in">Function</span>, <span class="built_in">Object</span>&gt; validator
+- [errorMsg] &lt;<span class="built_in">String</span>&gt; optional error message
+- [<span class="keyword">type</span>] &lt;<span class="built_in">String</span>&gt; optional validator <span class="keyword">type</span>
+</code></pre><h3 id="Returns:">Returns:</h3><pre><code>&lt;SchemaType&gt; this
+Validators always receive the value <span class="keyword">to</span> validate <span class="keyword">as</span> their first argument <span class="keyword">and</span> must <span class="keyword">return</span> <span class="built_in">Boolean</span>. Returning <span class="literal">false</span> means validation failed.
+
+The <span class="keyword">error</span> message argument <span class="keyword">is</span> <span class="keyword">optional</span>. <span class="keyword">If</span> <span class="keyword">not</span> passed, the <span class="keyword">default</span> generic <span class="keyword">error</span> message template will be used.
+</code></pre><h3 id="Examples:">Examples:</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// make sure every value is equal to "something"</span></span><br><span class="line">function validator (val) &#123;</span><br><span class="line">  <span class="keyword">return</span> val == <span class="string">'something'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">new</span> Schema(&#123; <span class="string">name:</span> &#123; <span class="string">type:</span> String, <span class="string">validate:</span> validator &#125;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// with a custom error message</span></span><br><span class="line"></span><br><span class="line">var custom = [validator, <span class="string">'Uh oh, &#123;PATH&#125; does not equal "something".'</span>]</span><br><span class="line"><span class="keyword">new</span> Schema(&#123; <span class="string">name:</span> &#123; <span class="string">type:</span> String, <span class="string">validate:</span> custom &#125;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// adding many validators at a time</span></span><br><span class="line"></span><br><span class="line">var many = [</span><br><span class="line">    &#123; <span class="string">validator:</span> validator, <span class="string">msg:</span> <span class="string">'uh oh'</span> &#125;</span><br><span class="line">  , &#123; <span class="string">validator:</span> anotherValidator, <span class="string">msg:</span> <span class="string">'failed'</span> &#125;</span><br><span class="line">]</span><br><span class="line"><span class="keyword">new</span> Schema(&#123; <span class="string">name:</span> &#123; <span class="string">type:</span> String, <span class="string">validate:</span> many &#125;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// or utilizing SchemaType methods directly:</span></span><br><span class="line"></span><br><span class="line">var schema = <span class="keyword">new</span> Schema(&#123; <span class="string">name:</span> <span class="string">'string'</span> &#125;);</span><br><span class="line">schema.path(<span class="string">'name'</span>).validate(validator, <span class="string">'validation of `&#123;PATH&#125;` failed with value `&#123;VALUE&#125;`'</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="Error_message_templates:">Error message templates:</h3><pre><code>From the examples above, you may have noticed that error messages support baseic templating. There are a few other template keywords besides {PATH}<span class="instruction"> and </span>{VALUE} too.
+
+Validation occurs<span class="function"> pre(</span>'save'<span class="function">)</span><span class="instruction"> or </span>whenever you manually<span class="instruction"> execute </span>document<span class="comment">#validate.</span>
+</code></pre><p><strong> Mongoose model instances have an update function, in which you pass on object containing the properties you want the instance to be updated to. This update function on a model does not pass through the validation middleware. </strong></p>
+<hr>
+<h2 id="How_To_Safely_Store_A_Password">How To Safely Store A Password</h2><h3 id="Use_bcrypt">Use bcrypt</h3><pre><code><span class="keyword">Use</span> bcrypt. <span class="keyword">Use</span> bcrypt. <span class="keyword">Use</span> bcrypt. <span class="keyword">Use</span> bcrypt. <span class="keyword">Use</span> bcrypt. <span class="keyword">Use</span> bcrypt. <span class="keyword">Use</span> bcrypt. <span class="keyword">Use</span> bcrypt. <span class="keyword">Use</span> bcrypt.
+</code></pre><h3 id="Why_Not_{MD5,_SHA1,_SHA256,_SHA512,_SHA-3,_etc}?">Why Not {MD5, SHA1, SHA256, SHA512, SHA-3, etc}?</h3><pre><code>These are all general purpose hash functions, designed <span class="built_in">to</span> calculate <span class="operator">a</span> digest <span class="operator">of</span> huge amounts <span class="operator">of</span> data <span class="operator">in</span> <span class="keyword">as</span> <span class="keyword">short</span> <span class="operator">a</span> <span class="built_in">time</span> <span class="keyword">as</span> possible. This means that they are fantastic <span class="keyword">for</span> ensuring <span class="operator">the</span> integrity <span class="operator">of</span> data <span class="operator">and</span> utterly rubbish <span class="keyword">for</span> storing passwords.
+
+A modern server can calculate <span class="operator">the</span> MD5 hash <span class="operator">of</span> about <span class="number">330</span>MB every <span class="keyword">second</span>. If your users have passwords which are lowercase, alphanumeric, <span class="operator">and</span> <span class="number">6</span> <span class="keyword">characters</span> <span class="keyword">long</span>, you can <span class="keyword">try</span> every single possible password <span class="operator">of</span> that size <span class="operator">in</span> around <span class="number">40</span> <span class="built_in">seconds</span>.
+
+And that’s <span class="keyword">without</span> investing anything.
+
+If you’re willing <span class="built_in">to</span> spend about <span class="number">2</span>,<span class="number">000</span> USD <span class="operator">and</span> <span class="operator">a</span> week <span class="operator">or</span> <span class="constant">two</span> picking up CUDA, you can <span class="built_in">put</span> together your own little supercomputer cluster which will let you <span class="keyword">try</span> around <span class="number">700</span>,<span class="number">000</span>,<span class="number">000</span> passwords <span class="operator">a</span> <span class="keyword">second</span>. And that rate you’ll be cracking those passwords <span class="keyword">at</span> <span class="operator">the</span> rate <span class="operator">of</span> more than <span class="constant">one</span> per <span class="keyword">second</span>.
+</code></pre><h3 id="Salts_Will_Not_Help_You">Salts Will Not Help You</h3><pre><code>It’s important to note that salts are useless for preventing dictionary attacks or brute force attacks. You can <span class="operator"><span class="keyword">use</span> huge salts <span class="keyword">or</span> many salts <span class="keyword">or</span> hand-harvested, shade-grown, organic Himalayan pink <span class="keyword">salt</span>. It doesn’<span class="keyword">t</span> affect how <span class="keyword">fast</span> an attacker can try a candidate <span class="keyword">password</span>, given the <span class="keyword">hash</span> <span class="keyword">and</span> the <span class="keyword">salt</span> <span class="keyword">from</span> your <span class="keyword">database</span>.
+
+<span class="keyword">Salt</span> <span class="keyword">or</span> <span class="keyword">no</span>, <span class="keyword">if</span> you’re <span class="keyword">using</span> a <span class="keyword">general</span>-purpose <span class="keyword">hash</span> <span class="keyword">function</span> designed <span class="keyword">for</span> speed you’re well <span class="keyword">and</span> truly effed.</span>
+</code></pre><h3 id="bcrypt_Solves_These_Problems">bcrypt Solves These Problems</h3><pre><code>How? Basically, <span class="keyword">it</span>’s slow <span class="keyword">as</span> hell. It uses <span class="operator">a</span> variant <span class="operator">of</span> <span class="operator">the</span> Blowfish encryption algorithm’s keying schedule, <span class="operator">and</span> introduces <span class="operator">a</span> work factor, which allows you <span class="built_in">to</span> determine how expensive <span class="operator">the</span> hash <span class="function"><span class="keyword">function</span> <span class="title">will</span> <span class="title">be</span>. <span class="title">Because</span> <span class="title">of</span> <span class="title">this</span>, <span class="title">bcrypt</span> <span class="title">can</span> <span class="title">keep</span> <span class="title">up</span> <span class="title">with</span> <span class="title">Moore</span>’<span class="title">s</span> <span class="title">law</span>. <span class="title">As</span> <span class="title">computers</span> <span class="title">get</span> <span class="title">faster</span> <span class="title">you</span> <span class="title">can</span> <span class="title">increase</span> <span class="title">the</span> <span class="title">work</span> <span class="title">factor</span> <span class="title">and</span> <span class="title">the</span> <span class="title">hash</span> <span class="title">will</span> <span class="title">get</span> <span class="title">slower</span>.</span>
+
+How much slower is bcrypt than, say, MD5? Depends <span class="command"><span class="keyword">on</span> <span class="title">the</span> <span class="title">work</span> <span class="title">factor</span>. <span class="title">Using</span> <span class="title">a</span> <span class="title">work</span> <span class="title">factor</span> <span class="title">of</span> <span class="title">12</span>, <span class="title">bcrypt</span> <span class="title">hashes</span> <span class="title">the</span> <span class="title">password</span> <span class="title">yaaa</span> <span class="title">in</span> <span class="title">about</span> <span class="title">0</span><span class="number">.3</span> <span class="title">seconds</span> <span class="title">on</span> <span class="title">my</span> <span class="title">laptop</span>. <span class="title">MD5</span>, <span class="title">on</span> <span class="title">the</span> <span class="title">other</span> <span class="title">hand</span>, <span class="title">takes</span> <span class="title">less</span> <span class="title">than</span> <span class="title">a</span> <span class="title">microsecond</span>.</span>
+
+
+* Quote form [How To Safely Store A Password](<span class="keyword">http</span>://codahale.com/how-<span class="built_in">to</span>-safely-store-<span class="operator">a</span>-password/) *
+</code></pre><h2 id="Rule_of_Three">Rule of Three</h2><blockquote>
+<p>   Rule of three is a code refactoring rule of thumb to decide when a replicated piece of code should be replaced by a new procedure. It states that the code can be copied once, but that when the same code is used three times, it should be extracted into a new procedure. The rule was introduced by Martin Fowler in Refactoring[1] and attributed to Don Roberts.</p>
+<p>   Duplication in programming is a bad practice because it makes the code harder to maintain. However, code refactoring to eliminate duplication also takes time, which might be better spent on other tasks. Triplication has an even higher cost because it makes maintenance harder yet. When the rule encoded in a replicated piece of code changes, whoever maintains the code will have to change it in all places correctly. This process is error-prone and often leads to problems. If the code exists in only one place, then it can be easily changed there. The rule proposes that the cost of maintenance certainly outweighs the cost of refactoring when there are three copies, and may or may not if there are two copies.</p>
+<p>   This rule is typically only applied to a small number of lines of code, or even single lines of code[citation needed]. For example, if a program calls a function, and then calls it again when it fails, it is acceptable to have two call sites; however, if it is to be called five times before giving up, all of the calls should be replaced with loop containing a single call.</p>
+<p>   As Charles Petzold puts it, “Three or more? Use a for!”</p>
+</blockquote>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2015/11/13/nodejs-note-09/" itemprop="url">
                   How to learn Node.js - Node work with Mongodb
                 </a>
@@ -1114,101 +1230,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2015/10/26/vagrant_gfw_errors/" itemprop="url">
-                  How to modify puphpet file to avoid vagrant up errors
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2015-10-26T16:46:25+08:00" content="2015-10-26">
-              2015-10-26
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="Error_code_when_run_vagrant_up:">Error code when run vagrant up:</h1><p>recently when I want to use vagrant to build PHP environment on my Mac,<br>I got three Errors :</p>
-<ol>
-<li><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">error:</span> <span class="regexp">/Stage[main]/</span><span class="string">Supervisord:</span>:Pip<span class="regexp">/Exec[install_setuptools]/</span><span class="string">returns:</span> change from notrun to <span class="number">0</span> <span class="string">failed:</span> Command exceeded timeout</span><br><span class="line"><span class="string">Warning:</span> <span class="regexp">/Stage[main]/</span><span class="string">Supervisord:</span>:Reload/Exec[supervisorctl_update]: Skipping because of failed dependencies</span><br></pre></td></tr></table></figure>
-</li>
-<li><figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERROR: While executing gem ... (Gem::RemoteFetcher::FetchError) ==&gt; <span class="keyword">default</span>: SSL_connect SYSCALL returned=<span class="number">5</span> errno=<span class="number">0</span> <span class="keyword">state</span>=<span class="literal">unknown</span> <span class="keyword">state</span> (https://rubygems.<span class="keyword">global</span>.ssl.fastly.net/<span class="keyword">quick</span>/Marshal.<span class="number">4.8</span>/deep_merge-<span class="number">1.0</span>.<span class="number">1</span>.gemspec.rz)</span><br></pre></td></tr></table></figure>
-</li>
-<li><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Error: <span class="string">"false"</span> <span class="keyword">is</span> <span class="keyword">not</span> a <span class="type">boolean</span>. It looks <span class="keyword">to</span> be a String <span class="keyword">at</span> /tmp/vagrant-puppet/modules-b7f682531389374ec63e7be34e57b9e6/nginx/manifests/resource/location.pp:<span class="number">198</span> <span class="function_start"><span class="keyword">on</span></span> node <span class="number">1</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>After investgating,I found the  root cause of the first two is  the same. The network between Mac and the ruby/pip servers is blocked by China GFW(as I am using Chinatelecom broadband).</p>
-<p>Therefore, I have to introduce China domestic ruby and pip sources to puphprt configuraions as followed:</p>
-<h1 id="Walkaround:">Walkaround:</h1><p>##Replce config.yaml nginx config </p>
-<p>the syntax should be :</p>
-<p>internal: off or internal :”false”</p>
-<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">locations:</span><br><span class="line">                nxvl_6x40k3ysb0yt:</span><br><span class="line">                    location: /</span><br><span class="line">                    autoindex: <span class="string">'off'</span></span><br><span class="line">                    internal: off</span><br><span class="line">                    try_files:</span><br><span class="line">                        - <span class="variable">$uri</span></span><br><span class="line">                        - <span class="variable">$uri</span>/</span><br><span class="line">                        - /index.php<span class="variable">$is</span>_args<span class="variable">$args</span></span><br><span class="line">                    fastcgi: <span class="string">''</span></span><br><span class="line">                    fastcgi_index: <span class="string">''</span></span><br><span class="line">                    fastcgi_split_path: <span class="string">''</span></span><br><span class="line">                nxvl_6punkjmd4tp3:</span><br><span class="line">                    location: <span class="string">'~ \.php$'</span></span><br><span class="line">                    autoindex: <span class="string">'off'</span></span><br><span class="line">                    internal: off</span><br><span class="line">                    try_files:</span><br><span class="line">                        - <span class="variable">$uri</span></span><br><span class="line">                        - <span class="variable">$uri</span>/</span><br><span class="line">                        - /index.php<span class="variable">$is</span>_args<span class="variable">$args</span></span><br><span class="line">                    fastcgi: <span class="string">'127.0.0.1:9000'</span></span><br><span class="line">                    fastcgi_index: index.php</span><br><span class="line">                    fastcgi_split_path: <span class="string">'^(.+\.php)(/.*)$'</span></span><br><span class="line">                    fast_cgi_params_extra:</span><br><span class="line">                        - <span class="string">'SCRIPT_FILENAME $request_filename'</span></span><br><span class="line">                        - <span class="string">'APP_ENV dev'</span></span><br></pre></td></tr></table></figure>
-<h2 id="Replace_gem_sources_in_initial-setup-sh">Replace gem sources in initial-setup.sh</h2><p>gem sources –remove <a href="https://rubygems.org/" target="_blank" rel="external">https://rubygems.org/</a><br>gem sources -a <a href="http://ruby.taobao.org/" target="_blank" rel="external">http://ruby.taobao.org/</a></p>
-<h2 id="Add_douban_pypi_source_in_puphpet/manifests/python/pip-pp">Add douban pypi source in  puphpet/manifests/python/pip.pp</h2><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">class puphpet::python::pip &#123;</span><br><span class="line"></span><br><span class="line">  Exec &#123; path =&gt; [ <span class="string">'/usr/bin/'</span>, <span class="string">'/usr/local/bin'</span>, <span class="string">'/bin'</span>, <span class="string">'/usr/local/sbin'</span>, <span class="string">'/usr/sbin'</span>, <span class="string">'/sbin'</span> ] &#125;</span><br><span class="line"></span><br><span class="line">  <span class="variable">$url</span> = <span class="string">'https://bootstrap.pypa.io/ez_setup.py'</span></span><br><span class="line">  <span class="variable">$download</span>_location = <span class="string">'/.puphpet-stuff/ez_setup.py'</span></span><br><span class="line"></span><br><span class="line">  exec &#123; <span class="string">"Download and install ez_setup"</span>:</span><br><span class="line">    creates =&gt; <span class="variable">$download</span>_location,</span><br><span class="line">    command =&gt; <span class="string">"wget $&#123;url&#125; -O $&#123;download_location&#125; &amp;&amp; \</span><br><span class="line">                python $&#123;download_location&#125;"</span>,</span><br><span class="line">    timeout =&gt; <span class="number">30</span>,</span><br><span class="line">    path    =&gt; <span class="string">'/usr/bin'</span></span><br><span class="line">  &#125;</span><br><span class="line">  -&gt; exec &#123; <span class="string">'easy_install pip -i http://pypi.douban.com/simple '</span>:</span><br><span class="line">    unless =&gt; <span class="string">'which pip'</span>,</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  if $::osfamily == <span class="string">'RedHat'</span> &#123;</span><br><span class="line">    exec &#123; <span class="string">'rhel pip_provider_name_fix'</span>:</span><br><span class="line">      command   =&gt; <span class="string">'alternatives --install /usr/bin/pip-python pip-python /usr/bin/pip 1'</span>,</span><br><span class="line">      subscribe =&gt; Exec[<span class="string">'easy_install pip'</span>],</span><br><span class="line">      unless    =&gt; <span class="string">'which pip-python'</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>hope these help :D</p>
-<p>if there is any mistake,please contact me to update! </p>
-<p>thank you</p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1254,7 +1275,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-count">12</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1268,7 +1289,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-count">10</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>

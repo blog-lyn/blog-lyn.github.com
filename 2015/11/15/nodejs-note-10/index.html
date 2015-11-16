@@ -1,0 +1,664 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+  <meta name="keywords" content="validation, mongodb, mongoose," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="Concepts:Unique value in mongodb: Changing the email type to an object with type rather than just stringexample:12var s = new Schema(&amp;#123; name: &amp;#123; type: String, unique: true &amp;#125;&amp;#125;);Schema">
+<meta property="og:type" content="article">
+<meta property="og:title" content="how to learn Node.js -- mongoose validation &unique records in mongodb">
+<meta property="og:url" content="http://blog-lyn.github.io/2015/11/15/nodejs-note-10/index.html">
+<meta property="og:site_name" content="Lyn's Blog">
+<meta property="og:description" content="Concepts:Unique value in mongodb: Changing the email type to an object with type rather than just stringexample:12var s = new Schema(&amp;#123; name: &amp;#123; type: String, unique: true &amp;#125;&amp;#125;);Schema">
+<meta property="og:updated_time" content="2015-11-16T05:57:55.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="how to learn Node.js -- mongoose validation &unique records in mongodb">
+<meta name="twitter:description" content="Concepts:Unique value in mongodb: Changing the email type to an object with type rather than just stringexample:12var s = new Schema(&amp;#123; name: &amp;#123; type: String, unique: true &amp;#125;&amp;#125;);Schema">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> how to learn Node.js -- mongoose validation &unique records in mongodb | Lyn's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e1a1e7f61eef21fbacf4a67a19789441";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lyn's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                how to learn Node.js -- mongoose validation &unique records in mongodb
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-11-15T00:49:39+08:00" content="2015-11-15">
+              2015-11-15
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="Concepts:">Concepts:</h1><h2 id="Unique_value_in_mongodb:_Changing_the_email_type_to_an_object_with_type_rather_than_just_string">Unique value in mongodb: Changing the email type to an object with type rather than just string</h2><h3 id="example:">example:</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var s = <span class="keyword">new</span> Schema(&#123; <span class="string">name:</span> &#123; <span class="string">type:</span> String, <span class="string">unique:</span> <span class="literal">true</span> &#125;&#125;);</span><br><span class="line">Schema.path(<span class="string">'name'</span>).index(&#123; <span class="string">unique:</span> <span class="literal">true</span> &#125;);</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="validation">validation</h2><pre><code>SchemaType#<span class="function"><span class="title">validate</span><span class="params">(obj, [errorMsg], [type])</span></span>
+
+Adds <span class="function"><span class="title">validator</span><span class="params">(s)</span></span> <span class="keyword">for</span> this document path.
+</code></pre><h3 id="Parameters:">Parameters:</h3><pre><code>- obj &lt;<span class="built_in">RegExp</span>, <span class="built_in">Function</span>, <span class="built_in">Object</span>&gt; validator
+- [errorMsg] &lt;<span class="built_in">String</span>&gt; optional error message
+- [<span class="keyword">type</span>] &lt;<span class="built_in">String</span>&gt; optional validator <span class="keyword">type</span>
+</code></pre><h3 id="Returns:">Returns:</h3><pre><code>&lt;SchemaType&gt; this
+Validators always receive the value <span class="keyword">to</span> validate <span class="keyword">as</span> their first argument <span class="keyword">and</span> must <span class="keyword">return</span> <span class="built_in">Boolean</span>. Returning <span class="literal">false</span> means validation failed.
+
+The <span class="keyword">error</span> message argument <span class="keyword">is</span> <span class="keyword">optional</span>. <span class="keyword">If</span> <span class="keyword">not</span> passed, the <span class="keyword">default</span> generic <span class="keyword">error</span> message template will be used.
+</code></pre><h3 id="Examples:">Examples:</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// make sure every value is equal to "something"</span></span><br><span class="line">function validator (val) &#123;</span><br><span class="line">  <span class="keyword">return</span> val == <span class="string">'something'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">new</span> Schema(&#123; <span class="string">name:</span> &#123; <span class="string">type:</span> String, <span class="string">validate:</span> validator &#125;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// with a custom error message</span></span><br><span class="line"></span><br><span class="line">var custom = [validator, <span class="string">'Uh oh, &#123;PATH&#125; does not equal "something".'</span>]</span><br><span class="line"><span class="keyword">new</span> Schema(&#123; <span class="string">name:</span> &#123; <span class="string">type:</span> String, <span class="string">validate:</span> custom &#125;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// adding many validators at a time</span></span><br><span class="line"></span><br><span class="line">var many = [</span><br><span class="line">    &#123; <span class="string">validator:</span> validator, <span class="string">msg:</span> <span class="string">'uh oh'</span> &#125;</span><br><span class="line">  , &#123; <span class="string">validator:</span> anotherValidator, <span class="string">msg:</span> <span class="string">'failed'</span> &#125;</span><br><span class="line">]</span><br><span class="line"><span class="keyword">new</span> Schema(&#123; <span class="string">name:</span> &#123; <span class="string">type:</span> String, <span class="string">validate:</span> many &#125;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// or utilizing SchemaType methods directly:</span></span><br><span class="line"></span><br><span class="line">var schema = <span class="keyword">new</span> Schema(&#123; <span class="string">name:</span> <span class="string">'string'</span> &#125;);</span><br><span class="line">schema.path(<span class="string">'name'</span>).validate(validator, <span class="string">'validation of `&#123;PATH&#125;` failed with value `&#123;VALUE&#125;`'</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="Error_message_templates:">Error message templates:</h3><pre><code>From the examples above, you may have noticed that error messages support baseic templating. There are a few other template keywords besides {PATH}<span class="instruction"> and </span>{VALUE} too.
+
+Validation occurs<span class="function"> pre(</span>'save'<span class="function">)</span><span class="instruction"> or </span>whenever you manually<span class="instruction"> execute </span>document<span class="comment">#validate.</span>
+</code></pre><p><strong> Mongoose model instances have an update function, in which you pass on object containing the properties you want the instance to be updated to. This update function on a model does not pass through the validation middleware. </strong></p>
+<hr>
+<h2 id="How_To_Safely_Store_A_Password">How To Safely Store A Password</h2><h3 id="Use_bcrypt">Use bcrypt</h3><pre><code><span class="keyword">Use</span> bcrypt. <span class="keyword">Use</span> bcrypt. <span class="keyword">Use</span> bcrypt. <span class="keyword">Use</span> bcrypt. <span class="keyword">Use</span> bcrypt. <span class="keyword">Use</span> bcrypt. <span class="keyword">Use</span> bcrypt. <span class="keyword">Use</span> bcrypt. <span class="keyword">Use</span> bcrypt.
+</code></pre><h3 id="Why_Not_{MD5,_SHA1,_SHA256,_SHA512,_SHA-3,_etc}?">Why Not {MD5, SHA1, SHA256, SHA512, SHA-3, etc}?</h3><pre><code>These are all general purpose hash functions, designed <span class="built_in">to</span> calculate <span class="operator">a</span> digest <span class="operator">of</span> huge amounts <span class="operator">of</span> data <span class="operator">in</span> <span class="keyword">as</span> <span class="keyword">short</span> <span class="operator">a</span> <span class="built_in">time</span> <span class="keyword">as</span> possible. This means that they are fantastic <span class="keyword">for</span> ensuring <span class="operator">the</span> integrity <span class="operator">of</span> data <span class="operator">and</span> utterly rubbish <span class="keyword">for</span> storing passwords.
+
+A modern server can calculate <span class="operator">the</span> MD5 hash <span class="operator">of</span> about <span class="number">330</span>MB every <span class="keyword">second</span>. If your users have passwords which are lowercase, alphanumeric, <span class="operator">and</span> <span class="number">6</span> <span class="keyword">characters</span> <span class="keyword">long</span>, you can <span class="keyword">try</span> every single possible password <span class="operator">of</span> that size <span class="operator">in</span> around <span class="number">40</span> <span class="built_in">seconds</span>.
+
+And that’s <span class="keyword">without</span> investing anything.
+
+If you’re willing <span class="built_in">to</span> spend about <span class="number">2</span>,<span class="number">000</span> USD <span class="operator">and</span> <span class="operator">a</span> week <span class="operator">or</span> <span class="constant">two</span> picking up CUDA, you can <span class="built_in">put</span> together your own little supercomputer cluster which will let you <span class="keyword">try</span> around <span class="number">700</span>,<span class="number">000</span>,<span class="number">000</span> passwords <span class="operator">a</span> <span class="keyword">second</span>. And that rate you’ll be cracking those passwords <span class="keyword">at</span> <span class="operator">the</span> rate <span class="operator">of</span> more than <span class="constant">one</span> per <span class="keyword">second</span>.
+</code></pre><h3 id="Salts_Will_Not_Help_You">Salts Will Not Help You</h3><pre><code>It’s important to note that salts are useless for preventing dictionary attacks or brute force attacks. You can <span class="operator"><span class="keyword">use</span> huge salts <span class="keyword">or</span> many salts <span class="keyword">or</span> hand-harvested, shade-grown, organic Himalayan pink <span class="keyword">salt</span>. It doesn’<span class="keyword">t</span> affect how <span class="keyword">fast</span> an attacker can try a candidate <span class="keyword">password</span>, given the <span class="keyword">hash</span> <span class="keyword">and</span> the <span class="keyword">salt</span> <span class="keyword">from</span> your <span class="keyword">database</span>.
+
+<span class="keyword">Salt</span> <span class="keyword">or</span> <span class="keyword">no</span>, <span class="keyword">if</span> you’re <span class="keyword">using</span> a <span class="keyword">general</span>-purpose <span class="keyword">hash</span> <span class="keyword">function</span> designed <span class="keyword">for</span> speed you’re well <span class="keyword">and</span> truly effed.</span>
+</code></pre><h3 id="bcrypt_Solves_These_Problems">bcrypt Solves These Problems</h3><pre><code>How? Basically, <span class="keyword">it</span>’s slow <span class="keyword">as</span> hell. It uses <span class="operator">a</span> variant <span class="operator">of</span> <span class="operator">the</span> Blowfish encryption algorithm’s keying schedule, <span class="operator">and</span> introduces <span class="operator">a</span> work factor, which allows you <span class="built_in">to</span> determine how expensive <span class="operator">the</span> hash <span class="function"><span class="keyword">function</span> <span class="title">will</span> <span class="title">be</span>. <span class="title">Because</span> <span class="title">of</span> <span class="title">this</span>, <span class="title">bcrypt</span> <span class="title">can</span> <span class="title">keep</span> <span class="title">up</span> <span class="title">with</span> <span class="title">Moore</span>’<span class="title">s</span> <span class="title">law</span>. <span class="title">As</span> <span class="title">computers</span> <span class="title">get</span> <span class="title">faster</span> <span class="title">you</span> <span class="title">can</span> <span class="title">increase</span> <span class="title">the</span> <span class="title">work</span> <span class="title">factor</span> <span class="title">and</span> <span class="title">the</span> <span class="title">hash</span> <span class="title">will</span> <span class="title">get</span> <span class="title">slower</span>.</span>
+
+How much slower is bcrypt than, say, MD5? Depends <span class="command"><span class="keyword">on</span> <span class="title">the</span> <span class="title">work</span> <span class="title">factor</span>. <span class="title">Using</span> <span class="title">a</span> <span class="title">work</span> <span class="title">factor</span> <span class="title">of</span> <span class="title">12</span>, <span class="title">bcrypt</span> <span class="title">hashes</span> <span class="title">the</span> <span class="title">password</span> <span class="title">yaaa</span> <span class="title">in</span> <span class="title">about</span> <span class="title">0</span><span class="number">.3</span> <span class="title">seconds</span> <span class="title">on</span> <span class="title">my</span> <span class="title">laptop</span>. <span class="title">MD5</span>, <span class="title">on</span> <span class="title">the</span> <span class="title">other</span> <span class="title">hand</span>, <span class="title">takes</span> <span class="title">less</span> <span class="title">than</span> <span class="title">a</span> <span class="title">microsecond</span>.</span>
+
+
+* Quote form [How To Safely Store A Password](<span class="keyword">http</span>://codahale.com/how-<span class="built_in">to</span>-safely-store-<span class="operator">a</span>-password/) *
+</code></pre><h2 id="Rule_of_Three">Rule of Three</h2><blockquote>
+<p>   Rule of three is a code refactoring rule of thumb to decide when a replicated piece of code should be replaced by a new procedure. It states that the code can be copied once, but that when the same code is used three times, it should be extracted into a new procedure. The rule was introduced by Martin Fowler in Refactoring[1] and attributed to Don Roberts.</p>
+<p>   Duplication in programming is a bad practice because it makes the code harder to maintain. However, code refactoring to eliminate duplication also takes time, which might be better spent on other tasks. Triplication has an even higher cost because it makes maintenance harder yet. When the rule encoded in a replicated piece of code changes, whoever maintains the code will have to change it in all places correctly. This process is error-prone and often leads to problems. If the code exists in only one place, then it can be easily changed there. The rule proposes that the cost of maintenance certainly outweighs the cost of refactoring when there are three copies, and may or may not if there are two copies.</p>
+<p>   This rule is typically only applied to a small number of lines of code, or even single lines of code[citation needed]. For example, if a program calls a function, and then calls it again when it fails, it is acceptable to have two call sites; however, if it is to be called five times before giving up, all of the calls should be replaced with loop containing a single call.</p>
+<p>   As Charles Petzold puts it, “Three or more? Use a for!”</p>
+</blockquote>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/validation-mongodb-mongoose/" rel="tag">#validation, mongodb, mongoose</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/13/nodejs-note-09/" rel="next" title="How to learn Node.js - Node work with Mongodb">
+                <i class="fa fa-chevron-left"></i> How to learn Node.js - Node work with Mongodb
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/author.png" alt="Lyn" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Lyn</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Concepts:"><span class="nav-number">1.</span> <span class="nav-text">Concepts:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Unique_value_in_mongodb:_Changing_the_email_type_to_an_object_with_type_rather_than_just_string"><span class="nav-number">1.1.</span> <span class="nav-text">Unique value in mongodb: Changing the email type to an object with type rather than just string</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#example:"><span class="nav-number">1.1.1.</span> <span class="nav-text">example:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#validation"><span class="nav-number">1.2.</span> <span class="nav-text">validation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Parameters:"><span class="nav-number">1.2.1.</span> <span class="nav-text">Parameters:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Returns:"><span class="nav-number">1.2.2.</span> <span class="nav-text">Returns:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Examples:"><span class="nav-number">1.2.3.</span> <span class="nav-text">Examples:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Error_message_templates:"><span class="nav-number">1.2.4.</span> <span class="nav-text">Error message templates:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How_To_Safely_Store_A_Password"><span class="nav-number">1.3.</span> <span class="nav-text">How To Safely Store A Password</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Use_bcrypt"><span class="nav-number">1.3.1.</span> <span class="nav-text">Use bcrypt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Why_Not_{MD5,_SHA1,_SHA256,_SHA512,_SHA-3,_etc}?"><span class="nav-number">1.3.2.</span> <span class="nav-text">Why Not {MD5, SHA1, SHA256, SHA512, SHA-3, etc}?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Salts_Will_Not_Help_You"><span class="nav-number">1.3.3.</span> <span class="nav-text">Salts Will Not Help You</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bcrypt_Solves_These_Problems"><span class="nav-number">1.3.4.</span> <span class="nav-text">bcrypt Solves These Problems</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Rule_of_Three"><span class="nav-number">1.4.</span> <span class="nav-text">Rule of Three</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2011 - 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lyn</span>
+</div>
+
+<div class="powered-by">
+  <a class="theme-link" href="http://hexo.io">Powered by Hexo
+  </a>
+</div>
+
+<div class="theme-info">
+  
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
