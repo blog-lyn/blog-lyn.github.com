@@ -205,6 +205,104 @@
             
             
               
+                <a class="post-title-link" href="/2015/12/01/nodejs-note-11/" itemprop="url">
+                  How to learn Node.js -- Using less and lessMiddleware to complie css file
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-12-01T23:52:25+08:00" content="2015-12-01">
+              2015-12-01
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="Why_using_less_?">Why using less ?</h1><p>less is an extension to CSS, Less is not only backwards compatible with CSS, but the extra features it adds use existing CSS syntax.</p>
+<p>it add some features to make css file more easy to maintain in development, for example:</p>
+<h2 id="Variables">Variables</h2><p>We can add variables in less:</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@color:</span> <span class="hexcolor">#4D926F</span>;</span><br><span class="line"></span><br><span class="line"><span class="id">#header</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="variable">@color</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">h2</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="variable">@color</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Mixins">Mixins</h2><p> You can mix-in class selectors and id selectors, e.g.<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class">.a</span>, <span class="id">#b</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: red;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class">.mixin-class</span> &#123;</span><br><span class="line">  <span class="class">.a</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="class">.mixin-id</span> &#123;</span><br><span class="line">  <span class="id">#b</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p> which results in:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class">.a</span>, <span class="id">#b</span> <span class="rules">&#123;</span><br><span class="line">  <span class="rule"><span class="attribute">color</span>:<span class="value"> red</span></span>;</span><br><span class="line">&#125;</span></span><br><span class="line"><span class="class">.mixin-class</span> <span class="rules">&#123;</span><br><span class="line">  <span class="rule"><span class="attribute">color</span>:<span class="value"> red</span></span>;</span><br><span class="line">&#125;</span></span><br><span class="line"><span class="class">.mixin-id</span> <span class="rules">&#123;</span><br><span class="line">  <span class="rule"><span class="attribute">color</span>:<span class="value"> red</span></span>;</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="Nested_Rules">Nested Rules</h2><p>Less enable us to use nesting instead of, or in combination with cascading:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="id">#header</span> <span class="tag">h1</span> <span class="rules">&#123;</span><br><span class="line">    <span class="rule"><span class="attribute">font-size</span>:<span class="value"> <span class="number">26px</span></span></span>;</span><br><span class="line">    <span class="rule"><span class="attribute">font-weight</span>:<span class="value"> bold</span></span>;</span><br><span class="line">&#125;</span></span><br><span class="line"><span class="id">#header</span> <span class="tag">p</span> <span class="rules">&#123;</span><br><span class="line">    <span class="rule"><span class="attribute">font-size</span>:<span class="value"> <span class="number">12px</span></span></span>;</span><br><span class="line">&#125;</span></span><br><span class="line"><span class="id">#header</span> <span class="tag">p</span> <span class="tag">a</span> <span class="rules">&#123;</span><br><span class="line">    <span class="rule"><span class="attribute">text-decoration</span>:<span class="value"> none</span></span>;</span><br><span class="line">&#125;</span></span><br><span class="line"><span class="id">#header</span> <span class="tag">p</span> <span class="tag">a</span><span class="pseudo">:hover</span> <span class="rules">&#123;</span><br><span class="line">    <span class="rule"><span class="attribute">border-width</span>:<span class="value"> <span class="number">1px</span></span></span>;</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>In Less, we can also write it this way:</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="id">#header</span> &#123;</span><br><span class="line">    <span class="tag">h1</span> &#123;</span><br><span class="line">        <span class="attribute">font-size</span>: <span class="number">26px</span>;</span><br><span class="line">        <span class="attribute">font-weight</span>: bold;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="tag">p</span> &#123;</span><br><span class="line">        <span class="attribute">font-size</span>: <span class="number">12px</span>;</span><br><span class="line">        <span class="tag">a</span> &#123;</span><br><span class="line">            <span class="attribute">text-decoration</span>: none;</span><br><span class="line">            <span class="keyword">&amp;</span><span class="pseudo">:hover</span> &#123;</span><br><span class="line">                <span class="attribute">border-width</span>: <span class="number">1px</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>This looks more nature like html structrue </p>
+<h1 id="Install_lessMiddleware">Install lessMiddleware</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="operator"><span class="keyword">install</span> <span class="keyword">less</span>-middleware <span class="comment">--save</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="Usage">Usage</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">lessMiddleware</span><span class="params">(source, [&#123;options&#125;])</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="Express">Express</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> lessMiddleware = <span class="keyword">require</span>(<span class="string">'less-middleware'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line">app.<span class="keyword">use</span>(lessMiddleware(__dirname + <span class="string">'/public'</span>));</span><br><span class="line">app.<span class="keyword">use</span>(express.<span class="keyword">static</span>(__dirname + <span class="string">'/public'</span>));</span><br></pre></td></tr></table></figure>
+<h1 id="configure_lessMiddleware">configure lessMiddleware</h1><h2 id="options">options</h2><p>The following options can be used to control the behavior of the middleware:</p>
+<table><br>    <thead><br>        <tr><br>            <th>Option</th><br>            <th>Description</th><br>            <th>Default</th><br>        </tr><br>    </thead><br>    <tbody><br>        <tr><br>            <th><code>debug</code></th><br>            <td>Show more verbose logging?</td><br>            <td><code>false</code></td><br>        </tr><br>        <tr><br>            <th><code>dest</code></th><br>            <td>Destination directory to output the compiled <code>.css</code> files.</td><br>            <td>Same directory as less source files.</td><br>        </tr><br>        <tr><br>            <th><code>force</code></th><br>            <td>Always re-compile less files on each request.</td><br>            <td><code>false</code></td><br>        </tr><br>        <tr><br>            <th><code>once</code></th><br>            <td>Only recompile once after each server restart. Useful for reducing disk i/o on production.</td><br>            <td><code>false</code></td><br>        </tr><br>        <tr><br>            <th><code>pathRoot</code></th><br>            <td>Common root of the source and destination. It is prepended to both the source and destination before being used.</td><br>            <td><code>null</code></td><br>        </tr><br>        <tr><br>            <th><code>postprocess</code></th><br>            <td>Object containing functions relevant to preprocessing data.</td><br>            <td></td><br>        </tr><br>        <tr><br>            <th><code>postprocess.css</code></th><br>            <td>Function that modifies the compiled css output before being stored.</td><br>            <td><code>function(css, req){…}</code></td><br>        </tr><br>        <tr><br>            <th><code>preprocess</code></th><br>            <td>Object containing functions relevant to preprocessing data.</td><br>            <td></td><br>        </tr><br>        <tr><br>            <th><code>preprocess.less</code></th><br>            <td>Function that modifies the raw less output before being parsed and compiled.</td><br>            <td><code>function(src, req){…}</code></td><br>        </tr><br>        <tr><br>            <th><code>preprocess.path</code></th><br>            <td>Function that modifies the less pathname before being loaded from the filesystem.</td><br>            <td><code>function(pathname, req){…}</code></td><br>        </tr><br>        <tr><br>            <th><code>preprocess.importPaths</code></th><br>            <td>Function that modifies the import paths used by the less parser per request.</td><br>            <td><code>function(paths, req){…}</code></td><br>        </tr><br>        <tr><br>            <th><code>render</code></th><br>            <td>Options for the less render. See the “<code>render</code> Options” section below.</td><br>            <td>&hellip;</td><br>        </tr><br>        <tr><br>            <th><code>storeCss</code></th><br>            <td>Function that is in charge of storing the css in the filesystem.</td><br>            <td><code>function(pathname, css, req, next){…}</code></td><br>        </tr><br>        <tr><br>            <th><code>cacheFile</code></th><br>            <td>Path to a JSON file that will be used to cache less data across server restarts. This can greatly speed up initial load time after a server restart - if the less files haven’t changed and the css files still exist, specifying this option will mean that the less files don’t need to be recompiled after a server restart.</td><br>            <td></td><br>        </tr><br>    </tbody><br></table>
+
+<p>We’ll use the compress option in the compiler. We don’t want to compress in development mode, so we’ll  do the App.env !== ‘development` trick.</p>
+<p>Note that if compress is set to true, then the dumpLineNumbers option is effectively ignored.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Configure less</span></span><br><span class="line"><span class="keyword">var</span> lessMiddleware = <span class="built_in">require</span>(<span class="string">'less-middleware'</span>)</span><br><span class="line">  , lessMiddlewareOptions = &#123;</span><br><span class="line">      dest: App.appPath(<span class="string">'/public'</span>)</span><br><span class="line">    , relativeUrls: <span class="literal">true</span></span><br><span class="line">    , force: App.env === <span class="string">'development'</span></span><br><span class="line">    , once: App.env !== <span class="string">'development'</span></span><br><span class="line">    , debug: App.env === <span class="string">'development'</span></span><br><span class="line">    , preprocess: &#123;</span><br><span class="line">        path: <span class="function"><span class="keyword">function</span>(<span class="params">pathname,req</span>) </span>&#123;</span><br><span class="line">          <span class="built_in">console</span>.log(pathname)</span><br><span class="line">          <span class="keyword">return</span> pathname.replace(<span class="string">'/stylesheets'</span>, <span class="string">''</span>)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  , lessParserOptions = &#123;</span><br><span class="line">      dumpLineNumbers: <span class="string">'mediaquery'</span></span><br><span class="line">    &#125;</span><br><span class="line">  , lessCompilerOptions = &#123;</span><br><span class="line">      compress: App.env !== <span class="string">'development'</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">App.app.use(lessMiddleware(</span><br><span class="line">  App.appPath(<span class="string">'app/stylesheets'</span>)</span><br><span class="line">, lessMiddlewareOptions</span><br><span class="line">, lessParserOptions</span><br><span class="line">, lessCompilerOptions</span><br><span class="line">))</span><br></pre></td></tr></table></figure>
+<p>/app/stylesheets/dummy.less</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// example of nesting styles and a variable</span></span><br><span class="line"><span class="variable">@administrator-text-color:</span> <span class="hexcolor">#00B4FF</span>;</span><br><span class="line"></span><br><span class="line"><span class="class">.system_message</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="hexcolor">#EEE</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">15px</span>;</span><br><span class="line"></span><br><span class="line">  <span class="tag">p</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="variable">@administrator-text-color</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2015/11/15/nodejs-note-10/" itemprop="url">
                   How to learn Node.js -- mongoose validation &unique records in mongodb
                 </a>
@@ -375,7 +473,9 @@ Validation occurs<span class="function"> pre(</span>'save'<span class="function"
             
               <h1 id="Installation_of_Mongodb">Installation of Mongodb</h1><p>install homebrew first</p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">Lyn</span>-<span class="constant">Cheung</span>-<span class="constant">MBP</span><span class="symbol">:~</span> <span class="constant">Lyn</span><span class="variable">$ </span>ruby -e <span class="string">"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"</span></span><br><span class="line"></span><br><span class="line"><span class="constant">Lyn</span>-<span class="constant">Cheung</span>-<span class="constant">MBP</span><span class="symbol">:~</span> <span class="constant">Lyn</span><span class="variable">$ </span>brew doctor</span><br><span class="line"></span><br><span class="line"><span class="constant">Lyn</span>-<span class="constant">Cheung</span>-<span class="constant">MBP</span><span class="symbol">:~</span> <span class="constant">Lyn</span><span class="variable">$ </span>brew update</span><br><span class="line"></span><br><span class="line"><span class="constant">Lyn</span>-<span class="constant">Cheung</span>-<span class="constant">MBP</span><span class="symbol">:~</span> <span class="constant">Lyn</span><span class="variable">$ </span>brew install mongodb</span><br></pre></td></tr></table></figure>
-<h1 id="Start_mongodb">Start mongodb</h1><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Lyn-Cheung-MBP:<span class="keyword">node</span><span class="identifier"></span><span class="title">-08</span> Lyn$ mongod</span><br></pre></td></tr></table></figure>
+<h1 id="Start_mongodb_in_your_Src_folder">Start mongodb in your Src folder</h1><p>it will create db under ./data/db directory</p>
+<p>or  using  mongod –dbpath  </p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Lyn-Cheung-MBP:<span class="keyword">node</span><span class="identifier"></span><span class="title">-08</span> Lyn$ mongod</span><br></pre></td></tr></table></figure>
 <h1 id="Install_mongoose">Install  mongoose</h1><p> edit package.json add mongoose dependenices</p>
  <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> &#123;</span><br><span class="line">  "<span class="attribute">name</span>": <span class="value"><span class="string">"node-mongodb"</span></span>,</span><br><span class="line">  "<span class="attribute">version</span>": <span class="value"><span class="string">"1.0.0"</span></span>,</span><br><span class="line">  "<span class="attribute">description</span>": <span class="value"><span class="string">"first express app"</span></span>,</span><br><span class="line">  "<span class="attribute">main</span>": <span class="value"><span class="string">"index.js"</span></span>,</span><br><span class="line">  "<span class="attribute">scripts</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">test</span>": <span class="value"><span class="string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span></span><br><span class="line">  </span>&#125;</span>,</span><br><span class="line">  "<span class="attribute">author</span>": <span class="value"><span class="string">"lyn"</span></span>,</span><br><span class="line">  "<span class="attribute">license</span>": <span class="value"><span class="string">"MIT"</span></span>,</span><br><span class="line">  "<span class="attribute">dependencies</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">method-override</span>": <span class="value"><span class="string">"2.3.5"</span></span>,</span><br><span class="line">    "<span class="attribute">express</span>": <span class="value"><span class="string">"^4.13.3"</span></span>,</span><br><span class="line">    "<span class="attribute">body-parser</span>":<span class="value"><span class="string">"1.14.1"</span></span>,</span><br><span class="line">    "<span class="attribute">cookie-session</span>":<span class="value"><span class="string">"2.0.0-alpha.1"</span></span>,</span><br><span class="line">    "<span class="attribute">cookie-parser</span>":<span class="value"><span class="string">"1.4.0"</span></span>,</span><br><span class="line">    "<span class="attribute">express-handlebars</span>":<span class="value"><span class="string">"2.0.1"</span></span>,</span><br><span class="line">    "<span class="attribute">mongoose</span>":<span class="value"><span class="string">"4.2.*"</span></span><br><span class="line">  </span>&#125;</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
 <h1 id="Test_connection_with_Mongodb">Test connection with Mongodb</h1><p>create a test connection file : ./config/database.js</p>
@@ -1158,92 +1258,6 @@ Validation occurs<span class="function"> pre(</span>'save'<span class="function"
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2015/10/28/hellowordnodejs/" itemprop="url">
-                  How to learn Node.js - 01 hello world !
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2015-10-28T00:40:11+08:00" content="2015-10-28">
-              2015-10-28
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="Try_Node-js_in_Read-Eval-Print_Loop_mode_first">Try Node.js in Read-Eval-Print Loop mode first</h1><figure class="highlight monkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"> Lyn-Cheung-MBP:node Lyn$ node</span><br><span class="line">&gt; <span class="number">50</span>+<span class="number">50</span></span><br><span class="line"><span class="number">100</span></span><br><span class="line">&gt; console</span><br><span class="line">Console &#123;</span><br><span class="line">  <span class="built_in">log</span>: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</span><br><span class="line">  info: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</span><br><span class="line">  warn: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</span><br><span class="line">  <span class="built_in">error</span>: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</span><br><span class="line">  dir: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</span><br><span class="line">  time: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</span><br><span class="line">  timeEnd: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</span><br><span class="line">  trace: [<span class="function"><span class="keyword">Function</span>:</span> bound trace],</span><br><span class="line">  assert: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</span><br><span class="line">  Console: [<span class="function"><span class="keyword">Function</span>:</span> Console] &#125;</span><br><span class="line">&gt; console.<span class="built_in">log</span>(<span class="string">"hello REPL"</span>)</span><br><span class="line">hello REPL</span><br><span class="line">undefined</span><br><span class="line">&gt; var foo = <span class="string">"toy!"</span></span><br><span class="line">undefined</span><br><span class="line">&gt; foo</span><br><span class="line"><span class="comment">'toy!'</span></span><br><span class="line">&gt;</span><br><span class="line">(^C again <span class="keyword">to</span> quit)</span><br><span class="line">&gt;</span><br><span class="line">Lyn-Cheung-MBP:node Lyn$</span><br></pre></td></tr></table></figure>
-<h1 id="Run_Node-js_code_in_files">Run Node.js code in files</h1><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim <span class="keyword">server</span>.js</span><br></pre></td></tr></table></figure>
-<p>Then enter insert mode to write your code </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br><span class="line"></span><br><span class="line">http.createServer(<span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">        res.writeHead(<span class="number">200</span>,&#123;<span class="string">'Content-Type'</span>:<span class="string">'text/plain'</span>&#125;);</span><br><span class="line">                res.end(<span class="string">'hello world \n'</span>);</span><br><span class="line">&#125;).listen(<span class="number">1337</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'Server running at http://127.0.0.1:1337/'</span>);</span><br></pre></td></tr></table></figure>
-<p>then Save this file in VIM by type “w” </p>
-<p>after this, we can run Node.js file in another iTerm terminal(press command + shift + d)</p>
-<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Lyn-Cheung-MBP:<span class="keyword">node</span><span class="identifier"> </span><span class="title">Lyn</span>$ <span class="keyword">node</span><span class="identifier"> </span><span class="title">hello</span>.js                  </span><br><span class="line"></span><br><span class="line">Server running at http://<span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">1337</span>/</span><br></pre></td></tr></table></figure>
-<p>then you can access to this server in your browser by <a href="http://127.0.0.1:1337/" target="_blank" rel="external">http://127.0.0.1:1337/</a> </p>
-<p>req = request<br>res = responde</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> http =<span class="built_in">require</span>(<span class="string">'http'</span>)</span><br><span class="line">	, handler =<span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">		res.writeHead(<span class="number">200</span>,&#123;<span class="string">'Content-Type'</span>:<span class="string">'text/plain'</span>&#125;);</span><br><span class="line">		res.end(<span class="string">'Hello World\n'</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	, sever = http.createServer(handler)</span><br><span class="line"></span><br><span class="line">server.listen(<span class="number">1337</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'Server running at http://127.0.0.1:1337/'</span>);</span><br></pre></td></tr></table></figure>
-<p>here is  a clear way  to explain the relation  between http (Node.js moduel), createServer (moduel function) and handler (the parameters of createServer)</p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1289,7 +1303,7 @@ Validation occurs<span class="function"> pre(</span>'save'<span class="function"
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-count">13</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1303,7 +1317,7 @@ Validation occurs<span class="function"> pre(</span>'save'<span class="function"
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-count">11</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
