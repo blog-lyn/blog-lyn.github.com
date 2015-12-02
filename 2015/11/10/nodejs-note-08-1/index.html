@@ -66,7 +66,7 @@ viewsAs we choose handlerbars as our template">
 <meta property="og:description" content="epxress template: Jade vs HbsJade is  something more like python, but I like Hbs as the syntax is easy to  transit from raw html file to template.hbs file
 viewsAs we choose handlerbars as our template">
 <meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/15-11-10/87116763.jpg">
-<meta property="og:updated_time" content="2015-11-10T16:24:35.000Z">
+<meta property="og:updated_time" content="2015-12-02T17:33:51.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="How to learn Node.js - express with template engine">
 <meta name="twitter:description" content="epxress template: Jade vs HbsJade is  something more like python, but I like Hbs as the syntax is easy to  transit from raw html file to template.hbs file
@@ -252,7 +252,7 @@ viewsAs we choose handlerbars as our template">
 <p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/15-11-10/87116763.jpg" alt=""></p>
 <figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> views </span><br><span class="line"><span class="built_in">cd</span>  views</span><br><span class="line"><span class="built_in">mkdir</span> layout</span><br><span class="line"><span class="built_in">mkdir</span> home</span><br><span class="line"><span class="built_in">mkdir</span> adventures</span><br><span class="line"><span class="built_in">mkdir</span> loot</span><br></pre></td></tr></table></figure>
 <p>import  template engine in application.js  by add:</p>
-<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">var</span> exphbs  	   = <span class="keyword">require</span>(<span class="string">'express-handlebars'</span>); </span><br><span class="line">App<span class="built_in">.</span>app<span class="built_in">.</span>engine(<span class="string">'hbs'</span>, exphbs(&#123;extname:<span class="string">'hbs'</span>, defaultLayout:<span class="string">'main.hbs'</span>&#125;));</span><br><span class="line">App<span class="built_in">.</span>app<span class="built_in">.</span><span class="built_in">set</span>(<span class="string">'view engine'</span>, <span class="string">'hbs'</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">var</span> exphbs  	   = <span class="keyword">require</span>(<span class="string">'express-handlebars'</span>); </span><br><span class="line"><span class="built_in">var</span> hbs = exphbs<span class="built_in">.</span>create(&#123;</span><br><span class="line">  extname:<span class="string">'hbs'</span>,</span><br><span class="line">    defaultLayout: <span class="string">'main'</span>,</span><br><span class="line">    layoutsDir:<span class="string">'app/views/layouts/'</span>,</span><br><span class="line">    partialsDir:<span class="string">'app/views/partials/'</span></span><br><span class="line">&#125;);</span><br><span class="line">App<span class="built_in">.</span>app<span class="built_in">.</span><span class="built_in">set</span>(<span class="string">'views'</span>, App<span class="built_in">.</span>appPath(<span class="string">"app/views"</span>));</span><br><span class="line">App<span class="built_in">.</span>app<span class="built_in">.</span>engine(<span class="string">'hbs'</span>, hbs<span class="built_in">.</span>engine);</span><br><span class="line">App<span class="built_in">.</span>app<span class="built_in">.</span><span class="built_in">set</span>(<span class="string">'view engine'</span>, <span class="string">'hbs'</span>);</span><br></pre></td></tr></table></figure>
 <p>then we need create our layout,</p>
  
 
@@ -364,7 +364,7 @@ viewsAs we choose handlerbars as our template">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-count">14</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -378,7 +378,7 @@ viewsAs we choose handlerbars as our template">
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-count">12</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
