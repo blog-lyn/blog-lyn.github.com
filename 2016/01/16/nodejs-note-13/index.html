@@ -57,16 +57,19 @@
 
 
 
-<meta name="description" content="CSRF DEMO跨站请求伪造（Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF， 是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。[1] 跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网页浏览器的信任。">
+<meta name="description" content="CSRF DEMO
+跨站请求伪造（Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF，是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。[1] 跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF利用的是网站对用户网页浏览器的信任。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="How to learn Node.js -- Protect your website from CSRF">
 <meta property="og:url" content="http://lyn.s76.org/2016/01/16/nodejs-note-13/index.html">
 <meta property="og:site_name" content="Lyn's Blog">
-<meta property="og:description" content="CSRF DEMO跨站请求伪造（Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF， 是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。[1] 跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网页浏览器的信任。">
-<meta property="og:updated_time" content="2016-01-15T16:58:49.000Z">
+<meta property="og:description" content="CSRF DEMO
+跨站请求伪造（Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF，是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。[1] 跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF利用的是网站对用户网页浏览器的信任。">
+<meta property="og:updated_time" content="2016-01-15T17:01:52.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="How to learn Node.js -- Protect your website from CSRF">
-<meta name="twitter:description" content="CSRF DEMO跨站请求伪造（Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF， 是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。[1] 跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网页浏览器的信任。">
+<meta name="twitter:description" content="CSRF DEMO
+跨站请求伪造（Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF，是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。[1] 跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF利用的是网站对用户网页浏览器的信任。">
 
 
 
@@ -237,8 +240,10 @@
       
 
       
-        <span itemprop="articleBody"><h1 id="CSRF_DEMO">CSRF DEMO</h1><pre><code>跨站请求伪造（<span class="keyword">Cross</span>-site request forgery），也被称为 <span class="keyword">one</span>-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF， 是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。[1] 跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网页浏览器的信任。
-</code></pre><h2 id="例子[编辑]">例子[编辑]</h2><p>假如一家银行用以执行转账操作的URL地址如下：<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/www.examplebank.com/withdraw</span>?account=<span class="constant">AccoutName</span>&amp;amount=<span class="number">1000</span>&amp;<span class="keyword">for</span>=<span class="constant">PayeeName</span></span><br></pre></td></tr></table></figure></p>
+        <span itemprop="articleBody"><h1 id="CSRF_DEMO">CSRF DEMO</h1><blockquote>
+<p>跨站请求伪造（Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF，<br>是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。[1] 跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF<br>利用的是网站对用户网页浏览器的信任。</p>
+</blockquote>
+<h2 id="CSRF_Examples">CSRF Examples</h2><p>假如一家银行用以执行转账操作的URL地址如下：<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/www.examplebank.com/withdraw</span>?account=<span class="constant">AccoutName</span>&amp;amount=<span class="number">1000</span>&amp;<span class="keyword">for</span>=<span class="constant">PayeeName</span></span><br></pre></td></tr></table></figure></p>
 <p>那么，一个恶意攻击者可以在网站上放置如下代码： </p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="tag">img</span> src=<span class="string">"http://www.examplebank.com/withdraw?account=Alice&amp;amount=1000&amp;for=Badman"</span>&gt;</span><br></pre></td></tr></table></figure>
 <p>如果有账户名为Alice的用户访问了恶意站点，而她之前刚访问过银行不久，登录信息尚未过期，那么她就会损失1000资金。</p>
@@ -390,7 +395,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CSRF_DEMO"><span class="nav-number">1.</span> <span class="nav-text">CSRF DEMO</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#例子[编辑]"><span class="nav-number">1.1.</span> <span class="nav-text">例子[编辑]</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CSURF"><span class="nav-number">2.</span> <span class="nav-text">CSURF</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Simple_express_example"><span class="nav-number">2.1.</span> <span class="nav-text">Simple express example</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Use_middleware"><span class="nav-number">3.</span> <span class="nav-text">Use middleware</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#invalidCsrfToken"><span class="nav-number">3.1.</span> <span class="nav-text">invalidCsrfToken</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#attachCsrfToken"><span class="nav-number">3.2.</span> <span class="nav-text">attachCsrfToken</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CSRF_DEMO"><span class="nav-number">1.</span> <span class="nav-text">CSRF DEMO</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CSRF_Examples"><span class="nav-number">1.1.</span> <span class="nav-text">CSRF Examples</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CSURF"><span class="nav-number">2.</span> <span class="nav-text">CSURF</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Simple_express_example"><span class="nav-number">2.1.</span> <span class="nav-text">Simple express example</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Use_middleware"><span class="nav-number">3.</span> <span class="nav-text">Use middleware</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#invalidCsrfToken"><span class="nav-number">3.1.</span> <span class="nav-text">invalidCsrfToken</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#attachCsrfToken"><span class="nav-number">3.2.</span> <span class="nav-text">attachCsrfToken</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
