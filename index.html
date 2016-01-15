@@ -244,8 +244,9 @@
           <span itemprop="articleBody">
             
               <h1 id="CSRF_DEMO">CSRF DEMO</h1><pre><code>跨站请求伪造（<span class="keyword">Cross</span>-site request forgery），也被称为 <span class="keyword">one</span>-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF， 是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。[1] 跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网页浏览器的信任。
-</code></pre><h2 id="例子[编辑]">例子[编辑]</h2><p>假如一家银行用以执行转账操作的URL地址如下： <a href="http://www.examplebank.com/withdraw?account=AccoutName&amp;amount=1000&amp;for=PayeeName" target="_blank" rel="external">http://www.examplebank.com/withdraw?account=AccoutName&amp;amount=1000&amp;for=PayeeName</a></p>
-<p>那么，一个恶意攻击者可以在网站上放置如下代码： <img src="http://www.examplebank.com/withdraw?account=Alice&amount=1000&for=Badman"></p>
+</code></pre><h2 id="例子[编辑]">例子[编辑]</h2><p>假如一家银行用以执行转账操作的URL地址如下：<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/www.examplebank.com/withdraw</span>?account=<span class="constant">AccoutName</span>&amp;amount=<span class="number">1000</span>&amp;<span class="keyword">for</span>=<span class="constant">PayeeName</span></span><br></pre></td></tr></table></figure></p>
+<p>那么，一个恶意攻击者可以在网站上放置如下代码： </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="tag">img</span> src=<span class="string">"http://www.examplebank.com/withdraw?account=Alice&amp;amount=1000&amp;for=Badman"</span>&gt;</span><br></pre></td></tr></table></figure>
 <p>如果有账户名为Alice的用户访问了恶意站点，而她之前刚访问过银行不久，登录信息尚未过期，那么她就会损失1000资金。</p>
 <p>这种恶意的网址可以有很多种形式，藏身于网页中的许多地方。此外，攻击者也不需要控制放置恶意网址的网站。例如他可以将这种地址藏在论坛，博客等任何用户生成内容的网站中。这意味着如果服务器端没有合适的防御措施的话，用户即使访问熟悉的可信网站也有受攻击的危险。</p>
 <p>透过例子能够看出，攻击者并不能通过CSRF攻击来直接获取用户的账户控制权，也不能直接窃取用户的任何信息。他们能做到的，是欺骗用户浏览器，让其以用户的名义执行操作。</p>
