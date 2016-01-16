@@ -65,7 +65,7 @@ it add some features to make css file more easy to">
 <meta property="og:site_name" content="Lyn's Blog">
 <meta property="og:description" content="Why using less ?less is an extension to CSS, Less is not only backwards compatible with CSS, but the extra features it adds use existing CSS syntax.
 it add some features to make css file more easy to">
-<meta property="og:updated_time" content="2015-12-01T17:38:06.000Z">
+<meta property="og:updated_time" content="2016-01-16T08:25:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="How to learn Node.js -- Using less and lessMiddleware to complie css file">
 <meta name="twitter:description" content="Why using less ?less is an extension to CSS, Less is not only backwards compatible with CSS, but the extra features it adds use existing CSS syntax.
@@ -263,71 +263,8 @@ it add some features to make css file more easy to">
 <h2 id="Usage">Usage</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">lessMiddleware</span><span class="params">(source, [&#123;options&#125;])</span></span></span><br></pre></td></tr></table></figure>
 <h2 id="Express">Express</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> lessMiddleware = <span class="keyword">require</span>(<span class="string">'less-middleware'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line">app.<span class="keyword">use</span>(lessMiddleware(__dirname + <span class="string">'/public'</span>));</span><br><span class="line">app.<span class="keyword">use</span>(express.<span class="keyword">static</span>(__dirname + <span class="string">'/public'</span>));</span><br></pre></td></tr></table></figure>
 <h1 id="configure_lessMiddleware">configure lessMiddleware</h1><h2 id="options">options</h2><p>The following options can be used to control the behavior of the middleware:</p>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>debug</td>
-<td>Show more verbose logging?</td>
-<td>false</td>
-</tr>
-<tr>
-<td>dest</td>
-<td>Destination directory to output the compiled .css files.    Same directory as less source files.force Always re-compile less files on each request.</td>
-<td>false</td>
-</tr>
-<tr>
-<td>once</td>
-<td>Only recompile once after each server restart. Useful for reducing disk i/o on production.</td>
-<td>false</td>
-</tr>
-<tr>
-<td>pathRoot</td>
-<td>Common root of the source and destination. It is prepended to both the source and destination before being used.</td>
-<td>null</td>
-</tr>
-<tr>
-<td>postprocess</td>
-<td>Object containing functions relevant to preprocessing data.postprocess.css    Function that modifies the compiled css output before being stored.</td>
-<td>function(css, req){…}</td>
-</tr>
-<tr>
-<td>preprocess</td>
-<td>Object containing functions relevant to preprocessing data.preprocess.less    Function that modifies the raw less output before being parsed and compiled.</td>
-<td>function(src, req){…}</td>
-</tr>
-<tr>
-<td>preprocess.path</td>
-<td>Function that modifies the less pathname before being loaded from the filesystem.</td>
-<td>function(pathname, req){…}</td>
-</tr>
-<tr>
-<td>preprocess.importPaths</td>
-<td>Function that modifies the import paths used by the less parser per request.</td>
-<td>function(paths, req){…}</td>
-</tr>
-<tr>
-<td>render</td>
-<td>Options for the less render. See the “render Options” section below.</td>
-<td>…</td>
-</tr>
-<tr>
-<td>storeCss</td>
-<td>Function that is in charge of storing the css in the filesystem.</td>
-<td>function(pathname, css, req, next){…}</td>
-</tr>
-<tr>
-<td>cacheFile</td>
-<td>Path to a JSON file that will be used to cache less data across server restarts. This can greatly speed up initial load time after a server restart - if the less files haven’t changed and the css files still exist, specifying this option will mean that the less files don’t need to be recompiled after a server restart.</td>
-</tr>
-</tbody>
-</table>
+<table class="table-responsive"><br><br>|Option |Description                 |Default|<br>|—|—|—|<br>|debug  |Show more verbose logging?    |false  |<br>|dest     |Destination directory to output the compiled .css files.    Same directory as less source files.force Always re-compile less files on each request. |false<br>|once    |Only recompile once after each server restart. Useful for reducing disk i/o on production.    |false<br>|pathRoot    |Common root of the source and destination. It is prepended to both the source and destination before being used.    |null<br>|postprocess    |Object containing functions relevant to preprocessing data.postprocess.css    Function that modifies the compiled css output before being stored.    |function(css, req){…}<br>|preprocess    |Object containing functions relevant to preprocessing data.preprocess.less    Function that modifies the raw less output before being parsed and compiled.    |function(src, req){…}<br>|preprocess.path|    Function that modifies the less pathname before being loaded from the filesystem.    |function(pathname, req){…}<br>|preprocess.importPaths |    Function that modifies the import paths used by the less parser per request.|function(paths, req){…}<br>|render|    Options for the less render. See the “render Options” section below.    |…<br>|storeCss|    Function that is in charge of storing the css in the filesystem.    |function(pathname, css, req, next){…}<br>|cacheFile    |Path to a JSON file that will be used to cache less data across server restarts. This can greatly speed up initial load time after a server restart - if the less files haven’t changed and the css files still exist, specifying this option will mean that the less files don’t need to be recompiled after a server restart.|<br><br></table>
+
 <p>We’ll use the compress option in the compiler. We don’t want to compress in development mode, so we’ll  do the App.env !== ‘development` trick.</p>
 <p>Note that if compress is set to true, then the dumpLineNumbers option is effectively ignored.</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Configure less</span></span><br><span class="line"><span class="keyword">var</span> lessMiddleware = <span class="built_in">require</span>(<span class="string">'less-middleware'</span>)</span><br><span class="line">  , lessMiddlewareOptions = &#123;</span><br><span class="line">      dest: App.appPath(<span class="string">'/public'</span>)</span><br><span class="line">    , relativeUrls: <span class="literal">true</span></span><br><span class="line">    , force: App.env === <span class="string">'development'</span></span><br><span class="line">    , once: App.env !== <span class="string">'development'</span></span><br><span class="line">    , debug: App.env === <span class="string">'development'</span></span><br><span class="line">    , preprocess: &#123;</span><br><span class="line">        path: <span class="function"><span class="keyword">function</span>(<span class="params">pathname,req</span>) </span>&#123;</span><br><span class="line">          <span class="built_in">console</span>.log(pathname)</span><br><span class="line">          <span class="keyword">return</span> pathname.replace(<span class="string">'/stylesheets'</span>, <span class="string">''</span>)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  , lessParserOptions = &#123;</span><br><span class="line">      dumpLineNumbers: <span class="string">'mediaquery'</span></span><br><span class="line">    &#125;</span><br><span class="line">  , lessCompilerOptions = &#123;</span><br><span class="line">      compress: App.env !== <span class="string">'development'</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">App.app.use(lessMiddleware(</span><br><span class="line">  App.appPath(<span class="string">'app/stylesheets'</span>)</span><br><span class="line">, lessMiddlewareOptions</span><br><span class="line">, lessParserOptions</span><br><span class="line">, lessCompilerOptions</span><br><span class="line">))</span><br></pre></td></tr></table></figure>
