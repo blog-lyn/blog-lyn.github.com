@@ -65,7 +65,7 @@
 <meta property="og:url" content="http://lyn.s76.org/2016/02/04/nodejs-note-19/index.html">
 <meta property="og:site_name" content="Lyn's Blog">
 <meta property="og:description" content="parallel(tasks, [callback])Run the tasks array of functions in parallel, without waiting until the previousfunction has completed. If any of the functions pass an error to itscallback, the main callba">
-<meta property="og:updated_time" content="2016-02-04T05:58:56.000Z">
+<meta property="og:updated_time" content="2016-02-04T06:06:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ASYNCHRONOUS PROGRAMMING -06">
 <meta name="twitter:description" content="parallel(tasks, [callback])Run the tasks array of functions in parallel, without waiting until the previousfunction has completed. If any of the functions pass an error to itscallback, the main callba">
@@ -248,8 +248,7 @@
       
         <span itemprop="articleBody"><h2 id="parallel(tasks,_[callback])">parallel(tasks, [callback])</h2><p>Run the <code>tasks</code> array of functions in parallel, without waiting until the previous<br>function has completed. If any of the functions pass an error to its<br>callback, the main <code>callback</code> is immediately called with the value of the error.<br>Once the <code>tasks</code> have completed, the results are passed to the final <code>callback</code> as an<br>array.</p>
 <p><strong>Note:</strong> <code>parallel</code> is about kicking-off I/O tasks in parallel, not about parallel execution of code.  If your tasks do not use any timers or perform any I/O, they will actually be executed in series.  Any synchronous setup sections for each task will happen one after the other.  JavaScript remains single-threaded.</p>
-<p>It is also possible to use an object instead of an array. Each property will be<br>run as a function and the results will be passed to the final <code>callback</code> as an object<br>instead of an array. This can be a more readable way of handling results from</p>
-<p>#parallel.</p>
+<p>It is also possible to use an object instead of an array. Each property will be<br>run as a function and the results will be passed to the final <code>callback</code> as an object<br>instead of an array. This can be a more readable way of handling results from parallel.</p>
 <p><strong>Arguments</strong></p>
 <ul>
 <li><code>tasks</code> - An array or object containing functions to run. Each function is passed<br>a <code>callback(err, result)</code> which it must call on completion with an error <code>err</code><br>(which can be <code>null</code>) and an optional <code>result</code> value.</li>
