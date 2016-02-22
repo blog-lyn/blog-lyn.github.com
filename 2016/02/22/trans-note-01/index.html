@@ -43,7 +43,7 @@
 
 
 
-  <meta name="keywords" content="TCP," />
+  <meta name="keywords" content="translation," />
 
 
 
@@ -59,25 +59,26 @@
 
 
 
-<meta name="description" content="index.js
-12345var  server = require(&apos;./server05&apos;);server.listen(8000, function()&amp;#123;	console.log(&apos;TCP server listening on %j&apos;, server.address());&amp;#125;);
- var net = require(‘net’);
- var server = net">
+<meta name="description" content="Behind the App: The Story of 1Password
+你的网络生活安全的保障不是一件可以开玩笑的事情，但是还是有很多人为了省事在不同的网站使用相同的密码。毫无疑问这是一种不好的习惯，而且安全而复杂的密码一定是一个你难以记住的密码。这也就是为什么你需要一个密码管理工具去管理你的网络密码，比如说使用：1Password。
+
+Securing your online life i">
 <meta property="og:type" content="article">
-<meta property="og:title" content="TCP programing">
-<meta property="og:url" content="http://lyn.s76.org/2016/02/06/nodejs-note-22/index.html">
+<meta property="og:title" content="翻译－－采访1Password背后的开发故事">
+<meta property="og:url" content="http://lyn.s76.org/2016/02/22/trans-note-01/index.html">
 <meta property="og:site_name" content="Lyn's Blog">
-<meta property="og:description" content="index.js
-12345var  server = require(&apos;./server05&apos;);server.listen(8000, function()&amp;#123;	console.log(&apos;TCP server listening on %j&apos;, server.address());&amp;#125;);
- var net = require(‘net’);
- var server = net">
-<meta property="og:updated_time" content="2016-02-19T05:48:23.000Z">
+<meta property="og:description" content="Behind the App: The Story of 1Password
+你的网络生活安全的保障不是一件可以开玩笑的事情，但是还是有很多人为了省事在不同的网站使用相同的密码。毫无疑问这是一种不好的习惯，而且安全而复杂的密码一定是一个你难以记住的密码。这也就是为什么你需要一个密码管理工具去管理你的网络密码，比如说使用：1Password。
+
+Securing your online life i">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-2-22/42337210.jpg">
+<meta property="og:updated_time" content="2016-02-22T04:54:41.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="TCP programing">
-<meta name="twitter:description" content="index.js
-12345var  server = require(&apos;./server05&apos;);server.listen(8000, function()&amp;#123;	console.log(&apos;TCP server listening on %j&apos;, server.address());&amp;#125;);
- var net = require(‘net’);
- var server = net">
+<meta name="twitter:title" content="翻译－－采访1Password背后的开发故事">
+<meta name="twitter:description" content="Behind the App: The Story of 1Password
+你的网络生活安全的保障不是一件可以开玩笑的事情，但是还是有很多人为了省事在不同的网站使用相同的密码。毫无疑问这是一种不好的习惯，而且安全而复杂的密码一定是一个你难以记住的密码。这也就是为什么你需要一个密码管理工具去管理你的网络密码，比如说使用：1Password。
+
+Securing your online life i">
 
 
 
@@ -89,7 +90,7 @@
   };
 </script>
 
-  <title> TCP programing | Lyn's Blog </title>
+  <title> 翻译－－采访1Password背后的开发故事 | Lyn's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
@@ -215,7 +216,7 @@
             
             
               
-                TCP programing
+                翻译－－采访1Password背后的开发故事
               
             
           </h1>
@@ -224,8 +225,8 @@
         <div class="post-meta">
           <span class="post-time">
             發表於
-            <time itemprop="dateCreated" datetime="2016-02-06T00:16:43+08:00" content="2016-02-06">
-              2016-02-06
+            <time itemprop="dateCreated" datetime="2016-02-22T11:58:17+08:00" content="2016-02-22">
+              2016-02-22
             </time>
           </span>
 
@@ -235,8 +236,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/02/06/nodejs-note-22/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/06/nodejs-note-22/" itemprop="commentsCount"></span>
+                <a href="/2016/02/22/trans-note-01/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/22/trans-note-01/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -255,82 +256,35 @@
       
 
       
-        <span itemprop="articleBody"><p>index.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span>  server = <span class="built_in">require</span>(<span class="string">'./server05'</span>);</span><br><span class="line"></span><br><span class="line">server.listen(<span class="number">8000</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'TCP server listening on %j'</span>, server.address());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p> var net = require(‘net’);</p>
-<p> var server = net.createServer();</p>
-<p> server.on(‘connection’, function(conn){</p>
-<pre><code><span class="built_in">console</span>.log(<span class="string">'new connection'</span>);
-conn.once(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>{
-    <span class="built_in">console</span>.log(<span class="string">'connection closed'</span>);
-});
-
-<span class="keyword">var</span> emit =conn.emit;
-conn.emit = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>{
-    <span class="built_in">console</span>.log(<span class="string">'connetion emitted  event type %s'</span>, event);
-    emit.apply(conn, <span class="built_in">arguments</span>);
-};
-</code></pre><p> }); </p>
-<p> module.exports = server ;<br><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="escape">``</span><span class="escape">`</span><br><span class="line"></span>server03.js</span><br></pre></td></tr></table></figure></p>
-<p> var net = require(‘net’);</p>
-<p> var server = net.createServer();</p>
-<p> server.on(‘connection’, function(conn){</p>
-<pre><code><span class="built_in">console</span>.log(<span class="string">'new connection'</span>);
-
-conn.setEncoding(<span class="string">'utf8'</span>);
-
-conn.once(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>{
-    <span class="built_in">console</span>.log(<span class="string">'connection closed'</span>);
-});
-
-conn.on(<span class="string">'data'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">buf</span>)</span>{
-    process.stdout.write(<span class="string">'data'</span> + buf);
-});
-</code></pre><p> }); </p>
-<p> module.exports = server ;<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">server04</span><span class="class">.js</span></span><br></pre></td></tr></table></figure></p>
-<p> var net = require(‘net’);</p>
-<p> var server = net.createServer();</p>
-<p> server.on(‘connection’, function(conn){</p>
-<pre><code>console.<span class="built_in">log</span>(<span class="string">'new connection'</span>);
-
-conn.setEncoding(<span class="string">'utf8'</span>);
-
-conn.once(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span>{</span>
-    console.<span class="built_in">log</span>(<span class="string">'connection closed'</span>);
-});
-
-conn.<span class="keyword">on</span>(<span class="string">'data'</span>, <span class="function"><span class="keyword">function</span><span class="params">(buf)</span>{</span>
-    process.stdout.<span class="keyword">write</span>(<span class="string">'User send message: '</span> + buf);
-    conn.<span class="keyword">write</span>(<span class="string">'Server send message: '</span>+ buf);
-    conn.<span class="keyword">write</span>(<span class="string">'Server capitalize your message:'</span> + buf.toUpperCase());
-});
-</code></pre><p> }); </p>
-<p> module.exports = server ;</p>
-<p> #through2</p>
- <figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">fs.createReadStream(<span class="string">'ex.txt'</span>)</span><br><span class="line"> .pipe(through2(<span class="function"><span class="keyword">function</span> <span class="params">(chunk, enc, callback)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; chunk.length; i++)</span><br><span class="line">     <span class="keyword">if</span> (chunk[i] == <span class="number">97</span>)</span><br><span class="line">       chunk[i] = <span class="number">122</span> <span class="comment">// swap 'a' for 'z'</span></span><br><span class="line"></span><br><span class="line">   <span class="keyword">this</span>.push(chunk)</span><br><span class="line"></span><br><span class="line">   <span class="keyword">callback</span>()</span><br><span class="line">  &#125;))</span><br><span class="line"> .pipe(fs.createWriteStream(<span class="string">'out.txt'</span>))</span><br></pre></td></tr></table></figure>
-<p>Or object streams:</p>
-<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> all = []</span><br><span class="line"></span><br><span class="line">fs.createReadStream(<span class="string">'data.csv'</span>)</span><br><span class="line">  .pipe(csv2())</span><br><span class="line">  .pipe(through2.obj(<span class="function"><span class="keyword">function</span> <span class="params">(chunk, enc, callback)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> data = &#123;</span><br><span class="line">        name    : chunk[<span class="number">0</span>]</span><br><span class="line">      , address : chunk[<span class="number">3</span>]</span><br><span class="line">      , phone   : chunk[<span class="number">10</span>]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.push(data)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">callback</span>()</span><br><span class="line">  &#125;))</span><br><span class="line">  .on(<span class="string">'data'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(data)</span> </span>&#123;</span><br><span class="line">    all.push(data)</span><br><span class="line">  &#125;)</span><br><span class="line">  .on(<span class="string">'end'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    doSomethingSpecial(all)</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server05</span><br></pre></td></tr></table></figure>
-<p> var through = require(‘through2’);<br> var net = require(‘net’);</p>
-<p> var server = net.createServer();</p>
-<p> server.on(‘connection’, function(conn){</p>
-<pre><code><span class="built_in">console</span>.log(<span class="string">'new connection'</span>);
-
-conn.setEncoding(<span class="string">'utf8'</span>);
-
-conn.once(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>{
-    <span class="built_in">console</span>.log(<span class="string">'connection closed'</span>);
-});
-
-<span class="keyword">var</span> upperCasing = through.obj(<span class="function"><span class="keyword">function</span>(<span class="params">str, enc, cb</span>)</span>{
-    <span class="keyword">this</span>.push(str.toUpperCase());
-    cb();
-});
-
-conn.pipe(upperCasing).pipe(conn);
-<span class="comment">// conn.pipe(conn);</span>
-</code></pre><p> }); </p>
-<p> module.exports = server ;<br>```</p>
+        <span itemprop="articleBody"><h2 id="Behind_the_App:_The_Story_of_1Password">Behind the App: The Story of 1Password</h2><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-2-22/42337210.jpg" alt=""></p>
+<p>你的网络生活安全的保障不是一件可以开玩笑的事情，但是还是有很多人为了省事在不同的网站使用相同的密码。毫无疑问这是一种不好的习惯，而且安全而复杂的密码一定是一个你难以记住的密码。这也就是为什么你需要一个密码管理工具去管理你的网络密码，比如说使用：1Password。</p>
+<blockquote>
+<p>Securing your online life is no joke, but many people still use the same password across different sites for the sake of convenience. Of course, that’s bad practice and the most secure password is one that you can’t remember. Which is why you need a tool to manager your online security like 1Password.</p>
+</blockquote>
+<p>这个App会为你的网络账号生成随机的复杂且唯一的密码，他会是你最喜欢的密码管家，最近他们最近和收费版本一同推出了带来新功能而且和IOS8兼容的免费增值版本的App</p>
+<p>The app generates random, complex, and unique passwords for all of your logins and then manages them for you. It’s one of your favorite password managers, and they recently adopted a freemium model to coincide with new features and integration with iOS 8.</p>
+<p>这个APP是怎么开发出来的呢？就像很多软件一样，它最开始就是一个没有计划成为消费品的供内部使用的软件，我们与1Password的团队取得了联系去探究App背后的故事。</p>
+<p>How did this security tool come about? Like a lot of software, it started as an internal tool without any real plan to become a consumer product. We caught up with the 1password team at AgileBits to learn more about the story behind the app.</p>
+<h2 id="这个App的想法是从哪里来的？_你们是为了解决一个过去遇到的问题？还是从什么其他地方获得的灵感？">这个App的想法是从哪里来的？ 你们是为了解决一个过去遇到的问题？还是从什么其他地方获得的灵感？</h2><p>就像很多我们喜欢的产品，我们最初是为了解决一个问题，我们的共同发起人：Dave Teare 和 Roustem Karimov 早在2005年就开始讨论这个产品的想法了，因为他们被各种需要密码的服务和为了记忆各种登录所需要的密码搞得头疼。他们想要一种能为保护不同的账号生成不同的唯一的密码的工具。并且能帮他们记住各种登录密码并在需要登录的时候帮助他们自动登录，这样他们就不会在浪费时间在各种密码登录界面了。</p>
+<blockquote>
+<p>Where did the idea for the app come from? Were you trying to solve a problem you’d experienced, or did the inspiration come from somewhere else?<br>Like many of our favorite products, we set out to solve a problem. Dave Teare and Roustem Karimov, our co-founders, were kicking around product ideas back in 2005 but started getting annoyed at how many services they had to sign into and all the passwords they needed to remember. They wanted a tool that would create unique passwords to protect all their accounts, and also remember those passwords and log them in automatically so they could spend less time typing into login forms and more time on what they wanted to do.</p>
+</blockquote>
+<h2 id="当你们有了这个想法以后，你们的下一步是什么？">当你们有了这个想法以后，你们的下一步是什么？</h2><p>最有趣的部分就是，原本那是没有下一步的， 我们设想那只是一个三个月的项目，Dave和Roustem当时只是自己使用这个最后成为1Password的工具，直到他们开始向他们在该领域的朋友们展示这个项目并且成功震惊了他们，直到这时他们才意识到他们创造了一个真的很特别的东西！</p>
+<p>After you came up with the idea, what was the next step?<br>The funny part of this story is that, originally, there was no next step. It was supposed to be a three-month project, and Dave and Roustem were just using what eventually became 1Password on their own, internally. It wasn’t until they started showing it to friends in the field and blew their minds that they realized they had created something truly special.</p>
+<h2 id="App背后的故事">App背后的故事</h2><h3 id="你们怎么确定在哪个平台开发这个软件作_而忽略哪些平台或者暂时不开发哪些平台？">你们怎么确定在哪个平台开发这个软件作 而忽略哪些平台或者暂时不开发哪些平台？</h3><p>在那个时候，Dave和 Roustem 两个人都离开了上班族的世界和接触Mac，所以那是难以置信的偶然。当时苹果刚推出了OS X 和 IPOD， 社区的发展极为迅速，两位创始人正在折腾新的项目，刚好就知道了OSX和Cocoa，所以这也很好理解他们在Mac上开发了测试版的1Password，看下效果如何。</p>
+<p>Behind the App: The Story of 1Password<br>How did you choose which platforms to target and which to ignore or wait on?<br>Right around this time, Dave and Roustem had both just left the corporate world and discovered the Mac, so it was incredibly serendipitous. Apple was on a roll with OS X and the iPod, and the community was taking off like a rocket ship. Dave and Roustem were tinkering with new projects, getting to know OS X and Cocoa, so it just made sense to try the initial beta version of 1Password on the Mac and see where it went.</p>
+<p>What was your biggest roadblock and how did you overcome it?</p>
+<p>I wouldn’t say it was so much of a roadblock, but exploring and understanding the context and deeper details of making a security product was an essential element to getting 1Password right. It stores people’s passwords, credit cards, and utmost personal info—we have to know our security chops, we have to be mindful of our customers’ privacy and concerns. It is a uniquely personal responsibility that we do not—cannot—take lightly.</p>
+<p>What was launch like for you?</p>
+<p>Launch blew us away. It really did. We thought we were building an internal tool that mostly nerds would care about, but we quickly learned we struck a nerve. A few tech sites found out about it (“1Passwd” back in those days), started writing about it, then made “how to do this and that” tutorials. When people start telling other people about this thing you made… that’s one of the best feelings in the world.<br>Another great part of the launch was users coming to talk to us. Some had suggestions, some complaints, plenty of praise and thanks, but it all boils down to the same thing: people care so much about 1Password that they want to be a part of it and make it even better. Again, best feeling in the world.</p>
+<p>Behind the App: The Story of 1Password</p>
+<p>How do you handle user requests and criticisms effectively?</p>
+<p>Our co-founders and CEO built a great culture obsessed with human-to-human interaction for all our social media, criticism, and general feedback. We have a thorough support staff that spans continents and languages, and we use collaborative services like Cerberus, Google Drive, and Respond.ly to talk with our customers and organize feedback. For actual bug reporting, discussion, and deciding what to improve and build, we use Jira and Basecamp.</p>
+<p>Now, how do you split time between developing new features and managing existing ones?</p>
+<p>Between all the tasks already on our list and all the ideas we get from our customers, there is absolutely no shortage of places to take 1Password. As for deciding when it’s time to build and when to improve, that’s a fairly complicated dance. If something isn’t working right and we hear from a lot of customers, it gets top priority; we’d be nothing without our customers.<br>We also have (and are grateful for!) a surprisingly active beta program. Those customers have a huge voice in what we add to 1Password, including both fixes and new features. Our Mac program, for example, includes over 25,000 customers.<br>Sometimes external elements can factor into our plans as well, including OS release schedules. It’s no secret that our customers love to see our updates ready by day one, and we try our best to hit that. But sometimes that leads to discussions over whether we need to push Feature Y to a free X.1 update.</p>
+<p>Behind the App: The Story of 1Password</p>
+<p>What advice would you give to others that want to take on a similar project?<br>Solve a personal problem, something that affects you or your closest friends. Find that thing that keeps you up at night, or that you always catch yourself complaining about with friends but might not give a second thought. Look at that problem, see if it might already have a solution, then think about how you can solve it better. It’s the best way to make sure you can do great work and stay passionate through both the good days and the bad, and there will be both.</p>
+<p><a href="http://lifehacker.com/behind-the-app-the-story-of-1password-1643425238" target="_blank" rel="external">http://lifehacker.com/behind-the-app-the-story-of-1password-1643425238</a></p>
 </span>
       
     </div>
@@ -339,7 +293,7 @@ conn.pipe(upperCasing).pipe(conn);
       
         <div class="post-tags">
           
-            <a href="/tags/TCP/" rel="tag">#TCP</a>
+            <a href="/tags/translation/" rel="tag">#translation</a>
           
         </div>
       
@@ -348,17 +302,13 @@ conn.pipe(upperCasing).pipe(conn);
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/02/05/nodejs-note-20/" rel="next" title="Asynchronous Programming - 07 async.each .map .eachSeries .eachLimit .mapLimit">
-                <i class="fa fa-chevron-left"></i> Asynchronous Programming - 07 async.each .map .eachSeries .eachLimit .mapLimit
+              <a href="/2016/02/21/nodejs-note-23-1/" rel="next" title="nodejs-note-23">
+                <i class="fa fa-chevron-left"></i> nodejs-note-23
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/02/06/nodejs-note-21/" rel="prev" title="Asynchronous Programming - 08 async.queue">
-                Asynchronous Programming - 08 async.queue <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -385,8 +335,8 @@ conn.pipe(upperCasing).pipe(conn);
         
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/02/06/nodejs-note-22/"
-           data-title="TCP programing" data-url="http://lyn.s76.org/2016/02/06/nodejs-note-22/">
+      <div class="ds-thread" data-thread-key="2016/02/22/trans-note-01/"
+           data-title="翻译－－采访1Password背后的开发故事" data-url="http://lyn.s76.org/2016/02/22/trans-note-01/">
       </div>
     
   </div>
@@ -474,7 +424,7 @@ conn.pipe(upperCasing).pipe(conn);
               
             
             
-              <p class="post-toc-empty">此文章未包含目錄</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Behind_the_App:_The_Story_of_1Password"><span class="nav-number">1.</span> <span class="nav-text">Behind the App: The Story of 1Password</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#这个App的想法是从哪里来的？_你们是为了解决一个过去遇到的问题？还是从什么其他地方获得的灵感？"><span class="nav-number">2.</span> <span class="nav-text">这个App的想法是从哪里来的？ 你们是为了解决一个过去遇到的问题？还是从什么其他地方获得的灵感？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#当你们有了这个想法以后，你们的下一步是什么？"><span class="nav-number">3.</span> <span class="nav-text">当你们有了这个想法以后，你们的下一步是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#App背后的故事"><span class="nav-number">4.</span> <span class="nav-text">App背后的故事</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#你们怎么确定在哪个平台开发这个软件作_而忽略哪些平台或者暂时不开发哪些平台？"><span class="nav-number">4.1.</span> <span class="nav-text">你们怎么确定在哪个平台开发这个软件作 而忽略哪些平台或者暂时不开发哪些平台？</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
