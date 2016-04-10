@@ -207,6 +207,128 @@
             
             
               
+                <a class="post-title-link" href="/2016/04/10/js-single-thread-concepts/" itemprop="url">
+                  JavaScript的单线程运行机制学习笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-04-10T23:17:24+08:00" content="2016-04-10">
+              2016-04-10
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/10/js-single-thread-concepts/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/10/js-single-thread-concepts/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="javascript_是单线程运行的">javascript 是单线程运行的</h1><p>JavaScript引擎是单线程运行的,浏览器无论在什么时候都只且只有一个线程在运行JavaScript程序。 </p>
+<blockquote>
+<p>为什么JavaScript不能有多个线程呢？这样能提高效率啊！</p>
+<p>JavaScript的单线程，与它的用途有关。作为浏览器脚本语言，JavaScript的主要用途是与用户互动，以及操作DOM。这决定了它只能是单线程，否则会带来很复杂的同步问题。比如，假定JavaScript同时有两个线程，一个线程在某个DOM节点上添加内容，另一个线程删除了这个节点，这时浏览器应该以哪个线程为准？</p>
+<p>所以，为了避免复杂性，从一诞生，JavaScript就是单线程，这已经成了这门语言的核心特征，将来也不会改变。</p>
+<p>为了利用多核CPU的计算能力，HTML5提出Web Worker标准，允许JavaScript脚本创建多个线程，但是子线程完全受主线程控制，且不得操作DOM。所以，这个新标准并没有改变JavaScript单线程的本质。</p>
+</blockquote>
+<h2 id="代码验证：js是堵塞式的单线程运行的">代码验证：js是堵塞式的单线程运行的</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'开始运行js'</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func01</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'function 1 正在运行'</span>);</span><br><span class="line">	<span class="keyword">return</span> func02();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func02</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">console</span>.log(<span class="string">'function 2 正在运行'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">main</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'mainJs 开始运行'</span>);</span><br><span class="line">	  func01();</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'mainJs 运行结束'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">main();</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'js运行结束'</span>);</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">开始运行js</span><br><span class="line">mainJs 开始运行</span><br><span class="line"><span class="function"><span class="keyword">function</span></span> <span class="number">1</span> 正在运行</span><br><span class="line"><span class="function"><span class="keyword">function</span></span> <span class="number">2</span> 正在运行</span><br><span class="line">mainJs 运行结束</span><br><span class="line">js运行结束</span><br></pre></td></tr></table></figure>
+<h1 id="运行队列">运行队列</h1><blockquote>
+<p>单线程就意味着，所有任务需要排队，前一个任务结束，才会执行后一个任务。如果前一个任务耗时很长，后一个任务就不得不一直等着。<br>如果排队是因为计算量大，CPU忙不过来，倒也算了，但是很多时候CPU是闲着的，因为IO设备（输入输出设备）很慢（比如Ajax操作从网络读取数据），不得不等着结果出来，再往下执行。</p>
+<p>JavaScript语言的设计者意识到，这时主线程完全可以不管IO设备，挂起处于等待中的任务，先运行排在后面的任务。等到IO设备返回了结果，再回过头，把挂起的任务继续执行下去。</p>
+<p>于是，所有任务可以分成两种，一种是同步任务（synchronous），另一种是异步任务（asynchronous）。同步任务指的是，在主线程上排队执行的任务，只有前一个任务执行完毕，才能执行后一个任务；异步任务指的是，不进入主线程、而进入”任务队列”（task queue）的任务，只有”任务队列”通知主线程，某个异步任务可以执行了，该任务才会进入主线程执行。<br>具体来说，异步执行的运行机制如下。（同步执行也是如此，因为它可以被视为没有异步任务的异步执行。）</p>
+</blockquote>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-10/32375570.jpg" alt=""></p>
+<blockquote>
+<ol>
+<li>所有同步任务都在主线程上执行，形成一个执行栈（execution context stack）。</li>
+<li>主线程之外，还存在一个”任务队列”（task queue）。只要异步任务有了运行结果，就在”任务队列”之中放置一个事件。</li>
+<li>一旦”执行栈”中的所有同步任务执行完毕，系统就会读取”任务队列”，看看里面有哪些事件。那些对应的异步任务，于是结束等待状态，进入执行栈，开始执行。</li>
+<li>主线程不断重复上面的第三步。</li>
+</ol>
+</blockquote>
+<p>Ps: Promise，mutation，observer的回调函数属于特殊的任务会在当前的eventLoop末尾执行，而普通任务则是在下一次获取任务队列后运行。</p>
+<h2 id="验证回调函数会进入任务队列等待主队列空闲后再调用：">验证回调函数会进入任务队列等待主队列空闲后再调用：</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'01 开始运行js'</span>);</span><br><span class="line"></span><br><span class="line">setTimeout( <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">'02 , 我从eventloop 中被加到了队列里进行运行 等待stack空闲了以后开始运行的'</span>);</span><br><span class="line">&#125;,<span class="number">5000</span> );</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'03, 这个写在setTimeout 后面'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'现在stack 队列里是空的啦 console 会返回 undefined '</span>);</span><br><span class="line"><span class="string">``</span><span class="string">` </span><br><span class="line">## 运行结果：</span></span><br></pre></td></tr></table></figure>
+<p>01 开始运行js<br>03, 这个写在setTimeout 后面<br>现在stack 队列里是空的啦 console 会返回 undefined<br>undefined<br>02 , 我从eventloop中被加到了队列里进行运行 等待stack空闲了以后开始运行</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="header"># 回调队列与事件循环:</span></span><br><span class="line">![](http://7xnuw0.com1.z0.glb.clouddn.com/16-4-10/97771921.jpg)</span><br><span class="line"><span class="blockquote">&gt; 浏览器的内核是多线程的，它们在内核控制下相互配合以保持同步，一个浏览器至少实现三个常驻线程：JavaScript引擎线程，GUI渲染线程，浏览器事件触发线程（图中的WebAPIs）。 </span></span><br><span class="line"></span><br><span class="line"><span class="blockquote">&gt; JavaScript引擎是基于事件驱动单线程执行的，JavaScript引擎一直等待着任务队列中任务的到来，然后加以处理，浏览器无论什么时候都只有一个JavaScript线程在运行JavaScript程序。 </span></span><br><span class="line"></span><br><span class="line"><span class="blockquote">&gt; GUI渲染线程负责渲染浏览器界面，当界面需要重绘（Repaint）或由于某种操作引发回流(Reflow)时,该线程就会执行。但需要注意，GUI渲染线程与JavaScript引擎是互斥的，当JavaScript引擎执行时GUI线程会被挂起，GUI更新会被保存在一个队列中等到JavaScript引擎空闲时立即被执行。 </span></span><br><span class="line"><span class="blockquote">&gt; 事件触发线程，当一个事件被触发时该线程会把事件添加到待处理队列的队尾，等待JavaScript引擎的处理。这些事件可来自JavaScript引擎当前执行的代码块如setTimeout、也可来自浏览器内核的其他线程如鼠标点击、Ajax异步请求等，但由于JavaScript的单线程关系所有这些事件都得排队等待JavaScript引擎处理（当线程中没有执行任何同步代码的前提下才会执行异步代码）。 </span></span><br><span class="line"><span class="header"># 用for循环堵塞运行来测试事件被添加到eventLoop的时机</span></span><br></pre></td></tr></table></figure>
+<p>console.log(‘1 js 开始运行’);<br>setTimeout(function () {<br>    console.log(‘a’);<br>}, 10);  </p>
+<p>setTimeout(function () {<br>    console.log(‘b’);<br>}, 0);  </p>
+<p>var sum = 0;  console.time(‘loopCost’);<br>for (var i = 0; i &lt; 100; i ++) {<br>    sum += i;<br>}<br>console.log(‘for 循环结果：’,sum);  </p>
+<p>console.timeEnd(‘loopCost’);<br>setTimeout(function () {<br>    console.log(‘c’);<br>}, 0);<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">## 运行结果：</span></span><br></pre></td></tr></table></figure></p>
+<p>1 js 开始运行<br>4950<br>loopCost: 0.298ms</p>
+<p>b<br>c<br>a<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">因为b和c的等待时间是<span class="number">0</span>，所以第一时间被加入到回调事件的队尾等待主函数空闲时再进行调用</span><br><span class="line">而a事件则需要等待<span class="number">10</span>ms以后才被加入回调事件队列的队尾等待调用</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 增加for循环运行时间</span></span><br></pre></td></tr></table></figure></p>
+<p>console.log(‘1 js 开始运行’);<br>setTimeout(function () {<br>    console.log(‘a’);<br>}, 10);  </p>
+<p>setTimeout(function () {<br>    console.log(‘b’);<br>}, 0);  </p>
+<p>var sum = 0;  console.time(‘loopCost’);<br>for (var i = 0; i &lt; 10000; i ++) {<br>    sum += i;<br>}<br>console.log(‘for 循环结果：’,sum);  </p>
+<p>console.timeEnd(‘loopCost’);<br>setTimeout(function () {<br>    console.log(‘c’);<br>}, 0);<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">## 运行结果：</span></span><br><span class="line">当<span class="keyword">for</span>循环的运行时间超过<span class="number">10</span>ms的情况下 b会比c先加入进回调事件队列里 然后先被主队列调用。</span><br></pre></td></tr></table></figure></p>
+<p>1 js 开始运行<br>for 循环结果： 49995000<br>loopCost: 13.285ms<br> b<br> a<br> c<br>```</p>
+<p>参考链接：<br><a href="http://www.ruanyifeng.com/blog/2014/10/event-loop.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2014/10/event-loop.html</a></p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/03/14/nodeJs-iOnic-Config/" itemprop="url">
                   iOnic Cordova Mac下的开发环境部署
                 </a>
@@ -291,7 +413,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.bash_profile</span><br></pre></td></tr></table></figure>
 <p>检查环境变量：</p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo $PATH </span><br><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>Library<span class="regexp">/Java/</span>JavaVirtualMachines<span class="regexp">/jdk1.7.0_79.jdk/</span>Contents<span class="regexp">/Home/</span><span class="string">bin:</span><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>Library<span class="regexp">/Java/</span>JavaVirtualMachines<span class="regexp">/jdk1.7.0_79.jdk/</span>Contents<span class="regexp">/Home/</span><span class="string">bin:</span><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>Library<span class="regexp">/Java/</span>JavaVirtualMachines<span class="regexp">/jdk1.7.0_79.jdk/</span>Contents<span class="regexp">/Home/</span><span class="string">bin:</span><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>usr<span class="regexp">/bin:/</span><span class="string">bin:</span><span class="regexp">/usr/</span><span class="string">sbin:</span><span class="regexp">/sbin:/</span>Development<span class="regexp">/android-sdk/</span>platform-<span class="string">tools:</span><span class="regexp">/Development/</span>android-sdk<span class="regexp">/tools:/</span>Development<span class="regexp">/android-sdk/</span><span class="string">tools:</span><span class="regexp">/Development/</span>android-sdk<span class="regexp">/tools:/</span>Development<span class="regexp">/android-sdk/</span><span class="string">tools:</span><span class="regexp">/Development/</span>android-sdk<span class="regexp">/tools:/</span>Development<span class="regexp">/android-sdk/</span>tools</span><br></pre></td></tr></table></figure>
-<h1 id="建立一个新的项目">建立一个新的项目</h1><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ionic <span class="built_in">start</span> myTest blank</span><br><span class="line">$ cd myTest</span><br><span class="line">$ ionic <span class="built_in">platform</span> <span class="built_in">add</span> ios</span><br><span class="line">$ ionic <span class="built_in">platform</span> <span class="built_in">add</span> android</span><br></pre></td></tr></table></figure>
+<h1 id="建立一个新的项目">建立一个新的项目</h1><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ionic <span class="built_in">start</span> oneApp</span><br><span class="line">$ cd oneApp</span><br><span class="line">$ ionic <span class="built_in">platform</span> <span class="built_in">add</span> ios</span><br><span class="line">$ ionic <span class="built_in">platform</span> <span class="built_in">add</span> android</span><br></pre></td></tr></table></figure>
 <p>编译这个空项目：</p>
 <figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">ionic</span> <span class="keyword">build </span>ios</span><br></pre></td></tr></table></figure>
 <p>启动模拟器来显示新建的项目：</p>
@@ -1363,104 +1485,11 @@ conn.pipe(upperCasing).pipe(conn);
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/02/04/nodejs-note-19/" itemprop="url">
-                  Asynchronous Programming -06 async.parallel
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-02-04T00:33:51+08:00" content="2016-02-04">
-              2016-02-04
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/04/nodejs-note-19/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/04/nodejs-note-19/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h2 id="parallel(tasks,_[callback])">parallel(tasks, [callback])</h2><p>Run the <code>tasks</code> array of functions in parallel, without waiting until the previous<br>function has completed. If any of the functions pass an error to its<br>callback, the main <code>callback</code> is immediately called with the value of the error.<br>Once the <code>tasks</code> have completed, the results are passed to the final <code>callback</code> as an<br>array.</p>
-<p><strong>Note:</strong> <code>parallel</code> is about kicking-off I/O tasks in parallel, not about parallel execution of code.  If your tasks do not use any timers or perform any I/O, they will actually be executed in series.  Any synchronous setup sections for each task will happen one after the other.  JavaScript remains single-threaded.</p>
-<p>It is also possible to use an object instead of an array. Each property will be<br>run as a function and the results will be passed to the final <code>callback</code> as an object<br>instead of an array. This can be a more readable way of handling results from parallel.</p>
-<p><strong>Arguments</strong></p>
-<ul>
-<li><code>tasks</code> - An array or object containing functions to run. Each function is passed<br>a <code>callback(err, result)</code> which it must call on completion with an error <code>err</code><br>(which can be <code>null</code>) and an optional <code>result</code> value.</li>
-<li><code>callback(err, results)</code> - An optional callback to run once all the functions<br>have completed successfully. This function gets a results array (or object) containing all<br>the result arguments passed to the task callbacks.</li>
-</ul>
-<p><strong>Example</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span>.parallel([</span><br><span class="line">    <span class="function"><span class="keyword">function</span>(<span class="params">callback</span>)</span>&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            callback(<span class="literal">null</span>, <span class="string">'one'</span>);</span><br><span class="line">        &#125;, <span class="number">200</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="function"><span class="keyword">function</span>(<span class="params">callback</span>)</span>&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            callback(<span class="literal">null</span>, <span class="string">'two'</span>);</span><br><span class="line">        &#125;, <span class="number">100</span>);</span><br><span class="line">    &#125;</span><br><span class="line">],</span><br><span class="line"><span class="comment">// optional callback</span></span><br><span class="line"><span class="function"><span class="keyword">function</span>(<span class="params">err, results</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// the results array will equal ['one','two'] even though</span></span><br><span class="line">    <span class="comment">// the second function had a shorter timeout.</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// an example using an object instead of an array</span></span><br><span class="line"><span class="keyword">async</span>.parallel(&#123;</span><br><span class="line">    one: <span class="function"><span class="keyword">function</span>(<span class="params">callback</span>)</span>&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            callback(<span class="literal">null</span>, <span class="number">1</span>);</span><br><span class="line">        &#125;, <span class="number">200</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    two: <span class="function"><span class="keyword">function</span>(<span class="params">callback</span>)</span>&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            callback(<span class="literal">null</span>, <span class="number">2</span>);</span><br><span class="line">        &#125;, <span class="number">100</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,</span><br><span class="line"><span class="function"><span class="keyword">function</span>(<span class="params">err, results</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// results is now equals to: &#123;one: 1, two: 2&#125;</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h2 id="apply_async-parallel_in_our_example">apply async.parallel in our example</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="keyword">async</span> = <span class="built_in">require</span>(<span class="string">'async'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> dir = path.join(__dirname, <span class="string">'temp'</span>);</span><br><span class="line"><span class="keyword">var</span> source = __filename;</span><br><span class="line"><span class="keyword">var</span> target = path.join(dir, <span class="string">'target'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> context;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> parallelOperations=[	 </span><br><span class="line">	fs.mkdir.bind(context, dir),</span><br><span class="line">	fs.readFile.bind(context, source)</span><br><span class="line">];</span><br><span class="line"><span class="keyword">var</span>  opreations = [</span><br><span class="line">	<span class="function"><span class="keyword">function</span>(<span class="params">cb</span>)</span>&#123;</span><br><span class="line">		<span class="keyword">async</span>.parallel(parallelOperations, cb);</span><br><span class="line">	&#125;,</span><br><span class="line">	extractResult(<span class="number">1</span>),</span><br><span class="line">	fs.writeFile.bind(context, target)</span><br><span class="line">];</span><br><span class="line"> </span><br><span class="line"><span class="keyword">async</span>.waterfall(opreations, done);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">done</span>(<span class="params">err</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (err)&#123;</span><br><span class="line">		handleError(err);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">'all done'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">extractResult</span>(<span class="params">pos</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">results,callback</span>)</span>&#123;</span><br><span class="line">		str = results.toString(<span class="string">'utf-8'</span>);</span><br><span class="line">		<span class="built_in">console</span>.log(str);</span><br><span class="line">		callback(<span class="literal">null</span>, results[pos]);</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">handleError</span>(<span class="params">err</span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.error(err);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="keyword">async</span> = <span class="built_in">require</span>(<span class="string">'async'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> dir = path.join(__dirname, <span class="string">'temp'</span>);</span><br><span class="line"><span class="keyword">var</span> source = __filename;</span><br><span class="line"><span class="keyword">var</span> target = path.join(dir, <span class="string">'target'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> context;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span>  opreations = [</span><br><span class="line">	parallel(</span><br><span class="line">	fs.mkdir.bind(context, dir),</span><br><span class="line">	fs.readFile.bind(context, source)),</span><br><span class="line">	extractResult(<span class="number">1</span>),</span><br><span class="line">	fs.writeFile.bind(context, target)</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span>.waterfall(opreations, done);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">done</span>(<span class="params">err</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (err)&#123;</span><br><span class="line">		handleError(err);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">'all done'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">parallel</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> ops = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>);</span><br><span class="line">	<span class="comment">//Array.prototype.slice.call(arguments)能将具有length属性的对象转成数组</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">cb</span>)</span>&#123;</span><br><span class="line">		<span class="keyword">async</span>.parallel(ops,cb);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">extractResult</span>(<span class="params">pos</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">results,callback</span>)</span>&#123;</span><br><span class="line">		str = results.toString(<span class="string">'utf-8'</span>);</span><br><span class="line">		<span class="built_in">console</span>.log(str);</span><br><span class="line">		<span class="comment">//检查结果</span></span><br><span class="line">		callback(<span class="literal">null</span>, results[pos]);</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">handleError</span>(<span class="params">err</span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.error(err);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1501,7 +1530,7 @@ conn.pipe(upperCasing).pipe(conn);
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1515,7 +1544,7 @@ conn.pipe(upperCasing).pipe(conn);
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-count">24</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
