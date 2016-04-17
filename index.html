@@ -277,10 +277,9 @@
 <h2 id="CSS的@media规则">CSS的@media规则</h2><p>同一个CSS文件中，也可以根据不同的屏幕分辨率，选择应用不同的CSS规则。</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">　　<span class="at_rule">@<span class="keyword">media</span> screen and (max-device-width: <span class="number">400px</span>) </span>&#123;</span><br><span class="line">　　　　<span class="class">.column</span> <span class="rules">&#123;</span><br><span class="line">　　　　　　<span class="rule"><span class="attribute">float</span>:<span class="value"> none</span></span>;</span><br><span class="line">　　　　　　<span class="rule"><span class="attribute">width</span>:<span class="value">auto</span></span>;</span><br><span class="line">　　　　&#125;</span></span><br><span class="line">　　　　<span class="id">#sidebar</span> <span class="rules">&#123;</span><br><span class="line">　　　　　　<span class="rule"><span class="attribute">display</span>:<span class="value">none</span></span>;</span><br><span class="line">　　　　&#125;</span></span><br><span class="line">　　&#125;</span><br></pre></td></tr></table></figure>
 <p>上面的代码意思是，如果屏幕宽度小于400像素，<br>则column块取消浮动（float:none）、宽度自动调节（width:auto），sidebar块不显示（display:none）。</p>
-<h1 id="@media_screen_属性的浏览器支持情况">@media screen 属性的浏览器支持情况</h1><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-17/99373677.jpg" alt=""></p>
-<h1 id="@media_width_属性浏览器的支持情况">@media width 属性浏览器的支持情况</h1><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-17/7417540.jpg" alt=""></p>
-<p>ref:</p>
-<p><a href="http://www.ruanyifeng.com/blog/2012/05/responsive_web_design.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2012/05/responsive_web_design.html</a> -阮一峰</p>
+<h1 id="兼容情况:">兼容情况:</h1><h2 id="@media_screen_属性的浏览器支持情况">@media screen 属性的浏览器支持情况</h2><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-17/99373677.jpg" alt=""></p>
+<h2 id="@media_width_属性浏览器的支持情况">@media width 属性浏览器的支持情况</h2><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-17/7417540.jpg" alt=""></p>
+<h1 id="Ref:">Ref:</h1><p><a href="http://www.ruanyifeng.com/blog/2012/05/responsive_web_design.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2012/05/responsive_web_design.html</a> -阮一峰</p>
 
             
           </span>
