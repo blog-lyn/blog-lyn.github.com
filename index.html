@@ -263,22 +263,85 @@
 <p> user-scalable 用户是否可以手动缩放,一般值设为no,不允许用户缩放;</p>
 </blockquote>
 <p>这段代码的大意是让viewport的物理宽度等于设备的分辨率,不允许用户缩放.原始缩放比例（initial-scale=1）为1.0，即网页初始大小占屏幕面积的100%,所有主流浏览器都支持这个设置，包括IE9。</p>
-<h2 id="js动态改变meta_viewport标签">js动态改变meta viewport标签</h2><h3 id="第一种方法">第一种方法</h3><p>可以使用document.write来动态输出meta viewport标签，例如：</p>
+<h2 id="js动态改变meta_viewport标签">js动态改变meta viewport标签</h2><h3 id="第一种方法:">第一种方法:</h3><p>可以使用document.write来动态输出meta viewport标签，例如：</p>
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">document.<span class="command">write</span>('&lt;meta <span class="property">name</span>=<span class="string">"viewport"</span> content=<span class="string">"width=device-width,initial-scale=1"</span>&gt;')</span><br></pre></td></tr></table></figure>
 <h3 id="第二种方法:">第二种方法:</h3><p>通过setAttribute来改变</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">meta</span> <span class="attribute">id</span>=<span class="value">"testViewport"</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width = 380"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript"></span><br><span class="line"><span class="keyword">var</span> mvp = <span class="built_in">document</span>.getElementById(<span class="string">'testViewport'</span>);</span><br><span class="line">mvp.setAttribute(<span class="string">'content'</span>,<span class="string">'width=480'</span>);</span><br><span class="line"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h2 id="选择加载CSS">选择加载CSS</h2><p>“自适应网页设计”的核心，就是CSS3引入的Media Query模块。<br>它的意思就是，自动探测屏幕宽度，然后加载相应的CSS文件。</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">　　&lt;link rel=<span class="string">"stylesheet"</span> <span class="class"><span class="keyword">type</span></span>=<span class="string">"text/css"</span></span><br><span class="line">　　　　media=<span class="string">"screen and (max-device-width: 400px)"</span></span><br><span class="line">　　　　href=<span class="string">"tinyScreen.css"</span> /&gt;</span><br></pre></td></tr></table></figure>
-<p>上面的代码意思是，如果屏幕宽度小于400像素（max-device-width: 400px），就加载tinyScreen.css文件。</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">　　&lt;link rel=<span class="string">"stylesheet"</span> <span class="class"><span class="keyword">type</span></span>=<span class="string">"text/css"</span></span><br><span class="line">　　　　media=<span class="string">"screen and (min-width: 400px) and (max-device-width: 600px)"</span></span><br><span class="line">　　　　href=<span class="string">"smallScreen.css"</span> /&gt;</span><br></pre></td></tr></table></figure>
-<p>如果屏幕宽度在400像素到600像素之间，则加载smallScreen.css文件。<br>除了用html标签加载CSS文件，还可以在现有CSS文件中加载。</p>
+<h1 id="CSS_@Media查询">CSS @Media查询</h1><p>引用MDN的描述:</p>
+<blockquote>
+<p> 媒体查询 包含了一个媒体类型和至少一个使用如宽度、高度和颜色等媒体属性来限制样式表范围的表达式。CSS3加入的媒体查询使得无需修改内容便可以使样式应用于某些特定的设备范围。<br>媒体查询包含了一个媒体类型 和如CSS3规范中描述的包含一个或多个表达式的媒体属性，这些媒体属性会被解析成真或假。如果媒体查询中的媒体类型与文档要展示的设备相符则查询结果为真，并且媒体查询中的所有表达式为真。</p>
+<h2 id="在stylesheet_Link_选择加载制定的CSS">在stylesheet Link 选择加载制定的CSS</h2></blockquote>
+<p>“自适应网页设计”的核心，就是CSS3引入的Media Query模块。<br>它的意思就是，自动探测屏幕宽度，然后加载相应的CSS文件。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">&lt;!-- link元素中的CSS媒体查询 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">media</span>=<span class="value">"(max-width: 800px)"</span> <span class="attribute">href</span>=<span class="value">"example.css"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上面的代码意思是，如果屏幕宽度不超过800像素（max-width: 800px），就加载example.css文件。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link rel=<span class="string">"stylesheet"</span> <span class="class"><span class="keyword">type</span></span>=<span class="string">"text/css"</span> media=<span class="string">"screen and (min-width: 400px) and (max-device-width: 600px)"</span> href=<span class="string">"smallScreen.css"</span> /&gt;</span><br></pre></td></tr></table></figure>
+<p>如果屏幕宽度在400像素到600像素之间，则加载smallScreen.css文件。<br>除了用html标签加载CSS文件，还可以在现有CSS文件中使用@import来实现加载。<br>但是并不推荐这样做.</p>
 <figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">　　<span class="constant">@import</span> url(<span class="string">"tinyScreen.css"</span>) screen <span class="literal">and</span> (<span class="built_in">max</span>-device-width: <span class="number">400</span>px)<span class="comment">;</span></span><br></pre></td></tr></table></figure>
-<h2 id="CSS的@media规则">CSS的@media规则</h2><p>同一个CSS文件中，也可以根据不同的屏幕分辨率，选择应用不同的CSS规则。</p>
+<p>当媒体查询为真时，相关的样式表或样式规则就会按照正常的级联规则被应用。即使媒体查询返回假， <link> 标签上带有媒体查询的样式表 仍将被下载 （只不过不会被应用）。</p>
+<p>在不使用 not 或 only 操作符的情况下，媒体类型是可选的，默认为 all 。</p>
+<h2 id="在CSS文件内使用@media规则加载不同的CSS">在CSS文件内使用@media规则加载不同的CSS</h2><p>同一个CSS文件中，也可以根据不同的屏幕分辨率，选择应用不同的CSS规则。</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">　　<span class="at_rule">@<span class="keyword">media</span> screen and (max-device-width: <span class="number">400px</span>) </span>&#123;</span><br><span class="line">　　　　<span class="class">.column</span> <span class="rules">&#123;</span><br><span class="line">　　　　　　<span class="rule"><span class="attribute">float</span>:<span class="value"> none</span></span>;</span><br><span class="line">　　　　　　<span class="rule"><span class="attribute">width</span>:<span class="value">auto</span></span>;</span><br><span class="line">　　　　&#125;</span></span><br><span class="line">　　　　<span class="id">#sidebar</span> <span class="rules">&#123;</span><br><span class="line">　　　　　　<span class="rule"><span class="attribute">display</span>:<span class="value">none</span></span>;</span><br><span class="line">　　　　&#125;</span></span><br><span class="line">　　&#125;</span><br></pre></td></tr></table></figure>
 <p>上面的代码意思是，如果屏幕宽度小于400像素，<br>则column块取消浮动（float:none）、宽度自动调节（width:auto），sidebar块不显示（display:none）。</p>
+<p>##媒体属性<br><em>引用自 MDN</em></p>
+<p>大多数媒体属性带有“min-”和“max-”前缀，用于表达“小于等于”和“大于等于”。这避免了使用与HTML和XML冲突的“&lt;”和“&gt;”字符。如果你未向媒体属性指定一个值，并且该特性的实际值不为零，则该表达式被解析为真。</p>
+<p>注意：如果浏览器运行的设备上没有该属性值，包含这个属性值的表达式一般返回假。例如，在语音合成器上查询屏幕长宽比总是返回假。</p>
+<h3 id="颜色（color）">颜色（color）</h3><p>值： <color><br>媒体： visual<br>是否接受 min/max 前缀：是</color></p>
+<p>指定输出设备每个像素单元的比特值。如果设备不支持输出颜色，则该值为0。</p>
+<p>注意：如果每个颜色单元具有不同数量的比特值，则使用最小的。例如，如果显示器为蓝色和红色提供5比特，而为绿色提供6比特，则认为每个颜色单元有5比特。如果设备使用索引颜色，则使用颜色表中颜色单元的最小比特数。</p>
+<h4 id="示例">示例</h4><p>向所有能显示颜色的设备应用样式表：</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@media</span> <span class="function">all <span class="title">and</span> <span class="params">(color)</span> </span>&#123; ... &#125;</span><br></pre></td></tr></table></figure>
+<p>向每个颜色单元至少有4个比特的设备应用样式表：</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">@media</span> all <span class="literal">and</span> (<span class="built_in">min</span>-color: <span class="number">4</span>) &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="颜色索引（color-index）">颜色索引（color-index）</h3><p> 值：<integer><br>媒体： visual<br>是否接受 min/max 前缀：是</integer></p>
+<p>指定了输出设备中颜色查询表中的条目数量。</p>
+<h4 id="示例-1">示例</h4><p>向所有使用索引颜色的设备应用样式表，你可以这么做：</p>
+<p>@media all and (color-index) { … }<br>向所有使用至少256个索引颜色的设备应用样式表：</p>
+<link rel="stylesheet" media="all and (min-color-index: 256)" href="http://foo.bar.com/stylesheet.css">
+
+<h3 id="宽高比（aspect-ratio）">宽高比（aspect-ratio）</h3><p>值：<ratio><br>媒体： visual, tactile<br>是否接受 min/max 前缀：是</ratio></p>
+<p>描述了输出设备目标显示区域的宽高比。该值包含两个以“/”分隔的正整数。代表了水平像素数（第一个值）与垂直像素数（第二个值）的比例。</p>
+<h4 id="示例-2">示例</h4><p>下面为显示区域宽高至少为一比一的设备选择了一个特殊的样式表。<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">@media</span> screen <span class="literal">and</span> (<span class="built_in">min</span>-aspect-ratio: <span class="number">1</span>/<span class="number">1</span>) &#123; ... &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这指定了宽高比或者1：1或者更大。换句话说，可视区域或者是正方形或者是宽屏。</p>
+<h3 id="设备宽高比（device-aspect-ratio）">设备宽高比（device-aspect-ratio）</h3><p>值：<ratio><br>媒体：visual, tactile<br>是否接受 min/max 前缀：是</ratio></p>
+<p>描述了输出设备的宽高比。该值包含两个以“/”分隔的正整数。代表了水平像素数（第一个值）与垂直像素数（第二个值）的比例。</p>
+<h4 id="示例-3">示例</h4><p>下面为宽屏设备选择了一个特殊的样式表。</p>
+<p>@media screen and (device-aspect-ratio: 16/9), screen and (device-aspect-ratio: 16/10) { … }<br>宽高比或者16：9或者16：10。</p>
+<h3 id="设备高度（device-height）">设备高度（device-height）</h3><p>值：<length><br>媒体：visual, tactile<br>是否接受 min/max 前缀：是</length></p>
+<p>描述了输出设备的高度（整个屏幕或页的高度，而不是仅仅像文档窗口一样的渲染区域）。</p>
+<h4 id="示例-4">示例</h4><p>向显示在最大宽度800px的屏幕上的文档应用样式表，你可以这样做：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">media</span>=<span class="value">"screen and (max-device-width: 799px)"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="设备宽度（device-width）">设备宽度（device-width）</h3><p>值：<length><br>媒体： visual, tactile<br>是否接受 min/max 前缀：是</length></p>
+<p>描述了输出设备的宽度（整个屏幕或页的高度，而不是仅仅像文档窗口一样的渲染区域）。</p>
+<h3 id="网格（grid）">网格（grid）</h3><p>值：<integer><br>媒体：all<br>是否接受 min/max 前缀： 否</integer></p>
+<p>判断输出设备是网格设备还是位图设备。如果设备是基于网格的（例如电传打字机终端或只能显示一种字形的电话），该值为1，否则为0。</p>
+<h4 id="示例-5">示例</h4><p>向一个15字符宽度或更窄的手持设备应用样式：<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">@media</span> handheld <span class="literal">and</span> (grid) <span class="literal">and</span> (<span class="built_in">max</span>-width: <span class="number">15</span>em) &#123; ... &#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意：“em” 在网格设备中有不同的意义；一个“em”的实际宽度不得而知，假设1em相当于一个网格单元的宽高。</p>
+<h3 id="高度（height）">高度（height）</h3><p>值：<length><br>媒体：visual, tactile<br>是否接受 min/max 前缀：是</length></p>
+<p>height 媒体属性描述了输出设备渲染区域（如可视区域的高度或打印机纸盒的高度）的高度。</p>
+<p>注意：用户调整窗口大小后，火狐浏览器会根据使用了width和height属性的媒体查询来切换合适的样式表。</p>
+<h3 id="方向（orientation）">方向（orientation）</h3><p>值：landscape | portrait<br>媒体：visual<br>是否接受 min/max 前缀：否</p>
+<p>指定了设备处于横屏（宽度大于宽度）模式还是竖屏（高度大于宽度）模式。</p>
+<h4 id="示例-6">示例</h4><p>向竖屏设备应用样式表：</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="at_rule">@media</span> all and (<span class="attribute">orientation</span>: portrait) &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分辨率（resolution）">分辨率（resolution）</h3><p>值： <resolution><br>媒体： bitmap<br>是否接受 min/max 前缀：是</resolution></p>
+<p>指定输出设备的分辨率（像素密度）。分辨率可以用每英寸（dpi）或每厘米（dpcm）的点数来表示。</p>
+<h4 id="示例-7">示例</h4><p>为每英寸至多300点的打印机应用样式：<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">@media</span> print <span class="literal">and</span> (<span class="built_in">min</span>-resolution: <span class="number">300</span>dpi) &#123; ... &#125;</span><br></pre></td></tr></table></figure></p>
+<p>替换老旧的 (min-device-pixel-ratio: 2) 语法：<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">@media</span> screen <span class="literal">and</span> (<span class="built_in">min</span>-resolution: <span class="number">2</span>dppx) &#123; ... &#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="扫描（scan）">扫描（scan）</h3><p>值： progressive | interlace<br>媒体：tv<br>是否接受 min/max 前缀：否</p>
+<p>描述了电视输出设备的扫描过程。</p>
+<p>示例</p>
+<p>向以顺序方式扫描的电视机上应用样式表：<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="at_rule">@media</span> tv and (<span class="attribute">scan</span>: progressive) &#123; ... &#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="宽度（width）">宽度（width）</h3><p>值： <length><br>媒体： visual, tactile<br>是否接受 min/max 前缀：是</length></p>
+<p>width 媒体属性描述了输出设备渲染区域（如可视区域的宽度或打印机纸盒的宽度）的宽度。</p>
+<p>注意：用户调整窗口大小后，火狐浏览器会根据使用了width和height属性的媒体查询来切换合适的样式表。<br>示例</p>
+<p>如果你想向最小宽度20em的手持设备或屏幕应用样式表，你可以使用这样的查询：</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">@media</span> handheld <span class="literal">and</span> (<span class="built_in">min</span>-width: <span class="number">20</span>em), screen <span class="literal">and</span> (<span class="built_in">min</span>-width: <span class="number">20</span>em) &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+<p>这个媒体查询将向最小宽度8.5英寸的打印机应用样式表：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">media</span>=<span class="value">"print and (min-width: 8.5in)"</span></span><br><span class="line">    <span class="attribute">href</span>=<span class="value">"http://foo.com/mystyle.css"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这个查询适用于宽度在500px和800px之间的屏幕：</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">@media</span> screen <span class="literal">and</span> (<span class="built_in">min</span>-width: <span class="number">500</span>px) <span class="literal">and</span> (<span class="built_in">max</span>-width: <span class="number">800</span>px) &#123; ... &#125;</span><br></pre></td></tr></table></figure>
 <h1 id="兼容情况:">兼容情况:</h1><h2 id="@media_screen_属性的浏览器支持情况">@media screen 属性的浏览器支持情况</h2><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-17/99373677.jpg" alt=""></p>
 <h2 id="@media_width_属性浏览器的支持情况">@media width 属性浏览器的支持情况</h2><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-17/7417540.jpg" alt=""></p>
-<h1 id="Ref:">Ref:</h1><p><a href="http://www.ruanyifeng.com/blog/2012/05/responsive_web_design.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2012/05/responsive_web_design.html</a> -阮一峰</p>
+<h1 id="Ref:">Ref:</h1><p><a href="http://www.ruanyifeng.com/blog/2012/05/responsive_web_design.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2012/05/responsive_web_design.html</a> -阮一峰<br><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media#Examples" target="_blank" rel="external">https://developer.mozilla.org/en-US/docs/Web/CSS/@media#Examples</a> -MDN</p>
 
             
           </span>
