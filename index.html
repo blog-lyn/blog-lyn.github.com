@@ -207,6 +207,296 @@
             
             
               
+                <a class="post-title-link" href="/2016/05/26/addNativeJavaSciptsInterface/" itemprop="url">
+                  addNativeJavaSciptsInterface
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-05-26T23:05:54+08:00" content="2016-05-26">
+              2016-05-26
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/26/addNativeJavaSciptsInterface/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/26/addNativeJavaSciptsInterface/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="技术需求:">技术需求:</h1><ul>
+<li>Native代码调用webview里面的js脚本,获取返回值</li>
+<li>webview中的js脚本调用本地的Native代码,获取返回值</li>
+<li>Native 调用js并传递参数,获取返回值</li>
+<li>Js调用 Native并传递参数,获取返回值</li>
+</ul>
+<h1 id="相关文档:">相关文档:</h1><h2 id="Android_:">Android :</h2><p><code>addJavascriptInterface(java.lang.Object, java.lang.String)</code></p>
+<h3 id="官方文档:">官方文档:</h3><ul>
+<li><code>https://developer.android.com/guide/webapps/webview.html#UsingJavaScript</code></li>
+<li><code>https://developer.android.com/reference/android/webkit/WebView.html#addJavascriptInterface(java.lang.Object, java.lang.String)</code></li>
+</ul>
+<h3 id="Android_参考文档:">Android 参考文档:</h3><ul>
+<li><code>https://github.com/pedant/safe-java-js-webview-bridge</code></li>
+<li><code>http://droidyue.com/blog/2014/09/20/interaction-between-java-and-javascript-in-android/index.html</code></li>
+<li><code>http://rensanning.iteye.com/blog/2043049</code></li>
+</ul>
+<h2 id="iOS:">iOS:</h2><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NSString <span class="keyword">*</span>returnvalue = [webViewstringByEvaluatingJavaScriptFromString:<span class="comment">@"your javascript code string here"];</span></span><br></pre></td></tr></table></figure>
+<h3 id="官方文档:-1">官方文档:</h3><ul>
+<li><a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIWebView_Class/" target="_blank" rel="external">https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIWebView_Class/</a></li>
+</ul>
+<h3 id="iOS_实现参考:">iOS 实现参考:</h3><ul>
+<li><a href="https://github.com/marcuswestin/WebViewJavascriptBridge" target="_blank" rel="external">https://github.com/marcuswestin/WebViewJavascriptBridge</a></li>
+<li><a href="http://dukeland.hk/2013/01/28/adding-JavaScript-interface-to-uiwebview-like-android/" target="_blank" rel="external">http://dukeland.hk/2013/01/28/adding-JavaScript-interface-to-uiwebview-like-android/</a></li>
+</ul>
+<h1 id="技术实现示例:">技术实现示例:</h1><p>这里以Android 为例: iOS可以使用github上的Bridge库(<code>https://github.com/marcuswestin/WebViewJavascriptBridge</code>),实现类似Android的调用方法.</p>
+<h2 id="新建一个_WebView">新建一个 WebView</h2><p>代码参考如下:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="title">WebView</span>  <span class="attribute">xmlns:android</span>=<span class="value">http:</span>//<span class="attribute">schemas.android.com</span>/<span class="attribute">apk</span>/<span class="attribute">res</span>/<span class="attribute">android</span></span><br><span class="line"><span class="attribute">android:id</span>=<span class="value">"@+id/webview"</span>     </span><br><span class="line"><span class="attribute">android:layout_width</span>=<span class="value">"fill_parent"</span>     </span><br><span class="line"><span class="attribute">android:layout_height</span>=<span class="value">"fill_parent"</span></span><br><span class="line"> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>使用 loadUrl()方法在WebView中加载web页面, 参考如下:</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WebView myWebView = <span class="list">(<span class="keyword">WebView</span>)</span> findViewById<span class="list">(<span class="keyword">R</span>.id.webview)</span><span class="comment">; myWebView.loadUrl("http://www.example.com");</span></span><br></pre></td></tr></table></figure>
+<p>记得设置外网权限:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">manifest</span> <span class="attribute">...</span> &gt;</span>     </span><br><span class="line"><span class="tag">&lt;<span class="title">uses-permission</span> <span class="attribute">android:name</span>=<span class="value">"android.permission.INTERNET"</span> /&gt;</span>     </span><br><span class="line">... </span><br><span class="line"><span class="tag">&lt;/<span class="title">manifest</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>所有的设置如上就应该可以使用了</p>
+<h2 id="在_WebView_中启用JavaScript">在 WebView 中启用JavaScript</h2><p>JavaScript默认情况下是disable的需要通过设置 WebSettings 到 WebView. 可以通过 getSettings()获取到WebSettings然后设置setJavaScriptEnabled().<br>示例如下:</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WebView myWebView = <span class="list">(<span class="keyword">WebView</span>)</span> findViewById<span class="list">(<span class="keyword">R</span>.id.webview)</span><span class="comment">; WebSettings webSettings = myWebView.getSettings(); webSettings.setJavaScriptEnabled(true);</span></span><br></pre></td></tr></table></figure>
+<h2 id="实现_JavaScript_代码_和_Android_代码的接口">实现 JavaScript 代码 和 Android 代码的接口</h2><p>调用webview的 addJavascriptInterface(), 传入两个参数 第一个是Java中定义的class对象,第二个是javaScript中的接口对象名.</p>
+<h3 id="第一步_在Android中声明被js调用的class">第一步 在Android中声明被js调用的class</h3><p>参考以下代码:</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">WebAppInterface</span> &#123;</span><br><span class="line">Context mContext;      </span><br><span class="line"><span class="comment">/** Instantiate the interface and set the context*/</span>     </span><br><span class="line">	WebAppInterface(Context c) &#123; </span><br><span class="line">        		mContext = c;     </span><br><span class="line">	&#125;      </span><br><span class="line"><span class="comment">/** Show a toast from the web page */</span>     </span><br><span class="line">	@<span class="function">JavascriptInterface     </span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title">showToast</span>(<span class="params">String toast</span>) </span>&#123; </span><br><span class="line">          Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();     </span><br><span class="line"> 	&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码说明: WebAppInterface 这个class 在被js调用时传入 Toast 参数,调用这个 showToast() 方法</p>
+<p><strong>注意</strong>: </p>
+<pre><code>如果你的 <span class="attr_selector">[targetSdkVersiong]</span> 高于<span class="tag">17</span> (<span class="attribute">https</span>:<span class="comment">//developer.android.com/guide/topics/manifest/uses-sdk-element.html#target), 你必须增加 @JavascriptInterface 注释 到所有你想要Js可以调用的public方法中,如果没有注释那么js在 Android 4.2 或更高的版本中不能调用到安卓的方法.</span>
+</code></pre><h3 id="第二步,在webview中定义接口">第二步,在webview中定义接口</h3><p>addJavascriptInterface() 定义接口为:  hostApp, 把这个class 和 webview中的JavaScript进行绑定,<br>参考代码:</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WebView webView = <span class="list">(<span class="keyword">WebView</span>)</span> findViewById<span class="list">(<span class="keyword">R</span>.id.webview)</span><span class="comment">; webView.addJavascriptInterface(new WebAppInterface(this), "hostApp");</span></span><br></pre></td></tr></table></figure>
+<p>代码说明:<br>为在webview中运行的JavaScript定义好了一个接口: hostApp 这样js就可以调用 WebAppInterface 这个class. </p>
+<h3 id="第三步,js中调用webview中定义的接口:">第三步,js中调用webview中定义的接口:</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"button"</span> <span class="attribute">value</span>=<span class="value">"Say hello"</span> <span class="attribute">onClick</span>=<span class="value">"showAndroidToast('Hello Android!')"</span> /&gt;</span>  </span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="actionscript"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">showAndroidToast</span><span class="params">(toast)</span> </span>&#123;</span><br><span class="line">         hostApp.showToast(toast);     </span><br><span class="line">&#125; </span><br><span class="line"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>JavaScript中不需要做任何声明,直接可以使用webview中提供的hostApp接口.<br>当你点击input按钮时  showAndroidToast() function 会自动使用 hostApp 接口 去调用 WebAppInterface.showToast() 方法.</p>
+<h2 id="Java调用JavaScript_:">Java调用JavaScript :</h2><ul>
+<li>直接把要运行的js代码作为参数调用loadUrl .就可以实现调用,但注意要声明传入的参数是JavaScript.</li>
+</ul>
+<h3 id="代码实现:">代码实现:</h3><figure class="highlight scilab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">String call = <span class="string">"javascript:helloWorld(1,2)"</span>;</span><br><span class="line"><span class="transposed_variable">WebView.</span>loadUrl(<span class="string">"http://www.hs.com"</span>);  </span><br><span class="line"></span><br><span class="line"><span class="comment">//先加载页面后就可以load JavaScript代码.</span></span><br><span class="line"></span><br><span class="line"><span class="transposed_variable">WebView.</span>loadUrl(call);    </span><br><span class="line">  </span><br><span class="line">&lt;script type=<span class="string">"text/javascript"</span>&gt;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">helloWorld</span><span class="params">(num1, num2)</span> &#123;</span></span><br><span class="line">	   <span class="built_in">sum</span> =num1+num2;</span><br><span class="line">       alert(<span class="string">"helloWord!"</span>+<span class="built_in">sum</span>); </span><br><span class="line">	<span class="comment">//这里也可以在java中定义一个方法接受js返回的参数.</span></span><br><span class="line">	<span class="comment">//参考上面的js调用java的代码    </span></span><br><span class="line">&#125; </span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/2016/05/19/JRE-setup-doc/" itemprop="url">
+                  Setup Java Eclipse Tomcat & FreeMarker on Mac
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-05-19T09:07:51+08:00" content="2016-05-19">
+              2016-05-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/19/JRE-setup-doc/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/19/JRE-setup-doc/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h2 id="Install_Homebrew">Install <a href="http://brew.sh/" target="_blank" rel="external">Homebrew</a></h2><ul>
+<li>Open Terminal.</li>
+<li>If you don’t already have Homebrew installed:<ul>
+<li>Run command to install Homebrew.<ul>
+<li><code>ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Make sure that it is up to date.<ul>
+<li><code>brew update</code></li>
+</ul>
+</li>
+<li>Check that there would not be any potential problems in your system.<ul>
+<li><code>brew doctor</code></li>
+</ul>
+</li>
+<li>Upgrade Homebrew packages.<ul>
+<li><code>brew upgrade</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="Install_JAVA_SDK">Install JAVA SDK</h2><p>Check if Java installed</p>
+<p><code>java -version</code></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Lyn-Cheung-MBP: Lyn$ java -version</span><br><span class="line">java version <span class="string">"1.7.0_79"</span></span><br><span class="line"><span class="function"><span class="title">Java</span><span class="params">(TM)</span></span> SE Runtime Environment (build <span class="number">1.7</span>.<span class="number">0</span>_79-b15)</span><br><span class="line">Java <span class="function"><span class="title">HotSpot</span><span class="params">(TM)</span></span> <span class="number">64</span>-Bit Server VM (build <span class="number">24.79</span>-b02, mixed mode)</span><br></pre></td></tr></table></figure>
+<p>Java SE Development Kit 8 Downloads</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/www.oracle.com/technetwork</span><span class="regexp">/java/javase</span><span class="regexp">/downloads/jdk</span>8-downloads-<span class="number">2133151</span>.html</span><br></pre></td></tr></table></figure>
+<p>edit  <code>~/.bash_profile</code></p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cat ~/.bash_profile</span><br><span class="line">export PATH=$&#123;PATH&#125;:/Development/android-sdk/tools</span><br><span class="line">export JAVA_HOME=$(/usr/libexec/java_home)</span><br><span class="line">export PATH=$&#123;JAVA_HOME&#125;/bin:<span class="variable">$PATH</span></span><br><span class="line">export PATH=/usr/local/bin:<span class="variable">$PATH</span></span><br><span class="line">export path=/usr/local/bin:<span class="variable">$path</span></span><br></pre></td></tr></table></figure>
+<p>reload bash_profile</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">source</span> ~/.bash_profile</span><br></pre></td></tr></table></figure>
+<h2 id="Eclipse">Eclipse</h2><ul>
+<li>Download and install latest version of <em>Eclipse IDE for Java EE developers</em> from <a href="http://www.eclipse.org/downloads/" target="_blank" rel="external">Eclipse Downloads</a></li>
+</ul>
+<h3 id="Set_Eclipse_to_use_the_previously_installed_version_of_Java">Set Eclipse to use the previously installed version of Java</h3><ul>
+<li>If you have multiple versions of Java installed, set the Eclipse to use the version installed earlier in these instructions.</li>
+<li><em>Window &gt;&gt; Preferences &gt;&gt; Java &gt;&gt; Installed JREs</em> Add the path to the Java version you installed (e.g. <em>/usr/lib/jvm/java-7-oracle (java-7-oracle)</em> )</li>
+</ul>
+<h2 id="Installing_Tomcat_8">Installing Tomcat 8</h2><ul>
+<li><p><code>brew install tomcat</code>: <a href="http://blog.bolshchikov.net/post/50277857673/installing-tomcat-on-macos-with-homebrew" target="_blank" rel="external">Installing Tomcat on MacOS with homebrew</a></p>
+<ul>
+<li><code>sudo ln -s /usr/local/Cellar/tomcat/8.0.14/libexec /Library/Tomcat</code></li>
+<li><code>sudo chown -R /Library/Tomcat</code></li>
+<li><code>sudo chmod +x /Library/Tomcat/bin/*.sh</code></li>
+</ul>
+</li>
+<li><p>In Eclipse:</p>
+<ul>
+<li><em>Eclipse &gt;&gt; Preferences</em></li>
+<li><em>Server &gt;&gt; Runtime Environment</em></li>
+<li>Click <em>“Add…”</em></li>
+<li>Under <em>“Apache”</em> select <em>“Tomcat v8.0”</em></li>
+<li>Click <em>“Next”</em></li>
+<li>Click <em>“Browse…”</em></li>
+<li>Select the folder where you installed Tomcat (e.g.<em>/usr/local/Cellar/tomcat/8.0.33/libexec</em>)</li>
+<li>Click <em>“Finish”</em></li>
+</ul>
+</li>
+</ul>
+<h2 id="MySQL">MySQL</h2><ul>
+<li>Install MySQL<ul>
+<li><code>brew install mysql</code></li>
+</ul>
+</li>
+<li>To have launchd start mysql at login:<ul>
+<li><code>ln -sfv /usr/local/opt/mysql/*.plist ~/Library/LaunchAgents</code></li>
+</ul>
+</li>
+<li>Then to load mysql now:<ul>
+<li><code>launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist</code></li>
+</ul>
+</li>
+<li>Or, if you don’t want/need launchctl, you can just run:<ul>
+<li><code>mysql.server start</code></li>
+</ul>
+</li>
+</ul>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/05/11/react-js-01/" itemprop="url">
                   react.js-Notes-01
                 </a>
@@ -1215,277 +1505,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/02/22/nodejs-note-24/" itemprop="url">
-                  Building restfull API by using restify - 02
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-02-22T21:45:57+08:00" content="2016-02-22">
-              2016-02-22
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/22/nodejs-note-24/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/22/nodejs-note-24/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span>  restify = <span class="built_in">require</span>(<span class="string">'restify'</span>);</span><br><span class="line"><span class="keyword">var</span>  bunyan = <span class="built_in">require</span>(<span class="string">'bunyan'</span>); </span><br><span class="line"><span class="keyword">var</span> options = &#123;</span><br><span class="line">	name:<span class="string">"Toodoo API"</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span>  server = restify.createServer(options);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">server.use(<span class="function"><span class="keyword">function</span>(<span class="params">req,res,next</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'middleware 1 here!'</span> );</span><br><span class="line">	next();</span><br><span class="line">	<span class="comment">// next(new Error('something awful happened!'));</span></span><br><span class="line"></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.use(<span class="function"><span class="keyword">function</span>(<span class="params">req,res,next</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'middleware 2 here!'</span> );</span><br><span class="line">	next();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.on(<span class="string">'after'</span>, restify.auditLogger(&#123;</span><br><span class="line">	log: bunyan.createLogger(&#123;</span><br><span class="line">		name:<span class="string">'audit'</span>,</span><br><span class="line">		stream: process.stdout</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;));</span><br><span class="line"></span><br><span class="line"><span class="comment">// server.on('after', function ()&#123;</span></span><br><span class="line"><span class="comment">//	console.log('after', arguments);</span></span><br><span class="line"><span class="comment">// &#125;);</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = server;</span><br><span class="line"></span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./routes'</span>);</span><br></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span>  restify = <span class="built_in">require</span>(<span class="string">'restify'</span>);</span><br><span class="line"><span class="keyword">var</span>  bunyan = <span class="built_in">require</span>(<span class="string">'bunyan'</span>); </span><br><span class="line"><span class="keyword">var</span> options = &#123;</span><br><span class="line">	name:<span class="string">"Toodoo API"</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span>  server = restify.createServer(options);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">server.use(<span class="function"><span class="keyword">function</span>(<span class="params">req,res,next</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'middleware 1 here!'</span>, req.body);</span><br><span class="line">	next();</span><br><span class="line">	<span class="comment">// next(new Error('something awful happened!'));</span></span><br><span class="line"></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.use(restify.bodyParser(&#123;</span><br><span class="line">	maxBodySize: <span class="number">10</span>*<span class="number">1024</span></span><br><span class="line">&#125;));</span><br><span class="line"></span><br><span class="line">server.use(<span class="function"><span class="keyword">function</span>(<span class="params">req,res,next</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'middleware 2 here!'</span>, req.body);</span><br><span class="line">	next();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.on(<span class="string">'after'</span>, restify.auditLogger(&#123;</span><br><span class="line">	log: bunyan.createLogger(&#123;</span><br><span class="line">		name:<span class="string">'audit'</span>,</span><br><span class="line">		stream: process.stdout</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;));</span><br><span class="line"></span><br><span class="line"><span class="comment">// server.on('after', function ()&#123;</span></span><br><span class="line"><span class="comment">//	console.log('after', arguments);</span></span><br><span class="line"><span class="comment">// &#125;);</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = server;</span><br><span class="line"></span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./routes'</span>);</span><br><span class="line"><span class="comment">// test with data</span></span><br><span class="line"><span class="comment">// curl -i -X PUT localhost:8080/lists/mylist --data '&#123;"hey":"there"&#125;' -H 'content-type: application/json'</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">192</span>:<span class="number">02</span> Lyn$ node .</span><br><span class="line"> API server listening on &#123;<span class="string">"address"</span>:<span class="string">"::"</span>,<span class="string">"family"</span>:<span class="string">"IPv6"</span>,<span class="string">"port"</span>:<span class="number">8080</span>&#125;</span><br><span class="line">middleware <span class="number">1</span> here! undefined</span><br><span class="line">middleware <span class="number">2</span> here! &#123; hey: <span class="string">'there'</span> &#125;</span><br><span class="line">body : &#123; hey: <span class="string">'there'</span> &#125;</span><br><span class="line">&#123;<span class="string">"name"</span>:<span class="string">"audit"</span>,<span class="string">"hostname"</span>:<span class="string">"Lyn-Cheung-MBP.local"</span>,<span class="string">"pid"</span>:<span class="number">45195</span>,<span class="string">"audit"</span>:true,<span class="string">"level"</span>:<span class="number">30</span>,<span class="string">"remoteAddress"</span>:<span class="string">"::ffff:127.0.0.1"</span>,<span class="string">"remotePort"</span>:<span class="number">55210</span>,<span class="string">"req_id"</span>:<span class="string">"6185400f-ad38-4578-bec7-2b1618a6ccf6"</span>,<span class="string">"req"</span>:&#123;<span class="string">"query"</span>:<span class="string">""</span>,<span class="string">"method"</span>:<span class="string">"PUT"</span>,<span class="string">"url"</span>:<span class="string">"/lists/mylist"</span>,<span class="string">"headers"</span>:&#123;<span class="string">"host"</span>:<span class="string">"localhost:8080"</span>,<span class="string">"user-agent"</span>:<span class="string">"curl/7.43.0"</span>,<span class="string">"accept"</span>:<span class="string">"*/*"</span>,<span class="string">"content-type"</span>:<span class="string">"application/json"</span>,<span class="string">"content-length"</span>:<span class="string">"15"</span>&#125;,<span class="string">"httpVersion"</span>:<span class="string">"1.1"</span>,<span class="string">"trailers"</span>:&#123;&#125;,<span class="string">"version"</span>:<span class="string">"*"</span>,<span class="string">"timers"</span>:&#123;<span class="string">"handler-0"</span>:<span class="number">449</span>,<span class="string">"readBody"</span>:<span class="number">2179</span>,<span class="string">"parseBody"</span>:<span class="number">242</span>,<span class="string">"handler-1"</span>:<span class="number">1494</span>,<span class="string">"createList"</span>:<span class="number">4112</span>&#125;&#125;,<span class="string">"res"</span>:&#123;<span class="string">"statusCode"</span>:<span class="number">200</span>,<span class="string">"headers"</span>:&#123;<span class="string">"content-type"</span>:<span class="string">"application/json"</span>,<span class="string">"content-length"</span>:<span class="number">15</span>&#125;,<span class="string">"trailer"</span>:false&#125;,<span class="string">"latency"</span>:<span class="number">12</span>,<span class="string">"_audit"</span>:true,<span class="string">"msg"</span>:<span class="string">"handled: 200"</span>,<span class="string">"time"</span>:<span class="string">"2016-02-22T15:00:33.154Z"</span>,<span class="string">"v"</span>:<span class="number">0</span>&#125;</span><br></pre></td></tr></table></figure>
-<p>create.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports= <span class="function"><span class="keyword">function</span> <span class="title">createList</span>(<span class="params">req,res,next</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> body = req.body;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'body :'</span>,body);</span><br><span class="line">	res.send(&#123;hey:<span class="string">'there'</span>&#125;);</span><br><span class="line">	next();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<hr>
-<h2 id="validating_the_data">validating the data</h2><h3 id="Joi">Joi</h3><p>joi allows you to create <em>blueprints</em> or <em>schemas</em> for JavaScript objects (an object that stores information) to ensure <em>validation</em> of key information.</p>
-<h4 id="Example">Example</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Joi = <span class="built_in">require</span>(<span class="string">'joi'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> schema = Joi.object().keys(&#123;</span><br><span class="line">    username: Joi.string().alphanum().min(<span class="number">3</span>).max(<span class="number">30</span>).required(),</span><br><span class="line">    password: Joi.string().regex(<span class="regexp">/^[a-zA-Z0-9]&#123;3,30&#125;$/</span>),</span><br><span class="line">    access_token: [Joi.string(), Joi.number()],</span><br><span class="line">    birthyear: Joi.number().integer().min(<span class="number">1900</span>).max(<span class="number">2013</span>),</span><br><span class="line">    email: Joi.string().email()</span><br><span class="line">&#125;).with(<span class="string">'username'</span>, <span class="string">'birthyear'</span>).without(<span class="string">'password'</span>, <span class="string">'access_token'</span>);</span><br><span class="line"></span><br><span class="line">Joi.validate(&#123; username: <span class="string">'abc'</span>, birthyear: <span class="number">1994</span> &#125;, schema, <span class="function"><span class="keyword">function</span> (<span class="params">err, value</span>) </span>&#123; &#125;);  <span class="comment">// err === null -&gt; valid</span></span><br></pre></td></tr></table></figure>
-<p>The above schema defines the following constraints:</p>
-<ul>
-<li><code>username</code><ul>
-<li>a required string</li>
-<li>must contain only alphanumeric characters</li>
-<li>at least 3 characters long but no more than 30</li>
-<li>must be accompanied by <code>birthyear</code></li>
-</ul>
-</li>
-<li><code>password</code><ul>
-<li>an optional string</li>
-<li>must satisfy the custom regex</li>
-<li>cannot appear together with <code>access_token</code></li>
-</ul>
-</li>
-<li><code>access_token</code><ul>
-<li>an optional, unconstrained string or number</li>
-</ul>
-</li>
-<li><code>birthyear</code><ul>
-<li>an integer between 1900 and 2013</li>
-</ul>
-</li>
-<li><code>email</code><ul>
-<li>a valid email address string</li>
-</ul>
-</li>
-</ul>
-<h4 id="Usage">Usage</h4><p>Usage is a two steps process. First, a schema is constructed using the provided types and constraints:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> schema = &#123;</span><br><span class="line">    a: Joi.string()</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>Note that <strong>joi</strong> schema objects are immutable which means every additional rule added (e.g. <code>.min(5)</code>) will return a<br>new schema object.</p>
-<p>Then the value is validated against the schema:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Joi.validate(&#123; a: <span class="string">'a string'</span> &#125;, schema, <span class="function"><span class="keyword">function</span> (<span class="params">err, value</span>) </span>&#123; &#125;);</span><br></pre></td></tr></table></figure>
-<p>If the value is valid, <code>null</code> is returned, otherwise an <code>Error</code> object.</p>
-<p>The schema can be a plain JavaScript object where every key is assigned a <strong>joi</strong> type, or it can be a <strong>joi</strong> type directly:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> schema = Joi.string().min(<span class="number">10</span>);</span><br></pre></td></tr></table></figure>
-<p>If the schema is a <strong>joi</strong> type, the <code>schema.validate(value, callback)</code> can be called directly on the type. When passing a non-type schema object,<br>the module converts it internally to an object() type equivalent to:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> schema = Joi.object().keys(&#123;</span><br><span class="line">    a: Joi.string()</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>When validating a schema:</p>
-<ul>
-<li>Keys are optional by default.</li>
-<li>Strings are utf-8 encoded by default.</li>
-<li>Rules are defined in an additive fashion and evaluated in order after whitelist and blacklist checks.</li>
-</ul>
-<p>npm install joi —save</p>
-<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">var</span> server = <span class="keyword">require</span>(<span class="string">'./server'</span>);</span><br><span class="line"><span class="built_in">var</span> resources = <span class="keyword">require</span>(<span class="string">'./resources'</span>);</span><br><span class="line"><span class="built_in">var</span> validating =  <span class="keyword">require</span>(<span class="string">'./middleware/validating'</span>);</span><br><span class="line"><span class="built_in">var</span> schemas = <span class="keyword">require</span>(<span class="string">'./schemas'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//	server.get(urlPattern, function(req, res)&#123;</span></span><br><span class="line"><span class="comment">//		res.send(obj);</span></span><br><span class="line"><span class="comment">//	&#125;);</span></span><br><span class="line"></span><br><span class="line">server<span class="built_in">.</span>get(<span class="string">'/lists'</span>,resources<span class="built_in">.</span>lists<span class="built_in">.</span><span class="built_in">list</span>);</span><br><span class="line">server<span class="built_in">.</span>put(<span class="string">'/lists/:list'</span>,validating(schemas<span class="built_in">.</span><span class="built_in">list</span>),resources<span class="built_in">.</span>lists<span class="built_in">.</span>create);</span><br><span class="line">server<span class="built_in">.</span>del(<span class="string">'/lists/:list'</span>,resources<span class="built_in">.</span>lists<span class="built_in">.</span>del);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Items</span></span><br><span class="line"></span><br><span class="line">server<span class="built_in">.</span>get(<span class="string">'/lists/:list/items'</span>, resources<span class="built_in">.</span>items<span class="built_in">.</span><span class="built_in">list</span>);</span><br><span class="line">server<span class="built_in">.</span>post(<span class="string">'lists/:list/items'</span>,validating(schemas<span class="built_in">.</span>item),resources<span class="built_in">.</span>items<span class="built_in">.</span>create);</span><br><span class="line">server<span class="built_in">.</span>del(<span class="string">'/lists/:list/items/:item'</span>,resources<span class="built_in">.</span>items<span class="built_in">.</span>del);</span><br><span class="line"><span class="string">``</span><span class="string">` </span><br><span class="line">./middleware/validating.js</span></span><br></pre></td></tr></table></figure>
-<p>var Joi = require(‘joi’);</p>
-<p>module.exports =  function validating(schema){</p>
-<pre><code><span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">(req,res,next)</span></span>{
-
-    Joi.validate(req.body, schema,<span class="function"><span class="keyword">function</span><span class="params">(err, doc)</span></span>{
-        <span class="keyword">if</span> (err){
-            err.statusCode = <span class="number">400</span>;
-            <span class="built_in">next</span>(err);
-        }
-        <span class="keyword">else</span>{
-            req.body = doc;
-            <span class="built_in">next</span>();
-        }
-
-    });
-
-};
-</code></pre><p>};<br><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./schmeas/<span class="keyword">index</span>.js</span><br></pre></td></tr></table></figure></p>
-<p>exports.list = require(‘./list’);<br>exports.item = require(‘./item’);<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">./schmeas/<span class="type">list</span>.js</span><br></pre></td></tr></table></figure></p>
-<p>var Joi = require(‘joi’);</p>
-<p>// npm doc joi</p>
-<p>module.exports = Joi.object().required().keys({<br>    name: Joi.string().required(),<br>    description: Joi.string(),<br>    priority: Joi.number().integer().default(0)<br>});<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./schemas/<span class="property">item</span>.js</span><br></pre></td></tr></table></figure></p>
-<p>var Joi = require(‘joi’);</p>
-<p>// npm doc joi</p>
-<p>module.exports = Joi.object().required().keys({<br>    label: Joi.string().required()<br>});<br>```</p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/02/21/nodejs-note-23/" itemprop="url">
-                  Building restfull API by using restify - 01
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-02-21T16:19:49+08:00" content="2016-02-21">
-              2016-02-21
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/21/nodejs-note-23/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/21/nodejs-note-23/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h2 id="Restify">Restify</h2><blockquote>
-<p>   restify is a node.js module built specifically to enable you to build correct REST web services. It intentionally borrows heavily from express as that is more or less the de facto API for writing web applications on top of node.js.</p>
-</blockquote>
-<h3 id="Why_use_restify_and_not_express?">Why use restify and not express?</h3><blockquote>
-<pre><code>Express' use case <span class="keyword">is</span> targeted <span class="keyword">at</span> browser applications <span class="keyword">and</span> <span class="keyword">contains</span> a lot <span class="keyword">of</span> functionality, such <span class="keyword">as</span> templating <span class="keyword">and</span> rendering, <span class="keyword">to</span> support <span class="keyword">that</span>. Restify <span class="keyword">does</span> <span class="keyword">not</span>.
-
-Restify exists <span class="keyword">to</span> let you build <span class="string">"strict"</span> API services <span class="keyword">that</span> are maintanable <span class="keyword">and</span> observable. Restify comes <span class="keyword">with</span> automatic DTrace support <span class="keyword">for</span> all your handlers, <span class="keyword">if</span> you're <span class="property">running</span> <span class="function_start"><span class="keyword">on</span></span> a platform <span class="keyword">that</span> supports DTrace.
-</code></pre></blockquote>
-<h2 id="creating_server">creating server</h2><p>server.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span>  restify = <span class="built_in">require</span>(<span class="string">'restify'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> options = &#123;</span><br><span class="line">	name:<span class="string">"Toodoo API"</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span>  server = restify.createServer(options);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = server;</span><br></pre></td></tr></table></figure>
-<p>index.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span>  server =<span class="built_in">require</span>(<span class="string">'./server'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span>  port = <span class="built_in">Number</span>(process.env.SERVER_PORT) || <span class="number">8080</span>;</span><br><span class="line"></span><br><span class="line">server.listen(port, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">' API server listening on %j'</span>, server.address());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<h2 id="Routes">Routes</h2><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// Print  direction structure</span><br><span class="line">192:01 Lyn$ find . -print |<span class="string"> sed -e 's;[^/]*/;</span>|<span class="string">____;g;s;____</span>|<span class="string">; </span>|<span class="string">;g'</span><br><span class="line">.</span><br><span class="line"></span>|<span class="string">____index.js</span><br><span class="line"></span>|____node_modules</span><br><span class="line">|<span class="string"> </span><br><span class="line"></span>|<span class="string">____package.json</span><br><span class="line"></span>|____resources</span><br><span class="line">|<span class="string"> </span>|<span class="string">____index.js</span><br><span class="line"></span>|<span class="string"> </span>|____items</span><br><span class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____create.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____del.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____index.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____list.js</span><br><span class="line"></span>|<span class="string"> </span>|____lists</span><br><span class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____create.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____del.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____index.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____list.js</span><br><span class="line"></span>|<span class="string">____routes.js</span><br><span class="line"></span>|<span class="string">____server.js</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">var <span class="keyword">server</span> = require(<span class="string">'./server'</span>);</span><br><span class="line">var resources = require(<span class="string">'./resources'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//lists</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//	server.get(urlPattern, function(req, res)&#123;</span></span><br><span class="line"><span class="comment">//		res.send(obj);</span></span><br><span class="line"><span class="comment">//	&#125;);</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">server</span>.get(<span class="string">'/lists'</span>,resources.lists.list);</span><br><span class="line"><span class="keyword">server</span>.put(<span class="string">'/lists/:list'</span>,resources.lists.create);</span><br><span class="line"><span class="keyword">server</span>.del(<span class="string">'/lists/:list'</span>,resources.lists.del);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Items</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">server</span>.get(<span class="string">'/lists/:list/items'</span>, resources.items.list);</span><br><span class="line"><span class="keyword">server</span>.post(<span class="string">'lists/:list/items'</span>,resources.items.create);</span><br><span class="line"><span class="keyword">server</span>.del(<span class="string">'/lists/:list/items/:item'</span>,resources.items.del);</span><br></pre></td></tr></table></figure>
-<p>server.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span>  restify = <span class="built_in">require</span>(<span class="string">'restify'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> options = &#123;</span><br><span class="line">	name:<span class="string">"Toodoo API"</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span>  server = restify.createServer(options);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = server;</span><br><span class="line"></span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./routes'</span>);</span><br></pre></td></tr></table></figure>
-<p>resources/index.js</p>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exports.lists = <span class="built_in">require</span>(<span class="string">'./lists'</span>);</span><br><span class="line">exports.items = <span class="built_in">require</span>(<span class="string">'./items'</span>);</span><br></pre></td></tr></table></figure>
-<p>resources/lists/index.js</p>
-<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">exports<span class="built_in">.</span><span class="built_in">list</span> = <span class="keyword">require</span>(<span class="string">'./list'</span>);</span><br><span class="line">exports<span class="built_in">.</span>create = <span class="keyword">require</span>(<span class="string">'./create'</span>);</span><br><span class="line">exports<span class="built_in">.</span>del =<span class="keyword">require</span>(<span class="string">'./del'</span>);</span><br></pre></td></tr></table></figure>
-<p>resources/lists/list.js<br>resources/lists/del.js<br>resources/lists/create.js</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports= <span class="function"><span class="keyword">function</span> <span class="title">createItem</span><span class="params">(req,res,next)</span></span>&#123;</span><br><span class="line">	res.send(<span class="number">202</span>,&#123;hey:<span class="string">'there'</span>&#125;);</span><br><span class="line">	<span class="built_in">next</span>();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -R resources<span class="regexp">/lists/</span>* resources<span class="regexp">/items/</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">192</span>:~ Lyn$ curl -I localhost:<span class="number">8080</span></span><br><span class="line">HTTP/<span class="number">1.1</span> <span class="number">404</span> Not Found</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Content-Length: <span class="number">56</span></span><br><span class="line">Date: Sun, <span class="number">21</span> Feb <span class="number">2016</span> <span class="number">13</span>:<span class="number">39</span>:<span class="number">46</span> GMT</span><br><span class="line">Connection: keep-alive</span><br><span class="line"></span><br><span class="line"><span class="number">192</span>:~ Lyn$ curl -i localhost:<span class="number">8080</span>/lists</span><br><span class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Content-Length: <span class="number">15</span></span><br><span class="line">Date: Sun, <span class="number">21</span> Feb <span class="number">2016</span> <span class="number">13</span>:<span class="number">40</span>:<span class="number">03</span> GMT</span><br><span class="line">Connection: keep-alive</span><br><span class="line"></span><br><span class="line">&#123;<span class="string">"hey"</span>:<span class="string">"there"</span>&#125;</span><br><span class="line"><span class="number">192</span>:~ Lyn$</span><br><span class="line"> </span><br><span class="line"><span class="number">192</span>:~ Lyn$ curl -X PUT -i localhost:<span class="number">8080</span>/lists/mylist</span><br><span class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Content-Length: <span class="number">15</span></span><br><span class="line">Date: Sun, <span class="number">21</span> Feb <span class="number">2016</span> <span class="number">13</span>:<span class="number">41</span>:<span class="number">28</span> GMT</span><br><span class="line">Connection: keep-alive</span><br><span class="line"></span><br><span class="line">&#123;<span class="string">"hey"</span>:<span class="string">"there"</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="number">192</span>:~ Lyn$</span><br><span class="line"><span class="number">192</span>:~ Lyn$ curl  -i localhost:<span class="number">8080</span>/lists/mylist/items</span><br><span class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Content-Length: <span class="number">15</span></span><br><span class="line">Date: Sun, <span class="number">21</span> Feb <span class="number">2016</span> <span class="number">13</span>:<span class="number">45</span>:<span class="number">50</span> GMT</span><br><span class="line">Connection: keep-alive</span><br><span class="line"></span><br><span class="line">&#123;<span class="string">"hey"</span>:<span class="string">"there"</span>&#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="number">192</span>:~ Lyn$ curl -X DELETE  -i localhost:<span class="number">8080</span>/lists/mylist/items/itemid</span><br><span class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Content-Length: <span class="number">15</span></span><br><span class="line">Date: Sun, <span class="number">21</span> Feb <span class="number">2016</span> <span class="number">13</span>:<span class="number">47</span>:<span class="number">03</span> GMT</span><br><span class="line">Connection: keep-alive</span><br><span class="line"></span><br><span class="line">&#123;<span class="string">"hey"</span>:<span class="string">"there"</span>&#125;<span class="number">192</span>:~ Lyn$</span><br><span class="line"><span class="number">192</span>:~ Lyn$</span><br></pre></td></tr></table></figure>
-<h2 id="Logging_requests">Logging requests</h2><h3 id="Bunyan">Bunyan</h3><blockquote>
-<p>Bunyan is a simple and fast JSON logging library for node.js services<br>It is very powerfull tool which help you to logging specific info </p>
-</blockquote>
-<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">var <span class="built_in">log</span> = bunyan.createLogger(&#123;</span><br><span class="line">  name: <span class="string">'myapp'</span>,</span><br><span class="line">  streams: [</span><br><span class="line">    &#123;</span><br><span class="line">      level: <span class="string">'info'</span>,</span><br><span class="line">      stream: process.stdout            // <span class="built_in">log</span> INFO <span class="literal">and</span> above <span class="keyword">to</span> stdout</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      level: <span class="string">'error'</span>,</span><br><span class="line">      path: <span class="string">'/var/tmp/myapp-error.log'</span>  // <span class="built_in">log</span> ERROR <span class="literal">and</span> above <span class="keyword">to</span> a file</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)<span class="comment">;</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">192</span>:<span class="number">01</span> Lyn$ npm install bunyan --save</span><br><span class="line"></span><br><span class="line">npm WARN package.json api01@<span class="number">1.0</span><span class="number">.0</span> No repository field.</span><br><span class="line">npm WARN package.json api01@<span class="number">1.0</span><span class="number">.0</span> No README data</span><br><span class="line"></span><br><span class="line">&gt; dtrace-provider@<span class="number">0.6</span><span class="number">.0</span> install /Users/Lyn/src/node/node-api/<span class="number">01</span>/node_modules/bunyan/node_modules/dtrace-provider</span><br><span class="line">&gt; node scripts/install.js</span><br><span class="line"></span><br><span class="line">bunyan@<span class="number">1.6</span><span class="number">.0</span> node_modules/bunyan</span><br><span class="line">├── safe-json-stringify@<span class="number">1.0</span><span class="number">.3</span></span><br><span class="line">├── moment@<span class="number">2.11</span><span class="number">.2</span></span><br><span class="line">├── dtrace-provider@<span class="number">0.6</span><span class="number">.0</span> (nan@<span class="number">2.2</span><span class="number">.0</span>)</span><br><span class="line">└── mv@<span class="number">2.1</span><span class="number">.1</span> (ncp@<span class="number">2.0</span><span class="number">.0</span>, mkdirp@<span class="number">0.5</span><span class="number">.1</span>, rimraf@<span class="number">2.4</span><span class="number">.5</span>)</span><br></pre></td></tr></table></figure>
-<p>server.js<br><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">var</span>  restify = <span class="keyword">require</span>(<span class="string">'restify'</span>);</span><br><span class="line"><span class="built_in">var</span>  bunyan = <span class="keyword">require</span>(<span class="string">'bunyan'</span>); </span><br><span class="line"><span class="built_in">var</span> options = &#123;</span><br><span class="line">	name:<span class="string">"Toodoo API"</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">var</span>  server = restify<span class="built_in">.</span>createServer(options);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">server<span class="built_in">.</span><span class="keyword">on</span>(<span class="string">'after'</span>, restify<span class="built_in">.</span>auditLogger(&#123;</span><br><span class="line">	<span class="keyword">log</span>: bunyan<span class="built_in">.</span>createLogger(&#123;</span><br><span class="line">		name:<span class="string">'audit'</span>,</span><br><span class="line">		stream: process<span class="built_in">.</span>stdout</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;));</span><br><span class="line"></span><br><span class="line"><span class="comment">// server.on('after', function ()&#123;</span></span><br><span class="line"><span class="comment">//	console.log('after', arguments);</span></span><br><span class="line"><span class="comment">// &#125;);</span></span><br><span class="line"></span><br><span class="line">module<span class="built_in">.</span>exports = server;</span><br><span class="line"></span><br><span class="line"><span class="keyword">require</span>(<span class="string">'./routes'</span>);</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">192</span>:<span class="number">01</span> Lyn$ node index.js</span><br><span class="line"></span><br><span class="line">API server listening on &#123;<span class="string">"address"</span>:<span class="string">"::"</span>,<span class="string">"family"</span>:<span class="string">"IPv6"</span>,<span class="string">"port"</span>:<span class="number">8080</span>&#125;</span><br><span class="line"></span><br><span class="line">&#123;<span class="string">"name"</span>:<span class="string">"audit"</span>,<span class="string">"hostname"</span>:<span class="string">"Lyn-Cheung-MBP.local"</span>,<span class="string">"pid"</span>:<span class="number">44385</span>,<span class="string">"audit"</span>:<span class="literal">true</span>,<span class="string">"level"</span>:<span class="number">30</span>,<span class="string">"remoteAddress"</span>:<span class="string">"::ffff:127.0.0.1"</span>,<span class="string">"remotePort"</span>:<span class="number">56088</span>,<span class="string">"req_id"</span>:<span class="string">"a701a353-6b55-4aa0-8888-5d67518867fb"</span>,<span class="string">"req"</span>:&#123;<span class="string">"query"</span>:<span class="string">""</span>,<span class="string">"method"</span>:<span class="string">"DELETE"</span>,<span class="string">"url"</span>:<span class="string">"/lists/mylist/items/itemid"</span>,<span class="string">"headers"</span>:&#123;<span class="string">"host"</span>:<span class="string">"localhost:8080"</span>,<span class="string">"user-agent"</span>:<span class="string">"curl/7.43.0"</span>,<span class="string">"accept"</span>:<span class="string">"*/*"</span>&#125;,<span class="string">"httpVersion"</span>:<span class="string">"1.1"</span>,<span class="string">"trailers"</span>:&#123;&#125;,<span class="string">"version"</span>:<span class="string">"*"</span>,<span class="string">"timers"</span>:&#123;<span class="string">"delItem"</span>:<span class="number">4500</span>&#125;&#125;,<span class="string">"res"</span>:&#123;<span class="string">"statusCode"</span>:<span class="number">200</span>,<span class="string">"headers"</span>:&#123;<span class="string">"content-type"</span>:<span class="string">"application/json"</span>,<span class="string">"content-length"</span>:<span class="number">15</span>&#125;,<span class="string">"trailer"</span>:<span class="literal">false</span>&#125;,<span class="string">"latency"</span>:<span class="number">8</span>,<span class="string">"_audit"</span>:<span class="literal">true</span>,<span class="string">"msg"</span>:<span class="string">"handled: 200"</span>,<span class="string">"time"</span>:<span class="string">"2016-02-21T14:21:20.022Z"</span>,<span class="string">"v"</span>:<span class="number">0</span>&#125;</span><br></pre></td></tr></table></figure>
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1531,7 +1550,7 @@ Restify exists <span class="keyword">to</span> let you build <span class="string
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">35</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1545,7 +1564,7 @@ Restify exists <span class="keyword">to</span> let you build <span class="string
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">25</span>
+              <span class="site-state-item-count">26</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
