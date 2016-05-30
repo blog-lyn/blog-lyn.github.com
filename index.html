@@ -207,6 +207,131 @@
             
             
               
+                <a class="post-title-link" href="/2016/05/30/installEsxiOnGen8/" itemprop="url">
+                  Mac 环境下 Hp Gen8 microServer安装 Esxi Synology DSM
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-05-30T20:33:03+08:00" content="2016-05-30">
+              2016-05-30
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/30/installEsxiOnGen8/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/30/installEsxiOnGen8/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="结构设计">结构设计</h1><ul>
+<li>ESXI安装在TF卡/U盘上(8gb肯定足够用了)</li>
+<li>SSD上装虚拟机</li>
+<li>raid1直通虚拟机作数据存储</li>
+</ul>
+<blockquote>
+<p>esxi读取是在启动时读取一次的,启动完成后，ESXi就在内存中运行了。<br>所以Esxi直接安装在MicroSD上。安装完毕后把卡拔下来，做一个完整的克隆备份或者直接克隆一个MicroSD实体卡以备不测</p>
+</blockquote>
+<h1 id="HP_gen8_相关工具">HP gen8 相关工具</h1><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/8170796.jpg" alt=""></p>
+<blockquote>
+<p>HP Gen8有自己的一套底层的管理系统,这里先讲一个小故事:<br>Gen8是当时在淘宝上买的,结果卖家亲自开车过来送货,同时还在淘宝卖家那里买了内存条,当时就说插上看看有没有问题(卖家车上自带电源逆变器,没有显示器). 结果开机半天了都还没有听到蜂鸣器的声音,于是我们拿着Gen8去路边的打印店借用显示器看下是什么原因.结果打印店的显示器都不方便拆线,卖家就问有没有网线,只要有网线就够了.<br>结果我们就插了一根网线到Gen8的ILO console口.在浏览器上访问gen8的ip地址,用机箱上自带的账号密码就登陆上ILO管理系统.发现确实是卡在了内存自检上.于是卖家就换了一根新的内存条给我.</p>
+</blockquote>
+<p>这就是服务器和普通PC相比的的神奇之处了吧.即使内存条有问题,Gen8底层的管理系统也可以启动起来,然后我们就可以方便的远程连接到ILO上看到服务器当前的状况.<br>可以查看服务器的各种信息.还可以在web页面上启动.net或者Java的远程桌面.(要在ie或者Safari下面打开ILO才行.)<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/90646810.jpg" alt=""></p>
+<p>ILO的高级功能需要输入一个license-key 可以到淘宝去购买,很便宜.</p>
+<h2 id="ILO">ILO</h2><h2 id="ADM">ADM</h2><h1 id="安装_ESXI_6-0_u2">安装 ESXI 6.0 u2</h1><h2 id="准备一个USB键盘">准备一个USB键盘</h2><p>因为mac的键盘和esxi还是ilo的映射不太正确,在安装过程中会出现F11按了不能被识别的情况,这时候就需要使用直接连接在Gen8上面的物理键盘按一下F11了.</p>
+<h2 id="下载HPE_Custom_Image_for_ESXi_6-0_U2">下载HPE Custom Image for ESXi 6.0 U2</h2><ul>
+<li><a href="https://my.vmware.com/web/vmware/details?downloadGroup=OEM-ESXI60U2-HPE&amp;productId=491" target="_blank" rel="external">https://my.vmware.com/web/vmware/details?downloadGroup=OEM-ESXI60U2-HPE&amp;productId=491</a> </li>
+<li>Version: 6.0 U2</li>
+<li>Release Date:2016-04-07</li>
+</ul>
+<p>下载好了以后,在Windows下就是在系统里挂载这个iSO然后像下面一样的勾选.<br>然而Hp的ILO对mac支持不是很好,能运行起来但是看不见选择加载的ISO.所以变通一下:把刚下载的esxi的ISO文件作为光驱挂载在Mac的PD9里的Windows上.(是不是特别绕?)还是直接看图:<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-30/87630709.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-30/78457314.jpg" alt=""></p>
+<p>然后输入GEN8 dhcp或得到的ip启动ILO.选择virtual device 加载刚才的光驱.</p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-30/79146767.jpg" alt=""></p>
+<p>然后插上Usb键盘. 这时候就可以开机了</p>
+<p>然后如果BIOS里的启动顺序是出厂的设置的话,那么等漫长的自检过了以后就会开始读取虚拟DVD里的镜像了.(注意 你的mac最好是使用网线,而且要和ilo在同一局域网内.不然加载会很慢,因为这里加载的iso实际上是在你的mac硬盘上的)</p>
+<p>然后就会出现启动选择界面,当然选择install ESXI 然后就会开始加载了</p>
+<p>加载好了以后就会要你选择安装的磁盘位置,设置管理员密码,然后就会按F11确认就开始安装了,因为ISO文件都只有300多MB所以安装的速度还是很快的.(这里为了防止装错.我是只插上了U盘其他的设备都没有接.)<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/83348189.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/31566859.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/41675492.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/78129151.jpg" alt=""></p>
+<p>安装好了以后会提示重启.这时候就需要把网线接进Gen8的另外两个网口上了(或者其中之一),然后在管理界面就会提示你去浏览器上打开esxi的ip地址配置虚拟机.<br>接下来的就比较简单了:<br>和普通的VMware配置虚拟机没有什么区别.因为VMware的客户端只有Windows的,所以我就没有安装专业的配置客户端,而是全部都在VMware的web管理页面上操作的.对了,这个时候就需要输入你的VMwarelicense了.<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/6061113.jpg" alt=""></p>
+<p>这时候就可以在开机自检的时候按F5去HPSSA(HP smart storage Administrator)中初始化你的磁盘了,如果是单块硬盘就只能加载成raid0才能识别.</p>
+<h2 id="黑群辉的安装">黑群辉的安装</h2><p>到下面的网址上去下载两个文件:</p>
+<blockquote>
+<p>xpenology.me/downloads/</p>
+</blockquote>
+<ul>
+<li>第一个是DSM_DS3615xs_5644.pat,这个是群辉的升级文件,一会儿在配置群辉的时候会用上.</li>
+<li>第二个是XPEnoboot_DS3615xs_5.2-5644.4.vmdk的启动文件</li>
+</ul>
+<ol>
+<li>先上传vmdk文件到服务器的磁盘上,在虚拟机里加载vmdk文件作为第二块硬盘(注意添加的时候选择现有的硬盘).</li>
+<li>选择启动虚拟机</li>
+<li>在群辉助手中去配置和升级DSM系统记得选择PAT文件的时候选择我们刚才下载的那个Pat文件.(不想下载群辉助手也可以直接在群辉的ip地址后面加上端口号:5000去访问web管理页面.)<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/70593634.jpg" alt=""></li>
+<li>升级设置完毕以后会要求重启,这时候可能会出现黑裙启动不起来的问题,报missing operating Syetem的错.这时候检查一下虚拟机的硬盘启动顺序.或者直接删除刚才添加的第二块20mb的硬盘,按照步骤一重新添加一次群辉的启动vmdk文件.</li>
+</ol>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/05/26/addNativeJavaSciptsInterface/" itemprop="url">
                   JS与Native交互接口定义 Native JavaScipts Interface
                 </a>
@@ -584,6 +709,88 @@
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">webpack</span><br><span class="line"></span><br><span class="line">npm <span class="command">run</span> dev</span><br></pre></td></tr></table></figure>
 <p>then you can visit your first react.js project on your browser by:<br><a href="http://127.0.0.1:1336/" target="_blank" rel="external">http://127.0.0.1:1336/</a> </p>
 
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/2016/04/30/react-js-02-router/" itemprop="url">
+                  react-js-02-router
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-04-30T20:34:25+08:00" content="2016-04-30">
+              2016-04-30
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/30/react-js-02-router/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/30/react-js-02-router/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              
             
           </span>
         
@@ -1264,248 +1471,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/02/27/trans-note-02/" itemprop="url">
-                  七个对我最好的职业建议－Nicholas C. Zakas（自译）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-02-27T13:23:29+08:00" content="2016-02-27">
-              2016-02-27
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/27/trans-note-02/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/27/trans-note-02/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="关于原作者">关于原作者</h1><p>Nicholas C. Zakas（尼古拉斯·泽卡斯），世界Web技术专家，现为雅虎公司界面呈现架构师，负责My Yahoo！和雅虎首页等大访问量站点的设计。尼古拉斯拥有丰富的Web开发和界面设计经验，曾经参与许多大公司的Web解决方案开发。他还是High Performance JavaScript一书的作者，并与他人合作撰写了Professional Ajax和Even Faster Web Sites。尼古拉斯拥有梅里马克学院计算机科学学士学位和埃迪柯特学院的MBA学位。他的Twitter别名是@slicknet。</p>
-<p>The best career advice I’ve received － Posted at October 15, 2013 by Nicholas C. Zakas<br>Tags: Advice Career Mentoring</p>
-<p>我最近有一段和我的同事有一段有趣的讨论.我们列举我们过去的工作，以及我们奇葩的性格可能对我们产生了负面的影响. 而事实是，我刚从学校毕业的时候很混蛋（有些人会说我现在依然很混蛋）。我曾经是傲慢而犀利喜欢讽刺的一个人，总的来说就是很无礼。我觉得我知道我是什么样的人而且还为此很是得意。<br>I recently had an interesting discussion with a colleague. We were recounting our job histories and how our, shall we say colorful personalities, could have negatively impacted us long term. The truth is, I was kind of an asshole coming out of college (some would argue I’m still kind of an asshole, but that’s beside the point). I was arrogant and bitingly sarcastic, a generally irreverent character. I thought I knew it all and was quite proud of myself for it.</p>
-<p>我有一个告诉更有经验的工程师他们做事的方法不对的爱好，尽管大部分的时候都是对的，我并没有一个性格让我以很高效的方式去做到它。在一次特别令人愉快的对话中，一个高级工程师跟我说；“如果你在不闭嘴，我就把你揍出翔来”。我一笑而过，因为我知道他不敢这样，但是一年之后我才知道这不是一个玩笑，他是真的想揍死我！<br>I had a habit of telling more experienced engineers that they were doing things wrong, and despite being right most of the time, I didn’t have the personality to make it effective. During one particularly engaging conversation, one of the senior engineers stopped and said, in these exact words, “I’m going to f<em>*</em>en beat the shit out of you if you don’t shut up.” I laughed it off because I knew he wouldn’t dare, and only years later did I realize the relevance of that statement: it was actually what he wanted to do.</p>
-<p>自从那以后<br>Since that time I’ve grown up a lot, learned to watch what I say, and treat people with respect regardless of defining characteristics. The sarcasm stays in check while in a professional environment; I let it out to play when I’m with good friends. This self-control, along with a lot of other invaluable lessons, came to me not of my own accord, but through the careful guidance of the mentors I’ve had along the way. If not for them, who knows if my interpersonal relationships would have short-circuited my career.</p>
-<p>The truth is that I have been incredibly blessed in my career because of the people I’ve come into contact with. My managers along the way molded a really rough-around-the-edges character into someone I’m proud to be. More than that, because of their influence, I’m not just a good programmer – I’m a good teammate and a good person. So impactful were these people on my life that I frequently recount their advice to the colleagues that I now mentor.</p>
-<p>I also find their advice to be universally applicable, so I’d like to share the things I was told that helped me along the way. Of course, some of these are paraphrased since my memory for exact phrases isn’t all that great, but I believe I’ve captured the important parts correctly.</p>
-<p>Don’t be a short-order cook</p>
-<p>My very first job lasted 8 months because the company shut down. As I was talking with my manager about what I would do next, he gave me this advice:</p>
-<p>Nicholas, you’re worth more than your code. Whatever your next gig is, make sure that you’re not a short-order cook. Don’t accept a job where you’re told exactly what to build and how to build it. You need to work somewhere that appreciates your insights into the product as well as your ability to build it.</p>
-<p>This is something I’ve kept in mind throughout my career. Simply being an implementer isn’t good enough – you need to be involved in the process that leads up to implementation. Good engineers don’t just follow orders, they give feedback to and work with product owners to make the product better. Fortunately, I’ve chosen my jobs wisely and never ended up in a situation where people didn’t respect or value my insights.</p>
-<p>Self-promote</p>
-<p>My second manager at Yahoo pulled me aside one day to give me some advice. He had been watching my work and felt like I was hiding a bit:</p>
-<p>You do great work. I mean really great work. I like how your code looks and that it rarely breaks. The problem is that others don’t see it. In order for you to get credit for the work you’re doing, you have to let people know. You need to do a bit of self-promotion to get noticed.</p>
-<p>It took me a little while to digest what he was saying, but I finally figured it out. If you do good work, but no one knows that you did good work, then it doesn’t really help you. Your manager can back you up but can’t make your case for you. People within the organization need to understand your value, and the best way to do that is to tell people what you did.</p>
-<p>This is advice I give to many of my colleagues now. Self-promoting doesn’t mean, “look at me, I’m awesome.” It means letting people know when you’ve hit major milestones, or when you’ve learned something new. It means showing people the work that you’re proud of. It means celebrating your accomplishments and the accomplishments of others. It means being visible within the organization. The engineer who sits quietly in a corner and just codes away is always a bit mysterious – don’t be like that. A quick email to say, “hey, I finished the new email layout. Let me know what you think” goes a long way.</p>
-<p>It’s about people</p>
-<p>I was very title-driven earlier in my career. I always wanted to know what I had to do to be promoted. During my first one-on-one with my new manager on the Yahoo homepage, I asked what it would take for me to get promoted. His words still ring in my ears:</p>
-<p>At a certain point, you stop being judged on your technical knowledge and start being judged on the way you interact with people.</p>
-<p>I’m not sure I’ve ever received a better insight into the software engineering profession since that time. He was exactly right. At that point, no one was questioning my technical ability. I was known as a guy who wrote good, high-quality code that rarely had bugs. What I lacked was leadership skill.</p>
-<p>Since that time, I’ve seen countless engineers get stuck at one level in their career. Smart people, good code, but the inability to work effectively with others keeps them where they are. Anytime someone feels stuck in their software engineering career, I recount this advice and it has always been right on the money.</p>
-<p>None of this matters</p>
-<p>I went through a period at Yahoo where I was frustrated. Maybe frustrated isn’t the right word, more like angry. I had angry outbursts and was arguing with people constantly. Things were going wrong and I didn’t like that. During one particularly rough day, I asked one of my mentors how he managed to stay calm when so many things were going wrong. His response:</p>
-<p>It’s easy. You see, none of this matters. So some crappy code got checked in, so the site went down. So what? Work can’t be your whole life. These aren’t real problems, they’re work problems. What really matters is what happens outside of work. I go home and my wife is waiting for me. That’s pretty nice.</p>
-<p>I had moved to California from Massachusetts and had a hard time making friends. Work was my life, it was what kept me sane, so when it wasn’t going that meant my life wasn’t going well. This conversation made me realize I had to have something else going on in my life, something I could go back to and forget about the troubles I had at work.</p>
-<p>He was right, once I shifted my mindset and recategorized the annoying things at work as “work things,” I was able to think more clearly. I was able to calm down at work and have much more pleasant interactions with people.</p>
-<p>Authority, your way</p>
-<p>When I was first promoted to principal engineer at Yahoo, I sat down with my director to better understand what the role entailed. I knew I had to be more of a leader, but I was having trouble being authoritative. I asked for help. Here’s what he said:</p>
-<p>I can’t tell you how to be authoritative, that’s something you need to figure out on your own. Different people have different styles. What you need to do is find a style that you can live with, that makes you comfortable. I can’t tell you what that is, but you do need to find it for this position.</p>
-<p>I spent a lot of time that year observing people of authority and how they interacted with others. I took note as to how they walked, how they talked, how they dealt with problem situations. I tried different styles before I finally came across one that worked for me. My style is uniquely me and anyone learning to be in a position of authority has to go through the same growing pains. My advantage was that my mentor clued me about the process up front.</p>
-<p>Moving from “how?” to “what?”</p>
-<p>During a conversation with my manager at Yahoo, I asked what the expectations were with my new position. He answered:</p>
-<p>To this point in your career, you’ve answered the question, “how?” As in, we tell you what needs to be done and you figure out how to do it. At this point, though, you need to answer the question, “what?” I’m expecting you to come and tell me what needs to be done.</p>
-<p>This is the part where I see a lot of engineers get tripped up, and I would have as well if not for this piece of advice. Switching from “how?” to “what?” is very hard and takes time to develop. It also takes a bit of maturity to be left to your own desires as to what you focus on. After all, if you can spend your time on anything you want, you are also solely responsible for what you produce.</p>
-<p>At Box, we call this “running open loop,” meaning that you do your job with minimal oversight and yet still are making a significant positive impact on the engineering organization and the company as a whole. This is the step where many engineers fail to make the leap, and I still give this advice to anyone who is trying to get to the next level.</p>
-<p>Act like you’re in charge</p>
-<p>I had just sat through a meeting where I had nothing to say. During my one-on-one with my director, I mentioned that I was just in a meeting where I had no idea why I was there and had nothing to contribute. He said:</p>
-<p>Don’t ever do that again. If you’re in a meeting, it’s because you are there to participate. If you’re not sure why you’re there, stop and ask. If you’re not needed, leave. You’re in a leadership position, act like it. Don’t go quietly into a room. Just act like you’re in charge and people will believe it.</p>
-<p>In that piece of advice, my mentor had reminded me of a lesson I learned while acting in high school: no one knows when you’re acting. If you’re nervous but act like you’re not, then people won’t know that you’re nervous. The same with leadership. The old phrase fake it til you make it comes to mind. From that point on, I never sat quietly in a meeting. I made sure I only went to meetings that needed me to participate and then I would participate.</p>
-<p>Let them win</p>
-<p>I went through a particular period where there were a lot of arguments on the team. I prided myself on ending those arguments with authority. I had a “my ruling is final” mentality, and my manager noticed that and gave me this piece of advice:</p>
-<p>I see a lot of arguing going on, and I see you pushing through to win a lot. I know that most of the time you are right, but every once in a while let them win. Pick the things that really matter to you and push for those but let the other things go. There’s no need to win every argument.</p>
-<p>This was one piece of advice I resisted initially. I was right nearly all of the time, why would I ever let someone else win? However, as I had grown to trust his instincts, I gave it a shot. The result: there were less arguments. People didn’t feel like they had to get one over on me, and in turn, I became better at identifying things I really didn’t care that much about. I stuck to my guns on important issues and let the others ones get resolved by the other party. The intensity of all conversations dropped considerably.</p>
-<p>Conclusion</p>
-<p>Looking back at the brash guy I was when I graduated college, my career could have ended up very different. I was seen as a malcontent, a smart but hard-to-deal-with guy who people dealt with because they had to. If it weren’t for the mentors I had along the way, as well as some humbling failures early in my career, my interpersonal skills (or lack thereof) could have very well done me in. These days, I regularly seek out those who are more experienced than me and ask for advice. I may no longer make big, glaring mistakes, but I also don’t want to wait for one to happen to seek out the experienced insights of someone I trust.</p>
-<p>The nearly five years I was at Yahoo were some of the most transformative in my career. I got to work on interesting problems at a large scale, but moreso I was blessed with a series of wonderful managers and other mentors within my organization. I credit those conversations with turning me into a person that I’m proud of today, both at work and outside in “real life.”</p>
-<p>If I can leave you with one overriding piece of career advice, it would be this: identify someone at your work that is smarter than you in some way (technically, organizationally, etc.) and attach yourself to them. See if you can regularly have lunch or coffee and pick their brain for the vast amount of knowledge it has. Your career, and maybe even your life, could end up drastically better by doing so.</p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/02/23/trans-note-01/" itemprop="url">
-                  采访1Password背后的开发故事（自译）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-02-23T11:58:17+08:00" content="2016-02-23">
-              2016-02-23
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/23/trans-note-01/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/23/trans-note-01/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="Behind_the_App:_The_Story_of_1Password">Behind the App: The Story of 1Password</h1><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-2-22/42337210.jpg" alt=""></p>
-<p>你的网络生活安全的保障不是一件可以开玩笑的事情，但是还是有很多人为了省事在不同的网站使用相同的密码。毫无疑问这是一种不好的习惯，而且安全而复杂的密码一定是一个你难以记住的密码。这也就是为什么你需要一个密码管理工具去管理你的网络密码，比如说使用：1Password。</p>
-<blockquote>
-<p>Securing your online life is no joke, but many people still use the same password across different sites for the sake of convenience. Of course, that’s bad practice and the most secure password is one that you can’t remember. Which is why you need a tool to manager your online security like 1Password.</p>
-</blockquote>
-<p>这个App会为你的网络账号生成随机的复杂且唯一的密码，他会是你最喜欢的密码管家，最近他们最近和收费版本一同推出了带来新功能而且和IOS8兼容的免费增值版本的App</p>
-<p>The app generates random, complex, and unique passwords for all of your logins and then manages them for you. It’s one of your favorite password managers, and they recently adopted a freemium model to coincide with new features and integration with iOS 8.</p>
-<p>这个APP是怎么开发出来的呢？就像很多软件一样，它最开始就是一个没有计划成为消费品的供内部使用的软件，我们与1Password的团队取得了联系去探究App背后的故事。</p>
-<p>How did this security tool come about? Like a lot of software, it started as an internal tool without any real plan to become a consumer product. We caught up with the 1password team at AgileBits to learn more about the story behind the app.</p>
-<h2 id="这个App的灵感是从哪里来的？">这个App的灵感是从哪里来的？</h2><p>你们是为了解决一个过去遇到的问题？还是从什么其他地方获得的灵感？</p>
-<p>就像很多我们喜欢的产品，我们最初是为了解决一个问题，我们的共同发起人：Dave Teare 和 Roustem Karimov 早在2005年就开始讨论这个产品的想法了，因为他们被各种需要密码的服务和为了记忆各种登录所需要的密码搞得头疼。他们想要一种能为保护不同的账号生成不同的唯一的密码的工具。并且能帮他们记住各种登录密码并在需要登录的时候帮助他们自动登录，这样他们就不会在浪费时间在各种密码登录界面了。</p>
-<blockquote>
-<p>Where did the idea for the app come from? Were you trying to solve a problem you’d experienced, or did the inspiration come from somewhere else?<br>Like many of our favorite products, we set out to solve a problem. Dave Teare and Roustem Karimov, our co-founders, were kicking around product ideas back in 2005 but started getting annoyed at how many services they had to sign into and all the passwords they needed to remember. They wanted a tool that would create unique passwords to protect all their accounts, and also remember those passwords and log them in automatically so they could spend less time typing into login forms and more time on what they wanted to do.</p>
-</blockquote>
-<h2 id="当你们有了这个灵感以后，你们的下一步是什么？">当你们有了这个灵感以后，你们的下一步是什么？</h2><p>最有趣的部分就是，原本那是没有下一步的， 我们设想那只是一个三个月的项目，Dave和Roustem当时只是自己使用这个最后成为1Password的工具，直到他们开始向他们在该领域的朋友们展示这个项目并且成功震惊了他们，直到这时他们才意识到他们创造了一个真的很特别的东西！</p>
-<p>After you came up with the idea, what was the next step?<br>The funny part of this story is that, originally, there was no next step. It was supposed to be a three-month project, and Dave and Roustem were just using what eventually became 1Password on their own, internally. It wasn’t until they started showing it to friends in the field and blew their minds that they realized they had created something truly special.</p>
-<h2 id="你们怎么确定在哪个平台开发这个软件作_而忽略哪些平台或者暂时不开发哪些平台？">你们怎么确定在哪个平台开发这个软件作 而忽略哪些平台或者暂时不开发哪些平台？</h2><p>在那个时候，Dave和 Roustem 两个人都离开了上班族的世界和接触Mac，所以那是难以置信的偶然。当时苹果刚推出了OS X 和 IPOD， 社区的发展极为迅速，两位创始人正在折腾新的项目，刚好就知道了OSX和Cocoa，所以这也很好理解他们在Mac上开发了测试版的1Password，看下效果如何。</p>
-<p>Behind the App: The Story of 1Password<br>How did you choose which platforms to target and which to ignore or wait on?<br>Right around this time, Dave and Roustem had both just left the corporate world and discovered the Mac, so it was incredibly serendipitous. Apple was on a roll with OS X and the iPod, and the community was taking off like a rocket ship. Dave and Roustem were tinkering with new projects, getting to know OS X and Cocoa, so it just made sense to try the initial beta version of 1Password on the Mac and see where it went.</p>
-<h2 id="什么是你们曾遇到的最大的障碍？你们是怎么克服它的？">什么是你们曾遇到的最大的障碍？你们是怎么克服它的？</h2><p>我不会说我们遇到了相当多的苦难，但是探索和理解安全软件的背景与更深层次的细节都是1Password不可或缺的基础。它储存了人们的密码，信用卡，大量的个人信息，我们必须知道我们的安全入口，我们必须谨慎的对待我们用户的隐私和担忧，这是一种我们不能轻松承担的特俗的责任。</p>
-<p>What was your biggest roadblock and how did you overcome it?<br>I wouldn’t say it was so much of a roadblock, but exploring and understanding the context and deeper details of making a security product was an essential element to getting 1Password right. It stores people’s passwords, credit cards, and utmost personal info—we have to know our security chops, we have to be mindful of our customers’ privacy and concerns. It is a uniquely personal responsibility that we do not—cannot—take lightly.</p>
-<h2 id="产品上线的时候是什么样的状况？">产品上线的时候是什么样的状况？</h2><p>发布以后让我们大吃一惊，真的。我们以为我们只是创建了一个只有书呆子才会在意的内部的工具。但是我们很快知道我们击中了用户的痛点，一些科技网站发现了它，开始写相关的文章，然后开始制作一些如何使用的教程，当人们开始与其他人讨论你们的作品时，我觉得那是世界上最棒的一种感觉之一。</p>
-<p>另一个很棒的地方就是，用户开始来与我们交流，有一些人会有建议，有一些会抱怨，很多人的表扬和感谢。但归根结底就是：人们很在乎1password，他们希望能成为它的一部分从而使它变的更好用。这也是世界上最棒的一种感觉之一。</p>
-<p>What was launch like for you?<br>Launch blew us away. It really did. We thought we were building an internal tool that mostly nerds would care about, but we quickly learned we struck a nerve. A few tech sites found out about it (“1Passwd” back in those days), started writing about it, then made “how to do this and that” tutorials. When people start telling other people about this thing you made… that’s one of the best feelings in the world.<br>Another great part of the launch was users coming to talk to us. Some had suggestions, some complaints, plenty of praise and thanks, but it all boils down to the same thing: people care so much about 1Password that they want to be a part of it and make it even better. Again, best feeling in the world.</p>
-<h2 id="你们是怎么有效的处理用户的建议和批评的？">你们是怎么有效的处理用户的建议和批评的？</h2><p>我们的合伙人和Ceo建立了一种很棒的企业文化：他们着迷与在各种社交平台上的各种人与人之间的互动，无论是批评还是一般的回馈。我们拥有完善的支持无论什么语言什么国家。而且我们使用协作服务比如Cerberus, Google Drive 积极的与我们的用户交流，并总结反馈的信息。我们使用Jira和basecamp来管理bug报告，讨论和决定改进和增加哪些功能。</p>
-<p>How do you handle user requests and criticisms effectively?<br>our co-founders and CEO built a great culture obsessed with human-to-human interaction for all our social media, criticism, and general feedback. We have a thorough support staff that spans continents and languages, and we use collaborative services like Cerberus, Google Drive, and Respond.ly to talk with our customers and organize feedback. For actual bug reporting, discussion, and deciding what to improve and build, we use Jira and Basecamp.</p>
-<h2 id="现在你们怎么分配你们的时间在开发新的功能和维护已有的那些功能？">现在你们怎么分配你们的时间在开发新的功能和维护已有的那些功能？</h2><p>在所有的在开发列表上的工作任务和所有我们从用户那里获取的想法之间，一定没有什么区别。因为当决定什么时候去开发还是什么时候去改进，是真的很复杂的步骤。如果有功能不正常的时候并且我们从很多的顾客那里获知的时候，这件事就会变成我们的首要任务，因为没有我们的顾客我们就什么都不是。<br>我们的也有一个令人惊喜和感激的测试版程序，那些用户拥有很大的发言权在什么会添加到1password，包括程序的修复和新的功能。比如说我们的mac程序，就有2万5000名客户参加测试。有的时候外部的因素也会影响到我们的计划，包括操作系统的更新计划。从产品推出的第一天起我们的用户期待看到我们推出新的升级，我们尽我们所能去满足我们的用户，但是有时候那也会导致我们会商量是不是把一些新的东西增加到免费升级的小版本中去。</p>
-<p>Now, how do you split time between developing new features and managing existing ones?<br>Between all the tasks already on our list and all the ideas we get from our customers, there is absolutely no shortage of places to take 1Password. As for deciding when it’s time to build and when to improve, that’s a fairly complicated dance. If something isn’t working right and we hear from a lot of customers, it gets top priority; we’d be nothing without our customers.</p>
-<p>We also have (and are grateful for!) a surprisingly active beta program. Those customers have a huge voice in what we add to 1Password, including both fixes and new features. Our Mac program, for example, includes over 25,000 customers.<br>Sometimes external elements can factor into our plans as well, including OS release schedules. It’s no secret that our customers love to see our updates ready by day one, and we try our best to hit that. But sometimes that leads to discussions over whether we need to push Feature Y to a free X.1 update.</p>
-<h2 id="你们会给那些想做类似的项目的人什么建议么？">你们会给那些想做类似的项目的人什么建议么？</h2><p>解决一个个人的问题，那种影响着你和你亲近的朋友们的问题。找到那件事会让你晚上也很兴奋，或者你总是发现你在和你的朋友抱怨相同的事情，但却没有好好思考过这些东西。正视那个问题，看看是不是它已经有了一个解决方案，然后想想你能不能有一个更好的解决方案。这是最好的方式去确定你可以把这件事做到最好并且保持做事的激情无论遇到在这其中遇到好的时期或者坏的，但这两种时期肯定都会出现。</p>
-<p>What advice would you give to others that want to take on a similar project?<br>Solve a personal problem, something that affects you or your closest friends. Find that thing that keeps you up at night, or that you always catch yourself complaining about with friends but might not give a second thought. Look at that problem, see if it might already have a solution, then think about how you can solve it better. It’s the best way to make sure you can do great work and stay passionate through both the good days and the bad, and there will be both.</p>
-<h2 id="原文链接">原文链接</h2><p><a href="http://lifehacker.com/behind-the-app-the-story-of-1password-1643425238" target="_blank" rel="external">http://lifehacker.com/behind-the-app-the-story-of-1password-1643425238</a></p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1551,7 +1516,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">37</span>
+              <span class="site-state-item-count">39</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

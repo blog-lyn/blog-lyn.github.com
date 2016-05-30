@@ -43,7 +43,7 @@
 
 
 
-  <meta name="keywords" content="vagrant gfw error," />
+  <meta name="keywords" content="Lyn's blog" />
 
 
 
@@ -59,22 +59,57 @@
 
 
 
-<meta name="description" content="Error code when run vagrant up:recently when I want to use vagrant to build PHP environment on my Mac,I got three Errors :
+<meta name="description" content="结构设计
+ESXI安装在TF卡/U盘上(8gb肯定足够用了)
+SSD上装虚拟机
+raid1直通虚拟机作数据存储
 
-12error: /Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: cha">
+
+esxi读取是在启动时读取一次的,启动完成后，ESXi就在内存中运行了。所以Esxi直接安装在MicroSD上。安装完毕后把卡拔下来，做一个完整的克隆备份或者直接克隆一个MicroSD实体卡以备不测
+
+HP gen8 相关工具
+
+HP Gen8有自己的一套底层的管理系统,这里先讲一个">
 <meta property="og:type" content="article">
-<meta property="og:title" content="How to modify puphpet file to avoid vagrant up errors">
-<meta property="og:url" content="http://lyn.s76.org/2015/03/26/vagrant_gfw_errors/index.html">
+<meta property="og:title" content="Mac 环境下 Hp Gen8 microServer安装 Esxi Synology DSM">
+<meta property="og:url" content="http://lyn.s76.org/2016/05/30/installEsxiOnGen8/index.html">
 <meta property="og:site_name" content="Lyn's Blog">
-<meta property="og:description" content="Error code when run vagrant up:recently when I want to use vagrant to build PHP environment on my Mac,I got three Errors :
+<meta property="og:description" content="结构设计
+ESXI安装在TF卡/U盘上(8gb肯定足够用了)
+SSD上装虚拟机
+raid1直通虚拟机作数据存储
 
-12error: /Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: cha">
-<meta property="og:updated_time" content="2016-02-27T04:54:12.000Z">
+
+esxi读取是在启动时读取一次的,启动完成后，ESXi就在内存中运行了。所以Esxi直接安装在MicroSD上。安装完毕后把卡拔下来，做一个完整的克隆备份或者直接克隆一个MicroSD实体卡以备不测
+
+HP gen8 相关工具
+
+HP Gen8有自己的一套底层的管理系统,这里先讲一个">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/8170796.jpg">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/90646810.jpg">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-30/87630709.jpg">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-30/78457314.jpg">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-30/79146767.jpg">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/83348189.jpg">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/31566859.jpg">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/41675492.jpg">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/78129151.jpg">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/6061113.jpg">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/70593634.jpg">
+<meta property="og:updated_time" content="2016-05-30T13:57:39.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="How to modify puphpet file to avoid vagrant up errors">
-<meta name="twitter:description" content="Error code when run vagrant up:recently when I want to use vagrant to build PHP environment on my Mac,I got three Errors :
+<meta name="twitter:title" content="Mac 环境下 Hp Gen8 microServer安装 Esxi Synology DSM">
+<meta name="twitter:description" content="结构设计
+ESXI安装在TF卡/U盘上(8gb肯定足够用了)
+SSD上装虚拟机
+raid1直通虚拟机作数据存储
 
-12error: /Stage[main]/Supervisord::Pip/Exec[install_setuptools]/returns: cha">
+
+esxi读取是在启动时读取一次的,启动完成后，ESXi就在内存中运行了。所以Esxi直接安装在MicroSD上。安装完毕后把卡拔下来，做一个完整的克隆备份或者直接克隆一个MicroSD实体卡以备不测
+
+HP gen8 相关工具
+
+HP Gen8有自己的一套底层的管理系统,这里先讲一个">
 
 
 
@@ -86,7 +121,7 @@
   };
 </script>
 
-  <title> How to modify puphpet file to avoid vagrant up errors | Lyn's Blog </title>
+  <title> Mac 环境下 Hp Gen8 microServer安装 Esxi Synology DSM | Lyn's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
@@ -212,7 +247,7 @@
             
             
               
-                How to modify puphpet file to avoid vagrant up errors
+                Mac 环境下 Hp Gen8 microServer安装 Esxi Synology DSM
               
             
           </h1>
@@ -221,8 +256,8 @@
         <div class="post-meta">
           <span class="post-time">
             發表於
-            <time itemprop="dateCreated" datetime="2015-03-26T16:46:25+08:00" content="2015-03-26">
-              2015-03-26
+            <time itemprop="dateCreated" datetime="2016-05-30T20:33:03+08:00" content="2016-05-30">
+              2016-05-30
             </time>
           </span>
 
@@ -232,8 +267,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/03/26/vagrant_gfw_errors/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/03/26/vagrant_gfw_errors/" itemprop="commentsCount"></span>
+                <a href="/2016/05/30/installEsxiOnGen8/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/30/installEsxiOnGen8/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -252,54 +287,67 @@
       
 
       
-        <span itemprop="articleBody"><h1 id="Error_code_when_run_vagrant_up:">Error code when run vagrant up:</h1><p>recently when I want to use vagrant to build PHP environment on my Mac,<br>I got three Errors :</p>
+        <span itemprop="articleBody"><h1 id="结构设计">结构设计</h1><ul>
+<li>ESXI安装在TF卡/U盘上(8gb肯定足够用了)</li>
+<li>SSD上装虚拟机</li>
+<li>raid1直通虚拟机作数据存储</li>
+</ul>
+<blockquote>
+<p>esxi读取是在启动时读取一次的,启动完成后，ESXi就在内存中运行了。<br>所以Esxi直接安装在MicroSD上。安装完毕后把卡拔下来，做一个完整的克隆备份或者直接克隆一个MicroSD实体卡以备不测</p>
+</blockquote>
+<h1 id="HP_gen8_相关工具">HP gen8 相关工具</h1><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/8170796.jpg" alt=""></p>
+<blockquote>
+<p>HP Gen8有自己的一套底层的管理系统,这里先讲一个小故事:<br>Gen8是当时在淘宝上买的,结果卖家亲自开车过来送货,同时还在淘宝卖家那里买了内存条,当时就说插上看看有没有问题(卖家车上自带电源逆变器,没有显示器). 结果开机半天了都还没有听到蜂鸣器的声音,于是我们拿着Gen8去路边的打印店借用显示器看下是什么原因.结果打印店的显示器都不方便拆线,卖家就问有没有网线,只要有网线就够了.<br>结果我们就插了一根网线到Gen8的ILO console口.在浏览器上访问gen8的ip地址,用机箱上自带的账号密码就登陆上ILO管理系统.发现确实是卡在了内存自检上.于是卖家就换了一根新的内存条给我.</p>
+</blockquote>
+<p>这就是服务器和普通PC相比的的神奇之处了吧.即使内存条有问题,Gen8底层的管理系统也可以启动起来,然后我们就可以方便的远程连接到ILO上看到服务器当前的状况.<br>可以查看服务器的各种信息.还可以在web页面上启动.net或者Java的远程桌面.(要在ie或者Safari下面打开ILO才行.)<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/90646810.jpg" alt=""></p>
+<p>ILO的高级功能需要输入一个license-key 可以到淘宝去购买,很便宜.</p>
+<h2 id="ILO">ILO</h2><h2 id="ADM">ADM</h2><h1 id="安装_ESXI_6-0_u2">安装 ESXI 6.0 u2</h1><h2 id="准备一个USB键盘">准备一个USB键盘</h2><p>因为mac的键盘和esxi还是ilo的映射不太正确,在安装过程中会出现F11按了不能被识别的情况,这时候就需要使用直接连接在Gen8上面的物理键盘按一下F11了.</p>
+<h2 id="下载HPE_Custom_Image_for_ESXi_6-0_U2">下载HPE Custom Image for ESXi 6.0 U2</h2><ul>
+<li><a href="https://my.vmware.com/web/vmware/details?downloadGroup=OEM-ESXI60U2-HPE&amp;productId=491" target="_blank" rel="external">https://my.vmware.com/web/vmware/details?downloadGroup=OEM-ESXI60U2-HPE&amp;productId=491</a> </li>
+<li>Version: 6.0 U2</li>
+<li>Release Date:2016-04-07</li>
+</ul>
+<p>下载好了以后,在Windows下就是在系统里挂载这个iSO然后像下面一样的勾选.<br>然而Hp的ILO对mac支持不是很好,能运行起来但是看不见选择加载的ISO.所以变通一下:把刚下载的esxi的ISO文件作为光驱挂载在Mac的PD9里的Windows上.(是不是特别绕?)还是直接看图:<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-30/87630709.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-30/78457314.jpg" alt=""></p>
+<p>然后输入GEN8 dhcp或得到的ip启动ILO.选择virtual device 加载刚才的光驱.</p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-30/79146767.jpg" alt=""></p>
+<p>然后插上Usb键盘. 这时候就可以开机了</p>
+<p>然后如果BIOS里的启动顺序是出厂的设置的话,那么等漫长的自检过了以后就会开始读取虚拟DVD里的镜像了.(注意 你的mac最好是使用网线,而且要和ilo在同一局域网内.不然加载会很慢,因为这里加载的iso实际上是在你的mac硬盘上的)</p>
+<p>然后就会出现启动选择界面,当然选择install ESXI 然后就会开始加载了</p>
+<p>加载好了以后就会要你选择安装的磁盘位置,设置管理员密码,然后就会按F11确认就开始安装了,因为ISO文件都只有300多MB所以安装的速度还是很快的.(这里为了防止装错.我是只插上了U盘其他的设备都没有接.)<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/83348189.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/31566859.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/41675492.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/78129151.jpg" alt=""></p>
+<p>安装好了以后会提示重启.这时候就需要把网线接进Gen8的另外两个网口上了(或者其中之一),然后在管理界面就会提示你去浏览器上打开esxi的ip地址配置虚拟机.<br>接下来的就比较简单了:<br>和普通的VMware配置虚拟机没有什么区别.因为VMware的客户端只有Windows的,所以我就没有安装专业的配置客户端,而是全部都在VMware的web管理页面上操作的.对了,这个时候就需要输入你的VMwarelicense了.<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/6061113.jpg" alt=""></p>
+<p>这时候就可以在开机自检的时候按F5去HPSSA(HP smart storage Administrator)中初始化你的磁盘了,如果是单块硬盘就只能加载成raid0才能识别.</p>
+<h2 id="黑群辉的安装">黑群辉的安装</h2><p>到下面的网址上去下载两个文件:</p>
+<blockquote>
+<p>xpenology.me/downloads/</p>
+</blockquote>
+<ul>
+<li>第一个是DSM_DS3615xs_5644.pat,这个是群辉的升级文件,一会儿在配置群辉的时候会用上.</li>
+<li>第二个是XPEnoboot_DS3615xs_5.2-5644.4.vmdk的启动文件</li>
+</ul>
 <ol>
-<li><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">error:</span> <span class="regexp">/Stage[main]/</span><span class="string">Supervisord:</span>:Pip<span class="regexp">/Exec[install_setuptools]/</span><span class="string">returns:</span> change from notrun to <span class="number">0</span> <span class="string">failed:</span> Command exceeded timeout</span><br><span class="line"><span class="string">Warning:</span> <span class="regexp">/Stage[main]/</span><span class="string">Supervisord:</span>:Reload/Exec[supervisorctl_update]: Skipping because of failed dependencies</span><br></pre></td></tr></table></figure>
-</li>
-<li><figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERROR: While executing gem ... (Gem::RemoteFetcher::FetchError) ==&gt; <span class="keyword">default</span>: SSL_connect SYSCALL returned=<span class="number">5</span> errno=<span class="number">0</span> <span class="keyword">state</span>=<span class="literal">unknown</span> <span class="keyword">state</span> (https://rubygems.<span class="keyword">global</span>.ssl.fastly.net/<span class="keyword">quick</span>/Marshal.<span class="number">4.8</span>/deep_merge-<span class="number">1.0</span>.<span class="number">1</span>.gemspec.rz)</span><br></pre></td></tr></table></figure>
-</li>
-<li><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Error: <span class="string">"false"</span> <span class="keyword">is</span> <span class="keyword">not</span> a <span class="type">boolean</span>. It looks <span class="keyword">to</span> be a String <span class="keyword">at</span> /tmp/vagrant-puppet/modules-b7f682531389374ec63e7be34e57b9e6/nginx/manifests/resource/location.pp:<span class="number">198</span> <span class="function_start"><span class="keyword">on</span></span> node <span class="number">1</span></span><br></pre></td></tr></table></figure>
-</li>
+<li>先上传vmdk文件到服务器的磁盘上,在虚拟机里加载vmdk文件作为第二块硬盘(注意添加的时候选择现有的硬盘).</li>
+<li>选择启动虚拟机</li>
+<li>在群辉助手中去配置和升级DSM系统记得选择PAT文件的时候选择我们刚才下载的那个Pat文件.(不想下载群辉助手也可以直接在群辉的ip地址后面加上端口号:5000去访问web管理页面.)<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/70593634.jpg" alt=""></li>
+<li>升级设置完毕以后会要求重启,这时候可能会出现黑裙启动不起来的问题,报missing operating Syetem的错.这时候检查一下虚拟机的硬盘启动顺序.或者直接删除刚才添加的第二块20mb的硬盘,按照步骤一重新添加一次群辉的启动vmdk文件.</li>
 </ol>
-<p>After investgating,I found the  root cause of the first two is  the same. The network between Mac and the ruby/pip servers is blocked by China GFW(as I am using Chinatelecom broadband).</p>
-<p>Therefore, I have to introduce China domestic ruby and pip sources to puphprt configuraions as followed:</p>
-<h1 id="Walkaround:">Walkaround:</h1><p>##Replce config.yaml nginx config </p>
-<p>the syntax should be :</p>
-<p>internal: off or internal :”false”</p>
-<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">locations:</span><br><span class="line">                nxvl_6x40k3ysb0yt:</span><br><span class="line">                    location: /</span><br><span class="line">                    autoindex: <span class="string">'off'</span></span><br><span class="line">                    internal: off</span><br><span class="line">                    try_files:</span><br><span class="line">                        - <span class="variable">$uri</span></span><br><span class="line">                        - <span class="variable">$uri</span>/</span><br><span class="line">                        - /index.php<span class="variable">$is</span>_args<span class="variable">$args</span></span><br><span class="line">                    fastcgi: <span class="string">''</span></span><br><span class="line">                    fastcgi_index: <span class="string">''</span></span><br><span class="line">                    fastcgi_split_path: <span class="string">''</span></span><br><span class="line">                nxvl_6punkjmd4tp3:</span><br><span class="line">                    location: <span class="string">'~ \.php$'</span></span><br><span class="line">                    autoindex: <span class="string">'off'</span></span><br><span class="line">                    internal: off</span><br><span class="line">                    try_files:</span><br><span class="line">                        - <span class="variable">$uri</span></span><br><span class="line">                        - <span class="variable">$uri</span>/</span><br><span class="line">                        - /index.php<span class="variable">$is</span>_args<span class="variable">$args</span></span><br><span class="line">                    fastcgi: <span class="string">'127.0.0.1:9000'</span></span><br><span class="line">                    fastcgi_index: index.php</span><br><span class="line">                    fastcgi_split_path: <span class="string">'^(.+\.php)(/.*)$'</span></span><br><span class="line">                    fast_cgi_params_extra:</span><br><span class="line">                        - <span class="string">'SCRIPT_FILENAME $request_filename'</span></span><br><span class="line">                        - <span class="string">'APP_ENV dev'</span></span><br></pre></td></tr></table></figure>
-<h2 id="Replace_gem_sources_in_initial-setup-sh">Replace gem sources in initial-setup.sh</h2><p>gem sources –remove <a href="https://rubygems.org/" target="_blank" rel="external">https://rubygems.org/</a><br>gem sources -a <a href="http://ruby.taobao.org/" target="_blank" rel="external">http://ruby.taobao.org/</a></p>
-<h2 id="Add_douban_pypi_source_in_puphpet/manifests/python/pip-pp">Add douban pypi source in  puphpet/manifests/python/pip.pp</h2><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">class puphpet::python::pip &#123;</span><br><span class="line"></span><br><span class="line">  Exec &#123; path =&gt; [ <span class="string">'/usr/bin/'</span>, <span class="string">'/usr/local/bin'</span>, <span class="string">'/bin'</span>, <span class="string">'/usr/local/sbin'</span>, <span class="string">'/usr/sbin'</span>, <span class="string">'/sbin'</span> ] &#125;</span><br><span class="line"></span><br><span class="line">  <span class="variable">$url</span> = <span class="string">'https://bootstrap.pypa.io/ez_setup.py'</span></span><br><span class="line">  <span class="variable">$download</span>_location = <span class="string">'/.puphpet-stuff/ez_setup.py'</span></span><br><span class="line"></span><br><span class="line">  exec &#123; <span class="string">"Download and install ez_setup"</span>:</span><br><span class="line">    creates =&gt; <span class="variable">$download</span>_location,</span><br><span class="line">    command =&gt; <span class="string">"wget $&#123;url&#125; -O $&#123;download_location&#125; &amp;&amp; \</span><br><span class="line">                python $&#123;download_location&#125;"</span>,</span><br><span class="line">    timeout =&gt; <span class="number">30</span>,</span><br><span class="line">    path    =&gt; <span class="string">'/usr/bin'</span></span><br><span class="line">  &#125;</span><br><span class="line">  -&gt; exec &#123; <span class="string">'easy_install pip -i http://pypi.douban.com/simple '</span>:</span><br><span class="line">    unless =&gt; <span class="string">'which pip'</span>,</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  if $::osfamily == <span class="string">'RedHat'</span> &#123;</span><br><span class="line">    exec &#123; <span class="string">'rhel pip_provider_name_fix'</span>:</span><br><span class="line">      command   =&gt; <span class="string">'alternatives --install /usr/bin/pip-python pip-python /usr/bin/pip 1'</span>,</span><br><span class="line">      subscribe =&gt; Exec[<span class="string">'easy_install pip'</span>],</span><br><span class="line">      unless    =&gt; <span class="string">'which pip-python'</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>hope these help :D</p>
-<p>if there is any mistake,please contact me to update! </p>
-<p>thank you</p>
 </span>
       
     </div>
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/vagrant-gfw-error/" rel="tag">#vagrant gfw error</a>
-          
-        </div>
-      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2014/12/26/hello-world/" rel="next" title="My first blog post launched with my new blog">
-                <i class="fa fa-chevron-left"></i> My first blog post launched with my new blog
+              <a href="/2016/05/26/addNativeJavaSciptsInterface/" rel="next" title="JS与Native交互接口定义 Native JavaScipts Interface">
+                <i class="fa fa-chevron-left"></i> JS与Native交互接口定义 Native JavaScipts Interface
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/06/28/hellowordnodejs/" rel="prev" title="How to learn Node.js - 01 hello world !">
-                How to learn Node.js - 01 hello world ! <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -326,8 +374,8 @@
         
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/03/26/vagrant_gfw_errors/"
-           data-title="How to modify puphpet file to avoid vagrant up errors" data-url="http://lyn.s76.org/2015/03/26/vagrant_gfw_errors/">
+      <div class="ds-thread" data-thread-key="2016/05/30/installEsxiOnGen8/"
+           data-title="Mac 环境下 Hp Gen8 microServer安装 Esxi Synology DSM" data-url="http://lyn.s76.org/2016/05/30/installEsxiOnGen8/">
       </div>
     
   </div>
@@ -415,7 +463,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Error_code_when_run_vagrant_up:"><span class="nav-number">1.</span> <span class="nav-text">Error code when run vagrant up:</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Walkaround:"><span class="nav-number">2.</span> <span class="nav-text">Walkaround:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Replace_gem_sources_in_initial-setup-sh"><span class="nav-number">2.1.</span> <span class="nav-text">Replace gem sources in initial-setup.sh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Add_douban_pypi_source_in_puphpet/manifests/python/pip-pp"><span class="nav-number">2.2.</span> <span class="nav-text">Add douban pypi source in  puphpet/manifests/python/pip.pp</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#结构设计"><span class="nav-number">1.</span> <span class="nav-text">结构设计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HP_gen8_相关工具"><span class="nav-number">2.</span> <span class="nav-text">HP gen8 相关工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ILO"><span class="nav-number">2.1.</span> <span class="nav-text">ILO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ADM"><span class="nav-number">2.2.</span> <span class="nav-text">ADM</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装_ESXI_6-0_u2"><span class="nav-number">3.</span> <span class="nav-text">安装 ESXI 6.0 u2</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#准备一个USB键盘"><span class="nav-number">3.1.</span> <span class="nav-text">准备一个USB键盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载HPE_Custom_Image_for_ESXi_6-0_U2"><span class="nav-number">3.2.</span> <span class="nav-text">下载HPE Custom Image for ESXi 6.0 U2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#黑群辉的安装"><span class="nav-number">3.3.</span> <span class="nav-text">黑群辉的安装</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
