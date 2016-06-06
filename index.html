@@ -207,6 +207,216 @@
             
             
               
+                <a class="post-title-link" href="/2016/06/06/javaScript-Object-Oriented-Prototype-link/" itemprop="url">
+                  JavaScript使用原型链实现继承
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-06-06T22:49:33+08:00" content="2016-06-06">
+              2016-06-06
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/06/javaScript-Object-Oriented-Prototype-link/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/06/javaScript-Object-Oriented-Prototype-link/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="JavaScript使用原型链实现继承">JavaScript使用原型链实现继承</h1><h2 id="原型链">原型链</h2><h2 id="原型式继承">原型式继承</h2><h2 id="寄生式继承">寄生式继承</h2><h2 id="寄生组合式继承">寄生组合式继承</h2><h2 id="ES6中的继承实现`">ES6中的继承实现`</h2>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/2016/06/05/javaScript-Object-Oriented-Prototype/" itemprop="url">
+                  JavaScript中使用prototype来创建对象
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-06-05T23:02:37+08:00" content="2016-06-05">
+              2016-06-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/05/javaScript-Object-Oriented-Prototype/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/05/javaScript-Object-Oriented-Prototype/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="JS中使用prototype来创建对象">JS中使用prototype来创建对象</h1><h2 id="工厂模式">工厂模式</h2><p>抽象了创建具体对象的过程</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createPerson</span>(<span class="params">name,age,job</span>)</span>&#123;</span><br><span class="line"> 	<span class="keyword">var</span> o  = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line"> 	o.name = name;</span><br><span class="line"> 	o.age  = age;</span><br><span class="line"> 	o.job  = job;</span><br><span class="line"> 	o.sayName =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"> 		alert(<span class="keyword">this</span>.name);</span><br><span class="line"> 	&#125;;</span><br><span class="line"> 	</span><br><span class="line"> 	<span class="keyword">return</span> o;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span>  person1 = createPerson(<span class="string">"lyn"</span>,<span class="number">27</span>,<span class="string">"Web developer"</span>);</span><br><span class="line"><span class="keyword">var</span>  person2 = createPerson(<span class="string">"cheung"</span>,<span class="number">20</span>,<span class="string">"student"</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="优缺点:">优缺点:</h3><ul>
+<li>优点:不创建多个相似的对象,减少重复的代码</li>
+<li>缺点:不能解决对象识别的问题(即对象没有特定的构造函数,不能通过instanceof来<br>识别 他是否是某个对象的实例).</li>
+</ul>
+<h2 id="构造函数模式">构造函数模式</h2><p>可以自定义构造函数的模式:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age, job</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name=name;</span><br><span class="line">    <span class="keyword">this</span>.age=age;</span><br><span class="line">    <span class="keyword">this</span>.job=job;</span><br><span class="line">    <span class="keyword">this</span>.sayName =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(<span class="keyword">this</span>.name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> Person(<span class="string">"lyn"</span>,<span class="number">27</span>,<span class="string">"Web developer"</span>);</span><br><span class="line"><span class="keyword">var</span> person2 = <span class="keyword">new</span> Person(<span class="string">"cheung"</span>,<span class="number">20</span>,<span class="string">"student"</span>);</span><br><span class="line"></span><br><span class="line">alert(person1.constructor == Person); <span class="comment">//true</span></span><br><span class="line">alert(person2.constructor == Person); <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//检测实例类型</span></span><br><span class="line">alert(person1 <span class="keyword">instanceof</span> <span class="built_in">Object</span>); <span class="comment">//true</span></span><br><span class="line">alert(person1 <span class="keyword">instanceof</span> Person); <span class="comment">//true</span></span><br><span class="line">alert(person2 <span class="keyword">instanceof</span> <span class="built_in">Object</span>);<span class="comment">//true</span></span><br><span class="line">alert(person2 <span class="keyword">instanceof</span> Person); <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//缺点:</span></span><br><span class="line">alert(person1.sayName == person2.sayName) <span class="comment">//false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//解决一个方法多次实例化的办法:将函数定义转移到构造函数外</span></span><br><span class="line"><span class="comment">//这种方法的缺点是:最终会导致创建了很多全局函数,</span></span><br><span class="line"><span class="comment">//但是却只能被构造函数生成的对象使用</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age, job</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.name=name;</span><br><span class="line">	<span class="keyword">this</span>.age=age;</span><br><span class="line">	<span class="keyword">this</span>.job=job;</span><br><span class="line">	<span class="keyword">this</span>.sayname=sayname;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sayName</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	alert(<span class="keyword">this</span>.name);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> Person(<span class="string">'Lyn'</span>,<span class="number">27</span>,<span class="string">'webdeveloper'</span>);</span><br><span class="line"><span class="keyword">var</span> person2 = <span class="keyword">new</span> Person(<span class="string">'Greg'</span>,<span class="number">20</span>,<span class="string">"student"</span>);</span><br><span class="line"></span><br><span class="line">alert(person1.sayName == person2.sayName) <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+<p>执行过程:</p>
+<ol>
+<li>创建一个新对象</li>
+<li>将构造函数的作用域赋给新对象.(this指向新对象)</li>
+<li>执行构造函数中的代码(添加属性(值和方法));</li>
+<li>返回新建的对象. </li>
+</ol>
+<h3 id="优点和缺点:">优点和缺点:</h3><ul>
+<li><p>优点:相比于工厂模式,可以用instanceof或者constuctor识别对象的类型.</p>
+</li>
+<li><p>缺点:完成相同任务的方法,创建了多次实例,不能代码共用.</p>
+</li>
+</ul>
+<h2 id="原型模式">原型模式</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.name=<span class="string">"lyn"</span>;</span><br><span class="line">Person.prototype.age=<span class="string">"27"</span>;</span><br><span class="line">Person.prototype.jbo=<span class="string">"web developer"</span>;</span><br><span class="line">Person.prototype.sayName= <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	alert(<span class="keyword">this</span>.name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person1= <span class="keyword">new</span> Person();</span><br><span class="line">person1.sayName(); <span class="comment">//"lyn"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person2 =<span class="keyword">new</span> Person();</span><br><span class="line">person2.sayName(); <span class="comment">//"lyn"</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(person1.sayName == person2.sayName);  <span class="comment">//true </span></span><br><span class="line"></span><br><span class="line"><span class="comment">//isPrototypeOf</span></span><br><span class="line">alert(Person.prototype.isPrototypeOf(person1));  <span class="comment">//true</span></span><br><span class="line">alert(Person.prototype.isPrototypeOf(person2));  <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//ES5 feature Object.getPrototypeOf()</span></span><br><span class="line">alert(<span class="built_in">Object</span>.getPrototypeOf(person1) ==Person.prototype); <span class="comment">//true</span></span><br><span class="line">alert(<span class="built_in">Object</span>.getPrototypeOf(person1).name ) <span class="comment">//lyn</span></span><br></pre></td></tr></table></figure>
+<h3 id="优点&amp;缺点:">优点&amp;缺点:</h3><ul>
+<li>优点:所有方法属性都可以共享,提高了代码重用率</li>
+<li>缺点:所有属性被所有实例共享,一个实例修改所有,所有实例获得的属性都会改变,需要结合构造函数来解决这个问题.</li>
+</ul>
+<h3 id="理解原型对象">理解原型对象</h3><p>在对象的prototype中查找属性与方法就是一次搜索,所以对对象的值得修改能够立即从实例上反应出来.</p>
+<h3 id="hasOwnProperty_&amp;&amp;_in_方法">hasOwnProperty &amp;&amp; in 方法</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.name=<span class="string">"lyn"</span>;</span><br><span class="line">Person.prototype.age=<span class="string">"27"</span>;</span><br><span class="line">Person.prototype.jbo=<span class="string">"web developer"</span>;</span><br><span class="line">Person.prototype.sayName= <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	alert(<span class="keyword">this</span>.name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person1= <span class="keyword">new</span> Person();</span><br><span class="line"><span class="keyword">var</span> person2 =<span class="keyword">new</span> Person();</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="comment">// hasOwnProperty &amp;&amp; in </span></span><br><span class="line"><span class="built_in">console</span>.log(person1.hasOwnProperty(<span class="string">"name"</span>)) <span class="comment">//false 因为name不是实例中定义的</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"name"</span><span class="keyword">in</span> person1)  <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">person1.name = <span class="string">"cheung"</span>;<span class="comment">//name 来自于实例   </span></span><br><span class="line"><span class="built_in">console</span>.log(person1.name); <span class="comment">//cheung 实例中的值屏蔽了原型中的值</span></span><br><span class="line"><span class="built_in">console</span>.log(person1.hasOwnProperty(<span class="string">"name"</span>)); </span><br><span class="line"><span class="comment">//true 因为现在的值是在实例中定义的</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"name"</span> <span class="keyword">in</span> person1) <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//删除后,这个值来自原型 lyn</span></span><br><span class="line"><span class="keyword">delete</span> person1.name; </span><br><span class="line"><span class="built_in">console</span>.log(person1.hasOwnProperty(<span class="string">"name"</span>)); </span><br><span class="line"><span class="comment">//false 因为现在的值来自于原型</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"name"</span> <span class="keyword">in</span> person1) <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//使用hasProtoProperty 函数来判断属性是否来自于原型</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasProtoProperty</span>(<span class="params">object, prop</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> !object.hasOwnProperty(prop) &amp;&amp; (prop <span class="keyword">in</span> object)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="获取对象的所有可枚举或不可枚举属性">获取对象的所有可枚举或不可枚举属性</h3><ul>
+<li>使用Object.keys获取所有可枚举的的属性</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> keys = <span class="built_in">Object</span>.keys(Person.prototype);</span><br><span class="line"><span class="built_in">console</span>.log(keys); <span class="comment">//name, age, job, say, Name</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> Person();</span><br><span class="line">p1.name =<span class="string">"Lee"</span>;</span><br><span class="line">p1.age =<span class="string">"23"</span>;</span><br><span class="line"><span class="keyword">var</span> p1Keys=<span class="built_in">Object</span>.keys(p1);</span><br><span class="line"><span class="built_in">console</span>.log(p1Keys);<span class="comment">//name,age</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用Object.getOwnPropertyNames()获取所有实例的属性(包括不可枚举的)</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> keys = <span class="built_in">Object</span>.getOwnPropertyNames(Person.prototype);</span><br><span class="line"><span class="built_in">console</span>.log(keys);<span class="comment">// constructor,name,age,job,sayName</span></span><br></pre></td></tr></table></figure>
+<p>更简单的原型语法(需要制定constructor):</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">&#125;</span><br><span class="line">person.prototype=&#123;</span><br><span class="line">	<span class="constructor"><span class="keyword">constructor</span>: Person, //如果不指定的话会默认指向Object的构造函数</span><br><span class="line">	name:"lyn",</span><br><span class="line">	age:"27",</span><br><span class="line">	job:"web developer",</span><br><span class="line">	sayName: function()</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="组合使用构造函数模式与原型模式">组合使用构造函数模式与原型模式</h2><ul>
+<li>使用最广泛的一种模式,默认应该使用的模式,</li>
+</ul>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//每个实例不想共享的属性:使用构造函数模式</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span><span class="params">(name,age,job)</span></span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.name = name;</span><br><span class="line">	<span class="keyword">this</span>.age = age;</span><br><span class="line">	<span class="keyword">this</span>.job = job;</span><br><span class="line">	<span class="keyword">this</span>.friends =[<span class="string">"Tom"</span>,<span class="string">"Oliver"</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//每个实例共享的属性和方法:使用原型模式</span></span><br><span class="line">Person.prototype =&#123;</span><br><span class="line">	constructor: Person,</span><br><span class="line">	sayName:(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="动态原型模式">动态原型模式</h2><ul>
+<li>判断方法是否存在来决定是否需要创建构造函数的原型方法.</li>
+</ul>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//每个实例不想共享的属性:使用构造函数模式</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span><span class="params">(name,age,job)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">this</span>.name = name;</span><br><span class="line">	<span class="keyword">this</span>.age = age;</span><br><span class="line">	<span class="keyword">this</span>.job = job;</span><br><span class="line">	<span class="keyword">this</span>.friends =[<span class="string">"Tom"</span>,<span class="string">"Oliver"</span>];</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//下面的方法只会被初始化一次.</span></span><br><span class="line">	<span class="comment">//还可以使用instanceof来做判断</span></span><br><span class="line">	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="keyword">this</span>.sayName !=<span class="string">"function"</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		Person.prototype.sayname=<span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">			alert(<span class="keyword">this</span>.name);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="ES6中的对象">ES6中的对象</h2>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/05/30/installEsxiOnGen8/" itemprop="url">
                   Mac 环境下 Hp Gen8 microServer安装 Esxi Synology DSM
                 </a>
@@ -281,6 +491,53 @@
 <p>加载好了以后就会要你选择安装的磁盘位置,设置管理员密码,然后就会按F11确认就开始安装了,因为ISO文件都只有300多MB所以安装的速度还是很快的.(这里为了防止装错.我是只插上了U盘其他的设备都没有接.)<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/83348189.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/31566859.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/41675492.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/78129151.jpg" alt=""></p>
 <p>安装好了以后会提示重启.这时候就需要把网线接进Gen8的另外两个网口上了(或者其中之一),然后在管理界面就会提示你去浏览器上打开esxi的ip地址配置虚拟机.<br>接下来的就比较简单了:<br>和普通的VMware配置虚拟机没有什么区别.因为VMware的客户端只有Windows的,所以我就没有安装专业的配置客户端,而是全部都在VMware的web管理页面上操作的.对了,这个时候就需要输入你的VMwarelicense了.<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/6061113.jpg" alt=""></p>
 <p>这时候就可以在开机自检的时候按F5去HPSSA(HP smart storage Administrator)中初始化你的磁盘了,如果是单块硬盘就只能加载成raid0才能识别.</p>
+<h3 id="RDM">RDM</h3><p>磁盘直通,也就是把完整的一块Raid或者一块SATA 直接映射成为一个VMdk,然后虚拟机可以通过加载这个vmdk硬盘文件,实现passthrough. </p>
+<p>在配置好虚拟机以后,在web管理页面或者ilo中按F2进入管理界面,启用SSH<br>然后ssh 上esxi<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh root@<span class="number">192.168</span><span class="number">.1</span><span class="number">.222</span>(你的esxi的dhcpIP地址)</span><br></pre></td></tr></table></figure></p>
+<p>然后使用以下的命令获取到你要RDM的磁盘信息</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> ls <span class="regexp">/dev/</span>disks</span><br><span class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span>L0</span><br><span class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span><span class="string">L0:</span><span class="number">1</span></span><br><span class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span><span class="string">L0:</span><span class="number">5</span></span><br><span class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span><span class="string">L0:</span><span class="number">6</span></span><br><span class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span><span class="string">L0:</span><span class="number">7</span></span><br><span class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span><span class="string">L0:</span><span class="number">8</span></span><br><span class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span><span class="string">L0:</span><span class="number">9</span></span><br><span class="line">naa<span class="number">.600508</span>b1001c0f178bbb175b496a3f68</span><br><span class="line">naa<span class="number">.600508</span><span class="string">b1001c0f178bbb175b496a3f68:</span><span class="number">1</span></span><br><span class="line">naa<span class="number">.600508</span>b1001c2031e2eb51ae0420a11f</span><br></pre></td></tr></table></figure>
+<p>通过下面的命令获取到volumes下面的SSD系统盘的名称</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ls vmfs/volumes/ -l</span><br><span class="line">total <span class="number">1792</span></span><br><span class="line">drwxr-xr-t    <span class="number">1</span> root     root          <span class="number">2100</span> Jul <span class="number">19</span> <span class="number">23</span>:<span class="number">57</span> <span class="number">55</span>a7da09-<span class="number">6</span>a7727f6-d50b-<span class="number">70106f</span>3eb224</span><br><span class="line">drwxr-xr-x    <span class="number">1</span> root     root             <span class="number">8</span> Jan  <span class="number">1</span>  <span class="number">1970</span> <span class="number">55</span>a834d9-c3bb963e-<span class="number">218</span>c-<span class="number">70106f</span>3eb224</span><br><span class="line">lrwxr-xr-x    <span class="number">1</span> root     root            <span class="number">35</span> Jul <span class="number">20</span> <span class="number">00</span>:<span class="number">35</span> SSD-&gt; <span class="number">55</span>a7da09-<span class="number">6</span>a7727f6-d50b-<span class="number">70106f</span>3eb224</span><br><span class="line">drwxr-xr-x    <span class="number">1</span> root     root             <span class="number">8</span> Jan  <span class="number">1</span>  <span class="number">1970</span> e052ace5-bc3d44fd-<span class="number">4</span>b45-<span class="number">39</span>d0f75d754e</span><br><span class="line">drwxr-xr-x    <span class="number">1</span> root     root             <span class="number">8</span> Jan  <span class="number">1</span>  <span class="number">1970</span> f0811cef-d4c5ddf9-<span class="number">1088</span>-<span class="number">94015e0</span>ad7d9</span><br></pre></td></tr></table></figure>
+<p>请自行替换磁盘（naa.xxx）、ssd系统盘（system）、虚拟磁盘文件（*.vmdk）的名称，创建成功后会在ssd系统目录下出现于磁盘容量相同的vmdk文件。然后就可以添加这个vmdk作为现有硬盘到虚拟机使用了.</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmkfstools -z <span class="regexp">/vmfs/</span>devices<span class="regexp">/disks/</span>naa.<span class="number">600508</span>b1001c94879db735b10944bfc2<span class="regexp">/vmfs/</span>volumes<span class="regexp">/system/</span>raid0.vmdk</span><br></pre></td></tr></table></figure>
+<p>查看vmdk映射内容</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="variable">@localhost</span><span class="symbol">:/vmfs/volumes/</span><span class="number">55</span>a7da09-<span class="number">6</span>a7727f6-d50b-<span class="number">70106</span>f3eb224] cat <span class="constant">Raid1.</span>vmdk</span><br><span class="line"><span class="comment"># Disk DescriptorFile</span></span><br><span class="line">version=<span class="number">1</span></span><br><span class="line">encoding=<span class="string">"UTF-8"</span></span><br><span class="line"><span class="constant">CID=</span>fffffffe</span><br><span class="line">parentCID=ffffffff</span><br><span class="line">isNativeSnapshot=<span class="string">"no"</span></span><br><span class="line">createType=<span class="string">"vmfsPassthroughRawDeviceMap"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Extent description</span></span><br><span class="line"><span class="constant">RW </span><span class="number">5860467632</span> <span class="constant">VMFSRDM </span><span class="string">"Raid1-rdmp.vmdk"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The Disk Data Base</span></span><br><span class="line"><span class="comment">#DDB</span></span><br><span class="line"></span><br><span class="line">ddb.adapterType = <span class="string">"lsilogic"</span></span><br><span class="line">ddb.geometry.cylinders = <span class="string">"364797"</span></span><br><span class="line">ddb.geometry.heads = <span class="string">"255"</span></span><br><span class="line">ddb.geometry.sectors = <span class="string">"63"</span></span><br><span class="line">ddb.longContentID = <span class="string">"b1655129dd033737e3ead76ffffffffe"</span></span><br><span class="line">ddb.uuid = <span class="string">"60 00 C2 94 d1 90 d9 b1-11 6e 14 90 58 0d 39 0f"</span></span><br><span class="line">ddb.virtualHWVersion = <span class="string">"11"</span></span><br></pre></td></tr></table></figure>
+<h3 id="RDM官方文档参考:">RDM官方文档参考:</h3><p>要使用 ESXi/ESX 主机配置本地存储上的 RDM，需要满足以下两个条件：</p>
+<ul>
+<li><p>候选设备必须支持 SCSI Inquiry 重要产品数据 (VPD) 页面代码 0x83，该代码用于直接寻址和与 RDM 设备通信。有关 SCSI 感知代码的详细信息，请参见 Understanding SCSI Check Conditions in VMkernel logs during rescan operations (1010244)。</p>
+</li>
+<li><p>候选设备必须导出可使 ESXi/ESX 主机唯一标识用作 RDM 的设备的全局序列号。<br>注意：充当 RDM 的此功能可能在一些本地控制器及其连接的存储上不可用。请联系您的硬件供应商以确认您的控制器是否支持所需条件，并寻求任何技术支持。</p>
+</li>
+</ul>
+<p>如果您有合适的控制器，则可以将本地设备配置为 RDM。必须使用命令行界面 (CLI) 将本地存储设备配置为 RDM，无法通过 vSphere Client 执行此操作。</p>
+<p>要将本地设备配置为 RDM 磁盘，请执行以下操作：<br>打开与 ESXi/ESX 主机的 SSH 会话。<br>运行以下命令列出已连接到 ESXi 主机的磁盘：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ls</span> -<span class="keyword">l</span> /vmfs/devices/disks</span><br></pre></td></tr></table></figure>
+<p>在列表中，标识要配置为 RDM 的本地设备，并复制设备名称。</p>
+<p><strong>注意</strong>：设备名称将很可能使用 t10. 前缀，类似于以下名称：<code>t10.F405E46494C4540046F455B64787D285941707D203F45765</code></p>
+<p>要将设备配置为 RDM，并将 RDM 指针文件输出到您所选的目标，请运行以下命令：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmkfstools -z <span class="regexp">/vmfs/</span>devices<span class="regexp">/disks/</span>diskname<span class="regexp">/vmfs/</span>volumes<span class="regexp">/datastorename/</span>vmfolder<span class="regexp">/vmname.vmdk</span></span><br></pre></td></tr></table></figure>
+<p>例如：</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmkfstools -z /vmfs/devices/disks/t10.F<span class="number">405E46494</span>C<span class="number">4540046F45</span><span class="number">5B64787D28</span><span class="number">5941707D203</span>F45765 /vmfs/volumes/Datastore2/localrdm1/localrdm1.vmdk</span><br></pre></td></tr></table></figure>
+<p>注意：新创建的 RDM 指针文件的大小显示为与其映射到的裸设备相同的大小，它是一个虚拟文件，不占用任何存储空间。</p>
+<p>如果已创建 RDM 指针文件，请使用 vSphere Client 将 RDM 连接到虚拟机：</p>
+<ol>
+<li>右键单击要将 RDM 磁盘添加到的虚拟机。</li>
+<li>单击编辑设置。</li>
+<li>单击添加…</li>
+<li>选择硬盘。</li>
+<li>选择使用现有虚拟磁盘。</li>
+<li>浏览到步骤 5 中保存 RDM 指针的目录，选择 RDM 指针文件，然后单击下一步。</li>
+<li>选择要将磁盘连接到的虚拟 SCSI 控制器，然后单击下一步。</li>
+<li>单击完成。</li>
+</ol>
+<p>现在，虚拟机清单中的新硬盘应显示为映射的裸 LUN。</p>
+<p><strong>注意:</strong></p>
+<ul>
+<li>由于此虚拟机现有已连接的本地磁盘迁移，因此无法使用 vMotion。</li>
+<li>如果需要从虚拟机中移除本地 RDM 映射，只需对共享存储 RDM 应用相同步骤。在 vSphere Client 中，右键单击虚拟机，单击编辑设置，选择 RDM 然后单击从磁盘删除。此操作不会删除磁盘中的数据，而仅删除 RDM 映射文件。</li>
+</ul>
+<h3 id="ESXI磁盘分区(不是必须的)">ESXI磁盘分区(不是必须的)</h3><p>如果你的磁盘之前安装过别的系统导致esxi下无法正确加载 可以参考以下方法 重新分区.</p>
+<p>ssh到esxi 上后使用 Fdisk 或者 esxi 提供的分区工具 可以删除原有分区,然后直接在虚拟机中进行格式化</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost:~] fdisk /dev/disks/naa.<span class="number">600508b100</span><span class="number">1c2031e2</span>eb51ae0420a11f</span><br><span class="line">Command Action</span><br><span class="line">a	toggle a bootable flag</span><br><span class="line">b	edit bsd disklabel</span><br><span class="line">c	toggle the dos compatibility flag</span><br><span class="line">d	delete a partition</span><br><span class="line">l	list known partition types</span><br><span class="line">n	add a new partition</span><br><span class="line">o	create a new empty DOS partition table</span><br><span class="line">p	print the partition table</span><br><span class="line">q	quit without saving changes</span><br><span class="line">s	create a new empty Sun disklabel</span><br><span class="line">t	change a partition's system id</span><br><span class="line">u	change display/entry units</span><br><span class="line">v	verify the partition table</span><br><span class="line">w	write table to disk and exit</span><br><span class="line">x	extra functionality (experts only)</span><br><span class="line"></span><br><span class="line">[root@localhost:~] ls /vmfs/devices/disks/</span><br><span class="line"></span><br><span class="line">[root@localhost:~] partedUtil getptbl /vmfs/devices/disks/naa.<span class="number">600508b100</span><span class="number">1c2031e2</span>eb51ae0420a11f</span><br><span class="line">msdos</span><br><span class="line"><span class="number">364797 255</span> <span class="number">63 58604676</span>32</span><br><span class="line"><span class="number">1 63 42949</span><span class="number">61684 131 0</span></span><br><span class="line">Usage:</span><br><span class="line"> Get Partitions : get &lt;diskName&gt;</span><br><span class="line"> Set Partitions : set &lt;diskName&gt; ["partNum startSector endSector type attr"]*</span><br><span class="line"> Delete Partition : delete &lt;diskName&gt; &lt;partNum&gt;</span><br><span class="line"> Resize Partition : resize &lt;diskName&gt; &lt;partNum&gt; &lt;start&gt; &lt;end&gt;</span><br><span class="line"> Get Partitions : getptbl &lt;diskName&gt;</span><br><span class="line"> Set Partitions : setptbl &lt;diskName&gt; &lt;label&gt; ["partNum startSector endSector type/guid attr"]*</span><br><span class="line"> Fix Partition Table : fix &lt;diskName&gt;</span><br><span class="line"> Create New Label (all existing data will be lost): mklabel &lt;diskName&gt; &lt;label&gt;</span><br><span class="line"> Show commonly used partition type guids : showGuids</span><br><span class="line"> Get usable first and last sectors : getUsableSectors &lt;diskName&gt;</span><br><span class="line"> Fix GPT Table interactively : fixGpt &lt;diskName&gt;</span><br><span class="line"></span><br><span class="line">[root@localhost:~] partedUtil delete /vmfs/devices/disks/naa.<span class="number">600508b100</span><span class="number">1c2031e2</span>eb51ae0420a11f 1</span><br><span class="line"></span><br><span class="line">[root@localhost:~] partedUtil showGuids</span><br><span class="line"> Partition Type       GUID</span><br><span class="line"> vmfs                 AA<span class="number">31E02A400</span>F11DB<span class="number">9590000C29</span>11D1B8</span><br><span class="line"> vmkDiagnostic        <span class="number">9D27538040</span>AD11DBBF<span class="number">97000C2911</span>D1B8</span><br><span class="line"> vsan                 381CFCCC<span class="number">728811E09</span>2EE<span class="number">000C2911</span>D0B2</span><br><span class="line"> virsto               <span class="number">77719A0</span>CA<span class="number">4A011E3</span><span class="keyword">A</span><span class="number">47E000C29</span>745A24</span><br><span class="line"> VMware Reserved      9198EFFC31C011DB<span class="number">8F78000C29</span>11D1B8</span><br><span class="line"> Basic Data           EBD<span class="number">0A0A2B9</span>E<span class="number">5443387C06</span><span class="number">8B6B72699</span>C7</span><br><span class="line"> Linux Swap           0657FD6DA4AB<span class="number">43C484E50</span><span class="number">933C84B4</span>F4F</span><br><span class="line"> Linux Lvm            E<span class="number">6D6D379</span>F<span class="number">50744C2A23</span>C<span class="number">238F2A3</span>DF928</span><br><span class="line"> Linux Raid           <span class="keyword">A</span><span class="number">19D880F05</span>FC4D3BA<span class="number">006743F0</span>F84911E</span><br><span class="line"> Efi System           C<span class="number">12A7328F81</span>F11D2BA<span class="number">4B00A0C93</span>EC93B</span><br><span class="line"> Microsoft Reserved   E<span class="number">3C9E3160</span>B5C4DB8817DF92DF00215AE</span><br><span class="line"> Unused Entry         <span class="number">00000000000</span><span class="number">00000000000</span><span class="number">0000000000</span></span><br></pre></td></tr></table></figure>
 <h2 id="黑群辉的安装">黑群辉的安装</h2><p>到下面的网址上去下载两个文件:</p>
 <blockquote>
 <p>xpenology.me/downloads/</p>
@@ -295,6 +552,8 @@
 <li>在群辉助手中去配置和升级DSM系统记得选择PAT文件的时候选择我们刚才下载的那个Pat文件.(不想下载群辉助手也可以直接在群辉的ip地址后面加上端口号:5000去访问web管理页面.)<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/70593634.jpg" alt=""></li>
 <li>升级设置完毕以后会要求重启,这时候可能会出现黑裙启动不起来的问题,报missing operating Syetem的错.这时候检查一下虚拟机的硬盘启动顺序.或者直接删除刚才添加的第二块20mb的硬盘,按照步骤一重新添加一次群辉的启动vmdk文件.</li>
 </ol>
+<h3 id="加载RDM的Raid1作为数据储存">加载RDM的Raid1作为数据储存</h3><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/75391528.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/95718109.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/88694438.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/4528211.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/97145984.jpg" alt=""><br>Raid1就没必要检查磁盘奇偶了 因为实在太慢了…..<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/28774652.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/19661986.jpg" alt=""></p>
+<h1 id="测试">测试</h1><p>上传写入速度 55mb/s 下载速度117Mb/s</p>
 
             
           </span>
@@ -1238,244 +1497,11 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/03/14/nodeJs-iOnic-Config/" itemprop="url">
-                  iOnic Cordova Mac下的开发环境部署
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-03-14T13:53:17+08:00" content="2016-03-14">
-              2016-03-14
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/03/14/nodeJs-iOnic-Config/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/14/nodeJs-iOnic-Config/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="Install_Node-js">Install Node.js</h1><blockquote>
-<p>@author: Lyn </p>
-</blockquote>
-<h2 id="安装Mac软件安装管理器：HomeBrew">安装Mac软件安装管理器：HomeBrew</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ruby <span class="operator">-e</span> <span class="string">"<span class="variable">$(curl -fsSL -k https://raw.githubusercontent.com/Homebrew/install/master/install7)</span>"</span></span><br></pre></td></tr></table></figure>
-<h2 id="安装Node-js版本管理器_NVM">安装Node.js版本管理器 NVM</h2><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install nvm</span><br></pre></td></tr></table></figure>
-<h2 id="使用NVM安装Node-js">使用NVM安装Node.js</h2><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm install <span class="keyword">node</span><span class="identifier"> </span><span class="title">&amp;&amp; nvm</span> alias default <span class="keyword">node</span><span class="identifier"></span><span class="title"></span></span><br></pre></td></tr></table></figure>
-<h2 id="检查Node-js是否安装成功">检查Node.js是否安装成功</h2><p>在终端输入下面的命令检查Node和NPM的版本，安装成功的话会返回版本号：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line">v4<span class="number">.2</span><span class="number">.1</span></span><br><span class="line">npm -v</span><br><span class="line"><span class="number">2.14</span><span class="number">.7</span></span><br></pre></td></tr></table></figure>
-<h1 id="Install_Xcode">Install Xcode</h1><blockquote>
-<p>（iOS SDK）Apple 开发者网站可以下载Xcode 或者AppStore安装 </p>
-</blockquote>
-<h1 id="Install_Cordova,_Ionic">Install Cordova, Ionic</h1><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$sudo</span> npm install cordova ionic ios-sim -g</span><br></pre></td></tr></table></figure>
-<h1 id="Install_JAVA">Install JAVA</h1><p>Java SE Development  Kit</p>
-<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/www.oracle.com/technetwork</span><span class="regexp">/java/javase</span><span class="regexp">/downloads/jdk</span>7-downloads-<span class="number">1880260</span>.html</span><br></pre></td></tr></table></figure>
-<h1 id="Install_Android_sdk">Install Android sdk</h1><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install <span class="keyword">android-sdk</span></span><br></pre></td></tr></table></figure>
-<h2 id="Android_Studio_(选装)">Android Studio (选装)</h2><blockquote>
-<p><a href="https://developer.android.com/sdk/index.html" target="_blank" rel="external">https://developer.android.com/sdk/index.html</a></p>
-</blockquote>
-<h1 id="Install_Git">Install Git</h1><p> 终端安装Git 如果安装过，请跳过。</p>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install git</span><br></pre></td></tr></table></figure>
-<p>如果是想更新Git版本：</p>
-<p>先安装：</p>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install git</span><br></pre></td></tr></table></figure>
-<p>然后新建一个目录，把原来的移动到这个目录去<br>命令如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo cd /usr/bin</span><br><span class="line">sudo mkdir old-git-<span class="number">1.7</span><span class="number">.5</span><span class="number">.4</span></span><br><span class="line">sudo mv git* old-git-<span class="number">1.7</span><span class="number">.5</span><span class="number">.4</span></span><br></pre></td></tr></table></figure>
-<h1 id="Install_Apache_Ant">Install Apache Ant</h1><blockquote>
-<p>还是使用 brew</p>
-</blockquote>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install ant</span><br></pre></td></tr></table></figure>
-<h1 id="Add_Android_sdk_in_your_path">Add Android sdk in your path</h1><blockquote>
-<p>在终端打开和编辑: “.bash_profile” - 添加以下变量:</p>
-</blockquote>
-<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=$(/usr/libexec/java_home)</span><br><span class="line">export PATH=$&#123;JAVA_HOME&#125;/bin:<span class="variable">$PATH</span></span><br><span class="line">export PATH=/usr/local/bin:<span class="variable">$PATH</span></span><br><span class="line">export JAVA_HOME=<span class="string">"/usr/libexec/java_home -v '1.7*'"</span></span><br><span class="line">export ANDROID_HOME=/usr/local/opt/android-sdk</span><br></pre></td></tr></table></figure>
-<p>如果还安装了Android Studio，还需要添加这一行： </p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export <span class="constant">PATH=</span><span class="variable">$&#123;</span><span class="constant">PATH&#125;</span><span class="symbol">:/Applications/Android</span>\ <span class="constant">Studio.</span>app/sdk/platform-<span class="symbol">tools:</span>/<span class="constant">Applications/Android\</span> <span class="constant">Studio.</span>app/sdk/tools</span><br></pre></td></tr></table></figure>
-<h1 id="Restart_Ur_Mac">Restart Ur Mac</h1><p>或者使用这个命令重新加载环境变量：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.bash_profile</span><br></pre></td></tr></table></figure>
-<p>检查环境变量：</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo $PATH </span><br><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>Library<span class="regexp">/Java/</span>JavaVirtualMachines<span class="regexp">/jdk1.7.0_79.jdk/</span>Contents<span class="regexp">/Home/</span><span class="string">bin:</span><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>Library<span class="regexp">/Java/</span>JavaVirtualMachines<span class="regexp">/jdk1.7.0_79.jdk/</span>Contents<span class="regexp">/Home/</span><span class="string">bin:</span><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>Library<span class="regexp">/Java/</span>JavaVirtualMachines<span class="regexp">/jdk1.7.0_79.jdk/</span>Contents<span class="regexp">/Home/</span><span class="string">bin:</span><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>usr<span class="regexp">/bin:/</span><span class="string">bin:</span><span class="regexp">/usr/</span><span class="string">sbin:</span><span class="regexp">/sbin:/</span>Development<span class="regexp">/android-sdk/</span>platform-<span class="string">tools:</span><span class="regexp">/Development/</span>android-sdk<span class="regexp">/tools:/</span>Development<span class="regexp">/android-sdk/</span><span class="string">tools:</span><span class="regexp">/Development/</span>android-sdk<span class="regexp">/tools:/</span>Development<span class="regexp">/android-sdk/</span><span class="string">tools:</span><span class="regexp">/Development/</span>android-sdk<span class="regexp">/tools:/</span>Development<span class="regexp">/android-sdk/</span>tools</span><br></pre></td></tr></table></figure>
-<h1 id="建立一个新的项目">建立一个新的项目</h1><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ionic <span class="built_in">start</span> oneApp</span><br><span class="line">$ cd oneApp</span><br><span class="line">$ ionic <span class="built_in">platform</span> <span class="built_in">add</span> ios</span><br><span class="line">$ ionic <span class="built_in">platform</span> <span class="built_in">add</span> android</span><br></pre></td></tr></table></figure>
-<p>编译这个空项目：</p>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">ionic</span> <span class="keyword">build </span>ios</span><br></pre></td></tr></table></figure>
-<p>启动模拟器来显示新建的项目：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ionic <span class="built_in">emulate</span> ios</span><br></pre></td></tr></table></figure>
-<p>如果遇到文件权限的问题，修改文件权限：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chmod -R <span class="number">777</span> ~/.yourfile</span><br></pre></td></tr></table></figure>
-<h1 id="其他的Cordova的命令：">其他的Cordova的命令：</h1><h2 id="Create_New_Project">Create New Project</h2> <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cordova create hello com.example.hello <span class="string">"HelloWorld"</span></span><br><span class="line"><span class="variable">$ </span>cd hello</span><br><span class="line"><span class="variable">$ </span>cordova platform add ios</span><br><span class="line"><span class="variable">$ </span>cordova prepare</span><br></pre></td></tr></table></figure>
-<h2 id="Deploy_the_app">Deploy the app</h2><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cordova build</span><br></pre></td></tr></table></figure>
-<h2 id="部署App到iOS设备:">部署App到iOS设备:</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cordova <span class="command">run</span> ios <span class="comment">--device</span></span><br></pre></td></tr></table></figure>
-<h2 id="部署App到iOS_xCode模拟器">部署App到iOS xCode模拟器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cordova <span class="built_in">emulate</span> ios</span><br></pre></td></tr></table></figure>
-<h2 id="查看所有可以用的模拟器列表">查看所有可以用的模拟器列表</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cordova <span class="command">run</span> ios <span class="comment">--list</span></span><br></pre></td></tr></table></figure>
-<h2 id="使用指定的手机模拟器">使用指定的手机模拟器</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cordova <span class="command">run</span> ios <span class="comment">--target=target_name  </span></span><br><span class="line">cordova <span class="command">run</span> ios <span class="comment">--target="iPhone-6") //指定使用iPhone6作为模拟器</span></span><br></pre></td></tr></table></figure>
-<h1 id="参考链接">参考链接</h1><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/ionicframework.com/getting</span>-started/</span><br><span class="line"><span class="symbol">http:</span>/<span class="regexp">/cordova.apache.org/docs</span><span class="regexp">/en/latest</span><span class="regexp">/guide/platforms</span><span class="regexp">/android/index</span>.html</span><br></pre></td></tr></table></figure>
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/03/10/nodejs-gulp-01/" itemprop="url">
-                  Node.js gulp notes
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-03-10T21:43:06+08:00" content="2016-03-10">
-              2016-03-10
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/03/10/nodejs-gulp-01/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/10/nodejs-gulp-01/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="Your_first_gulp_file">Your first  gulp file</h1><p>new gulpfile.js  in your PWD </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> gulp =  <span class="built_in">require</span>(<span class="string">'gulp'</span>);</span><br><span class="line"></span><br><span class="line">gulp.task(<span class="string">'default'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'hello world!'</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<h1 id="install_Gulp">install  Gulp</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// <span class="operator"><span class="keyword">install</span> gulp  gloablly</span><br><span class="line">sudo npm <span class="keyword">install</span> -<span class="keyword">g</span> gulp</span><br><span class="line"></span><br><span class="line">// <span class="keyword">then</span> chang <span class="keyword">to</span> your pwd</span><br><span class="line">npm <span class="keyword">install</span> <span class="comment">--save-dev gulp</span></span><br><span class="line"></span><br><span class="line">// run gulp  <span class="keyword">in</span> your pwd </span><br><span class="line">gulp</span><br><span class="line">[<span class="number">21</span>:<span class="number">41</span>:<span class="number">05</span>] <span class="keyword">Using</span> gulpfile ~/src/node/casher/gulpfile.js</span><br><span class="line">[<span class="number">21</span>:<span class="number">41</span>:<span class="number">05</span>] <span class="keyword">Starting</span> <span class="string">'default'</span>...</span><br><span class="line">hello world!</span><br><span class="line">[<span class="number">21</span>:<span class="number">41</span>:<span class="number">05</span>] Finished <span class="string">'default'</span> <span class="keyword">after</span> <span class="number">90</span> μs</span></span><br></pre></td></tr></table></figure>
-<h1 id="install_plugins_form_http://gulpjs-com/plugins/">install  plugins  form <a href="http://gulpjs.com/plugins/" target="_blank" rel="external">http://gulpjs.com/plugins/</a></h1><p>minify the Js file size  is  the most common things, when we are using  gulp</p>
-<h2 id="Installation">Installation</h2><p>Install package with NPM and add it to your development dependencies:<br><figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --<span class="built_in">save</span>-<span class="built_in">dev</span> gulp-uglify</span><br></pre></td></tr></table></figure></p>
-<h2 id="Usage">Usage</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> uglify = <span class="built_in">require</span>(<span class="string">'gulp-uglify'</span>);</span><br><span class="line"> </span><br><span class="line">gulp.task(<span class="string">'compress'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.src(<span class="string">'lib/*.js'</span>)</span><br><span class="line">    .pipe(uglify())</span><br><span class="line">    .pipe(gulp.dest(<span class="string">'dist'</span>));</span><br><span class="line">&#125;);check the Api https:<span class="comment">//www.npmjs.com/package/gulp-uglify/</span></span><br></pre></td></tr></table></figure>
-<h2 id="running_in_our_PWD">running in our PWD</h2><p>gulpfile.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> gulp =  <span class="built_in">require</span>(<span class="string">'gulp'</span>);</span><br><span class="line"><span class="keyword">var</span> uglify = <span class="built_in">require</span>(<span class="string">'gulp-uglify'</span>);	</span><br><span class="line"></span><br><span class="line">gulp.task(<span class="string">'scripts'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	 gulp.src(<span class="string">'src/*.js'</span>)</span><br><span class="line">	  .pipe(uglify())</span><br><span class="line">	  .pipe(gulp.dest(<span class="string">'dist'</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>run our  code </p>
-<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="atom">gulp</span> <span class="atom">scripts</span></span><br><span class="line"></span><br><span class="line">[<span class="number">22</span>:<span class="number">14</span>:<span class="number">54</span>] <span class="name">Using</span> <span class="atom">gulpfile</span> ~/<span class="atom">src</span>/<span class="atom">node</span>/<span class="atom">casher</span>/<span class="atom">gulpfile</span>.<span class="atom">js</span></span><br><span class="line">[<span class="number">22</span>:<span class="number">14</span>:<span class="number">54</span>] <span class="name">Starting</span> <span class="string">'scripts'</span>...</span><br><span class="line">[<span class="number">22</span>:<span class="number">14</span>:<span class="number">54</span>] <span class="name">Finished</span> <span class="string">'scripts'</span> <span class="atom">after</span> <span class="number">8.18</span> <span class="atom">ms</span></span><br></pre></td></tr></table></figure>
-<p>I copy gulpfile.js  to src folder</p>
-<p>and in ./dest/ folder it trim all the blank  and turn all the codes into one line.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> gulp=<span class="built_in">require</span>(<span class="string">"gulp"</span>),uglify=<span class="built_in">require</span>(<span class="string">"gulp-uglify"</span>);gulp.task(<span class="string">"scripts"</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;gulp.src(<span class="string">"src/*.js"</span>).pipe(uglify()).pipe(gulp.dest(<span class="string">"dist"</span>))&#125;);</span><br></pre></td></tr></table></figure>
-<h2 id="gulp-concat:_Concat_your_js_file">gulp-concat: Concat your js file</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">npm install gulp-concat --save-dev</span><br><span class="line"></span><br><span class="line">gulp-concat@<span class="number">2.6</span><span class="number">.0</span> node_modules/gulp-concat</span><br><span class="line">├── concat-with-sourcemaps@<span class="number">1.0</span><span class="number">.4</span> (source-<span class="built_in">map</span>@<span class="number">0.5</span><span class="number">.3</span>)</span><br><span class="line">├── through2@<span class="number">0.6</span><span class="number">.5</span> (xtend@<span class="number">4.0</span><span class="number">.1</span>, readable-stream@<span class="number">1.0</span><span class="number">.33</span>)</span><br><span class="line">└── gulp-util@<span class="number">3.0</span><span class="number">.7</span> (<span class="built_in">array</span>-differ@<span class="number">1.0</span><span class="number">.0</span>, <span class="built_in">array</span>-uniq@<span class="number">1.0</span><span class="number">.2</span>, beeper@<span class="number">1.1</span><span class="number">.0</span>, object-assign@<span class="number">3.0</span><span class="number">.0</span>, lodash._reevaluate@<span class="number">3.0</span><span class="number">.0</span>, lodash._reinterpolate@<span class="number">3.0</span><span class="number">.0</span>, lodash._reescape@<span class="number">3.0</span><span class="number">.0</span>, replace-ext@<span class="number">0.0</span><span class="number">.1</span>, minimist@<span class="number">1.2</span><span class="number">.0</span>, multipipe@<span class="number">0.1</span><span class="number">.2</span>, has-gulplog@<span class="number">0.1</span><span class="number">.0</span>, fancy-<span class="built_in">log</span>@<span class="number">1.2</span><span class="number">.0</span>, vinyl@<span class="number">0.5</span><span class="number">.3</span>, gulplog@<span class="number">1.0</span><span class="number">.0</span>, through2@<span class="number">2.0</span><span class="number">.1</span>, lodash.<span class="keyword">template</span>@<span class="number">3.6</span><span class="number">.2</span>, chalk@<span class="number">1.1</span><span class="number">.1</span>, dateformat@<span class="number">1.0</span><span class="number">.12</span>)</span><br></pre></td></tr></table></figure>
-<p>gulpfile.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">//config file</span></span><br><span class="line"><span class="keyword">var</span> gulp =  <span class="built_in">require</span>(<span class="string">'gulp'</span>);</span><br><span class="line"><span class="keyword">var</span> uglify = <span class="built_in">require</span>(<span class="string">'gulp-uglify'</span>);	</span><br><span class="line"><span class="keyword">var</span> concat = <span class="built_in">require</span>(<span class="string">'gulp-concat'</span>);</span><br><span class="line"></span><br><span class="line">gulp.task(<span class="string">'scripts'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	 gulp.src(<span class="string">'src/*.js'</span>)</span><br><span class="line">	  .pipe(concat(<span class="string">'all.min.js'</span>))</span><br><span class="line">	  .pipe(uglify())</span><br><span class="line">	  .pipe(gulp.dest(<span class="string">'dist'</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>Running results: &gt; all.min.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myFirstFunction</span>(<span class="params"></span>)</span>&#123;<span class="keyword">return</span><span class="string">"first"</span>&#125;<span class="function"><span class="keyword">function</span> <span class="title">mySecondFunction</span>(<span class="params"></span>)</span>&#123;<span class="keyword">return</span><span class="string">"Second"</span>&#125;<span class="keyword">var</span> gulp=<span class="built_in">require</span>(<span class="string">"gulp"</span>),uglify=<span class="built_in">require</span>(<span class="string">"gulp-uglify"</span>);gulp.task(<span class="string">"scripts"</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;gulp.src(<span class="string">"src/*.js"</span>).pipe(uglify()).pipe(gulp.dest(<span class="string">"dist"</span>))&#125;);</span><br></pre></td></tr></table></figure>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1516,7 +1542,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">39</span>
+              <span class="site-state-item-count">41</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
