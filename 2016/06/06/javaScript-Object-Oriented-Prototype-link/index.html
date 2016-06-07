@@ -59,16 +59,34 @@
 
 
 
-<meta name="description" content="JavaScript使用原型链实现继承原型链原型式继承寄生式继承寄生组合式继承ES6中的继承实现`">
+<meta name="description" content="JavaScript使用原型链实现继承
+ECMAScript 支持面向对象编程,但在ES6之前不使用类或者接口.
+
+原型链
+JavaScript主要是通过原型链(prototype chain)来实现的继承,原型链的实现是通过创建”超类”的一个实例并且把这个实例赋值给”子类”构造函数的prototype指针.这样子类型就可以访问超类里的所有方法和属性.
+
+原型式继承1234567891011121">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JavaScript使用原型链实现继承">
 <meta property="og:url" content="http://lyn.s76.org/2016/06/06/javaScript-Object-Oriented-Prototype-link/index.html">
 <meta property="og:site_name" content="Lyn's Blog">
-<meta property="og:description" content="JavaScript使用原型链实现继承原型链原型式继承寄生式继承寄生组合式继承ES6中的继承实现`">
-<meta property="og:updated_time" content="2016-06-06T14:56:46.000Z">
+<meta property="og:description" content="JavaScript使用原型链实现继承
+ECMAScript 支持面向对象编程,但在ES6之前不使用类或者接口.
+
+原型链
+JavaScript主要是通过原型链(prototype chain)来实现的继承,原型链的实现是通过创建”超类”的一个实例并且把这个实例赋值给”子类”构造函数的prototype指针.这样子类型就可以访问超类里的所有方法和属性.
+
+原型式继承1234567891011121">
+<meta property="og:updated_time" content="2016-06-07T15:06:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript使用原型链实现继承">
-<meta name="twitter:description" content="JavaScript使用原型链实现继承原型链原型式继承寄生式继承寄生组合式继承ES6中的继承实现`">
+<meta name="twitter:description" content="JavaScript使用原型链实现继承
+ECMAScript 支持面向对象编程,但在ES6之前不使用类或者接口.
+
+原型链
+JavaScript主要是通过原型链(prototype chain)来实现的继承,原型链的实现是通过创建”超类”的一个实例并且把这个实例赋值给”子类”构造函数的prototype指针.这样子类型就可以访问超类里的所有方法和属性.
+
+原型式继承1234567891011121">
 
 
 
@@ -246,7 +264,18 @@
       
 
       
-        <span itemprop="articleBody"><h1 id="JavaScript使用原型链实现继承">JavaScript使用原型链实现继承</h1><h2 id="原型链">原型链</h2><h2 id="原型式继承">原型式继承</h2><h2 id="寄生式继承">寄生式继承</h2><h2 id="寄生组合式继承">寄生组合式继承</h2><h2 id="ES6中的继承实现`">ES6中的继承实现`</h2></span>
+        <span itemprop="articleBody"><h1 id="JavaScript使用原型链实现继承">JavaScript使用原型链实现继承</h1><ul>
+<li>ECMAScript 支持面向对象编程,但在ES6之前不使用类或者接口.</li>
+</ul>
+<h1 id="原型链">原型链</h1><ul>
+<li>JavaScript主要是通过原型链(prototype chain)来实现的继承,原型链的实现是通过创建”超类”的一个实例并且把这个实例赋值给”子类”构造函数的prototype指针.这样子类型就可以访问超类里的所有方法和属性.</li>
+</ul>
+<h1 id="原型式继承">原型式继承</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//超类的构造函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.property = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//给超类定义共享的原型方法</span></span><br><span class="line">SuperType.prototype.getSuperValue = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.subproperty = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//子类的构造函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.subproperty = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//这里实现继承</span></span><br><span class="line">SubType.prototype = <span class="keyword">new</span> SuperType();</span><br><span class="line"></span><br><span class="line">SubType.prototype.getSubValue = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.subproperty;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> SubType();</span><br><span class="line"><span class="built_in">console</span>.log(instance.getSuperValue()); <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//确定原型和实例的关系</span></span><br><span class="line"><span class="built_in">console</span>.log(instance <span class="keyword">instanceof</span> <span class="built_in">Object</span>)       <span class="comment">//true</span></span><br><span class="line"><span class="built_in">console</span>.log(instance <span class="keyword">instanceof</span> SuperType)    <span class="comment">//true</span></span><br><span class="line"><span class="built_in">console</span>.log(instance <span class="keyword">instanceof</span> SubType)      <span class="comment">//true		</span></span><br><span class="line"><span class="comment">//正确的增加定义子类的方法</span></span><br><span class="line">SubType.prototype.getSubVaule = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.subproperty;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//正确的重写超类的方法</span></span><br><span class="line">SubType.prototype.getSuperValue =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//错误的定义方法会导致继承失效.</span></span><br><span class="line">SubType.prototype = &#123;</span><br><span class="line">	someMethod: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="comment">// method do something</span></span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> anotherInstance = <span class="keyword">new</span> SubType();</span><br><span class="line"><span class="built_in">console</span>.log(getSuperValue()); <span class="comment">// error 因为上面的代码将子类的prototype从指向超累的一个实例替换成了一个对象字面量.</span></span><br></pre></td></tr></table></figure>
+<h2 id="优点&amp;缺点">优点&amp;缺点</h2><ul>
+<li>所有的子类实例都共享超累的属性,如果修改了超类的属性那么新建的实例都会受到影响</li>
+<li>创建子类型实例的时候,不能在不影响所有对象实例的前提下向超类型的构造函数传递参数.<h1 id="借用构造函数继承">借用构造函数继承</h1></li>
+</ul>
+<h1 id="组合式继承">组合式继承</h1><h1 id="寄生组合式继承">寄生组合式继承</h1><h1 id="ES6中的继承实现">ES6中的继承实现</h1></span>
       
     </div>
 
@@ -379,7 +408,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JavaScript使用原型链实现继承"><span class="nav-number">1.</span> <span class="nav-text">JavaScript使用原型链实现继承</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#原型链"><span class="nav-number">1.1.</span> <span class="nav-text">原型链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原型式继承"><span class="nav-number">1.2.</span> <span class="nav-text">原型式继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#寄生式继承"><span class="nav-number">1.3.</span> <span class="nav-text">寄生式继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#寄生组合式继承"><span class="nav-number">1.4.</span> <span class="nav-text">寄生组合式继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ES6中的继承实现`"><span class="nav-number">1.5.</span> <span class="nav-text">ES6中的继承实现`</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JavaScript使用原型链实现继承"><span class="nav-number">1.</span> <span class="nav-text">JavaScript使用原型链实现继承</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原型链"><span class="nav-number">2.</span> <span class="nav-text">原型链</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原型式继承"><span class="nav-number">3.</span> <span class="nav-text">原型式继承</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#优点&缺点"><span class="nav-number">3.1.</span> <span class="nav-text">优点&缺点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#借用构造函数继承"><span class="nav-number">4.</span> <span class="nav-text">借用构造函数继承</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#组合式继承"><span class="nav-number">5.</span> <span class="nav-text">组合式继承</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#寄生组合式继承"><span class="nav-number">6.</span> <span class="nav-text">寄生组合式继承</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ES6中的继承实现"><span class="nav-number">7.</span> <span class="nav-text">ES6中的继承实现</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
