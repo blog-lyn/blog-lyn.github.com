@@ -207,6 +207,143 @@
             
             
               
+                <a class="post-title-link" href="/2015/11/15/nodejs-note-10/" itemprop="url">
+                  How to learn Node.js -- mongoose validation &unique records in mongodb
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-11-15T00:49:39+08:00" content="2015-11-15">
+              2015-11-15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/11/15/nodejs-note-10/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/15/nodejs-note-10/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="Concepts:">Concepts:</h1><h2 id="Unique_value_in_mongodb:_Changing_the_email_type_to_an_object_with_type_rather_than_just_string">Unique value in mongodb: Changing the email type to an object with type rather than just string</h2><h3 id="example:">example:</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var s = <span class="keyword">new</span> Schema(&#123; <span class="string">name:</span> &#123; <span class="string">type:</span> String, <span class="string">unique:</span> <span class="literal">true</span> &#125;&#125;);</span><br><span class="line">Schema.path(<span class="string">'name'</span>).index(&#123; <span class="string">unique:</span> <span class="literal">true</span> &#125;);</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="validation">validation</h2><pre><code>SchemaType#<span class="function"><span class="title">validate</span><span class="params">(obj, [errorMsg], [type])</span></span>
+
+Adds <span class="function"><span class="title">validator</span><span class="params">(s)</span></span> <span class="keyword">for</span> this document path.
+</code></pre><h3 id="Parameters:">Parameters:</h3><pre><code>- obj &lt;<span class="built_in">RegExp</span>, <span class="built_in">Function</span>, <span class="built_in">Object</span>&gt; validator
+- [errorMsg] &lt;<span class="built_in">String</span>&gt; optional error message
+- [<span class="keyword">type</span>] &lt;<span class="built_in">String</span>&gt; optional validator <span class="keyword">type</span>
+</code></pre><h3 id="Returns:">Returns:</h3><pre><code>&lt;SchemaType&gt; this
+Validators always receive the value <span class="keyword">to</span> validate <span class="keyword">as</span> their first argument <span class="keyword">and</span> must <span class="keyword">return</span> <span class="built_in">Boolean</span>. Returning <span class="literal">false</span> means validation failed.
+
+The <span class="keyword">error</span> message argument <span class="keyword">is</span> <span class="keyword">optional</span>. <span class="keyword">If</span> <span class="keyword">not</span> passed, the <span class="keyword">default</span> generic <span class="keyword">error</span> message template will be used.
+</code></pre><h3 id="Examples:">Examples:</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// make sure every value is equal to "something"</span></span><br><span class="line">function validator (val) &#123;</span><br><span class="line">  <span class="keyword">return</span> val == <span class="string">'something'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">new</span> Schema(&#123; <span class="string">name:</span> &#123; <span class="string">type:</span> String, <span class="string">validate:</span> validator &#125;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// with a custom error message</span></span><br><span class="line"></span><br><span class="line">var custom = [validator, <span class="string">'Uh oh, &#123;PATH&#125; does not equal "something".'</span>]</span><br><span class="line"><span class="keyword">new</span> Schema(&#123; <span class="string">name:</span> &#123; <span class="string">type:</span> String, <span class="string">validate:</span> custom &#125;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// adding many validators at a time</span></span><br><span class="line"></span><br><span class="line">var many = [</span><br><span class="line">    &#123; <span class="string">validator:</span> validator, <span class="string">msg:</span> <span class="string">'uh oh'</span> &#125;</span><br><span class="line">  , &#123; <span class="string">validator:</span> anotherValidator, <span class="string">msg:</span> <span class="string">'failed'</span> &#125;</span><br><span class="line">]</span><br><span class="line"><span class="keyword">new</span> Schema(&#123; <span class="string">name:</span> &#123; <span class="string">type:</span> String, <span class="string">validate:</span> many &#125;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// or utilizing SchemaType methods directly:</span></span><br><span class="line"></span><br><span class="line">var schema = <span class="keyword">new</span> Schema(&#123; <span class="string">name:</span> <span class="string">'string'</span> &#125;);</span><br><span class="line">schema.path(<span class="string">'name'</span>).validate(validator, <span class="string">'validation of `&#123;PATH&#125;` failed with value `&#123;VALUE&#125;`'</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="Error_message_templates:">Error message templates:</h3><pre><code>From the examples above, you may have noticed that error messages support baseic templating. There are a few other template keywords besides {PATH}<span class="instruction"> and </span>{VALUE} too.
+
+Validation occurs<span class="function"> pre(</span>'save'<span class="function">)</span><span class="instruction"> or </span>whenever you manually<span class="instruction"> execute </span>document<span class="comment">#validate.</span>
+</code></pre><p><strong> Mongoose model instances have an update function, in which you pass on object containing the properties you want the instance to be updated to. This update function on a model does not pass through the validation middleware. </strong></p>
+<hr>
+<h2 id="How_To_Safely_Store_A_Password">How To Safely Store A Password</h2><h3 id="Use_bcrypt">Use bcrypt</h3><blockquote>
+<p>   Use bcrypt. Use bcrypt. Use bcrypt. Use bcrypt. Use bcrypt. Use bcrypt. Use bcrypt. Use bcrypt. Use bcrypt.</p>
+</blockquote>
+<h3 id="Why_Not_{MD5,_SHA1,_SHA256,_SHA512,_SHA-3,_etc}?">Why Not {MD5, SHA1, SHA256, SHA512, SHA-3, etc}?</h3><blockquote>
+<p>  These are all general purpose hash functions, designed to calculate a digest of huge amounts of data in as short a time as possible. This means that they are fantastic for ensuring the integrity of data and utterly rubbish for storing passwords.</p>
+<p>   A modern server can calculate the MD5 hash of about 330MB every second. If your users have passwords which are lowercase, alphanumeric, and 6 characters long, you can try every single possible password of that size in around 40 seconds.</p>
+<p>  And that’s without investing anything.</p>
+<p>  If you’re willing to spend about 2,000 USD and a week or two picking up CUDA, you can put together your own little supercomputer cluster which will let you try around 700,000,000 passwords a second. And that rate you’ll be cracking those passwords at the rate of more than one per second.</p>
+</blockquote>
+<h3 id="Salts_Will_Not_Help_You">Salts Will Not Help You</h3><blockquote>
+<p>  It’s important to note that salts are useless for preventing dictionary attacks or brute force attacks. You can use huge salts or many salts or hand-harvested, shade-grown, organic Himalayan pink salt. It doesn’t affect how fast an attacker can try a candidate password, given the hash and the salt from your database.</p>
+</blockquote>
+<pre><code>Salt <span class="operator">or</span> no, <span class="keyword">if</span> you’re <span class="keyword">using</span> <span class="operator">a</span> general-purpose hash <span class="function"><span class="keyword">function</span> <span class="title">designed</span> <span class="title">for</span> <span class="title">speed</span> <span class="title">you</span>’<span class="title">re</span> <span class="title">well</span> <span class="title">and</span> <span class="title">truly</span> <span class="title">effed</span>.</span>
+</code></pre><h3 id="bcrypt_Solves_These_Problems">bcrypt Solves These Problems</h3><blockquote>
+<p>   How? Basically, it’s slow as hell. It uses a variant of the Blowfish encryption algorithm’s keying schedule, and introduces a work factor, which allows you to determine how expensive the hash function will be. Because of this, bcrypt can keep up with Moore’s law. As computers get faster you can increase the work factor and the hash will get slower.</p>
+<p>   How much slower is bcrypt than, say, MD5? Depends on the work factor. <strong> Using a work factor of 12, bcrypt hashes the password yaaa in about 0.3 seconds on my laptop. MD5, on the other hand, takes less than a microsecond.</strong></p>
+</blockquote>
+<ul>
+<li>Quote form <a href="http://codahale.com/how-to-safely-store-a-password/" target="_blank" rel="external">How To Safely Store A Password</a> *</li>
+</ul>
+<h2 id="Rule_of_Three">Rule of Three</h2><p>As our sign_in and sign_up template is very similar,but we haven’t yet hit the Rule of 3 wall, so we’ll just do a copy/paste + bit of modification</p>
+<blockquote>
+<p>   Rule of three is a code refactoring rule of thumb to decide when a replicated piece of code should be replaced by a new procedure. It states that the code can be copied once, but that when the same code is used three times, it should be extracted into a new procedure. The rule was introduced by Martin Fowler in Refactoring[1] and attributed to Don Roberts.</p>
+<p>   Duplication in programming is a bad practice because it makes the code harder to maintain. However, code refactoring to eliminate duplication also takes time, which might be better spent on other tasks. Triplication has an even higher cost because it makes maintenance harder yet. When the rule encoded in a replicated piece of code changes, whoever maintains the code will have to change it in all places correctly. This process is error-prone and often leads to problems. If the code exists in only one place, then it can be easily changed there. The rule proposes that the cost of maintenance certainly outweighs the cost of refactoring when there are three copies, and may or may not if there are two copies.</p>
+<p>   This rule is typically only applied to a small number of lines of code, or even single lines of code[citation needed]. For example, if a program calls a function, and then calls it again when it fails, it is acceptable to have two call sites; however, if it is to be called five times before giving up, all of the calls should be replaced with loop containing a single call.</p>
+<p>   As Charles Petzold puts it, “Three or more? Use a for!”</p>
+</blockquote>
+<h1 id="code_of_sign_in_and_sign_up">code of sign_in and sign_up</h1><p>user.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mongoose = <span class="built_in">require</span>(<span class="string">'mongoose'</span>)</span><br><span class="line">,   validate = <span class="built_in">require</span>(<span class="string">'mongoose-validate'</span>)</span><br><span class="line">,	bcrypt	 = <span class="built_in">require</span>(<span class="string">'bcrypt'</span>)</span><br><span class="line">,	SALT_WORK_FACTOR = <span class="number">10</span> </span><br><span class="line">,	REQUIRED_PASSWORD_LENGTH = <span class="number">6</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">validateStringLength</span>(<span class="params">value</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> value &amp;&amp; value.length &gt;= REQUIRED_PASSWORD_LENGTH</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">dummyEmailValidator</span>(<span class="params">candidate</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span>  <span class="regexp">/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/</span>.test(candidate);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> schema = mongoose.Schema(&#123;</span><br><span class="line">	email:&#123;type: <span class="built_in">String</span>, required: <span class="literal">true</span>, unique: <span class="literal">true</span>, validate: [dummyEmailValidator,<span class="string">'is not a valid email address'</span>]&#125;</span><br><span class="line">   ,passwordHash:&#123;type: <span class="built_in">String</span>, required: <span class="literal">true</span>, validate: [validateStringLength,<span class="string">'is too short !(minimum is'</span> + REQUIRED_PASSWORD_LENGTH +<span class="string">'character'</span>]&#125;</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">schema.pre(<span class="string">'save'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">next</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> self = <span class="keyword">this</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(!self.isModified(<span class="string">'passwordHash'</span>))<span class="keyword">return</span> next() </span><br><span class="line"></span><br><span class="line">	bcrypt.hash(self.passwordHash, SALT_WORK_FACTOR, <span class="function"><span class="keyword">function</span>(<span class="params">err,hash</span>)</span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(err) <span class="keyword">return</span> next(err)</span><br><span class="line"></span><br><span class="line">		self.passwordHash = hash;</span><br><span class="line"></span><br><span class="line">		next()</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">schema.statics.findByEmailAndPassword = <span class="function"><span class="keyword">function</span> <span class="title">findByEmailAndPassword</span>(<span class="params">email, password,cb</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.findOne(&#123;email: email&#125;, <span class="function"><span class="keyword">function</span>(<span class="params">err,user</span>)</span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (err) <span class="keyword">return</span> cb(err)</span><br><span class="line">		<span class="keyword">if</span> (!user) <span class="keyword">return</span> cb()</span><br><span class="line"></span><br><span class="line">			bcrypt.compare(password, user.passwordHash,<span class="function"><span class="keyword">function</span>(<span class="params">err,res</span>)</span>&#123;</span><br><span class="line">				<span class="keyword">return</span> cb(err,res ? user:<span class="literal">null</span>)</span><br><span class="line">			&#125;)</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// auto disable autoIndex mode in production environment</span></span><br><span class="line"></span><br><span class="line">schema.set(<span class="string">'autoIndex'</span>, App.env !== <span class="string">'production'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> Model = mongoose.model(<span class="string">'User'</span>, schema)</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = Model</span><br></pre></td></tr></table></figure>
+<p>userRoutes.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> User = App.model(<span class="string">'user'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">newUser</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> data = &#123;title:<span class="string">'Join the adventure!'</span>&#125;</span><br><span class="line">	</span><br><span class="line">	res.render(<span class="string">'users/new'</span>,data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">create</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> u = <span class="keyword">new</span> User(&#123;email:req.body.email, passwordHash:req.body.password&#125;); </span><br><span class="line"></span><br><span class="line">	 <span class="built_in">console</span>.log(req.body.email);</span><br><span class="line">	 <span class="built_in">console</span>.log(req.body.password);</span><br><span class="line"></span><br><span class="line">	u.save(<span class="function"><span class="keyword">function</span>(<span class="params">err</span>)</span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(err)&#123;</span><br><span class="line">			<span class="built_in">console</span>.log(err);</span><br><span class="line">			res.status(<span class="number">422</span>).send(<span class="string">'Problem:'</span> + err.message);</span><br><span class="line">		</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">			res.status(<span class="number">200</span>).send(<span class="string">'welcome to the game'</span>);</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">exports.new     = newUser</span><br><span class="line">exports.create  = create</span><br></pre></td></tr></table></figure>
+<p>sessionRoutes.js</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>  <span class="title">newSession</span>(<span class="title">req</span>,<span class="title">res</span>)&#123;</span></span><br><span class="line">	data =&#123;title:<span class="string">'welcome back!'</span>&#125;</span><br><span class="line">	res.render(<span class="string">'sessions/new'</span>) </span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var User = App.model(<span class="string">'user'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">create</span>(<span class="title">req</span>,<span class="title">res</span>)&#123;</span></span><br><span class="line">	User.findByEmailAndPassword(req.body.email,req.body.password,<span class="function"><span class="keyword">function</span>(<span class="title">err</span>,<span class="title">user</span>)&#123;</span></span><br><span class="line">		<span class="keyword">if</span>(err)&#123;</span><br><span class="line">			res.status(<span class="number">422</span>).<span class="built_in">send</span>(<span class="string">'problem'</span>,err.message)</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span>(!user)&#123;</span><br><span class="line">			res.status(<span class="number">401</span>).<span class="built_in">send</span>(<span class="string">'That email &amp; password did not match our records'</span>)</span><br><span class="line"></span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			res.status(<span class="number">200</span>).<span class="built_in">send</span>(<span class="string">'Welcome back  !!! '</span>+ user.email )</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">exports.<span class="built_in">new</span>    = newSession</span><br><span class="line">exports.<span class="built_in">create</span> = <span class="built_in">create</span></span><br></pre></td></tr></table></figure>
+<p>update our routes.js file </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">var</span> express       =  <span class="function"><span class="title">require</span><span class="params">(<span class="string">"express"</span>)</span></span></span><br><span class="line"><span class="tag">var</span> indexRouter   =  express.<span class="function"><span class="title">Router</span><span class="params">()</span></span></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="tag">var</span> homeRoutes    =  App.<span class="function"><span class="title">routes</span><span class="params">(<span class="string">'homeRoutes'</span>)</span></span>	</span><br><span class="line">indexRouter.<span class="function"><span class="title">get</span><span class="params">(<span class="string">'/'</span>, homeRoutes.home)</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">var</span> adventuresRoutes = App.<span class="function"><span class="title">routes</span><span class="params">(<span class="string">'adventruesRoutes'</span>)</span></span></span><br><span class="line"></span><br><span class="line">indexRouter.<span class="function"><span class="title">route</span><span class="params">(<span class="string">'/adventures'</span>)</span></span></span><br><span class="line">	.<span class="function"><span class="title">get</span><span class="params">(adventuresRoutes.index)</span></span></span><br><span class="line">	.<span class="function"><span class="title">post</span><span class="params">(adventuresRoutes.create)</span></span></span><br><span class="line">	.<span class="function"><span class="title">put</span><span class="params">(adventuresRoutes.update)</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">var</span> lootRoutes = App.<span class="function"><span class="title">routes</span><span class="params">(<span class="string">'lootRoutes'</span>)</span></span></span><br><span class="line">indexRouter.<span class="function"><span class="title">get</span><span class="params">(<span class="string">'/loot'</span>, lootRoutes.index)</span></span></span><br><span class="line">indexRouter.<span class="function"><span class="title">get</span><span class="params">(<span class="string">'/loot/:id'</span>, lootRoutes.show)</span></span></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="tag">var</span> userRoutes = App.<span class="function"><span class="title">routes</span><span class="params">(<span class="string">'userRoutes'</span>)</span></span></span><br><span class="line">indexRouter.<span class="function"><span class="title">get</span><span class="params">(<span class="string">'/sign_up'</span>, userRoutes.new)</span></span></span><br><span class="line">indexRouter.<span class="function"><span class="title">post</span><span class="params">(<span class="string">'/sign_up'</span>, userRoutes.create)</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// session routes</span></span><br><span class="line"><span class="tag">var</span> sessionRoutes = App.<span class="function"><span class="title">routes</span><span class="params">(<span class="string">'sessionRoutes'</span>)</span></span></span><br><span class="line"></span><br><span class="line">indexRouter.<span class="function"><span class="title">get</span><span class="params">(<span class="string">'/sign_in'</span>, sessionRoutes.new)</span></span></span><br><span class="line">indexRouter.<span class="function"><span class="title">post</span><span class="params">(<span class="string">'/sign_in'</span>, sessionRoutes.create)</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line">module<span class="class">.exports</span> = indexRouter</span><br></pre></td></tr></table></figure>
+<p>sign_up templates<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">h1</span>&gt;</span> join the web's premiere adventure venue<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">form</span> <span class="attribute">action</span>=<span class="value">"/sign_up"</span><span class="value">,</span> <span class="attribute">method</span>=<span class="value">"post"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">label</span> <span class="attribute">class</span>=<span class="value">"form-group"</span>&gt;</span>Email<span class="tag">&lt;/<span class="title">label</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"email"</span><span class="value">,</span> <span class="attribute">name</span>=<span class="value">"email"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">label</span> <span class="attribute">class</span>=<span class="value">"form-group"</span>&gt;</span>Password<span class="tag">&lt;/<span class="title">label</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"password"</span> <span class="attribute">name</span>=<span class="value">"password"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">"submit"</span>&gt;</span>Start your adventure!<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>sign_in templates</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">h1</span>&gt;</span> Welcome back. login to the web again! <span class="tag">&lt;/<span class="title">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">form</span> <span class="attribute">action</span>=<span class="value">"/sign_in"</span><span class="value">,</span> <span class="attribute">method</span>=<span class="value">"post"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">label</span> <span class="attribute">class</span>=<span class="value">"form-group"</span>&gt;</span>Email<span class="tag">&lt;/<span class="title">label</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"email"</span><span class="value">,</span> <span class="attribute">name</span>=<span class="value">"email"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">label</span> <span class="attribute">class</span>=<span class="value">"form-group"</span>&gt;</span>Password<span class="tag">&lt;/<span class="title">label</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"password"</span> <span class="attribute">name</span>=<span class="value">"password"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">"submit"</span>&gt;</span>Contintue your adventure!<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2015/11/13/nodejs-note-09/" itemprop="url">
                   How to learn Node.js - Node working with Mongodb
                 </a>
@@ -1181,108 +1318,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2015/03/26/vagrant_gfw_errors/" itemprop="url">
-                  How to modify puphpet file to avoid vagrant up errors
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2015-03-26T16:46:25+08:00" content="2015-03-26">
-              2015-03-26
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/03/26/vagrant_gfw_errors/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/03/26/vagrant_gfw_errors/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="Error_code_when_run_vagrant_up:">Error code when run vagrant up:</h1><p>recently when I want to use vagrant to build PHP environment on my Mac,<br>I got three Errors :</p>
-<ol>
-<li><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">error:</span> <span class="regexp">/Stage[main]/</span><span class="string">Supervisord:</span>:Pip<span class="regexp">/Exec[install_setuptools]/</span><span class="string">returns:</span> change from notrun to <span class="number">0</span> <span class="string">failed:</span> Command exceeded timeout</span><br><span class="line"><span class="string">Warning:</span> <span class="regexp">/Stage[main]/</span><span class="string">Supervisord:</span>:Reload/Exec[supervisorctl_update]: Skipping because of failed dependencies</span><br></pre></td></tr></table></figure>
-</li>
-<li><figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERROR: While executing gem ... (Gem::RemoteFetcher::FetchError) ==&gt; <span class="keyword">default</span>: SSL_connect SYSCALL returned=<span class="number">5</span> errno=<span class="number">0</span> <span class="keyword">state</span>=<span class="literal">unknown</span> <span class="keyword">state</span> (https://rubygems.<span class="keyword">global</span>.ssl.fastly.net/<span class="keyword">quick</span>/Marshal.<span class="number">4.8</span>/deep_merge-<span class="number">1.0</span>.<span class="number">1</span>.gemspec.rz)</span><br></pre></td></tr></table></figure>
-</li>
-<li><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Error: <span class="string">"false"</span> <span class="keyword">is</span> <span class="keyword">not</span> a <span class="type">boolean</span>. It looks <span class="keyword">to</span> be a String <span class="keyword">at</span> /tmp/vagrant-puppet/modules-b7f682531389374ec63e7be34e57b9e6/nginx/manifests/resource/location.pp:<span class="number">198</span> <span class="function_start"><span class="keyword">on</span></span> node <span class="number">1</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>After investgating,I found the  root cause of the first two is  the same. The network between Mac and the ruby/pip servers is blocked by China GFW(as I am using Chinatelecom broadband).</p>
-<p>Therefore, I have to introduce China domestic ruby and pip sources to puphprt configuraions as followed:</p>
-<h1 id="Walkaround:">Walkaround:</h1><p>##Replce config.yaml nginx config </p>
-<p>the syntax should be :</p>
-<p>internal: off or internal :”false”</p>
-<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">locations:</span><br><span class="line">                nxvl_6x40k3ysb0yt:</span><br><span class="line">                    location: /</span><br><span class="line">                    autoindex: <span class="string">'off'</span></span><br><span class="line">                    internal: off</span><br><span class="line">                    try_files:</span><br><span class="line">                        - <span class="variable">$uri</span></span><br><span class="line">                        - <span class="variable">$uri</span>/</span><br><span class="line">                        - /index.php<span class="variable">$is</span>_args<span class="variable">$args</span></span><br><span class="line">                    fastcgi: <span class="string">''</span></span><br><span class="line">                    fastcgi_index: <span class="string">''</span></span><br><span class="line">                    fastcgi_split_path: <span class="string">''</span></span><br><span class="line">                nxvl_6punkjmd4tp3:</span><br><span class="line">                    location: <span class="string">'~ \.php$'</span></span><br><span class="line">                    autoindex: <span class="string">'off'</span></span><br><span class="line">                    internal: off</span><br><span class="line">                    try_files:</span><br><span class="line">                        - <span class="variable">$uri</span></span><br><span class="line">                        - <span class="variable">$uri</span>/</span><br><span class="line">                        - /index.php<span class="variable">$is</span>_args<span class="variable">$args</span></span><br><span class="line">                    fastcgi: <span class="string">'127.0.0.1:9000'</span></span><br><span class="line">                    fastcgi_index: index.php</span><br><span class="line">                    fastcgi_split_path: <span class="string">'^(.+\.php)(/.*)$'</span></span><br><span class="line">                    fast_cgi_params_extra:</span><br><span class="line">                        - <span class="string">'SCRIPT_FILENAME $request_filename'</span></span><br><span class="line">                        - <span class="string">'APP_ENV dev'</span></span><br></pre></td></tr></table></figure>
-<h2 id="Replace_gem_sources_in_initial-setup-sh">Replace gem sources in initial-setup.sh</h2><p>gem sources –remove <a href="https://rubygems.org/" target="_blank" rel="external">https://rubygems.org/</a><br>gem sources -a <a href="http://ruby.taobao.org/" target="_blank" rel="external">http://ruby.taobao.org/</a></p>
-<h2 id="Add_douban_pypi_source_in_puphpet/manifests/python/pip-pp">Add douban pypi source in  puphpet/manifests/python/pip.pp</h2><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">class puphpet::python::pip &#123;</span><br><span class="line"></span><br><span class="line">  Exec &#123; path =&gt; [ <span class="string">'/usr/bin/'</span>, <span class="string">'/usr/local/bin'</span>, <span class="string">'/bin'</span>, <span class="string">'/usr/local/sbin'</span>, <span class="string">'/usr/sbin'</span>, <span class="string">'/sbin'</span> ] &#125;</span><br><span class="line"></span><br><span class="line">  <span class="variable">$url</span> = <span class="string">'https://bootstrap.pypa.io/ez_setup.py'</span></span><br><span class="line">  <span class="variable">$download</span>_location = <span class="string">'/.puphpet-stuff/ez_setup.py'</span></span><br><span class="line"></span><br><span class="line">  exec &#123; <span class="string">"Download and install ez_setup"</span>:</span><br><span class="line">    creates =&gt; <span class="variable">$download</span>_location,</span><br><span class="line">    command =&gt; <span class="string">"wget $&#123;url&#125; -O $&#123;download_location&#125; &amp;&amp; \</span><br><span class="line">                python $&#123;download_location&#125;"</span>,</span><br><span class="line">    timeout =&gt; <span class="number">30</span>,</span><br><span class="line">    path    =&gt; <span class="string">'/usr/bin'</span></span><br><span class="line">  &#125;</span><br><span class="line">  -&gt; exec &#123; <span class="string">'easy_install pip -i http://pypi.douban.com/simple '</span>:</span><br><span class="line">    unless =&gt; <span class="string">'which pip'</span>,</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  if $::osfamily == <span class="string">'RedHat'</span> &#123;</span><br><span class="line">    exec &#123; <span class="string">'rhel pip_provider_name_fix'</span>:</span><br><span class="line">      command   =&gt; <span class="string">'alternatives --install /usr/bin/pip-python pip-python /usr/bin/pip 1'</span>,</span><br><span class="line">      subscribe =&gt; Exec[<span class="string">'easy_install pip'</span>],</span><br><span class="line">      unless    =&gt; <span class="string">'which pip-python'</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>hope these help :D</p>
-<p>if there is any mistake,please contact me to update! </p>
-<p>thank you</p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1328,7 +1363,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-count">42</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
