@@ -59,25 +59,25 @@
 
 
 
-<meta name="description" content="JS中使用prototype来创建对象工厂模式
+<meta name="description" content="JS中使用prototype来实现面向对象编程工厂模式
 使用了简单的函数来创建对象,并且为对象增加属性和方法,然后返回对象.(抽象创建具体对象的过程)
 
-12345678910111213function createPerson(name,age,job)&amp;#123; 	var o  = new Object(); 	o.name = name; 	o.age  = age; 	o.job  = job">
+12345678910111213function createPerson(name,age,job)&amp;#123; 	var o  = new Object(); 	o.name = name; 	o.age  = age; 	o.job  =">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JavaScript中使用prototype来创建对象">
 <meta property="og:url" content="http://lyn.s76.org/2016/06/05/javaScript-Object-Oriented-Prototype/index.html">
 <meta property="og:site_name" content="Lyn's Blog">
-<meta property="og:description" content="JS中使用prototype来创建对象工厂模式
+<meta property="og:description" content="JS中使用prototype来实现面向对象编程工厂模式
 使用了简单的函数来创建对象,并且为对象增加属性和方法,然后返回对象.(抽象创建具体对象的过程)
 
-12345678910111213function createPerson(name,age,job)&amp;#123; 	var o  = new Object(); 	o.name = name; 	o.age  = age; 	o.job  = job">
-<meta property="og:updated_time" content="2016-06-07T14:10:31.000Z">
+12345678910111213function createPerson(name,age,job)&amp;#123; 	var o  = new Object(); 	o.name = name; 	o.age  = age; 	o.job  =">
+<meta property="og:updated_time" content="2016-06-11T02:09:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript中使用prototype来创建对象">
-<meta name="twitter:description" content="JS中使用prototype来创建对象工厂模式
+<meta name="twitter:description" content="JS中使用prototype来实现面向对象编程工厂模式
 使用了简单的函数来创建对象,并且为对象增加属性和方法,然后返回对象.(抽象创建具体对象的过程)
 
-12345678910111213function createPerson(name,age,job)&amp;#123; 	var o  = new Object(); 	o.name = name; 	o.age  = age; 	o.job  = job">
+12345678910111213function createPerson(name,age,job)&amp;#123; 	var o  = new Object(); 	o.name = name; 	o.age  = age; 	o.job  =">
 
 
 
@@ -255,7 +255,7 @@
       
 
       
-        <span itemprop="articleBody"><h1 id="JS中使用prototype来创建对象">JS中使用prototype来创建对象</h1><h1 id="工厂模式">工厂模式</h1><ul>
+        <span itemprop="articleBody"><h1 id="JS中使用prototype来实现面向对象编程">JS中使用prototype来实现面向对象编程</h1><h1 id="工厂模式">工厂模式</h1><ul>
 <li>使用了简单的函数来创建对象,并且为对象增加属性和方法,然后返回对象.(抽象创建具体对象的过程)</li>
 </ul>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createPerson</span>(<span class="params">name,age,job</span>)</span>&#123;</span><br><span class="line"> 	<span class="keyword">var</span> o  = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line"> 	o.name = name;</span><br><span class="line"> 	o.age  = age;</span><br><span class="line"> 	o.job  = job;</span><br><span class="line"> 	o.sayName =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"> 		alert(<span class="keyword">this</span>.name);</span><br><span class="line"> 	&#125;;</span><br><span class="line"> 	</span><br><span class="line"> 	<span class="keyword">return</span> o;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span>  person1 = createPerson(<span class="string">"lyn"</span>,<span class="number">27</span>,<span class="string">"Web developer"</span>);</span><br><span class="line"><span class="keyword">var</span>  person2 = createPerson(<span class="string">"cheung"</span>,<span class="number">20</span>,<span class="string">"student"</span>);</span><br></pre></td></tr></table></figure>
@@ -442,7 +442,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JS中使用prototype来创建对象"><span class="nav-number">1.</span> <span class="nav-text">JS中使用prototype来创建对象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#工厂模式"><span class="nav-number">2.</span> <span class="nav-text">工厂模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#优缺点:"><span class="nav-number">2.1.</span> <span class="nav-text">优缺点:</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#构造函数模式"><span class="nav-number">3.</span> <span class="nav-text">构造函数模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#优点和缺点:"><span class="nav-number">3.1.</span> <span class="nav-text">优点和缺点:</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原型模式"><span class="nav-number">4.</span> <span class="nav-text">原型模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#理解原型对象"><span class="nav-number">4.1.</span> <span class="nav-text">理解原型对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优点&缺点:"><span class="nav-number">4.2.</span> <span class="nav-text">优点&缺点:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hasOwnProperty_&&_in_方法"><span class="nav-number">4.3.</span> <span class="nav-text">hasOwnProperty && in 方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取对象的所有可枚举或不可枚举属性"><span class="nav-number">4.4.</span> <span class="nav-text">获取对象的所有可枚举或不可枚举属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组合使用构造函数模式与原型模式"><span class="nav-number">4.5.</span> <span class="nav-text">组合使用构造函数模式与原型模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动态原型模式"><span class="nav-number">4.6.</span> <span class="nav-text">动态原型模式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ES6中的实现"><span class="nav-number">5.</span> <span class="nav-text">ES6中的实现</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JS中使用prototype来实现面向对象编程"><span class="nav-number">1.</span> <span class="nav-text">JS中使用prototype来实现面向对象编程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#工厂模式"><span class="nav-number">2.</span> <span class="nav-text">工厂模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#优缺点:"><span class="nav-number">2.1.</span> <span class="nav-text">优缺点:</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#构造函数模式"><span class="nav-number">3.</span> <span class="nav-text">构造函数模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#优点和缺点:"><span class="nav-number">3.1.</span> <span class="nav-text">优点和缺点:</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原型模式"><span class="nav-number">4.</span> <span class="nav-text">原型模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#理解原型对象"><span class="nav-number">4.1.</span> <span class="nav-text">理解原型对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优点&缺点:"><span class="nav-number">4.2.</span> <span class="nav-text">优点&缺点:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hasOwnProperty_&&_in_方法"><span class="nav-number">4.3.</span> <span class="nav-text">hasOwnProperty && in 方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取对象的所有可枚举或不可枚举属性"><span class="nav-number">4.4.</span> <span class="nav-text">获取对象的所有可枚举或不可枚举属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组合使用构造函数模式与原型模式"><span class="nav-number">4.5.</span> <span class="nav-text">组合使用构造函数模式与原型模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动态原型模式"><span class="nav-number">4.6.</span> <span class="nav-text">动态原型模式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ES6中的实现"><span class="nav-number">5.</span> <span class="nav-text">ES6中的实现</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
