@@ -208,7 +208,7 @@
             
               
                 <a class="post-title-link" href="/2016/06/09/ios8-cors-prefilght/" itemprop="url">
-                  ios8-cors-prefilght
+                  iOS8下CORS请求返回504错误的debug
                 </a>
               
             
@@ -252,7 +252,34 @@
         
           <span itemprop="articleBody">
             
-              
+              <p>放假前遇到一个奇葩的问题,做了一个移动端使用的web页面,这个页面需要通过ajax调用对后台的接口,结果出现了很诡异的现象:</p>
+<blockquote>
+<p>在Chrome浏览器上模拟手机或者是在安卓上都可以请求到后台的数据,但是在公司几台iOS的测试机(因为不想升级OS和xcode所以都还是iOS8的版本)上请求后台数据的时候,在Safari的开发调试中都会看到,http请求都会返回一个504网关超时的报错(然后还提示是CORS错误).具体现象就是请求发出去一分钟以后超时,返回504错误.</p>
+</blockquote>
+<h1 id="Debug过程:">Debug过程:</h1><h2 id="第一步_排除后台原因">第一步 排除后台原因</h2><p>因为上午的时候就发现了服务器返回的header里没有对cors header的 ‘access-control-allow-origin’属性进行配置,导致请求接口被拒绝的情况,所以先怀疑是后台服务器的配置有问题.<br>于是就让后台查一下服务器日志,看是不是接收到了这个请求(但是他们告诉我没有这个请求的日志).所以他们认为我这边请求没有发出来.(而且安卓都可以只有iOS不行,他们就觉得更不可能是他们的问题了)</p>
+<h2 id="第二步_排除iOS代码原因">第二步 排除iOS代码原因</h2><p>当时因为JS和iOS之间的调用接口是使用的是github上的开源库”WebViewJavascriptBridge”实现的.而这个库的原理就是在web页面中建立带有特定Url连接的iframe,然后在iOS端用webview的delegate来拦截带有特定标志的请求作为调用信号的.<br>所以就找到iOS开发的同学,问他们是不是有这种不正确的拦截的可能,以及是不是在他们代码中有其他的拦截http请求的设置? 答案也是没有.他们认为是我的代码有兼容性问题,或者是后台的问题.</p>
+<p>这时候为了排除是不是iOS APP拦截造成的,于是就把web页面的url放进iPhone的Safari浏览器里运行,结果还是相同的504错误!这时候为了排除是App的干扰,索性把设备上的App都删掉了结果还是相同的错误!这说明确实不是iOS APP代码造成的!于是我又在自己的iPhone上的Safari中进行同样的测试,结果发现错误消失了!</p>
+<ul>
+<li>确实不是iOS APP代码的问题!</li>
+</ul>
+<h2 id="抓包分析">抓包分析</h2><p>这时候为了验证我的请求确实是发出了,就使用了Charles进行抓包(在iPhone的wifi中设置Charles的proxy代理地址),结果发现在公司的测试机上确实是有发出了一个请求,但是请求类型却是OPTIONS.然后Http请求就一直等待返回然后就超时了! 这时候后这个坑才要浮现出他的真面目!</p>
+<h2 id="分析">分析</h2><ol>
+<li>原来我们公司的服务器是基于Apache Mina Server(一个网络通信应用框架)自己开发的一个关网服务器来对Http请求进行处理,然而他们在实现中只接受post的Http请求!所以当接收到一个Options的请求的时候,当然置之不理了!更别说会在日志中记录这次请求!!!</li>
+<li><p>那为什么我的ajax里面明明是post请求但在iOS8为什么发出的却是OPTIONS请求呢?!</p>
+<p>查资料得知:原来都是<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS" target="_blank" rel="external">预请求(preflight)</a>挖的坑.</p>
+</li>
+</ol>
+<blockquote>
+<p>跨源资源共享标准通过新增一系列 HTTP 头，让服务器能声明哪些来源可以通过浏览器访问该服务器上的资源。另外，对那些会对服务器数据造成破坏性影响的 HTTP 请求方法（特别是 GET 以外的 HTTP 方法，或者搭配某些MIME类型的POST请求），标准强烈要求浏览器必须先以 OPTIONS 请求方式发送一个预请求(preflight request)，从而获知服务器端对跨源请求所支持 HTTP 方法。在确认服务器允许该跨源请求的情况下，以实际的 HTTP 请求方法发送那个真正的请求。服务器端也可以通知客户端，是不是需要随同请求一起发送信用信息（包括 Cookies 和 HTTP 认证相关数据）。</p>
+</blockquote>
+<p>那为什么在iOS9下就不存在这个问题呢? 参考下面的Note可以知道,原来预请求的标准也是在变化过程中.至于是不是这个原因,还要放假结束回去抓包分析才能知道了.</p>
+<blockquote>
+<ul>
+<li>Note: 从Gecko 2.0开始，text/plain, application/x-www-form-urlencoded 和 multipart/form-data 类型的数据都可以直接用于跨站请求，而不需要先发起“预请求”了。之前，只有 text/plain 可以不用先发起“预请求”，进行跨站请求。</li>
+</ul>
+</blockquote>
+<h1 id="总结:">总结:</h1><p>如果一开始的时候就去抓包分析,而不是去胡乱猜想,一定会更快找到这个bug的原因.</p>
+
             
           </span>
         
