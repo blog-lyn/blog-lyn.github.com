@@ -70,7 +70,7 @@
 
 在Chrome浏览器上模拟手机或者是在安卓上都可以请求到后台的数据,但是在公司几台iOS的测试机(因为不想升级OS和xcode所以都还是iOS8的版本)上请求后台数据的时候,在Safari的开发调试中都会看到,http请求都会返回一个504网关超时的">
 <meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-12/81504459.jpg">
-<meta property="og:updated_time" content="2016-06-12T08:18:30.000Z">
+<meta property="og:updated_time" content="2016-06-12T08:26:31.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS8下CORS请求返回504错误的Dubug记录">
 <meta name="twitter:description" content="放假前遇到一个奇葩的问题,做了一个移动端使用原生JS写的一个互动的的web页面,这个页面需要通过ajax调用对后台的接口,结果出现了很诡异的现象:
@@ -257,9 +257,10 @@
 <blockquote>
 <p>在Chrome浏览器上模拟手机或者是在安卓上都可以请求到后台的数据,但是在公司几台iOS的测试机(因为不想升级OS和xcode所以都还是iOS8的版本)上请求后台数据的时候,在Safari的开发调试中都会看到,http请求都会返回一个504网关超时的报错(然后还提示是CORS错误).具体现象就是请求发出去一分钟以后超时,返回504错误.</p>
 </blockquote>
-<h1 id="Debug过程:">Debug过程:</h1><h2 id="第一步_排除后台原因">第一步 排除后台原因</h2><p>因为上午的时候就发现了服务器返回的header里没有对cors header的 ‘access-control-allow-origin’属性进行配置,导致请求接口被拒绝的情况,所以先怀疑是后台服务器的配置有问题.<br>于是就让后台查一下服务器日志,看是不是接收到了这个请求(但是他们告诉我没有这个请求的日志).所以他们认为我这边请求没有发出来.(而且安卓都可以只有iOS不行,他们就觉得更不可能是他们的问题了)</p>
+<h1 id="Debug过程:">Debug过程:</h1><h2 id="第一步_排除后台原因">第一步 排除后台原因</h2><p>因为上午的时候就发现了后台接口返回的<code>ResponseHeader</code>里没有对cors header的 <code>access-control-allow-origin</code>属性进行配置,导致请求接口被拒绝的情况,所以先怀疑是后台服务器的在中午更新之后又出了什么问题.</p>
+<p>于是就让后台查一下服务器日志,看是不是接收到了这个请求(但是他们告诉我没有这个请求的日志).所以他们认为我这边请求没有发出来.(而且安卓都可以只有iOS不行,他们就觉得更不可能是他们的问题了)</p>
 <ul>
-<li>结论:可能和他们没有关系.</li>
+<li>结论: 可能和他们没有关系.</li>
 </ul>
 <h2 id="第二步_排除iOS代码原因">第二步 排除iOS代码原因</h2><p>当时因为JS和iOS之间的调用接口是使用的是github上的开源库”WebViewJavascriptBridge”实现的.而这个库的原理就是在web页面中建立带有特定Url连接的iframe,然后在iOS端用webview的delegate来拦截带有特定标志的请求作为调用信号的.<br>所以就找到iOS开发的同学,问他们是不是有这种不正确的拦截的可能,以及是不是在他们代码中有其他的拦截http请求的设置? 答案也是没有.他们认为是我的代码有兼容性问题,或者是后台的问题.</p>
 <p>这时候为了排除是不是iOS APP拦截造成的,于是就把web页面的url放进iPhone的Safari浏览器里运行,结果还是相同的504错误!这时候为了排除是App的干扰,索性把设备上的App都删掉了结果还是相同的错误!这说明确实不是iOS APP代码造成的!于是我又在自己的iPhone上的Safari中进行同样的测试,结果发现错误消失了!</p>
@@ -295,13 +296,13 @@
 <li>返回正确的 <code>Access-Control-Allow-Headers: Content-Type</code></li>
 </ol>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="status">HTTP/1.1 <span class="number">200</span> OK</span></span><br><span class="line"><span class="attribute">Server</span>: <span class="string">nginx/1.9.0</span></span><br><span class="line"><span class="attribute">Date</span>: <span class="string">Sun, 12 Jun 2016 01:58:13 GMT</span></span><br><span class="line"><span class="attribute">Content-Type</span>: <span class="string">text/html; charset=UTF-8</span></span><br><span class="line"><span class="attribute">Content-Length</span>: <span class="string">30</span></span><br><span class="line"><span class="attribute">Connection</span>: <span class="string">keep-alive</span></span><br><span class="line"><span class="attribute">Access-Control-Allow-Origin</span>: <span class="string">*</span></span><br><span class="line"><span class="attribute">Access-Control-Allow-Headers</span>: <span class="string">Origin,X-Requested-With,Content-Type,Accept</span></span><br><span class="line"><span class="attribute">Access-Control-Allow-Methods</span>: <span class="string">GET,POST,OPTIONS //这里要接受OPTIONS </span></span><br><span class="line"><span class="attribute">Access-Control-Allow-Credentials</span>: <span class="string">true</span></span><br></pre></td></tr></table></figure>
-<h2 id="设置XHR的RequestHeader">设置XHR的RequestHeader</h2><p>这里大神的书里也有偏差</p>
+<h2 id="设置XHR的RequestHeader">设置XHR的RequestHeader</h2><p>这里大神的书里也有偏差,道神写的书里记载着跨域的xhr的不能使用setRequestHeader.但实际上是可以的:</p>
 <blockquote>
 <p>从Gecko 2.0开始，text/plain, application/x-www-form-urlencoded 和 multipart/form-data 类型的数据都可以直接用于跨站请求，而不需要先发起“预请求”了</p>
 </blockquote>
 <p>所以可以把请求的类型强制设置为这三种之中的一种,但是也需要后台的接口能正确的处理这三种中的一种才可以选择这个解决方法.</p>
 <figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">xhr = new XMLHttpRequest();</span><br><span class="line">xhr.open(<span class="string">"<span class="keyword">POST</span>"</span>, url, true);</span><br><span class="line">xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded'); //模拟form提交的数据</span><br><span class="line">xhr.send(paramStr);</span><br></pre></td></tr></table></figure>
-<h1 id="总结:">总结:</h1><p>如果一开始的时候就去抓包分析,而不是去胡乱猜想,一定会更快找到这个bug的原因.</p>
+<h1 id="总结:">总结:</h1><p>如果一开始的时候就去抓包分析,只要发现了OPTIONS请求类型和我设置的不一致,再展开去查找,而不是去胡乱猜想,一定会更快找到这个bug的原因.</p>
 </span>
       
     </div>
