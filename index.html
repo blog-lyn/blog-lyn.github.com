@@ -337,275 +337,6 @@
             
             
               
-                <a class="post-title-link" href="/2016/06/06/javaScript-Object-Oriented-Prototype-link/" itemprop="url">
-                  JavaScript使用原型链实现继承以及Es6中的实现
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-06-06T22:49:33+08:00" content="2016-06-06">
-              2016-06-06
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/06/javaScript-Object-Oriented-Prototype-link/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/06/javaScript-Object-Oriented-Prototype-link/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="JavaScript使用原型链实现继承">JavaScript使用原型链实现继承</h1><ul>
-<li>ECMAScript 支持面向对象编程,但在ES6之前不使用类或者接口.</li>
-</ul>
-<h1 id="原型链">原型链</h1><ul>
-<li><p>JavaScript主要是通过原型链(prototype chain)来实现的继承,原型链的实现是通过创建”超类”的一个实例并且把这个实例赋值给”子类”构造函数的prototype指针.这样子类型就可以访问超类里的所有方法和属性.</p>
-</li>
-<li><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-15/87102920.jpg" alt=""></p>
-</li>
-</ul>
-<h1 id="原型式继承">原型式继承</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//超类的构造函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.property = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//给超类定义共享的原型方法</span></span><br><span class="line">SuperType.prototype.getSuperValue = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.subproperty = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//子类的构造函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.subproperty = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//这里实现继承</span></span><br><span class="line">SubType.prototype = <span class="keyword">new</span> SuperType();</span><br><span class="line"></span><br><span class="line">SubType.prototype.getSubValue = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.subproperty;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> SubType();</span><br><span class="line"><span class="built_in">console</span>.log(instance.getSuperValue()); <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//确定原型和实例的关系</span></span><br><span class="line"><span class="built_in">console</span>.log(instance <span class="keyword">instanceof</span> <span class="built_in">Object</span>)       <span class="comment">//true</span></span><br><span class="line"><span class="built_in">console</span>.log(instance <span class="keyword">instanceof</span> SuperType)    <span class="comment">//true</span></span><br><span class="line"><span class="built_in">console</span>.log(instance <span class="keyword">instanceof</span> SubType)      <span class="comment">//true		</span></span><br><span class="line"><span class="comment">//正确的增加定义子类的方法</span></span><br><span class="line">SubType.prototype.getSubVaule = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.subproperty;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//正确的重写超类的方法</span></span><br><span class="line">SubType.prototype.getSuperValue =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//错误的定义方法会导致继承失效.</span></span><br><span class="line">SubType.prototype = &#123;</span><br><span class="line">	someMethod: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="comment">// method do something</span></span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> anotherInstance = <span class="keyword">new</span> SubType();</span><br><span class="line"><span class="built_in">console</span>.log(getSuperValue()); <span class="comment">// error 因为上面的代码将子类的prototype从指向超累的一个实例替换成了一个对象字面量.</span></span><br></pre></td></tr></table></figure>
-<h2 id="优点&amp;缺点">优点&amp;缺点</h2><ul>
-<li>所有的子类实例都共享超累的属性,如果修改了超类的属性那么新建的实例都会受到影响</li>
-<li>创建子类型实例的时候,不能在不影响所有对象实例的前提下向超类型的构造函数传递参数.</li>
-</ul>
-<h2 id="ES5中的的原型式继承">ES5中的的原型式继承</h2><p> 如果只需要一个对象与另一个对象保持类似,而且在不同的对象之间共享相同的引用类型的的值的情况下可以使用这种Object.create方法.相当于把传入的对象(第一个参数)进行一次浅复制.这个特性会在后面的寄生组合式继承中用到.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person=&#123;</span><br><span class="line">	name:<span class="string">"lyn"</span>,</span><br><span class="line">	numbers:[<span class="string">"1"</span>,<span class="string">"2"</span>,<span class="string">"3"</span>]</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> anotherPerson = <span class="built_in">Object</span>.create(person);</span><br><span class="line">anotherPerson.name= <span class="string">"Cheung"</span>; <span class="comment">//覆盖原型对象中的值</span></span><br><span class="line">anotherPerson.numbers.push(<span class="string">"5"</span>); <span class="comment">//修改共享的原型对象的属性</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> otherPerson = <span class="built_in">Object</span>.create(person,&#123;</span><br><span class="line">		name:&#123;</span><br><span class="line">			value:<span class="string">"Lee"</span></span><br><span class="line">		&#125;</span><br><span class="line">&#125;); <span class="comment">//第二个参数会覆盖原型对象上的同名属性</span></span><br><span class="line">otherPerson.numbers.push(<span class="string">"6"</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(person.numbers)<span class="comment">// "1,2,3,5,6"</span></span><br></pre></td></tr></table></figure>
-<h1 id="借用构造函数继承">借用构造函数继承</h1><p>为了实现向超类的构造函数传递参数,可以使用借用构造函数继承</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">SuperType(name)&#123;</span><br><span class="line">   <span class="keyword">this</span>.name = name;</span><br><span class="line">   <span class="keyword">this</span>.colors=[<span class="string">'red'</span>,<span class="string">'green'</span>,<span class="string">'yellow'</span>];</span><br><span class="line">&#125;</span><br><span class="line">SubType()&#123;</span><br><span class="line">	<span class="comment">//实现继承</span></span><br><span class="line">	SuperType.call(<span class="keyword">this</span>,<span class="string">"lyn"</span>);<span class="comment">//在构造函数中给属性或方法赋值</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> instance1 = <span class="keyword">new</span> SubType();</span><br><span class="line">instance1.colors.push(<span class="string">"black"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(instance1.colors);<span class="comment">//"red,green,yellow,black"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> instance2 = <span class="keyword">new</span> SubType();</span><br><span class="line"><span class="built_in">console</span>.log(instance2.colors);<span class="comment">//"red,blue,green"</span></span><br></pre></td></tr></table></figure>
-<h2 id="优点&amp;缺点-1">优点&amp;缺点</h2><ul>
-<li>因为只借用了构造函数,所以构造函数模式的弊端(参考前一篇blog):所有方法和属性都在构造函数中定义,相同的功能的函数都是不同的实例,因此函数复用就无从谈起了.</li>
-<li>在超类的原型中定义的方法对于子类型来说也是不可见的.</li>
-</ul>
-<h1 id="组合式继承(combination_inheritance)">组合式继承(combination inheritance)</h1><p>组合继承:将原型链模式和借用构造函数模式相结合,发挥二者长处的一种模式.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.name =name;</span><br><span class="line">	<span class="keyword">this</span>.colors=[<span class="string">"red"</span>,<span class="string">"blue"</span>,<span class="string">"green"</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>.<span class="title">prototype</span>.<span class="title">sayName</span> =<span class="title">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params">name,age</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//继承方法,传递参数</span></span><br><span class="line">	SuperType.call(<span class="keyword">this</span>,name);</span><br><span class="line">	<span class="keyword">this</span>.age = age;</span><br><span class="line">&#125;</span><br><span class="line">SubType.prototype = <span class="keyword">new</span> SuperType();</span><br><span class="line">SubType.prototype.constructor= SubType;</span><br><span class="line">SubType.prototype.sayAge =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="keyword">this</span>.age);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> instance1 = <span class="keyword">new</span> SubType(<span class="string">"lyn"</span>,<span class="number">27</span>);</span><br><span class="line">instance1.colors.push(<span class="string">"black"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(instance1.colors); <span class="comment">//"red, blue, green, black"</span></span><br><span class="line">instance1.sayName();   <span class="comment">//lyn</span></span><br><span class="line">instance1.sayAge();	<span class="comment">//27	</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> instance2 = <span class="keyword">new</span> SubType(<span class="string">"Cheung"</span>,<span class="number">23</span>);</span><br><span class="line"><span class="built_in">console</span>.log(instance2.colors); <span class="comment">// "red,blue,green"</span></span><br><span class="line">instance2.sayName();    <span class="comment">// "Cheung"</span></span><br><span class="line">instance2.sayAge();  	<span class="comment">//  23</span></span><br></pre></td></tr></table></figure>
-<p>实现步骤:</p>
-<ol>
-<li>SuperType在自己的构造函数中定义了2个属性: name,colors</li>
-<li>SuperType的原型中定义了自己的方法sayName.</li>
-<li>SubType的构造函数在调用SuperType的构造函数的时候传入了name参数</li>
-<li>SubType的原型中也定义了自己的方法sayAge</li>
-</ol>
-<p>这样两个不同的实例就可以拥有不同的属性但是共享/复用同样的方法了.</p>
-<h2 id="优点&amp;缺点-2">优点&amp;缺点</h2><h3 id="优点:">优点:</h3><ul>
-<li>避免了原型链和借用构造函数的缺点,融合了他们的优点</li>
-<li>instanceof 和 isPrototypeOf() 也能识别组合式继承实现的对象.</li>
-</ul>
-<h3 id="缺点:">缺点:</h3><ul>
-<li>调用了两次SuperType的构造函数:(第一次是在把SuperType的实例赋值给SubType的原型时 ,第二次 是在SubType的构造函数中又call了一次).这个可以使用寄生组合继承来解决</li>
-</ul>
-<h1 id="寄生组合式继承">寄生组合式继承</h1><p>通过借用构造函数来继承属性,通过使用Object.create方法对SuperType的prototype进行浅复制实现对超类的继承,然后再讲结果指定给子类型的原型.寄生组合式继承的基本模式如下:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inheritPrototype</span>(<span class="params">subType,superType</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> prototypeTemp =<span class="built_in">Object</span>(superType.prototype); <span class="comment">//创建超类型原型的副本</span></span><br><span class="line">	prototypeTemp.constructor = subType;  <span class="comment">//为创建的副本指定构造函数</span></span><br><span class="line">	subType.prototype = prototypeTemp;   <span class="comment">//将创建的副本赋值给子类的原型</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>有了这个函数我们就可以替换掉组合式继承中为子类原型赋值的语句了.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.name =name;</span><br><span class="line">	<span class="keyword">this</span>.colors=[<span class="string">"red"</span>,<span class="string">"blue"</span>,<span class="string">"green"</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>.<span class="title">prototype</span>.<span class="title">sayName</span> =<span class="title">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params">name,age</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//继承方法,传递参数</span></span><br><span class="line">	SuperType.call(<span class="keyword">this</span>,name);</span><br><span class="line">	<span class="keyword">this</span>.age = age;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">inheritPrototype(SubType,SuperType); <span class="comment">//为子类原型赋值</span></span><br><span class="line"></span><br><span class="line">SubType.prototype.sayAge = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="keyword">this</span>.age);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="优点&amp;缺点:">优点&amp;缺点:</h2><ul>
-<li>只调用了一次SuperType构造函数,这样就避免了SubType.prototype重复创建属性.</li>
-<li>原型链可以保持不变,因此可以使用instanceof 和 isPrototypeOf()检测创建的对象</li>
-<li>寄生组合式继承是引用类型最理想的继承范式.</li>
-</ul>
-<h1 id="ES6中的继承实现">ES6中的继承实现</h1><p>Es6中有了extends 关键字可以实现继承,而不用在关心借用构造函数或者原型链来实现.</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Person&#123;</span><br><span class="line">    <span class="constructor"><span class="keyword">constructor</span>(name, age)</span>&#123;</span><br><span class="line">        <span class="keyword">public</span> name = name;</span><br><span class="line">        <span class="keyword">public</span> age  = age;</span><br><span class="line">        </span><br><span class="line">        sayName()&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="keyword">this</span>.name);     </span><br><span class="line">        &#125;</span><br><span class="line">        getOlder(years)&#123;</span><br><span class="line">            <span class="keyword">this</span>.age += years;  </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Employee extends Person&#123;</span><br><span class="line">	<span class="constructor"><span class="keyword">constructor</span>(name,age)</span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(name,age); <span class="comment">//借用Person的构造函数</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面的代码与西面的代码实现了相同的继承效果</p>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Employee</span><span class="params">(name,age)</span></span>&#123;</span><br><span class="line">	Person.call(<span class="keyword">this</span>,name,age);</span><br><span class="line">&#125;</span><br><span class="line">Employee.prototype = <span class="keyword">new</span> Person;</span><br></pre></td></tr></table></figure>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/06/05/javaScript-Object-Oriented-Prototype/" itemprop="url">
-                  JS中使用prototype来实现面向对象编程
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-06-05T23:02:37+08:00" content="2016-06-05">
-              2016-06-05
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/05/javaScript-Object-Oriented-Prototype/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/05/javaScript-Object-Oriented-Prototype/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <blockquote>
-<p> ECMAScript 支持面向对象编程,但在ES6之前不使用类或者接口.对象在代码执行的过程中创建和增加更多的方法.在没有类的情况下可以采用下面几种模式来创建对象:</p>
-</blockquote>
-<h1 id="工厂模式">工厂模式</h1><ul>
-<li>使用了简单的函数来创建对象,并且为对象增加属性和方法,然后返回对象.(抽象创建具体对象的过程)</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createPerson</span>(<span class="params">name,age,job</span>)</span>&#123;</span><br><span class="line"> 	<span class="keyword">var</span> o  = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line"> 	o.name = name;</span><br><span class="line"> 	o.age  = age;</span><br><span class="line"> 	o.job  = job;</span><br><span class="line"> 	o.sayName =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"> 		alert(<span class="keyword">this</span>.name);</span><br><span class="line"> 	&#125;;</span><br><span class="line"> 	</span><br><span class="line"> 	<span class="keyword">return</span> o;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span>  person1 = createPerson(<span class="string">"lyn"</span>,<span class="number">27</span>,<span class="string">"Web developer"</span>);</span><br><span class="line"><span class="keyword">var</span>  person2 = createPerson(<span class="string">"cheung"</span>,<span class="number">20</span>,<span class="string">"student"</span>);</span><br></pre></td></tr></table></figure>
-<h2 id="优缺点:">优缺点:</h2><ul>
-<li>优点:不创建多个相似的对象,减少重复的代码</li>
-<li>缺点:不能解决对象识别的问题(即对象没有特定的构造函数,不能通过instanceof来<br>识别 他是否是某个对象的实例).</li>
-</ul>
-<h1 id="构造函数模式">构造函数模式</h1><p>可以自定义构造函数的模式:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age, job</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name=name;</span><br><span class="line">    <span class="keyword">this</span>.age=age;</span><br><span class="line">    <span class="keyword">this</span>.job=job;</span><br><span class="line">    <span class="keyword">this</span>.sayName =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(<span class="keyword">this</span>.name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> Person(<span class="string">"lyn"</span>,<span class="number">27</span>,<span class="string">"Web developer"</span>);</span><br><span class="line"><span class="keyword">var</span> person2 = <span class="keyword">new</span> Person(<span class="string">"cheung"</span>,<span class="number">20</span>,<span class="string">"student"</span>);</span><br><span class="line"></span><br><span class="line">alert(person1.constructor == Person); <span class="comment">//true</span></span><br><span class="line">alert(person2.constructor == Person); <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//检测实例类型</span></span><br><span class="line">alert(person1 <span class="keyword">instanceof</span> <span class="built_in">Object</span>); <span class="comment">//true</span></span><br><span class="line">alert(person1 <span class="keyword">instanceof</span> Person); <span class="comment">//true</span></span><br><span class="line">alert(person2 <span class="keyword">instanceof</span> <span class="built_in">Object</span>);<span class="comment">//true</span></span><br><span class="line">alert(person2 <span class="keyword">instanceof</span> Person); <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//缺点:</span></span><br><span class="line">alert(person1.sayName == person2.sayName) <span class="comment">//false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//解决一个方法多次实例化的办法:将函数定义转移到构造函数外</span></span><br><span class="line"><span class="comment">//这种方法的缺点是:最终会导致创建了很多全局函数,</span></span><br><span class="line"><span class="comment">//但是却只能被构造函数生成的对象使用</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age, job</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.name=name;</span><br><span class="line">	<span class="keyword">this</span>.age=age;</span><br><span class="line">	<span class="keyword">this</span>.job=job;</span><br><span class="line">	<span class="keyword">this</span>.sayname=sayname;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sayName</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	alert(<span class="keyword">this</span>.name);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> Person(<span class="string">'Lyn'</span>,<span class="number">27</span>,<span class="string">'webdeveloper'</span>);</span><br><span class="line"><span class="keyword">var</span> person2 = <span class="keyword">new</span> Person(<span class="string">'Greg'</span>,<span class="number">20</span>,<span class="string">"student"</span>);</span><br><span class="line"></span><br><span class="line">alert(person1.sayName == person2.sayName) <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-<p>执行过程:</p>
-<ol>
-<li>创建一个新对象</li>
-<li>将构造函数的作用域赋给新对象.(this指向新对象)</li>
-<li>执行构造函数中的代码(添加属性(值和方法));</li>
-<li>返回新建的对象. </li>
-</ol>
-<h2 id="优点和缺点:">优点和缺点:</h2><ul>
-<li><p>优点:相比于工厂模式,可以用instanceof或者constuctor识别对象的类型.</p>
-</li>
-<li><p>缺点:完成相同任务的方法,创建了多次实例,不能代码共用.</p>
-</li>
-</ul>
-<h1 id="原型模式">原型模式</h1><h2 id="理解原型对象">理解原型对象</h2><p>在对象的prototype中查找属性与方法就是一次搜索,所以对对象的值得修改能够立即从实例上反应出来.<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-15/41954395.jpg" alt=""></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.name=<span class="string">"lyn"</span>;</span><br><span class="line">Person.prototype.age=<span class="string">"27"</span>;</span><br><span class="line">Person.prototype.jbo=<span class="string">"web developer"</span>;</span><br><span class="line">Person.prototype.sayName= <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	alert(<span class="keyword">this</span>.name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person1= <span class="keyword">new</span> Person();</span><br><span class="line">person1.sayName(); <span class="comment">//"lyn"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person2 =<span class="keyword">new</span> Person();</span><br><span class="line">person2.sayName(); <span class="comment">//"lyn"</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(person1.sayName == person2.sayName);  <span class="comment">//true </span></span><br><span class="line"></span><br><span class="line"><span class="comment">//isPrototypeOf</span></span><br><span class="line">alert(Person.prototype.isPrototypeOf(person1));  <span class="comment">//true</span></span><br><span class="line">alert(Person.prototype.isPrototypeOf(person2));  <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//ES5 feature Object.getPrototypeOf()</span></span><br><span class="line">alert(<span class="built_in">Object</span>.getPrototypeOf(person1) ==Person.prototype); <span class="comment">//true</span></span><br><span class="line">alert(<span class="built_in">Object</span>.getPrototypeOf(person1).name ) <span class="comment">//lyn</span></span><br></pre></td></tr></table></figure>
-<h2 id="优点&amp;缺点:">优点&amp;缺点:</h2><ul>
-<li>优点:所有方法属性都可以共享,提高了代码重用率</li>
-<li>缺点:所有属性被所有实例共享,一个实例修改所有,所有实例获得的属性都会改变,需要结合构造函数来解决这个问题.</li>
-</ul>
-<h2 id="hasOwnProperty_&amp;&amp;_in_方法">hasOwnProperty &amp;&amp; in 方法</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.name=<span class="string">"lyn"</span>;</span><br><span class="line">Person.prototype.age=<span class="string">"27"</span>;</span><br><span class="line">Person.prototype.jbo=<span class="string">"web developer"</span>;</span><br><span class="line">Person.prototype.sayName= <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	alert(<span class="keyword">this</span>.name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person1= <span class="keyword">new</span> Person();</span><br><span class="line"><span class="keyword">var</span> person2 =<span class="keyword">new</span> Person();</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="comment">// hasOwnProperty &amp;&amp; in </span></span><br><span class="line"><span class="built_in">console</span>.log(person1.hasOwnProperty(<span class="string">"name"</span>)) <span class="comment">//false 因为name不是实例中定义的</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"name"</span><span class="keyword">in</span> person1)  <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">person1.name = <span class="string">"cheung"</span>;   <span class="comment">//name 来自于实例   </span></span><br><span class="line"><span class="built_in">console</span>.log(person1.name); <span class="comment">//cheung 实例中的值屏蔽了原型中的值</span></span><br><span class="line"><span class="built_in">console</span>.log(person1.hasOwnProperty(<span class="string">"name"</span>)); <span class="comment">//true 因为现在的值是在实例中定义的</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"name"</span> <span class="keyword">in</span> person1) <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span> person1.name; <span class="comment">//删除后,这个值来自原型 = lyn</span></span><br><span class="line"><span class="built_in">console</span>.log(person1.hasOwnProperty(<span class="string">"name"</span>));   <span class="comment">//false 因为现在的值来自于原型</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"name"</span> <span class="keyword">in</span> person1) <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//使用hasProtoProperty 函数来判断属性是否来自于原型</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasProtoProperty</span>(<span class="params">object, prop</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> !object.hasOwnProperty(prop) &amp;&amp; (prop <span class="keyword">in</span> object)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="获取对象的所有可枚举或不可枚举属性">获取对象的所有可枚举或不可枚举属性</h2><ul>
-<li>使用Object.keys获取所有可枚举的的属性</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> keys = <span class="built_in">Object</span>.keys(Person.prototype);</span><br><span class="line"><span class="built_in">console</span>.log(keys); <span class="comment">//name, age, job, say, Name</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> Person();</span><br><span class="line">p1.name =<span class="string">"Lee"</span>;</span><br><span class="line">p1.age =<span class="string">"23"</span>;</span><br><span class="line"><span class="keyword">var</span> p1Keys=<span class="built_in">Object</span>.keys(p1);</span><br><span class="line"><span class="built_in">console</span>.log(p1Keys);<span class="comment">//name,age</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>使用Object.getOwnPropertyNames()获取所有实例的属性(包括不可枚举的)</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> keys = <span class="built_in">Object</span>.getOwnPropertyNames(Person.prototype);</span><br><span class="line"><span class="built_in">console</span>.log(keys);<span class="comment">// constructor,name,age,job,sayName</span></span><br></pre></td></tr></table></figure>
-<p>更简单的原型语法(需要制定constructor):</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">&#125;</span><br><span class="line">person.prototype=&#123;</span><br><span class="line">	<span class="constructor"><span class="keyword">constructor</span>: Person, //如果不指定的话会默认指向Object的构造函数</span><br><span class="line">	name:"lyn",</span><br><span class="line">	age:"27",</span><br><span class="line">	job:"web developer",</span><br><span class="line">	sayName: function()</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="组合使用构造函数模式与原型模式">组合使用构造函数模式与原型模式</h2><ul>
-<li>使用最广泛的一种模式,默认应该使用的模式,</li>
-</ul>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//每个实例不想共享的属性:使用构造函数模式</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span><span class="params">(name,age,job)</span></span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.name = name;</span><br><span class="line">	<span class="keyword">this</span>.age = age;</span><br><span class="line">	<span class="keyword">this</span>.job = job;</span><br><span class="line">	<span class="keyword">this</span>.friends =[<span class="string">"Tom"</span>,<span class="string">"Oliver"</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//每个实例共享的属性和方法:使用原型模式</span></span><br><span class="line">Person.prototype =&#123;</span><br><span class="line">	constructor: Person,</span><br><span class="line">	sayName:(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="动态原型模式">动态原型模式</h2><ul>
-<li>判断方法是否存在来决定是否需要创建构造函数的原型方法.</li>
-</ul>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//每个实例不想共享的属性:使用构造函数模式</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span><span class="params">(name,age,job)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">this</span>.name = name;</span><br><span class="line">	<span class="keyword">this</span>.age = age;</span><br><span class="line">	<span class="keyword">this</span>.job = job;</span><br><span class="line">	<span class="keyword">this</span>.friends =[<span class="string">"Tom"</span>,<span class="string">"Oliver"</span>];</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//下面的方法只会被初始化一次.</span></span><br><span class="line">	<span class="comment">//还可以使用instanceof来做判断</span></span><br><span class="line">	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="keyword">this</span>.sayName !=<span class="string">"function"</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		Person.prototype.sayname=<span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">			alert(<span class="keyword">this</span>.name);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="ES6中的实现">ES6中的实现</h1><p>ES6中 定义面向对象的类,只需要以class开头 然后是类型名,不再需要使用function关键字,只需方法名和圆括号.在constructor方法中定义的是这个类的构造函数.所有的属性和方法都会被添加到原型上.sayName和getOlder方法都是定义在Person.prototype上的.</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Person&#123;</span><br><span class="line">	<span class="constructor"><span class="keyword">constructor</span>(name, age)</span>&#123;</span><br><span class="line">		<span class="keyword">public</span> name = name;</span><br><span class="line">		<span class="keyword">public</span> age  = age;</span><br><span class="line">		</span><br><span class="line">		sayName()&#123;</span><br><span class="line">			<span class="built_in">console</span>.log(<span class="keyword">this</span>.name);		</span><br><span class="line">		&#125;</span><br><span class="line">		getOlder(years)&#123;</span><br><span class="line">			<span class="keyword">this</span>.age += years;	</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 <a class="post-title-link" href="/2016/05/30/installEsxiOnGen8/" itemprop="url">
                   Mac 环境下 Hp Gen8 microServer安装 Esxi Synology DSM
                 </a>
@@ -1533,6 +1264,283 @@
 <h2 id="@Media_Queries支持情况">@Media Queries支持情况</h2><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-18/50675002.jpg" alt=""></p>
 <h1 id="Ref:">Ref:</h1><p><a href="http://www.ruanyifeng.com/blog/2012/05/responsive_web_design.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2012/05/responsive_web_design.html</a> -阮一峰<br><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media#Examples" target="_blank" rel="external">https://developer.mozilla.org/en-US/docs/Web/CSS/@media#Examples</a> -MDN<br><a href="http://zihua.li/2013/12/keep-height-relevant-to-width-using-css/" target="_blank" rel="external">http://zihua.li/2013/12/keep-height-relevant-to-width-using-css/</a> -zihuali</p>
 
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/2016/04/10/js-single-thread-concepts/" itemprop="url">
+                  JavaScript的单线程运行机制笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-04-10T23:17:24+08:00" content="2016-04-10">
+              2016-04-10
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/10/js-single-thread-concepts/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/10/js-single-thread-concepts/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="javascript_是单线程运行的么?">javascript 是单线程运行的么?</h1><p>JavaScript引擎是单线程运行的,浏览器无论在什么时候都只且只有一个线程在运行JavaScript程序。 </p>
+<blockquote>
+<p>为什么JavaScript不能有多个线程呢？这样能提高效率啊！</p>
+<p>JavaScript的单线程，与它的用途有关。作为浏览器脚本语言，JavaScript的主要用途是与用户互动，以及操作DOM。这决定了它只能是单线程，否则会带来很复杂的同步问题。比如，假定JavaScript同时有两个线程，一个线程在某个DOM节点上添加内容，另一个线程删除了这个节点，这时浏览器应该以哪个线程为准？</p>
+<p>所以，为了避免复杂性，从一诞生，JavaScript就是单线程，这已经成了这门语言的核心特征，将来也不会改变。</p>
+<p>为了利用多核CPU的计算能力，HTML5提出Web Worker标准，允许JavaScript脚本创建多个线程，但是子线程完全受主线程控制，且不得操作DOM。所以，这个新标准并没有改变JavaScript单线程的本质。</p>
+</blockquote>
+<h2 id="代码验证：js是单线程运行的">代码验证：js是单线程运行的</h2><p>下面的代码，当while执行时候，setTimeout永远不会执行。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> isEnd = <span class="literal">true</span>;</span><br><span class="line">     <span class="built_in">window</span>.setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">         isEnd = <span class="literal">false</span>;<span class="comment">//1s后，改变isEnd的值</span></span><br><span class="line">     &#125;, <span class="number">1000</span>);</span><br><span class="line">     <span class="comment">//这个while永远的占用了js线程，所以setTimeout里面的函数永远不会执行</span></span><br><span class="line">     <span class="keyword">while</span> (isEnd);</span><br><span class="line">     <span class="comment">//alert也永远不会弹出</span></span><br><span class="line">     alert(<span class="string">'end'</span>);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'开始运行js'</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func01</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'function 1 正在运行'</span>);</span><br><span class="line">	<span class="keyword">return</span> func02();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func02</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">console</span>.log(<span class="string">'function 2 正在运行'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">main</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'mainJs 开始运行'</span>);</span><br><span class="line">	  func01();</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'mainJs 运行结束'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">main();</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'js运行结束'</span>);</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">开始运行js</span><br><span class="line">mainJs 开始运行</span><br><span class="line"><span class="function"><span class="keyword">function</span></span> <span class="number">1</span> 正在运行</span><br><span class="line"><span class="function"><span class="keyword">function</span></span> <span class="number">2</span> 正在运行</span><br><span class="line">mainJs 运行结束</span><br><span class="line">js运行结束</span><br></pre></td></tr></table></figure>
+<h1 id="执行栈的队列">执行栈的队列</h1><blockquote>
+<p>单线程就意味着，所有任务需要排队，前一个任务结束，才会执行后一个任务。如果前一个任务耗时很长，后一个任务就不得不一直等着。<br>如果排队是因为计算量大，CPU忙不过来，倒也算了，但是很多时候CPU是闲着的，因为IO设备（输入输出设备）很慢（比如Ajax操作从网络读取数据），不得不等着结果出来，再往下执行。</p>
+<p>JavaScript语言的设计者意识到，这时主线程完全可以不管IO设备，挂起处于等待中的任务，先运行排在后面的任务。等到IO设备返回了结果，再回过头，把挂起的任务继续执行下去。</p>
+<p>于是，所有任务可以分成两种，一种是同步任务（synchronous），另一种是异步任务（asynchronous）。同步任务指的是，在主线程上排队执行的任务，只有前一个任务执行完毕，才能执行后一个任务；异步任务指的是，不进入主线程、而进入”任务队列”（task queue）的任务，只有”任务队列”通知主线程，某个异步任务可以执行了，该任务才会进入主线程执行。<br>具体来说，异步执行的运行机制如下。（同步执行也是如此，因为它可以被视为没有异步任务的异步执行。）</p>
+</blockquote>
+<p>Ps：</p>
+<ol>
+<li>执行栈队列是fist in  last out 的数据结构。</li>
+<li>回调函数队列是firtst in first out 的数据结构。</li>
+</ol>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-10/32375570.jpg" alt=""></p>
+<p>运行时的流程图应该是这样：</p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-11/59788839.jpg" alt=""></p>
+<blockquote>
+<ol>
+<li>所有同步任务都在主线程上执行，形成一个执行栈（execution context stack）。</li>
+<li>主线程之外，还存在一个”任务队列”（task queue）。只要异步任务有了运行结果，就在”任务队列”之中放置一个事件。</li>
+<li>一旦”执行栈”中的所有同步任务执行完毕，系统就会读取”任务队列”，看看里面有哪些事件。那些对应的异步任务，于是结束等待状态，进入执行栈，开始执行。</li>
+<li>主线程不断重复上面的第三步。</li>
+</ol>
+</blockquote>
+<p>Ps: Promise，mutation，observer的回调函数属于特殊的任务会在当前的eventLoop末尾执行，而普通任务则是在下一次获取任务队列后运行。</p>
+<h2 id="验证回调函数会进入回调函数队列等待执行栈空闲后再调用：">验证回调函数会进入回调函数队列等待执行栈空闲后再调用：</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'01 开始运行js'</span>);</span><br><span class="line"></span><br><span class="line">setTimeout( <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">'02 , 我从eventloop 中被加到了回调函数队列等待运行 等待stack空闲了以后才会调用我'</span>);</span><br><span class="line">&#125;,<span class="number">5000</span> );</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'03, 这个写在setTimeout 后面'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'现在stack 队列里是空的, 因为没有定义返回值所以会返回 undefined  '</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="运行结果：">运行结果：</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">01</span> 开始运行js</span><br><span class="line"><span class="number">03</span>, 这个写在setTimeout 后面</span><br><span class="line">现在<span class="built_in">stack</span> 队列里是空的, 因为没有定义返回值所以会返回 undefined </span><br><span class="line">undefined</span><br><span class="line"><span class="number">02</span> , 我从eventloop 中被加到了回调函数队列等待运行 等待<span class="built_in">stack</span>空闲了以后才会调用我</span><br></pre></td></tr></table></figure>
+<h1 id="回调函数队列与事件循环机制:">回调函数队列与事件循环机制:</h1><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-10/97771921.jpg" alt=""></p>
+<blockquote>
+<p>浏览器的内核是多线程的，它们在内核控制下相互配合以保持同步，一个浏览器至少实现三个常驻线程：JavaScript引擎线程，GUI渲染线程，浏览器事件触发线程（图中的WebAPIs）。 </p>
+<p>JavaScript引擎是基于事件驱动单线程执行的，JavaScript引擎一直等待着任务队列中任务的到来，然后加以处理，浏览器无论什么时候都只有一个JavaScript线程在运行JavaScript程序。 </p>
+<p>GUI渲染线程负责渲染浏览器界面，当界面需要重绘（Repaint）或由于某种操作引发回流(Reflow)时,该线程就会执行。但需要注意，GUI渲染线程与JavaScript引擎是互斥的，当JavaScript引擎执行时GUI线程会被挂起，GUI更新会被保存在一个队列中等到JavaScript引擎空闲时立即被执行。<br>事件触发线程，当一个事件被触发时该线程会把事件添加到待处理队列的队尾，等待JavaScript引擎的处理。这些事件可来自JavaScript引擎当前执行的代码块如setTimeout、也可来自浏览器内核的其他线程如鼠标点击、Ajax异步请求等，但由于JavaScript的单线程关系所有这些事件都得排队等待JavaScript引擎处理（当线程中没有执行任何同步代码的前提下才会执行异步代码）。 </p>
+</blockquote>
+<h1 id="用for循环堵塞执行栈来测试事件被添加到eventLoop的时机">用for循环堵塞执行栈来测试事件被添加到eventLoop的时机</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'1 js 开始运行'</span>); </span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'a'</span>);</span><br><span class="line">&#125;, <span class="number">10</span>);  </span><br><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'b'</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);  </span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> sum = <span class="number">0</span>;  <span class="built_in">console</span>.time(<span class="string">'loopCost'</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i ++) &#123;  </span><br><span class="line">    sum += i;  </span><br><span class="line">&#125;   </span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'for 循环结果：'</span>,sum);  </span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.timeEnd(<span class="string">'loopCost'</span>);</span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'c'</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="运行结果：-1">运行结果：</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> js 开始运行</span><br><span class="line"><span class="number">4950</span></span><br><span class="line">loopCost: <span class="number">0.298</span>ms</span><br><span class="line"></span><br><span class="line">b</span><br><span class="line">c</span><br><span class="line">a</span><br></pre></td></tr></table></figure>
+<p>因为b和c的等待时间是0，所以第一时间被加入到回调事件的队尾等待主函数空闲时再进行调用.<br>而a事件则需要等待10ms以后才被加入回调事件队列的队尾等待调用.</p>
+<h1 id="增加for循环运行时间">增加for循环运行时间</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'1 js 开始运行'</span>); </span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'a'</span>);</span><br><span class="line">&#125;, <span class="number">10</span>);  </span><br><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'b'</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);  </span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> sum = <span class="number">0</span>;  <span class="built_in">console</span>.time(<span class="string">'loopCost'</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i ++) &#123;  </span><br><span class="line">    sum += i;  </span><br><span class="line">&#125;   </span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'for 循环结果：'</span>,sum);  </span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.timeEnd(<span class="string">'loopCost'</span>);</span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'c'</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="运行结果：-2">运行结果：</h2><p>当for循环的运行时间超过10ms的情况下,当for 循环完成的时候, a的回调函数会比c的回调函数先触发,然后被加入回调函数等待队列里,等待事件循环取出执行。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> js 开始运行</span><br><span class="line"><span class="keyword">for</span> 循环结果： <span class="number">49995000</span></span><br><span class="line">loopCost: <span class="number">13.285ms</span></span><br><span class="line"> <span class="tag">b</span></span><br><span class="line"> <span class="tag">a</span></span><br><span class="line"> c</span><br></pre></td></tr></table></figure>
+<h1 id="浏览器异步请求数量的验证">浏览器异步请求数量的验证</h1><p>通过上面的验证,我们得知js是单线程运行的,那浏览器的辅助线程对js的异步请求有限制么?<br>最大支持同时发起多少个请求呢?</p>
+<p>通过查找资料可以得知:</p>
+<blockquote>
+<p>浏览器与同一服务器的连接数最大值有限制，即Chrome和Firefox为6，IE为12。<br>在Firefox的“about:config”页面下找到如下图的配置项（network.http.max-persistent-connections-per-server）</p>
+</blockquote>
+<p>但还是通过代码来验证最靠谱:.<br>下面我们来进行验证:</p>
+<h2 id="代码验证:">代码验证:</h2><h3 id="HTML以及Ajax_请求页面:">HTML以及Ajax 请求页面:</h3><p>html页面在点击事件触发时会同时发起20个AJAX异步请求.</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"utf-8"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">label</span> <span class="attribute">for</span>=<span class="value">"requestNum"</span>&gt;</span>请求数：<span class="tag">&lt;/<span class="title">label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">input</span> <span class="attribute">id</span>=<span class="value">"requestNum"</span> <span class="attribute">value</span>=<span class="value">"20"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">button</span> <span class="attribute">onclick</span>=<span class="value">"startRequest()"</span>&gt;</span>开始请求<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span>&gt;</span><span class="javascript"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ajax</span>(<span class="params">config</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="built_in">window</span>.XMLHttpRequest();</span><br><span class="line">    <span class="comment">//console.log(config.url);</span></span><br><span class="line">    xhr.open(<span class="string">"GET"</span>, config.url, <span class="literal">true</span> );</span><br><span class="line">    xhr.send(<span class="literal">null</span>);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">startRequest</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> num = ~~requestNum.value;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; num; i += <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(i);</span><br><span class="line">        ajax(&#123;</span><br><span class="line">            url: <span class="string">"http://127.0.0.1:1337/?="</span> + i</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="Node-js_服务器端的代码">Node.js 服务器端的代码</h3><p>这里我们创建了一个Http 服务器,在接收到请求以后设置一个timeout,在一秒以后才结束返回请求.<br>并且会在接收到请求的同时,记录下时间.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br><span class="line"></span><br><span class="line">http.createServer(<span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(req.url);</span><br><span class="line">    <span class="keyword">var</span> startTime = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'第 次接收到请求 时间是 ：'</span>,startTime);</span><br><span class="line">    res.writeHead(<span class="number">200</span>, &#123;</span><br><span class="line">        <span class="string">'Content-Type'</span>: <span class="string">'text/plain'</span>,</span><br><span class="line">        <span class="string">'Access-Control-Allow-Origin'</span>: <span class="string">'*'</span>,</span><br><span class="line">        <span class="string">'charset'</span>: <span class="string">'utf8'</span></span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        res.end(<span class="built_in">String</span>(+<span class="keyword">new</span> <span class="built_in">Date</span>));</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">   </span><br><span class="line">&#125;).listen(<span class="number">1337</span>, <span class="string">'127.0.0.1'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'Server running at http://127.0.0.1:1337/'</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="运行结果:">运行结果:</h3><p>监控发起的网络请求时间:</p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-17/48064341.jpg" alt=""></p>
+<p>服务器端的log日志:<br>我们可以看得出来在同一时间节点,请求都是6个为一组接收到的.<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">/?=<span class="number">0</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">05</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">1</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">05</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">2</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">05</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">3</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">05</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">4</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">05</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">5</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">05</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">6</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">06</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">7</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">06</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">8</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">06</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">9</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">06</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">10</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">06</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">11</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">06</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">12</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">07</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">13</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">07</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">14</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">07</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">15</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">07</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">16</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">07</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">17</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">07</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">18</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">08</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">/?=<span class="number">19</span></span><br><span class="line">这次接收到请求 时间是 ： Sun Apr <span class="number">17</span> <span class="number">2016</span> <span class="number">22</span>:<span class="number">29</span>:<span class="number">08</span> GMT+<span class="number">0800</span> (CST)</span><br></pre></td></tr></table></figure></p>
+<p>参考链接：<br><a href="http://www.ruanyifeng.com/blog/2014/10/event-loop.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2014/10/event-loop.html</a> －阮一峰</p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/2016/03/14/nodeJs-iOnic-Config/" itemprop="url">
+                  iOnic Cordova Mac下的开发环境部署
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-03-14T13:53:17+08:00" content="2016-03-14">
+              2016-03-14
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/14/nodeJs-iOnic-Config/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/14/nodeJs-iOnic-Config/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="Install_Node-js">Install Node.js</h1><blockquote>
+<p>@author: Lyn </p>
+</blockquote>
+<h2 id="安装Mac软件安装管理器：HomeBrew">安装Mac软件安装管理器：HomeBrew</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ruby <span class="operator">-e</span> <span class="string">"<span class="variable">$(curl -fsSL -k https://raw.githubusercontent.com/Homebrew/install/master/install7)</span>"</span></span><br></pre></td></tr></table></figure>
+<h2 id="安装Node-js版本管理器_NVM">安装Node.js版本管理器 NVM</h2><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install nvm</span><br></pre></td></tr></table></figure>
+<h2 id="使用NVM安装Node-js">使用NVM安装Node.js</h2><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm install <span class="keyword">node</span><span class="identifier"> </span><span class="title">&amp;&amp; nvm</span> alias default <span class="keyword">node</span><span class="identifier"></span><span class="title"></span></span><br></pre></td></tr></table></figure>
+<h2 id="检查Node-js是否安装成功">检查Node.js是否安装成功</h2><p>在终端输入下面的命令检查Node和NPM的版本，安装成功的话会返回版本号：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line">v4<span class="number">.2</span><span class="number">.1</span></span><br><span class="line">npm -v</span><br><span class="line"><span class="number">2.14</span><span class="number">.7</span></span><br></pre></td></tr></table></figure>
+<h1 id="Install_Xcode">Install Xcode</h1><blockquote>
+<p>（iOS SDK）Apple 开发者网站可以下载Xcode 或者AppStore安装 </p>
+</blockquote>
+<h1 id="Install_Cordova,_Ionic">Install Cordova, Ionic</h1><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$sudo</span> npm install cordova ionic ios-sim -g</span><br></pre></td></tr></table></figure>
+<h1 id="Install_JAVA">Install JAVA</h1><p>Java SE Development  Kit</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/www.oracle.com/technetwork</span><span class="regexp">/java/javase</span><span class="regexp">/downloads/jdk</span>7-downloads-<span class="number">1880260</span>.html</span><br></pre></td></tr></table></figure>
+<h1 id="Install_Android_sdk">Install Android sdk</h1><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install <span class="keyword">android-sdk</span></span><br></pre></td></tr></table></figure>
+<h2 id="Android_Studio_(选装)">Android Studio (选装)</h2><blockquote>
+<p><a href="https://developer.android.com/sdk/index.html" target="_blank" rel="external">https://developer.android.com/sdk/index.html</a></p>
+</blockquote>
+<h1 id="Install_Git">Install Git</h1><p> 终端安装Git 如果安装过，请跳过。</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install git</span><br></pre></td></tr></table></figure>
+<p>如果是想更新Git版本：</p>
+<p>先安装：</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install git</span><br></pre></td></tr></table></figure>
+<p>然后新建一个目录，把原来的移动到这个目录去<br>命令如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo cd /usr/bin</span><br><span class="line">sudo mkdir old-git-<span class="number">1.7</span><span class="number">.5</span><span class="number">.4</span></span><br><span class="line">sudo mv git* old-git-<span class="number">1.7</span><span class="number">.5</span><span class="number">.4</span></span><br></pre></td></tr></table></figure>
+<h1 id="Install_Apache_Ant">Install Apache Ant</h1><blockquote>
+<p>还是使用 brew</p>
+</blockquote>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install ant</span><br></pre></td></tr></table></figure>
+<h1 id="Add_Android_sdk_in_your_path">Add Android sdk in your path</h1><blockquote>
+<p>在终端打开和编辑: “.bash_profile” - 添加以下变量:</p>
+</blockquote>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=$(/usr/libexec/java_home)</span><br><span class="line">export PATH=$&#123;JAVA_HOME&#125;/bin:<span class="variable">$PATH</span></span><br><span class="line">export PATH=/usr/local/bin:<span class="variable">$PATH</span></span><br><span class="line">export JAVA_HOME=<span class="string">"/usr/libexec/java_home -v '1.7*'"</span></span><br><span class="line">export ANDROID_HOME=/usr/local/opt/android-sdk</span><br></pre></td></tr></table></figure>
+<p>如果还安装了Android Studio，还需要添加这一行： </p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export <span class="constant">PATH=</span><span class="variable">$&#123;</span><span class="constant">PATH&#125;</span><span class="symbol">:/Applications/Android</span>\ <span class="constant">Studio.</span>app/sdk/platform-<span class="symbol">tools:</span>/<span class="constant">Applications/Android\</span> <span class="constant">Studio.</span>app/sdk/tools</span><br></pre></td></tr></table></figure>
+<h1 id="Restart_Ur_Mac">Restart Ur Mac</h1><p>或者使用这个命令重新加载环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.bash_profile</span><br></pre></td></tr></table></figure>
+<p>检查环境变量：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo $PATH </span><br><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>Library<span class="regexp">/Java/</span>JavaVirtualMachines<span class="regexp">/jdk1.7.0_79.jdk/</span>Contents<span class="regexp">/Home/</span><span class="string">bin:</span><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>Library<span class="regexp">/Java/</span>JavaVirtualMachines<span class="regexp">/jdk1.7.0_79.jdk/</span>Contents<span class="regexp">/Home/</span><span class="string">bin:</span><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>Library<span class="regexp">/Java/</span>JavaVirtualMachines<span class="regexp">/jdk1.7.0_79.jdk/</span>Contents<span class="regexp">/Home/</span><span class="string">bin:</span><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>usr<span class="regexp">/bin:/</span><span class="string">bin:</span><span class="regexp">/usr/</span><span class="string">sbin:</span><span class="regexp">/sbin:/</span>Development<span class="regexp">/android-sdk/</span>platform-<span class="string">tools:</span><span class="regexp">/Development/</span>android-sdk<span class="regexp">/tools:/</span>Development<span class="regexp">/android-sdk/</span><span class="string">tools:</span><span class="regexp">/Development/</span>android-sdk<span class="regexp">/tools:/</span>Development<span class="regexp">/android-sdk/</span><span class="string">tools:</span><span class="regexp">/Development/</span>android-sdk<span class="regexp">/tools:/</span>Development<span class="regexp">/android-sdk/</span>tools</span><br></pre></td></tr></table></figure>
+<h1 id="建立一个新的项目">建立一个新的项目</h1><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ionic <span class="built_in">start</span> oneApp</span><br><span class="line">$ cd oneApp</span><br><span class="line">$ ionic <span class="built_in">platform</span> <span class="built_in">add</span> ios</span><br><span class="line">$ ionic <span class="built_in">platform</span> <span class="built_in">add</span> android</span><br></pre></td></tr></table></figure>
+<p>编译这个空项目：</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">ionic</span> <span class="keyword">build </span>ios</span><br></pre></td></tr></table></figure>
+<p>启动模拟器来显示新建的项目：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ionic <span class="built_in">emulate</span> ios</span><br></pre></td></tr></table></figure>
+<p>如果遇到文件权限的问题，修改文件权限：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chmod -R <span class="number">777</span> ~/.yourfile</span><br></pre></td></tr></table></figure>
+<h1 id="其他的Cordova的命令：">其他的Cordova的命令：</h1><h2 id="Create_New_Project">Create New Project</h2> <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cordova create hello com.example.hello <span class="string">"HelloWorld"</span></span><br><span class="line"><span class="variable">$ </span>cd hello</span><br><span class="line"><span class="variable">$ </span>cordova platform add ios</span><br><span class="line"><span class="variable">$ </span>cordova prepare</span><br></pre></td></tr></table></figure>
+<h2 id="Deploy_the_app">Deploy the app</h2><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cordova build</span><br></pre></td></tr></table></figure>
+<h2 id="部署App到iOS设备:">部署App到iOS设备:</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cordova <span class="command">run</span> ios <span class="comment">--device</span></span><br></pre></td></tr></table></figure>
+<h2 id="部署App到iOS_xCode模拟器">部署App到iOS xCode模拟器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cordova <span class="built_in">emulate</span> ios</span><br></pre></td></tr></table></figure>
+<h2 id="查看所有可以用的模拟器列表">查看所有可以用的模拟器列表</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cordova <span class="command">run</span> ios <span class="comment">--list</span></span><br></pre></td></tr></table></figure>
+<h2 id="使用指定的手机模拟器">使用指定的手机模拟器</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cordova <span class="command">run</span> ios <span class="comment">--target=target_name  </span></span><br><span class="line">cordova <span class="command">run</span> ios <span class="comment">--target="iPhone-6") //指定使用iPhone6作为模拟器</span></span><br></pre></td></tr></table></figure>
+<h1 id="参考链接">参考链接</h1><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/ionicframework.com/getting</span>-started/</span><br><span class="line"><span class="symbol">http:</span>/<span class="regexp">/cordova.apache.org/docs</span><span class="regexp">/en/latest</span><span class="regexp">/guide/platforms</span><span class="regexp">/android/index</span>.html</span><br></pre></td></tr></table></figure>
             
           </span>
         
