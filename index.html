@@ -1488,7 +1488,8 @@
         
           <span itemprop="articleBody">
             
-              <h1 id="运行环境(Execution_Context)">运行环境(Execution Context)</h1><p>Execution Context决定了在执行栈中运行的代码所能访问的变量,对象,函数.</p>
+              <p>在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.</p>
+<h1 id="运行环境(Execution_Context)">运行环境(Execution Context)</h1><p>Execution Context决定了在执行栈中运行的代码所能访问的变量,对象,函数.很多人总是把这个概念和作用域混淆,而实际上ScopeChain只是Execution Context的一部分.</p>
 <ul>
 <li><p>可以暂时简单地理解为能在执行栈中独立完整运行的代码,它由三个部分的内容组成:</p>
 <ul>

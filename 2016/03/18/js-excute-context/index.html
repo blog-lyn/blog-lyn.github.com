@@ -59,32 +59,20 @@
 
 
 
-<meta name="description" content="运行环境(Execution Context)Execution Context决定了在执行栈中运行的代码所能访问的变量,对象,函数.
-
-可以暂时简单地理解为能在执行栈中独立完整运行的代码,它由三个部分的内容组成:
-
-作用域链(Scope Chain):链接中包含当前的context中包含的变量 + 所有的父级直到全局作用域中的所包含的可以访问的变量
-变量对象,由函数的定义的参数,当前contex">
+<meta name="description" content="在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.
+运行环境(Execution Context)Execution Context决定了在执行栈中运行的代码所能访问的变量,对象,函数.很多人总是把这个概念和作用域混淆,而实际上ScopeChain只是Execution Context的一部分.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Javascript 中的 运行环境(Execution Context),  作用域链(Scope Chain), this & 闭包(Closure)">
 <meta property="og:url" content="http://lyn.s76.org/2016/03/18/js-excute-context/index.html">
 <meta property="og:site_name" content="Lyn's Blog">
-<meta property="og:description" content="运行环境(Execution Context)Execution Context决定了在执行栈中运行的代码所能访问的变量,对象,函数.
-
-可以暂时简单地理解为能在执行栈中独立完整运行的代码,它由三个部分的内容组成:
-
-作用域链(Scope Chain):链接中包含当前的context中包含的变量 + 所有的父级直到全局作用域中的所包含的可以访问的变量
-变量对象,由函数的定义的参数,当前contex">
+<meta property="og:description" content="在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.
+运行环境(Execution Context)Execution Context决定了在执行栈中运行的代码所能访问的变量,对象,函数.很多人总是把这个概念和作用域混淆,而实际上ScopeChain只是Execution Context的一部分.">
 <meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-18/73084259.jpg">
-<meta property="og:updated_time" content="2016-06-18T16:21:51.000Z">
+<meta property="og:updated_time" content="2016-06-18T16:34:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Javascript 中的 运行环境(Execution Context),  作用域链(Scope Chain), this & 闭包(Closure)">
-<meta name="twitter:description" content="运行环境(Execution Context)Execution Context决定了在执行栈中运行的代码所能访问的变量,对象,函数.
-
-可以暂时简单地理解为能在执行栈中独立完整运行的代码,它由三个部分的内容组成:
-
-作用域链(Scope Chain):链接中包含当前的context中包含的变量 + 所有的父级直到全局作用域中的所包含的可以访问的变量
-变量对象,由函数的定义的参数,当前contex">
+<meta name="twitter:description" content="在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.
+运行环境(Execution Context)Execution Context决定了在执行栈中运行的代码所能访问的变量,对象,函数.很多人总是把这个概念和作用域混淆,而实际上ScopeChain只是Execution Context的一部分.">
 
 
 
@@ -262,7 +250,8 @@
       
 
       
-        <span itemprop="articleBody"><h1 id="运行环境(Execution_Context)">运行环境(Execution Context)</h1><p>Execution Context决定了在执行栈中运行的代码所能访问的变量,对象,函数.</p>
+        <span itemprop="articleBody"><p>在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.</p>
+<h1 id="运行环境(Execution_Context)">运行环境(Execution Context)</h1><p>Execution Context决定了在执行栈中运行的代码所能访问的变量,对象,函数.很多人总是把这个概念和作用域混淆,而实际上ScopeChain只是Execution Context的一部分.</p>
 <ul>
 <li><p>可以暂时简单地理解为能在执行栈中独立完整运行的代码,它由三个部分的内容组成:</p>
 <ul>
