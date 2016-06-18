@@ -1588,8 +1588,7 @@
 <li>Function.prototype.bind 创建一个特殊的函数，该函数将永远使用传递给.bind的参数作为this的值，以及能够分配部分参数，创建原函数的咖喱化（currided）版本。</li>
 </ol>
 <figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, <span class="number">2</span>];</span><br><span class="line"><span class="keyword">var</span> <span class="keyword">add</span> = <span class="keyword">Array</span>.prototype.push.bind(arr, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// effectively the same as arr.push(3)</span></span><br><span class="line"><span class="keyword">add</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// effectively the same as arr.push(3, 4)</span></span><br><span class="line"><span class="keyword">add</span>(<span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">console.log(arr);</span><br><span class="line"><span class="comment">// &lt;- [1, 2, 3, 3, 4]</span></span><br></pre></td></tr></table></figure>
-<p>#关于函数调用时参数传值:</p>
-<p>这里我们先要搞清楚jJavaScript中的变量分为两种:基本类型 和引用类型</p>
+<h1 id="关于函数参数传值的问题:">关于函数参数传值的问题:</h1><p>函数调用时候的参数究竟是传递的按引用传递的还是按值传递的呢?<br>这里我们先要搞清楚jJavaScript中的变量分为两种:基本类型 和引用类型</p>
 <h2 id="基本类型">基本类型</h2><p>基本类型指的是简单的数据段,包括:</p>
 <ul>
 <li>undefined</li>
