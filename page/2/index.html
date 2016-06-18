@@ -207,6 +207,140 @@
             
             
               
+                <a class="post-title-link" href="/2016/03/14/nodeJs-iOnic-Config/" itemprop="url">
+                  iOnic Cordova Mac下的开发环境部署
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-03-14T13:53:17+08:00" content="2016-03-14">
+              2016-03-14
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/14/nodeJs-iOnic-Config/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/14/nodeJs-iOnic-Config/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="Install_Node-js">Install Node.js</h1><blockquote>
+<p>@author: Lyn </p>
+</blockquote>
+<h2 id="安装Mac软件安装管理器：HomeBrew">安装Mac软件安装管理器：HomeBrew</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ruby <span class="operator">-e</span> <span class="string">"<span class="variable">$(curl -fsSL -k https://raw.githubusercontent.com/Homebrew/install/master/install7)</span>"</span></span><br></pre></td></tr></table></figure>
+<h2 id="安装Node-js版本管理器_NVM">安装Node.js版本管理器 NVM</h2><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install nvm</span><br></pre></td></tr></table></figure>
+<h2 id="使用NVM安装Node-js">使用NVM安装Node.js</h2><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm install <span class="keyword">node</span><span class="identifier"> </span><span class="title">&amp;&amp; nvm</span> alias default <span class="keyword">node</span><span class="identifier"></span><span class="title"></span></span><br></pre></td></tr></table></figure>
+<h2 id="检查Node-js是否安装成功">检查Node.js是否安装成功</h2><p>在终端输入下面的命令检查Node和NPM的版本，安装成功的话会返回版本号：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line">v4<span class="number">.2</span><span class="number">.1</span></span><br><span class="line">npm -v</span><br><span class="line"><span class="number">2.14</span><span class="number">.7</span></span><br></pre></td></tr></table></figure>
+<h1 id="Install_Xcode">Install Xcode</h1><blockquote>
+<p>（iOS SDK）Apple 开发者网站可以下载Xcode 或者AppStore安装 </p>
+</blockquote>
+<h1 id="Install_Cordova,_Ionic">Install Cordova, Ionic</h1><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$sudo</span> npm install cordova ionic ios-sim -g</span><br></pre></td></tr></table></figure>
+<h1 id="Install_JAVA">Install JAVA</h1><p>Java SE Development  Kit</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/www.oracle.com/technetwork</span><span class="regexp">/java/javase</span><span class="regexp">/downloads/jdk</span>7-downloads-<span class="number">1880260</span>.html</span><br></pre></td></tr></table></figure>
+<h1 id="Install_Android_sdk">Install Android sdk</h1><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install <span class="keyword">android-sdk</span></span><br></pre></td></tr></table></figure>
+<h2 id="Android_Studio_(选装)">Android Studio (选装)</h2><blockquote>
+<p><a href="https://developer.android.com/sdk/index.html" target="_blank" rel="external">https://developer.android.com/sdk/index.html</a></p>
+</blockquote>
+<h1 id="Install_Git">Install Git</h1><p> 终端安装Git 如果安装过，请跳过。</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install git</span><br></pre></td></tr></table></figure>
+<p>如果是想更新Git版本：</p>
+<p>先安装：</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install git</span><br></pre></td></tr></table></figure>
+<p>然后新建一个目录，把原来的移动到这个目录去<br>命令如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo cd /usr/bin</span><br><span class="line">sudo mkdir old-git-<span class="number">1.7</span><span class="number">.5</span><span class="number">.4</span></span><br><span class="line">sudo mv git* old-git-<span class="number">1.7</span><span class="number">.5</span><span class="number">.4</span></span><br></pre></td></tr></table></figure>
+<h1 id="Install_Apache_Ant">Install Apache Ant</h1><blockquote>
+<p>还是使用 brew</p>
+</blockquote>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install ant</span><br></pre></td></tr></table></figure>
+<h1 id="Add_Android_sdk_in_your_path">Add Android sdk in your path</h1><blockquote>
+<p>在终端打开和编辑: “.bash_profile” - 添加以下变量:</p>
+</blockquote>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=$(/usr/libexec/java_home)</span><br><span class="line">export PATH=$&#123;JAVA_HOME&#125;/bin:<span class="variable">$PATH</span></span><br><span class="line">export PATH=/usr/local/bin:<span class="variable">$PATH</span></span><br><span class="line">export JAVA_HOME=<span class="string">"/usr/libexec/java_home -v '1.7*'"</span></span><br><span class="line">export ANDROID_HOME=/usr/local/opt/android-sdk</span><br></pre></td></tr></table></figure>
+<p>如果还安装了Android Studio，还需要添加这一行： </p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export <span class="constant">PATH=</span><span class="variable">$&#123;</span><span class="constant">PATH&#125;</span><span class="symbol">:/Applications/Android</span>\ <span class="constant">Studio.</span>app/sdk/platform-<span class="symbol">tools:</span>/<span class="constant">Applications/Android\</span> <span class="constant">Studio.</span>app/sdk/tools</span><br></pre></td></tr></table></figure>
+<h1 id="Restart_Ur_Mac">Restart Ur Mac</h1><p>或者使用这个命令重新加载环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.bash_profile</span><br></pre></td></tr></table></figure>
+<p>检查环境变量：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo $PATH </span><br><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>Library<span class="regexp">/Java/</span>JavaVirtualMachines<span class="regexp">/jdk1.7.0_79.jdk/</span>Contents<span class="regexp">/Home/</span><span class="string">bin:</span><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>Library<span class="regexp">/Java/</span>JavaVirtualMachines<span class="regexp">/jdk1.7.0_79.jdk/</span>Contents<span class="regexp">/Home/</span><span class="string">bin:</span><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>Library<span class="regexp">/Java/</span>JavaVirtualMachines<span class="regexp">/jdk1.7.0_79.jdk/</span>Contents<span class="regexp">/Home/</span><span class="string">bin:</span><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>usr<span class="regexp">/bin:/</span><span class="string">bin:</span><span class="regexp">/usr/</span><span class="string">sbin:</span><span class="regexp">/sbin:/</span>Development<span class="regexp">/android-sdk/</span>platform-<span class="string">tools:</span><span class="regexp">/Development/</span>android-sdk<span class="regexp">/tools:/</span>Development<span class="regexp">/android-sdk/</span><span class="string">tools:</span><span class="regexp">/Development/</span>android-sdk<span class="regexp">/tools:/</span>Development<span class="regexp">/android-sdk/</span><span class="string">tools:</span><span class="regexp">/Development/</span>android-sdk<span class="regexp">/tools:/</span>Development<span class="regexp">/android-sdk/</span>tools</span><br></pre></td></tr></table></figure>
+<h1 id="建立一个新的项目">建立一个新的项目</h1><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ionic <span class="built_in">start</span> oneApp</span><br><span class="line">$ cd oneApp</span><br><span class="line">$ ionic <span class="built_in">platform</span> <span class="built_in">add</span> ios</span><br><span class="line">$ ionic <span class="built_in">platform</span> <span class="built_in">add</span> android</span><br></pre></td></tr></table></figure>
+<p>编译这个空项目：</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">ionic</span> <span class="keyword">build </span>ios</span><br></pre></td></tr></table></figure>
+<p>启动模拟器来显示新建的项目：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ionic <span class="built_in">emulate</span> ios</span><br></pre></td></tr></table></figure>
+<p>如果遇到文件权限的问题，修改文件权限：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chmod -R <span class="number">777</span> ~/.yourfile</span><br></pre></td></tr></table></figure>
+<h1 id="其他的Cordova的命令：">其他的Cordova的命令：</h1><h2 id="Create_New_Project">Create New Project</h2> <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cordova create hello com.example.hello <span class="string">"HelloWorld"</span></span><br><span class="line"><span class="variable">$ </span>cd hello</span><br><span class="line"><span class="variable">$ </span>cordova platform add ios</span><br><span class="line"><span class="variable">$ </span>cordova prepare</span><br></pre></td></tr></table></figure>
+<h2 id="Deploy_the_app">Deploy the app</h2><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cordova build</span><br></pre></td></tr></table></figure>
+<h2 id="部署App到iOS设备:">部署App到iOS设备:</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cordova <span class="command">run</span> ios <span class="comment">--device</span></span><br></pre></td></tr></table></figure>
+<h2 id="部署App到iOS_xCode模拟器">部署App到iOS xCode模拟器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cordova <span class="built_in">emulate</span> ios</span><br></pre></td></tr></table></figure>
+<h2 id="查看所有可以用的模拟器列表">查看所有可以用的模拟器列表</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cordova <span class="command">run</span> ios <span class="comment">--list</span></span><br></pre></td></tr></table></figure>
+<h2 id="使用指定的手机模拟器">使用指定的手机模拟器</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cordova <span class="command">run</span> ios <span class="comment">--target=target_name  </span></span><br><span class="line">cordova <span class="command">run</span> ios <span class="comment">--target="iPhone-6") //指定使用iPhone6作为模拟器</span></span><br></pre></td></tr></table></figure>
+<h1 id="参考链接">参考链接</h1><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/ionicframework.com/getting</span>-started/</span><br><span class="line"><span class="symbol">http:</span>/<span class="regexp">/cordova.apache.org/docs</span><span class="regexp">/en/latest</span><span class="regexp">/guide/platforms</span><span class="regexp">/android/index</span>.html</span><br></pre></td></tr></table></figure>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/03/10/nodejs-gulp-01/" itemprop="url">
                   Node.js gulp notes
                 </a>
@@ -1361,143 +1495,6 @@ conn.pipe(upperCasing).pipe(conn);
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/02/05/nodejs-note-20/" itemprop="url">
-                  Asynchronous Programming - 07 async.each .map .eachSeries .eachLimit .mapLimit
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-02-05T15:59:11+08:00" content="2016-02-05">
-              2016-02-05
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/05/nodejs-note-20/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/05/nodejs-note-20/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h3 id="each(arr,_iterator,_[callback])">each(arr, iterator, [callback])</h3><p>Applies the function <code>iterator</code> to each item in <code>arr</code>, in parallel.<br>The <code>iterator</code> is called with an item from the list, and a callback for when it<br>has finished. If the <code>iterator</code> passes an error to its <code>callback</code>, the main<br><code>callback</code> (for the <code>each</code> function) is immediately called with the error.</p>
-<p>Note, that since this function applies <code>iterator</code> to each item in parallel,<br>there is no guarantee that the iterator functions will complete in order.</p>
-<p><strong>Arguments</strong></p>
-<ul>
-<li><code>arr</code> - An array to iterate over.</li>
-<li><code>iterator(item, callback)</code> - A function to apply to each item in <code>arr</code>.<br>The iterator is passed a <code>callback(err)</code> which must be called once it has<br>completed. If no error has occurred, the <code>callback</code> should be run without<br>arguments or with an explicit <code>null</code> argument.  The array index is not passed<br>to the iterator.  If you need the index, use forEachOf.</li>
-<li><code>callback(err)</code> - <em>Optional</em> A callback which is called when all <code>iterator</code> functions<br>have finished, or an error occurs.</li>
-</ul>
-<p><strong>Examples</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// assuming openFiles is an array of file names and saveFile is a function</span></span><br><span class="line"><span class="comment">// to save the modified contents of that file:</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span>.each(openFiles, saveFile, <span class="function"><span class="keyword">function</span>(<span class="params">err</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// if any of the saves produced an error, err would equal that error</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// assuming openFiles is an array of file names</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span>.each(openFiles, <span class="function"><span class="keyword">function</span>(<span class="params">file, callback</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Perform operation on file here.</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Processing file '</span> + file);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span>( file.length &gt; <span class="number">32</span> ) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'This file name is too long'</span>);</span><br><span class="line">    callback(<span class="string">'File name too long'</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// Do work to process file here</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'File processed'</span>);</span><br><span class="line">    callback();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, <span class="function"><span class="keyword">function</span>(<span class="params">err</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// if any of the file processing produced an error, err would equal that error</span></span><br><span class="line">    <span class="keyword">if</span>( err ) &#123;</span><br><span class="line">      <span class="comment">// One of the iterations produced an error.</span></span><br><span class="line">      <span class="comment">// All processing will now stop.</span></span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'A file failed to process'</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'All files have been processed successfully'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p><strong>Related</strong></p>
-<ul>
-<li>eachSeries(arr, iterator, [callback])</li>
-<li>eachLimit(arr, limit, iterator, [callback])</li>
-</ul>
-<hr>
-<h2 id="Asynchronous_iteration_using_async">Asynchronous iteration using async</h2><p>apply async.each to our example:</p>
-<p>send_all.js:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="keyword">async</span> = <span class="built_in">require</span>(<span class="string">'async'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = sendAll;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sendAll</span>(<span class="params">messages,cb</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">async</span>.each(messages, send, cb);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">send</span>(<span class="params">message,cb</span>)</span>&#123;</span><br><span class="line">	<span class="comment">// echo start message </span></span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'sending message %s'</span>, message);</span><br><span class="line"></span><br><span class="line">	setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// echo finish message</span></span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">'finish sending message: %s '</span>, message);</span><br><span class="line">		cb();</span><br><span class="line">	&#125;, randomTimeout());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomTimeout</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random()*<span class="number">1e3</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>client.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span>  sendAll =<span class="built_in">require</span>(<span class="string">'./send_all'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> messages =[<span class="string">'message1'</span>,<span class="string">'message2'</span>,<span class="string">'message3'</span>,<span class="string">'message4'</span>,<span class="string">'message5'</span>,<span class="string">'message6'</span>];</span><br><span class="line"></span><br><span class="line">sendAll(messages, <span class="function"><span class="keyword">function</span>(<span class="params">err</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(err)&#123;</span><br><span class="line">		<span class="built_in">console</span>.error(err);</span><br><span class="line">	&#125; <span class="keyword">else</span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">'all messages send'</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>Running result:</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Lyn$ node client.js</span><br><span class="line">sending <span class="keyword">message</span> message1</span><br><span class="line">sending <span class="keyword">message</span> message2</span><br><span class="line">sending <span class="keyword">message</span> message3</span><br><span class="line">sending <span class="keyword">message</span> message4</span><br><span class="line">sending <span class="keyword">message</span> message5</span><br><span class="line">sending <span class="keyword">message</span> message6</span><br><span class="line">finish sending <span class="keyword">message</span>: message2</span><br><span class="line">finish sending <span class="keyword">message</span>: message6</span><br><span class="line">finish sending <span class="keyword">message</span>: message5</span><br><span class="line">finish sending <span class="keyword">message</span>: message1</span><br><span class="line">finish sending <span class="keyword">message</span>: message4</span><br><span class="line">finish sending <span class="keyword">message</span>: message3</span><br><span class="line">all messages send</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="map(arr,_iterator,_[callback])">map(arr, iterator, [callback])</h2><p>Produces a new array of values by mapping each value in <code>arr</code> through<br>the <code>iterator</code> function. The <code>iterator</code> is called with an item from <code>arr</code> and a<br>callback for when it has finished processing. Each of these callback takes 2 arguments:<br>an <code>error</code>, and the transformed item from <code>arr</code>. If <code>iterator</code> passes an error to its<br>callback, the main <code>callback</code> (for the <code>map</code> function) is immediately called with the error.</p>
-<p>Note, that since this function applies the <code>iterator</code> to each item in parallel,<br>there is no guarantee that the <code>iterator</code> functions will complete in order.<br>However, the results array will be in the same order as the original <code>arr</code>.</p>
-<p><strong>Arguments</strong></p>
-<ul>
-<li><code>arr</code> - An array to iterate over.</li>
-<li><code>iterator(item, callback)</code> - A function to apply to each item in <code>arr</code>.<br>The iterator is passed a <code>callback(err, transformed)</code> which must be called once<br>it has completed with an error (which can be <code>null</code>) and a transformed item.</li>
-<li><code>callback(err, results)</code> - <em>Optional</em> A callback which is called when all <code>iterator</code><br>functions have finished, or an error occurs. Results is an array of the<br>transformed items from the <code>arr</code>.</li>
-</ul>
-<p><strong>Example</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span>.map([<span class="string">'file1'</span>,<span class="string">'file2'</span>,<span class="string">'file3'</span>], fs.stat, <span class="function"><span class="keyword">function</span>(<span class="params">err, results</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// results is now an array of stats for each file</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p><strong>Related</strong></p>
-<ul>
-<li>mapSeries(arr, iterator, [callback])</li>
-<li>mapLimit(arr, limit, iterator, [callback])</li>
-</ul>
-<h2 id="Mapping_in_parallel_by_using_async-map">Mapping in parallel by using async.map</h2><p>send_all03.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="keyword">async</span> = <span class="built_in">require</span>(<span class="string">'async'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = sendAll;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sendAll</span>(<span class="params">messages,cb</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">async</span>.map(messages, send, cb);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">send</span>(<span class="params">message,cb</span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'sending message %s'</span>, message);</span><br><span class="line">	setTimeout(cb, randomTimeout(),<span class="literal">null</span>,randomResult());</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomTimeout</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random()*<span class="number">1e3</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomResult</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random()*<span class="number">1e10</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>client03.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span>  sendAll =<span class="built_in">require</span>(<span class="string">'./send_all03'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> messages =[<span class="string">'message1'</span>,<span class="string">'message2'</span>,<span class="string">'message3'</span>,</span><br><span class="line">			   <span class="string">'message4'</span>,<span class="string">'message5'</span>,<span class="string">'message6'</span>];</span><br><span class="line"></span><br><span class="line">sendAll(messages, <span class="function"><span class="keyword">function</span>(<span class="params">err, results</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(err)&#123;</span><br><span class="line">		<span class="built_in">console</span>.error(err);</span><br><span class="line">	&#125; <span class="keyword">else</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">'all messages send,results: %s'</span>, results);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>Running results:</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Lyn$ node client03.js</span><br><span class="line">sending <span class="keyword">message</span> message1</span><br><span class="line">sending <span class="keyword">message</span> message2</span><br><span class="line">sending <span class="keyword">message</span> message3</span><br><span class="line">sending <span class="keyword">message</span> message4</span><br><span class="line">sending <span class="keyword">message</span> message5</span><br><span class="line">sending <span class="keyword">message</span> message6</span><br><span class="line">all messages send,results: <span class="number">2688018348</span>,<span class="number">9740347757</span>,<span class="number">1796786184</span>,<span class="number">9157391262</span>,<span class="number">9049146866</span>,<span class="number">9496613333</span></span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="eachSeries(arr,_iterator,_[callback])">eachSeries(arr, iterator, [callback])</h2><h2 id="iterating_in_series_by_using_Async-eachSeries_and_async-mapSeries">iterating in series by using Async.eachSeries and async.mapSeries</h2><p>if any error occur during the proccess, it will not excute the rest messages and return error.</p>
-<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> async = require('async');</span><br><span class="line"></span><br><span class="line">module.exports = sendAll;</span><br><span class="line"></span><br><span class="line">function sendAll(messages,cb)&#123;</span><br><span class="line">	async.eachSeries(messages, send, cb);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function send(message,cb)&#123;</span><br><span class="line">	console.log('sending message %s', message);</span><br><span class="line">	setTimeout(finished, randomTimeout(),null,randomResult());</span><br><span class="line"> 	</span><br><span class="line"> 	function finished(err, <span class="literal">result</span>)&#123;</span><br><span class="line"> 		console.log('finished sending %s, <span class="literal">result</span> <span class="keyword">is</span>:', message, <span class="literal">result</span>);</span><br><span class="line"> 		cb(err, <span class="literal">result</span>);</span><br><span class="line"> 	&#125;</span><br><span class="line"></span><br><span class="line"> &#125;    </span><br><span class="line"></span><br><span class="line">function randomTimeout()&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="type">Math</span>.floor(<span class="type">Math</span>.random()*<span class="number">1</span>e3);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function randomResult()&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="type">Math</span>.floor(<span class="type">Math</span>.random()*<span class="number">1</span>e10);</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span>  sendAll =<span class="built_in">require</span>(<span class="string">'./send_all04'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> messages =[<span class="string">'message1'</span>,<span class="string">'message2'</span>,<span class="string">'message3'</span>,</span><br><span class="line">			   <span class="string">'message4'</span>,<span class="string">'message5'</span>,<span class="string">'message6'</span>];</span><br><span class="line"></span><br><span class="line">sendAll(messages, <span class="function"><span class="keyword">function</span>(<span class="params">err, results</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(err)&#123;</span><br><span class="line">		<span class="built_in">console</span>.error(err);</span><br><span class="line">	&#125; <span class="keyword">else</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">'all messages send,results: %s'</span>, results);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Lyn</span>$ node client04.js</span><br><span class="line">sending message message1</span><br><span class="line">finished sending message1, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">7154820929</span></span><br><span class="line">sending message message2</span><br><span class="line">finished sending message2, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">3823260059</span></span><br><span class="line">sending message message3</span><br><span class="line">finished sending message3, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">3379720377</span></span><br><span class="line">sending message message4</span><br><span class="line">finished sending message4, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">7657029824</span></span><br><span class="line">sending message message5</span><br><span class="line">finished sending message5, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">8405372535</span></span><br><span class="line">sending message message6</span><br><span class="line">finished sending message6, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">5340888185</span></span><br><span class="line">all messages send,results: undefined</span><br></pre></td></tr></table></figure>
-<p>if any error occur during the proccess, it will not excute the rest messages and return error.<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> async = require('async');</span><br><span class="line"></span><br><span class="line">module.exports = sendAll;</span><br><span class="line"></span><br><span class="line">function sendAll(messages,cb)&#123;</span><br><span class="line">	async.eachSeries(messages, send, cb);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function send(message,cb)&#123;</span><br><span class="line">	console.log('sending message %s', message);</span><br><span class="line">	setTimeout(finished, randomTimeout(), new <span class="type">Error</span>('whoops!'),randomResult());</span><br><span class="line"> 	</span><br><span class="line"> 	function finished(err, <span class="literal">result</span>)&#123;</span><br><span class="line"> 		console.log('finished sending %s, <span class="literal">result</span> <span class="keyword">is</span>:', message, <span class="literal">result</span>);</span><br><span class="line"> 		cb(err, <span class="literal">result</span>);</span><br><span class="line"> 	&#125;</span><br><span class="line"></span><br><span class="line"> &#125;    </span><br><span class="line"></span><br><span class="line">function randomTimeout()&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="type">Math</span>.floor(<span class="type">Math</span>.random()*<span class="number">1</span>e3);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function randomResult()&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="type">Math</span>.floor(<span class="type">Math</span>.random()*<span class="number">1</span>e10);</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Lyn</span>$ node client04.js</span><br><span class="line">sending message message1</span><br><span class="line">finished sending message1, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">9289228790</span></span><br><span class="line">[<span class="type">Error</span>: whoops!]</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="Limiting_parallel_opreations_using_async-eachLimit_and_async-mapLimit">Limiting parallel opreations using async.eachLimit and async.mapLimit</h2><p>send_all05.js<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> async = require('async');</span><br><span class="line"></span><br><span class="line">module.exports = sendAll;</span><br><span class="line"></span><br><span class="line">function sendAll(messages,cb)&#123;</span><br><span class="line">	async.mapLimit(messages,<span class="number">1</span>, send, cb);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function send(message,cb)&#123;</span><br><span class="line">	console.log('sending message %s', message);</span><br><span class="line">	setTimeout(finished, randomTimeout(), null,randomResult());</span><br><span class="line"> 	</span><br><span class="line"> 	function finished(err, <span class="literal">result</span>)&#123;</span><br><span class="line"> 		console.log('finished sending %s, <span class="literal">result</span> <span class="keyword">is</span>:', message, <span class="literal">result</span>);</span><br><span class="line"> 		cb(err, <span class="literal">result</span>);</span><br><span class="line"> 	&#125;</span><br><span class="line"></span><br><span class="line"> &#125;    </span><br><span class="line"></span><br><span class="line">function randomTimeout()&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="type">Math</span>.floor(<span class="type">Math</span>.random()*<span class="number">1</span>e3);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function randomResult()&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="type">Math</span>.floor(<span class="type">Math</span>.random()*<span class="number">1</span>e10);</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> async = require('async');</span><br><span class="line"></span><br><span class="line">module.exports = sendAll;</span><br><span class="line"></span><br><span class="line">function sendAll(messages,cb)&#123;</span><br><span class="line">	async.mapLimit(messages,<span class="number">1</span>, send, cb);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function send(message,cb)&#123;</span><br><span class="line">	console.log('sending message %s', message);</span><br><span class="line">	setTimeout(finished, randomTimeout(), null,randomResult());</span><br><span class="line"> 	</span><br><span class="line"> 	function finished(err, <span class="literal">result</span>)&#123;</span><br><span class="line"> 		console.log('finished sending %s, <span class="literal">result</span> <span class="keyword">is</span>:', message, <span class="literal">result</span>);</span><br><span class="line"> 		cb(err, <span class="literal">result</span>);</span><br><span class="line"> 	&#125;</span><br><span class="line"></span><br><span class="line"> &#125;    </span><br><span class="line"></span><br><span class="line">function randomTimeout()&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="type">Math</span>.floor(<span class="type">Math</span>.random()*<span class="number">1</span>e3);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function randomResult()&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="type">Math</span>.floor(<span class="type">Math</span>.random()*<span class="number">1</span>e10);</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>running results:<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">// async.mapLimit(messages,<span class="number">1</span>, send, cb)</span><br><span class="line">node client05.js </span><br><span class="line">sending message message1</span><br><span class="line">finished sending message1, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">5214791572</span></span><br><span class="line">sending message message2</span><br><span class="line">finished sending message2, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">7899478934</span></span><br><span class="line">sending message message3</span><br><span class="line">finished sending message3, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">4825203265</span></span><br><span class="line">sending message message4</span><br><span class="line">finished sending message4, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">3875634921</span></span><br><span class="line">sending message message5</span><br><span class="line">finished sending message5, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">2315958645</span></span><br><span class="line">sending message message6</span><br><span class="line">finished sending message6, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">9344773869</span></span><br><span class="line">all messages send,results: <span class="number">5214791572</span>,<span class="number">7899478934</span>,<span class="number">4825203265</span>,<span class="number">3875634921</span>,<span class="number">2315958645</span>,<span class="number">9344773869</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// async.mapLimit(messages,<span class="number">2</span>, send, cb)</span><br><span class="line">node client05.js</span><br><span class="line">sending message message1</span><br><span class="line">sending message message2</span><br><span class="line">finished sending message1, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">7242625339</span></span><br><span class="line">sending message message3</span><br><span class="line">finished sending message3, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">8989950458</span></span><br><span class="line">sending message message4</span><br><span class="line">finished sending message2, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">5234759687</span></span><br><span class="line">sending message message5</span><br><span class="line">finished sending message5, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">8056981025</span></span><br><span class="line">sending message message6</span><br><span class="line">finished sending message4, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">1524076925</span></span><br><span class="line">finished sending message6, <span class="literal">result</span> <span class="keyword">is</span>: <span class="number">5004728934</span></span><br><span class="line">all messages send,results: <span class="number">7242625339</span>,<span class="number">5234759687</span>,<span class="number">8989950458</span>,<span class="number">1524076925</span>,<span class="number">8056981025</span>,<span class="number">5004728934</span></span><br></pre></td></tr></table></figure></p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1543,7 +1540,7 @@ conn.pipe(upperCasing).pipe(conn);
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-count">43</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
