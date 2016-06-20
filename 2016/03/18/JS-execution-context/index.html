@@ -68,7 +68,7 @@
 <meta property="og:description" content="在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.
 运行环境(Execution Context)在 ECMA 262 3rd edition中: Execution Context决定了在执行栈中运行的代码所能访问的变量,函数.很多人总是把这个概念和作用域混淆,而实际上作用域ScopeChain只">
 <meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-18/73084259.jpg">
-<meta property="og:updated_time" content="2016-06-20T07:59:29.000Z">
+<meta property="og:updated_time" content="2016-06-20T08:43:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Javascript 中的 运行环境(Execution Context),  作用域链(Scope Chain), this & 闭包(Closure)概念">
 <meta name="twitter:description" content="在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.
@@ -271,9 +271,9 @@
 <h2 id="作用域链(scope_Chain)">作用域链(scope Chain)</h2><p>当构造一个function时,就会自动生成的这个function的[[scope]]属性.[[scope]]会把当前Execution Context的 AO或VO添加到function[[scope]]属性的最前端(也就是作用域链的最前端).所以内部的[[scope]]是如何被定义的对于我们理解Execution Conetext来说很重要.</p>
 <p>在 ECMAScript 中所定义的函数都可以看成是object对象,他们是在从实例化代码中声明的函数,执行函数表达式或者调用构造函数的时候中被创建的.这里分成两种情况:</p>
 <ul>
-<li><p>当调用构造函数创建实例对象时. 构造函数中会包含一个[[scope]]属性指向一个只包含了全局对象(global object)的作用域链.</p>
+<li><p>当调用构造函数创建实例对象时. 构造函数中会包含一个[[scope]]属性指向一个只包含了全局对象(global object)的作用域链(scope chain).</p>
 </li>
-<li><p>当函数实例对象是被函数声明或函数表达式创建的,会创建一个函数内部的[[scope]]属性,这个属性指向的是当前函数所在的的Execution Context的作用域链</p>
+<li><p>当函数实例对象是被函数声明或函数表达式创建的,会创建一个函数内部的[[scope]]属性,这个属性指向的是当前函数所在的的Execution Context的作用域链(scope chain).</p>
 </li>
 </ul>
 <p>最简单的一个例子:在全局环境下声明一个函数:</p>
@@ -288,28 +288,32 @@
 <p>参考以下代码:</p>
 <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">outerFunc</span><span class="params">(formalParameter)</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">innerFunc</span><span class="params">()</span></span>&#123;</span><br><span class="line">        ... <span class="comment">// innerfunc的函数体 </span></span><br><span class="line">    &#125;</span><br><span class="line">    ...  <span class="comment">// outerFunc的函数体 the rest of the outer function body.</span></span><br><span class="line">&#125;</span><br><span class="line">outerFunc( <span class="number">5</span> );</span><br></pre></td></tr></table></figure>
 <ul>
-<li><p>外部的函数对象是在global execution context中的变量实例化的时候创建的,所以它的[[scope]]属性只包含了global object.</p>
+<li><p>外部的函数对象是在global execution context中的创建VO的时候创建的,所以它的[[scope]]属性只包含了global object.</p>
 </li>
-<li><p>当全局环境下的代码执行到调用 outerFunc 函数的时候,创建一个新的执行环境(execution context)和outerFunc的所包含的AO或是VO函数, 而AO/VO对象会被添加到outerFunc的scopechain作用域链的最前端.链的后端指向outerFunc的函数对象的[[scope]]属性(这里就是 global object).</p>
+<li><p>当全局环境下的代码执行到调用 outerFunc 函数的时候,创建一个新的执行环境(execution context)和outerFunc函数对象的AO或是VO, 而AO/VO对象会被添加到outerFunc的scopechain作用域链的最前端.链的后端指向outerFunc的函数对象的[[scope]]属性(这里就是 global object).</p>
 </li>
-<li><p>在为outerFunc生成VO/AO的时候,就会创建innerFunc的函数对象,而这个函数对象的[[scope chain]]会指向innerFunc被创建时的execution context的作用域链(也就是outerFunc的作用域链)  </p>
+<li><p>在为outerFunc生成VO/AO的时候,就会创建innerFunc的函数对象,而这个函数对象的[[scope chain]]会指向innerFunc被创建时的execution context的作用域链(也就是outerFunc的作用域链).  </p>
 </li>
-<li><p>所有的这些步骤都是自动的而且是决定于代码的结构和执行.execution context的作用域链定义了函数对象的[[scope]]属性.而函数的[[scope]]属性定义了函数的execution context的有效范围.</p>
+<li><p>所有的这些步骤都是自动的而且是决定于代码的结构和执行.execution context的作用域链定义了函数对象的[[scope]]属性.而函数的[[scope]]属性定义了函数的execution context的范围.</p>
 </li>
 </ul>
-<h2 id="AO和VO的区别:">AO和VO的区别:</h2><p>变量对象(Variable Object)和激活/活动变量(Activation Object)</p>
+<h2 id="Execution_context中的AO和VO:">Execution context中的AO和VO:</h2><p>变量对象(Variable Object)和激活/活动变量(Activation Object)</p>
+<h3 id="变量对象(Variable_Object)">变量对象(Variable Object)</h3><p>在不同的环境是指的下面二者中的一个:</p>
 <ul>
-<li><p>变量对象(Variable Object)包含部分下列属性:</p>
+<li><p>global object,储存着所有的全局变量(像是: 浏览器里的 window, document或console对象)</p>
+</li>
+<li><p>Activation object:在一个函数的局部环境下是使用的AO作为VO,定义了ECMAScript的作用域 (这时候: <code>AO===VO //true</code>)</p>
+</li>
+</ul>
+<h3 id="激活/活动变量(Activation_Object)">激活/活动变量(Activation Object)</h3><p>Activation object对象中包含:</p>
 <ol>
 <li>变量 (var, VariableDeclaration);</li>
 <li>函数声明 (FunctionDeclaration, 缩写为FD);</li>
-<li>函数的形参(Function formal parameters)和实参(actual parameters/arguments),如果函数被调用时具有实参,形参会在这时就赋值,否则形参被赋值为undefined).</li>
+<li>函数的形参(Function formal parameters)和实参(actual parameters/arguments),如果函数被调用时具有实参,形参会在这时就赋值,否则形参被赋值为undefined).    </li>
 </ol>
-</li>
-<li><p>当在全局的execution Context的下的时候,Global object就被当做VO对象使用了,</p>
-</li>
-<li>而在一个函数的局部环境下, Activation object就被作为VO来使用了(<code>AO===VO //true</code>).</li>
-<li>global下的VO比AO只是缺少了函数的形参这个属性(因为全局变量不是一个函数,没有参数~)<br>这就可以说明: 为什么在全局下声明的函数会成为window/global对象的一个属性 </li>
+<p>这就可以解释: 为什么在全局下声明的函数会成为window/global对象的一个属性.</p>
+<h3 id="AO和VO区别">AO和VO区别</h3><ul>
+<li>global下的VO比函数局部execution context中的AO只是缺少了函数的形参这个属性(因为全局变量不是一个函数,没有参数~).</li>
 </ul>
 <p>Tips: node.js下全局对象是global,而在浏览器JavaScript中全局对象通常是window.</p>
 <p>通过以下代码就可以验证:在全局的execution Context的下的时候,Global object就被当做VO对象使用.</p>
@@ -552,7 +556,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#运行环境(Execution_Context)"><span class="nav-number">1.</span> <span class="nav-text">运行环境(Execution Context)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#作用域链(scope_Chain)"><span class="nav-number">1.1.</span> <span class="nav-text">作用域链(scope Chain)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AO和VO的区别:"><span class="nav-number">1.2.</span> <span class="nav-text">AO和VO的区别:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行栈(Execution_Context_Stack)"><span class="nav-number">1.3.</span> <span class="nav-text">执行栈(Execution Context Stack)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码验证:"><span class="nav-number">1.3.1.</span> <span class="nav-text">代码验证:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Execution_Context_生成的过程:"><span class="nav-number">1.4.</span> <span class="nav-text">Execution Context 生成的过程:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ES5中的解释说明:"><span class="nav-number">1.4.1.</span> <span class="nav-text">ES5中的解释说明:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建阶段(Creation_Stage)"><span class="nav-number">1.4.2.</span> <span class="nav-text">创建阶段(Creation Stage)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行/赋值阶段(Activation_/_Code_Execution_Stage)"><span class="nav-number">1.4.3.</span> <span class="nav-text">执行/赋值阶段(Activation / Code Execution Stage)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例子:"><span class="nav-number">1.4.4.</span> <span class="nav-text">例子:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量声明提升(Hoisting)"><span class="nav-number">1.5.</span> <span class="nav-text">变量声明提升(Hoisting)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#闭包Closure"><span class="nav-number">2.</span> <span class="nav-text">闭包Closure</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#闭包中的this指针"><span class="nav-number">2.1.</span> <span class="nav-text">闭包中的this指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用call,apply和bind的区别"><span class="nav-number">2.2.</span> <span class="nav-text">使用call,apply和bind的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#区别如下:"><span class="nav-number">2.2.1.</span> <span class="nav-text">区别如下:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于函数参数传值的问题:"><span class="nav-number">3.</span> <span class="nav-text">关于函数参数传值的问题:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本类型"><span class="nav-number">3.1.</span> <span class="nav-text">基本类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用类型"><span class="nav-number">3.2.</span> <span class="nav-text">引用类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参数的传值是传递的值而非引用"><span class="nav-number">3.3.</span> <span class="nav-text">参数的传值是传递的值而非引用</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#运行环境(Execution_Context)"><span class="nav-number">1.</span> <span class="nav-text">运行环境(Execution Context)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#作用域链(scope_Chain)"><span class="nav-number">1.1.</span> <span class="nav-text">作用域链(scope Chain)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Execution_context中的AO和VO:"><span class="nav-number">1.2.</span> <span class="nav-text">Execution context中的AO和VO:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#变量对象(Variable_Object)"><span class="nav-number">1.2.1.</span> <span class="nav-text">变量对象(Variable Object)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#激活/活动变量(Activation_Object)"><span class="nav-number">1.2.2.</span> <span class="nav-text">激活/活动变量(Activation Object)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AO和VO区别"><span class="nav-number">1.2.3.</span> <span class="nav-text">AO和VO区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行栈(Execution_Context_Stack)"><span class="nav-number">1.3.</span> <span class="nav-text">执行栈(Execution Context Stack)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码验证:"><span class="nav-number">1.3.1.</span> <span class="nav-text">代码验证:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Execution_Context_生成的过程:"><span class="nav-number">1.4.</span> <span class="nav-text">Execution Context 生成的过程:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ES5中的解释说明:"><span class="nav-number">1.4.1.</span> <span class="nav-text">ES5中的解释说明:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建阶段(Creation_Stage)"><span class="nav-number">1.4.2.</span> <span class="nav-text">创建阶段(Creation Stage)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行/赋值阶段(Activation_/_Code_Execution_Stage)"><span class="nav-number">1.4.3.</span> <span class="nav-text">执行/赋值阶段(Activation / Code Execution Stage)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例子:"><span class="nav-number">1.4.4.</span> <span class="nav-text">例子:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量声明提升(Hoisting)"><span class="nav-number">1.5.</span> <span class="nav-text">变量声明提升(Hoisting)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#闭包Closure"><span class="nav-number">2.</span> <span class="nav-text">闭包Closure</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#闭包中的this指针"><span class="nav-number">2.1.</span> <span class="nav-text">闭包中的this指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用call,apply和bind的区别"><span class="nav-number">2.2.</span> <span class="nav-text">使用call,apply和bind的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#区别如下:"><span class="nav-number">2.2.1.</span> <span class="nav-text">区别如下:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于函数参数传值的问题:"><span class="nav-number">3.</span> <span class="nav-text">关于函数参数传值的问题:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本类型"><span class="nav-number">3.1.</span> <span class="nav-text">基本类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用类型"><span class="nav-number">3.2.</span> <span class="nav-text">引用类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参数的传值是传递的值而非引用"><span class="nav-number">3.3.</span> <span class="nav-text">参数的传值是传递的值而非引用</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
