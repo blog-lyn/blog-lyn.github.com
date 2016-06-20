@@ -68,7 +68,7 @@
 <meta property="og:description" content="在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.
 运行环境(Execution Context)在 ECMA 262 3rd edition中: Execution Context决定了在执行栈中运行的代码所能访问的变量,函数.很多人总是把这个概念和作用域混淆,而实际上作用域ScopeChain只">
 <meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-18/73084259.jpg">
-<meta property="og:updated_time" content="2016-06-20T09:16:20.000Z">
+<meta property="og:updated_time" content="2016-06-20T09:22:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Javascript 中的 运行环境(Execution Context),  作用域链(Scope Chain), this & 闭包(Closure)概念">
 <meta name="twitter:description" content="在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.
@@ -309,7 +309,7 @@
 <ol>
 <li>变量 (var, VariableDeclaration);</li>
 <li>函数声明 (FunctionDeclaration, 缩写为FD);</li>
-<li>函数的形参(Function formal parameters)和实参(actual parameters/arguments),如果函数被调用时具有实参,形参会在这时就赋值,否则形参被赋值为undefined).    </li>
+<li>函数的形参(Function formal parameters)和实参(actual parameters/arguments),如果函数被调用时具有实参,形参会在这时就赋值,否则形参被赋值为undefined,注意参数是:按值传参而不是引用).    </li>
 </ol>
 <p>这就可以解释: 为什么在全局下声明的函数会成为window/global对象的一个属性.</p>
 <h3 id="AO和VO区别">AO和VO区别</h3><ul>
@@ -341,7 +341,7 @@
 <h3 id="创建阶段(Creation_Stage)">创建阶段(Creation Stage)</h3><p>这个阶段是:当函数被调用时,且在执行其中任何一行代码之前时,包括以下三个步骤: </p>
 <ol>
 <li>初始化作用域链(Scope Chain)</li>
-<li>这个阶段会声明变量和函数,初始化函数的参数时不仅会声明变量名同时还会给参数赋值值(按值传参而不是引用).</li>
+<li>这个阶段会创建一个VO对象(具体内容参考前面1.2的内容).</li>
 <li>给Execution Context对应的this指针赋值. </li>
 </ol>
 <h3 id="执行/赋值阶段(Activation_/_Code_Execution_Stage)">执行/赋值阶段(Activation / Code Execution Stage)</h3><p>解释器解析代码,一行一行的执行代码,并且根据执行的代码,为之前声明创建的变量赋值.(比如:执行到var i =0  时,才为i赋值).</p>

@@ -1547,7 +1547,7 @@
 <ol>
 <li>变量 (var, VariableDeclaration);</li>
 <li>函数声明 (FunctionDeclaration, 缩写为FD);</li>
-<li>函数的形参(Function formal parameters)和实参(actual parameters/arguments),如果函数被调用时具有实参,形参会在这时就赋值,否则形参被赋值为undefined).    </li>
+<li>函数的形参(Function formal parameters)和实参(actual parameters/arguments),如果函数被调用时具有实参,形参会在这时就赋值,否则形参被赋值为undefined,注意参数是:按值传参而不是引用).    </li>
 </ol>
 <p>这就可以解释: 为什么在全局下声明的函数会成为window/global对象的一个属性.</p>
 <h3 id="AO和VO区别">AO和VO区别</h3><ul>
@@ -1579,7 +1579,7 @@
 <h3 id="创建阶段(Creation_Stage)">创建阶段(Creation Stage)</h3><p>这个阶段是:当函数被调用时,且在执行其中任何一行代码之前时,包括以下三个步骤: </p>
 <ol>
 <li>初始化作用域链(Scope Chain)</li>
-<li>这个阶段会声明变量和函数,初始化函数的参数时不仅会声明变量名同时还会给参数赋值值(按值传参而不是引用).</li>
+<li>这个阶段会创建一个VO对象(具体内容参考前面1.2的内容).</li>
 <li>给Execution Context对应的this指针赋值. </li>
 </ol>
 <h3 id="执行/赋值阶段(Activation_/_Code_Execution_Stage)">执行/赋值阶段(Activation / Code Execution Stage)</h3><p>解释器解析代码,一行一行的执行代码,并且根据执行的代码,为之前声明创建的变量赋值.(比如:执行到var i =0  时,才为i赋值).</p>
