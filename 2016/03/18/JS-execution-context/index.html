@@ -60,19 +60,19 @@
 
 
 <meta name="description" content="在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.
-运行环境(Execution Context)Execution Context决定了在执行栈中运行的代码所能访问的变量,对象,函数.很多人总是把这个概念和作用域混淆,而实际上ScopeChain只是Execution Context的一部分.">
+运行环境(Execution Context)在 ECMA 262 3rd edition中: Execution Context决定了在执行栈中运行的代码所能访问的变量,函数.很多人总是把这个概念和作用域混淆,而实际上作用域ScopeChain只">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Javascript 中的 运行环境(Execution Context),  作用域链(Scope Chain), this & 闭包(Closure)概念">
 <meta property="og:url" content="http://lyn.s76.org/2016/03/18/JS-execution-context/index.html">
 <meta property="og:site_name" content="Lyn's Blog">
 <meta property="og:description" content="在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.
-运行环境(Execution Context)Execution Context决定了在执行栈中运行的代码所能访问的变量,对象,函数.很多人总是把这个概念和作用域混淆,而实际上ScopeChain只是Execution Context的一部分.">
+运行环境(Execution Context)在 ECMA 262 3rd edition中: Execution Context决定了在执行栈中运行的代码所能访问的变量,函数.很多人总是把这个概念和作用域混淆,而实际上作用域ScopeChain只">
 <meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-18/73084259.jpg">
-<meta property="og:updated_time" content="2016-06-18T16:34:54.000Z">
+<meta property="og:updated_time" content="2016-06-20T07:59:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Javascript 中的 运行环境(Execution Context),  作用域链(Scope Chain), this & 闭包(Closure)概念">
 <meta name="twitter:description" content="在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.
-运行环境(Execution Context)Execution Context决定了在执行栈中运行的代码所能访问的变量,对象,函数.很多人总是把这个概念和作用域混淆,而实际上ScopeChain只是Execution Context的一部分.">
+运行环境(Execution Context)在 ECMA 262 3rd edition中: Execution Context决定了在执行栈中运行的代码所能访问的变量,函数.很多人总是把这个概念和作用域混淆,而实际上作用域ScopeChain只">
 
 
 
@@ -251,23 +251,69 @@
 
       
         <span itemprop="articleBody"><p>在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.</p>
-<h1 id="运行环境(Execution_Context)">运行环境(Execution Context)</h1><p>Execution Context决定了在执行栈中运行的代码所能访问的变量,对象,函数.很多人总是把这个概念和作用域混淆,而实际上ScopeChain只是Execution Context的一部分.</p>
+<h1 id="运行环境(Execution_Context)">运行环境(Execution Context)</h1><p>在 ECMA 262 3rd edition中: Execution Context决定了在执行栈中运行的代码所能访问的变量,函数.很多人总是把这个概念和作用域混淆,而实际上作用域ScopeChain只是Execution Context的一部分.</p>
 <ul>
 <li><p>可以暂时简单地理解为能在执行栈中独立完整运行的代码,它由三个部分的内容组成:</p>
 <ul>
-<li>作用域链(Scope Chain):链接中包含当前的context中包含的变量 + 所有的父级直到全局作用域中的所包含的可以访问的变量</li>
-<li>变量对象,由函数的定义的参数,当前context内部的变量和函数声明组成</li>
-<li>this 指针</li>
+<li>作用域链(Scope Chain)</li>
+<li>变量对象(Variable Object) </li>
+<li>Execution Context的this 指针.</li>
 </ul>
 </li>
 <li><p>下面三种情况都会生成一个新的Execution Context:</p>
 <ul>
 <li>初始化全局时</li>
 <li>声明一个函数时</li>
-<li>Evel函数执行的内容时</li>
+<li>Evel函数执行内容时</li>
 </ul>
 </li>
 </ul>
+<h2 id="作用域链(scope_Chain)">作用域链(scope Chain)</h2><p>当构造一个function时,就会自动生成的这个function的[[scope]]属性.[[scope]]会把当前Execution Context的 AO或VO添加到function[[scope]]属性的最前端(也就是作用域链的最前端).所以内部的[[scope]]是如何被定义的对于我们理解Execution Conetext来说很重要.</p>
+<p>在 ECMAScript 中所定义的函数都可以看成是object对象,他们是在从实例化代码中声明的函数,执行函数表达式或者调用构造函数的时候中被创建的.这里分成两种情况:</p>
+<ul>
+<li><p>当调用构造函数创建实例对象时. 构造函数中会包含一个[[scope]]属性指向一个只包含了全局对象(global object)的作用域链.</p>
+</li>
+<li><p>当函数实例对象是被函数声明或函数表达式创建的,会创建一个函数内部的[[scope]]属性,这个属性指向的是当前函数所在的的Execution Context的作用域链</p>
+</li>
+</ul>
+<p>最简单的一个例子:在全局环境下声明一个函数:</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">exampleFunc</span><span class="params">(formalParameter)</span></span>&#123;</span><br><span class="line">    ...   <span class="comment">// 函数体 function body code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在全局执行环境实例化变量的时候会生成相关联的函数对象,全局执行环境包含一个作用链域,这个作用域链指向的就是全局对象(global object 作为VO使用).</li>
+<li>因此在创建的函数对象时(就是在global object中创建一个名字为exampleFunc的属性时),函数对象实例的[[scope]]内部属性会指向一个只包含global object的作用域链. </li>
+<li>当像下面的函数表达式在一个全局的execution context中执行的时候,也会分配一个类似的作用域链.</li>
+</ul>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> exampleFuncRef = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">    ...   <span class="comment">// 函数体 function body code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在一个新的函数内部函数声明或函数表达式会使新建的内部函数的[[scope]]属性指向外部部函数的execution context.</p>
+<p>参考以下代码:</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">outerFunc</span><span class="params">(formalParameter)</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">innerFunc</span><span class="params">()</span></span>&#123;</span><br><span class="line">        ... <span class="comment">// innerfunc的函数体 </span></span><br><span class="line">    &#125;</span><br><span class="line">    ...  <span class="comment">// outerFunc的函数体 the rest of the outer function body.</span></span><br><span class="line">&#125;</span><br><span class="line">outerFunc( <span class="number">5</span> );</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>外部的函数对象是在global execution context中的变量实例化的时候创建的,所以它的[[scope]]属性只包含了global object.</p>
+</li>
+<li><p>当全局环境下的代码执行到调用 outerFunc 函数的时候,创建一个新的执行环境(execution context)和outerFunc的所包含的AO或是VO函数, 而AO/VO对象会被添加到outerFunc的scopechain作用域链的最前端.链的后端指向outerFunc的函数对象的[[scope]]属性(这里就是 global object).</p>
+</li>
+<li><p>在为outerFunc生成VO/AO的时候,就会创建innerFunc的函数对象,而这个函数对象的[[scope chain]]会指向innerFunc被创建时的execution context的作用域链(也就是outerFunc的作用域链)  </p>
+</li>
+<li><p>所有的这些步骤都是自动的而且是决定于代码的结构和执行.execution context的作用域链定义了函数对象的[[scope]]属性.而函数的[[scope]]属性定义了函数的execution context的有效范围.</p>
+</li>
+</ul>
+<h2 id="AO和VO的区别:">AO和VO的区别:</h2><p>变量对象(Variable Object)和激活/活动变量(Activation Object)</p>
+<ul>
+<li><p>变量对象(Variable Object)包含部分下列属性:</p>
+<ol>
+<li>变量 (var, VariableDeclaration);</li>
+<li>函数声明 (FunctionDeclaration, 缩写为FD);</li>
+<li>函数的形参(Function formal parameters)和实参(actual parameters/arguments),如果函数被调用时具有实参,形参会在这时就赋值,否则形参被赋值为undefined).</li>
+</ol>
+</li>
+<li><p>当在全局的execution Context的下的时候,Global object就被当做VO对象使用了,</p>
+</li>
+<li>而在一个函数的局部环境下, Activation object就被作为VO来使用了(<code>AO===VO //true</code>).</li>
+<li>global下的VO比AO只是缺少了函数的形参这个属性(因为全局变量不是一个函数,没有参数~)<br>这就可以说明: 为什么在全局下声明的函数会成为window/global对象的一个属性 </li>
+</ul>
+<p>Tips: node.js下全局对象是global,而在浏览器JavaScript中全局对象通常是window.</p>
+<p>通过以下代码就可以验证:在全局的execution Context的下的时候,Global object就被当做VO对象使用.</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">var GLOBAL_OBJECT = this;</span><br><span class="line"></span><br><span class="line"> /* create global <span class="keyword">property</span><span class="title"> </span>via variable declaration; <span class="keyword">property</span><span class="title"> </span>has DontDelete */</span><br><span class="line"> var foo = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"> /* create global <span class="keyword">property</span><span class="title"> </span>via undeclared assignment; <span class="keyword">property</span><span class="title"> </span>has no DontDelete */</span><br><span class="line"> bar = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"> delete foo; // <span class="literal">false</span></span><br><span class="line"> typeof foo; // <span class="string">"number"</span></span><br><span class="line"></span><br><span class="line"> delete bar; // <span class="literal">true</span></span><br><span class="line"> typeof bar; // <span class="string">"undefined"</span></span><br></pre></td></tr></table></figure>
 <p>谈到Execution context,就不能不谈Execution context stack(栈),因为Execution Context的就是在在stack中运行的.</p>
 <h2 id="执行栈(Execution_Context_Stack)">执行栈(Execution Context Stack)</h2><p>这个栈有如下几个特点:</p>
 <ul>
@@ -318,7 +364,8 @@
 <li>参考下面的例子:</li>
 </ul>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">   </span><br><span class="line"><span class="built_in">console</span>.log(foo); <span class="comment">// function的指针, 输出: foo()&#123;return 'hello';&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> foo); <span class="comment">//输出 function  </span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> bar); <span class="comment">//输出 undefined </span></span><br><span class="line"><span class="comment">//因为这里只是声明了变量bar 但是还没有运算到赋值的那行 所以输出 undefined.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> foo = <span class="string">'hello'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(foo);  </span><br><span class="line"><span class="comment">//输出 hello,因为这里又给foo赋值为字符串'hello',覆盖了之前的函数指针.  </span></span><br><span class="line">    </span><br><span class="line"><span class="keyword">var</span> bar = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'world'</span>;</span><br><span class="line">&#125;;</span><br><span class="line"> 	</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'hello'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="闭包Closure">闭包Closure</h1><ul>
+<h1 id="闭包Closure">闭包Closure</h1><p>由上面可以知道JavaScript中只有在三种情况下才会新建一个Execution Context,而不像其他语言那样:{}包裹的代码块都会生成自己的Execution Context作为块级作用域.然而理解了JS的Execution Context后,我们可以使用闭包来模仿块级作用域.</p>
+<ul>
 <li>如果理解了上文中提到的Execution Context与作用域链(Scope Chain)的机制，再来看闭包(Closure)的概念就很清楚了。每个function在调用时会创建新的Execution Context，而Execution Content中创建的作用域链就是将外层（上层）上下文所绑定的变量对象逐一串连起来，使当前function可以获取外层的Execution Context的变量、数据等。</li>
 <li>如果我们在一个function中定义一个新的function，同时将内层function作为值返回，那么内层function所包含的Exxcution Context将会一起返回，即使内层function在其他Execution Context中执行，其内部的作用域链仍然保持原有的数据，而且在运行时,外部的变量无法接触原先内层function中的数据，使得function内部的execution context被保护起来，从而形成“闭包”。</li>
 </ul>
@@ -505,7 +552,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#运行环境(Execution_Context)"><span class="nav-number">1.</span> <span class="nav-text">运行环境(Execution Context)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#执行栈(Execution_Context_Stack)"><span class="nav-number">1.1.</span> <span class="nav-text">执行栈(Execution Context Stack)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码验证:"><span class="nav-number">1.1.1.</span> <span class="nav-text">代码验证:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Execution_Context_生成的过程:"><span class="nav-number">1.2.</span> <span class="nav-text">Execution Context 生成的过程:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ES5中的解释说明:"><span class="nav-number">1.2.1.</span> <span class="nav-text">ES5中的解释说明:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建阶段(Creation_Stage)"><span class="nav-number">1.2.2.</span> <span class="nav-text">创建阶段(Creation Stage)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行/赋值阶段(Activation_/_Code_Execution_Stage)"><span class="nav-number">1.2.3.</span> <span class="nav-text">执行/赋值阶段(Activation / Code Execution Stage)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例子:"><span class="nav-number">1.2.4.</span> <span class="nav-text">例子:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量声明提升(Hoisting)"><span class="nav-number">1.3.</span> <span class="nav-text">变量声明提升(Hoisting)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#闭包Closure"><span class="nav-number">2.</span> <span class="nav-text">闭包Closure</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#闭包中的this指针"><span class="nav-number">2.1.</span> <span class="nav-text">闭包中的this指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用call,apply和bind的区别"><span class="nav-number">2.2.</span> <span class="nav-text">使用call,apply和bind的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#区别如下:"><span class="nav-number">2.2.1.</span> <span class="nav-text">区别如下:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于函数参数传值的问题:"><span class="nav-number">3.</span> <span class="nav-text">关于函数参数传值的问题:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本类型"><span class="nav-number">3.1.</span> <span class="nav-text">基本类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用类型"><span class="nav-number">3.2.</span> <span class="nav-text">引用类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参数的传值是传递的值而非引用"><span class="nav-number">3.3.</span> <span class="nav-text">参数的传值是传递的值而非引用</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#运行环境(Execution_Context)"><span class="nav-number">1.</span> <span class="nav-text">运行环境(Execution Context)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#作用域链(scope_Chain)"><span class="nav-number">1.1.</span> <span class="nav-text">作用域链(scope Chain)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AO和VO的区别:"><span class="nav-number">1.2.</span> <span class="nav-text">AO和VO的区别:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行栈(Execution_Context_Stack)"><span class="nav-number">1.3.</span> <span class="nav-text">执行栈(Execution Context Stack)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码验证:"><span class="nav-number">1.3.1.</span> <span class="nav-text">代码验证:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Execution_Context_生成的过程:"><span class="nav-number">1.4.</span> <span class="nav-text">Execution Context 生成的过程:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ES5中的解释说明:"><span class="nav-number">1.4.1.</span> <span class="nav-text">ES5中的解释说明:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建阶段(Creation_Stage)"><span class="nav-number">1.4.2.</span> <span class="nav-text">创建阶段(Creation Stage)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行/赋值阶段(Activation_/_Code_Execution_Stage)"><span class="nav-number">1.4.3.</span> <span class="nav-text">执行/赋值阶段(Activation / Code Execution Stage)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例子:"><span class="nav-number">1.4.4.</span> <span class="nav-text">例子:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量声明提升(Hoisting)"><span class="nav-number">1.5.</span> <span class="nav-text">变量声明提升(Hoisting)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#闭包Closure"><span class="nav-number">2.</span> <span class="nav-text">闭包Closure</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#闭包中的this指针"><span class="nav-number">2.1.</span> <span class="nav-text">闭包中的this指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用call,apply和bind的区别"><span class="nav-number">2.2.</span> <span class="nav-text">使用call,apply和bind的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#区别如下:"><span class="nav-number">2.2.1.</span> <span class="nav-text">区别如下:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于函数参数传值的问题:"><span class="nav-number">3.</span> <span class="nav-text">关于函数参数传值的问题:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本类型"><span class="nav-number">3.1.</span> <span class="nav-text">基本类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用类型"><span class="nav-number">3.2.</span> <span class="nav-text">引用类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参数的传值是传递的值而非引用"><span class="nav-number">3.3.</span> <span class="nav-text">参数的传值是传递的值而非引用</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
