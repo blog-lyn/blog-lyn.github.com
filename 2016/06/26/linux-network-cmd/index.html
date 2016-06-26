@@ -1,0 +1,696 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+
+  <meta name="description" content="Lyn's Blog about Node.js  Express.js Angular.js HTML5 Mongodb Programing Notes" />
+
+
+
+
+  <meta name="keywords" content="dig, tcpdump," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="tcpdump因为需要远程抓取一台设备的network记录. 所以需要想办法:
+
+把mbp做个wifi共享热点,让被抓包的设备连接到热点上来.
+再把有线网卡的mac地址伪装成被抓包的设备,方便我们接入被抓包设备的网段.
+
+这样做以后:
+
+mbp就成了远程的设备的网关,所有流量就会经过mbp的有线网卡.
+而且由于远程设备的代码中都是http协议的而不是https的.所以所有的流量都可以说是透明的.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux网络抓包命令以及dns查询命令">
+<meta property="og:url" content="http://lyn.s76.org/2016/06/26/linux-network-cmd/index.html">
+<meta property="og:site_name" content="Lyn's Blog">
+<meta property="og:description" content="tcpdump因为需要远程抓取一台设备的network记录. 所以需要想办法:
+
+把mbp做个wifi共享热点,让被抓包的设备连接到热点上来.
+再把有线网卡的mac地址伪装成被抓包的设备,方便我们接入被抓包设备的网段.
+
+这样做以后:
+
+mbp就成了远程的设备的网关,所有流量就会经过mbp的有线网卡.
+而且由于远程设备的代码中都是http协议的而不是https的.所以所有的流量都可以说是透明的.">
+<meta property="og:updated_time" content="2016-06-26T16:31:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux网络抓包命令以及dns查询命令">
+<meta name="twitter:description" content="tcpdump因为需要远程抓取一台设备的network记录. 所以需要想办法:
+
+把mbp做个wifi共享热点,让被抓包的设备连接到热点上来.
+再把有线网卡的mac地址伪装成被抓包的设备,方便我们接入被抓包设备的网段.
+
+这样做以后:
+
+mbp就成了远程的设备的网关,所有流量就会经过mbp的有线网卡.
+而且由于远程设备的代码中都是http协议的而不是https的.所以所有的流量都可以说是透明的.">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> Linux网络抓包命令以及dns查询命令 | Lyn's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e1a1e7f61eef21fbacf4a67a19789441";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lyn's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Node.js Angular.js Express.js HTML5 Mongodb Programing Notes</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Linux网络抓包命令以及dns查询命令
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-06-26T19:38:23+08:00" content="2016-06-26">
+              2016-06-26
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/26/linux-network-cmd/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/26/linux-network-cmd/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="tcpdump">tcpdump</h1><p>因为需要远程抓取一台设备的network记录. 所以需要想办法:</p>
+<ol>
+<li>把mbp做个wifi共享热点,让被抓包的设备连接到热点上来.</li>
+<li>再把有线网卡的mac地址伪装成被抓包的设备,方便我们接入被抓包设备的网段.</li>
+</ol>
+<p>这样做以后:</p>
+<ol>
+<li>mbp就成了远程的设备的网关,所有流量就会经过mbp的有线网卡.</li>
+<li>而且由于远程设备的代码中都是http协议的而不是https的.所以所有的流量都可以说是透明的. </li>
+</ol>
+<p>于是就可以抓包下来进行分析了.</p>
+<p>这时候就需要用到tcpdump命令了,先使用tcpdump命令把所有的包储存成在本地的cap文件,然后再把这个cap文件丢到wireshark里面进行分析.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo tcpdump -XvvennSs <span class="number">0</span> -w  <span class="built_in">log</span>.cap  host <span class="number">10.100</span><span class="number">.100</span><span class="number">.100</span></span><br></pre></td></tr></table></figure>
+<h1 id="dns_查询_dig">dns 查询 dig</h1><p>先用<code>man dig</code> 查询dig的manual(手册) </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br></pre></td><td class="code"><pre><span class="line">NAME</span><br><span class="line">       dig - DNS lookup utility</span><br><span class="line"></span><br><span class="line">SYNOPSIS</span><br><span class="line">       dig [@server] [-b address] [-c class] [-f filename] [-k filename] [-m] [-p port#] [-q name] [-t type] [-x addr]</span><br><span class="line">           [-y [hmac:]name:key] [-4] [-6] [name] [type] [class] [queryopt...]</span><br><span class="line"></span><br><span class="line">       dig [-h]</span><br><span class="line"></span><br><span class="line">       dig [global-queryopt...] [query...]</span><br><span class="line"></span><br><span class="line">DESCRIPTION</span><br><span class="line">       dig (domain information groper) is a flexible tool for interrogating DNS name servers. It performs DNS lookups and displays</span><br><span class="line">       the answers that are returned from the name server(s) that were queried. Most DNS administrators <span class="operator"><span class="keyword">use</span> dig <span class="keyword">to</span> troubleshoot</span><br><span class="line">       DNS problems because <span class="keyword">of</span> its flexibility, ease <span class="keyword">of</span> <span class="keyword">use</span> <span class="keyword">and</span> clarity <span class="keyword">of</span> <span class="keyword">output</span>. Other lookup tools tend <span class="keyword">to</span> have <span class="keyword">less</span></span><br><span class="line">       functionality <span class="keyword">than</span> dig.</span><br><span class="line"></span><br><span class="line">       Although dig <span class="keyword">is</span> normally used <span class="keyword">with</span> command-line arguments, it also has a batch <span class="keyword">mode</span> <span class="keyword">of</span> operation <span class="keyword">for</span> reading lookup</span><br><span class="line">       requests <span class="keyword">from</span> a <span class="keyword">file</span>. A brief summary <span class="keyword">of</span> its command-line arguments <span class="keyword">and</span> options <span class="keyword">is</span> printed <span class="keyword">when</span> the -h <span class="keyword">option</span> <span class="keyword">is</span> given.</span><br><span class="line">       Unlike earlier <span class="keyword">versions</span>, the BIND <span class="number">9</span> implementation <span class="keyword">of</span> dig allows multiple lookups <span class="keyword">to</span> be issued <span class="keyword">from</span> the command line.</span><br><span class="line"></span><br><span class="line">       Unless it <span class="keyword">is</span> told <span class="keyword">to</span> <span class="keyword">query</span> a specific <span class="keyword">name</span> <span class="keyword">server</span>, dig will try <span class="keyword">each</span> <span class="keyword">of</span> the servers listed <span class="keyword">in</span> /etc/resolv.conf.</span><br><span class="line"></span><br><span class="line">       <span class="keyword">When</span> <span class="keyword">no</span> command line arguments <span class="keyword">or</span> options <span class="keyword">are</span> given, dig will perform an NS <span class="keyword">query</span> <span class="keyword">for</span> <span class="string">"."</span> (the root).</span><br><span class="line"></span><br><span class="line">       It <span class="keyword">is</span> possible <span class="keyword">to</span> <span class="keyword">set</span> per-<span class="keyword">user</span> <span class="keyword">defaults</span> <span class="keyword">for</span> dig via $&#123;HOME&#125;/.digrc. This <span class="keyword">file</span> <span class="keyword">is</span> <span class="keyword">read</span> <span class="keyword">and</span> <span class="keyword">any</span> options <span class="keyword">in</span> it <span class="keyword">are</span> applied</span><br><span class="line">       <span class="keyword">before</span> the command line arguments.</span><br><span class="line"></span><br><span class="line">       The <span class="keyword">IN</span> <span class="keyword">and</span> CH <span class="keyword">class</span> <span class="keyword">names</span> overlap <span class="keyword">with</span> the <span class="keyword">IN</span> <span class="keyword">and</span> CH top <span class="keyword">level</span> domains <span class="keyword">names</span>. Either <span class="keyword">use</span> the -<span class="keyword">t</span> <span class="keyword">and</span> -<span class="keyword">c</span> options <span class="keyword">to</span> specify</span><br><span class="line">       the <span class="keyword">type</span> <span class="keyword">and</span> <span class="keyword">class</span>, <span class="keyword">use</span> the -q the specify the <span class="keyword">domain</span> <span class="keyword">name</span>, <span class="keyword">or</span> <span class="keyword">use</span> <span class="string">"IN."</span> <span class="keyword">and</span> <span class="string">"CH."</span> <span class="keyword">when</span> looking up these top <span class="keyword">level</span> domains.</span><br><span class="line"></span><br><span class="line">SIMPLE <span class="keyword">USAGE</span></span><br><span class="line">       A typical invocation <span class="keyword">of</span> dig looks <span class="keyword">like</span>:</span><br><span class="line"></span><br><span class="line">            dig @<span class="keyword">server</span> <span class="keyword">name</span> <span class="keyword">type</span></span><br><span class="line"></span><br><span class="line">       <span class="keyword">where</span>:</span><br><span class="line"></span><br><span class="line">       <span class="keyword">server</span></span><br><span class="line">           <span class="keyword">is</span> the <span class="keyword">name</span> <span class="keyword">or</span> IP address <span class="keyword">of</span> the <span class="keyword">name</span> <span class="keyword">server</span> <span class="keyword">to</span> <span class="keyword">query</span>. This can be an IPv4 address <span class="keyword">in</span> dotted-<span class="built_in">decimal</span> notation <span class="keyword">or</span> an</span><br><span class="line">           IPv6 address <span class="keyword">in</span> colon-<span class="keyword">delimited</span> notation. <span class="keyword">When</span> the supplied <span class="keyword">server</span> argument <span class="keyword">is</span> a hostname, dig resolves that <span class="keyword">name</span></span><br><span class="line">           <span class="keyword">before</span> querying that <span class="keyword">name</span> <span class="keyword">server</span>. <span class="keyword">If</span> <span class="keyword">no</span> <span class="keyword">server</span> argument <span class="keyword">is</span> provided, dig consults /etc/resolv.conf <span class="keyword">and</span> queries the <span class="keyword">name</span></span><br><span class="line">           servers listed there. The reply <span class="keyword">from</span> the <span class="keyword">name</span> <span class="keyword">server</span> that responds <span class="keyword">is</span> displayed.</span><br><span class="line"></span><br><span class="line">       <span class="keyword">name</span></span><br><span class="line">           <span class="keyword">is</span> the <span class="keyword">name</span> <span class="keyword">of</span> the <span class="keyword">resource</span> <span class="built_in">record</span> that <span class="keyword">is</span> <span class="keyword">to</span> be looked up.</span><br><span class="line"></span><br><span class="line">       <span class="keyword">type</span></span><br><span class="line">           indicates what <span class="keyword">type</span> <span class="keyword">of</span> <span class="keyword">query</span> <span class="keyword">is</span> <span class="keyword">required</span> <span class="comment">-- ANY, A, MX, SIG, etc.  type can be any valid query type. If no type</span></span><br><span class="line">           argument <span class="keyword">is</span> supplied, dig will perform a lookup <span class="keyword">for</span> an A <span class="built_in">record</span>.</span><br><span class="line"></span><br><span class="line">OPTIONS</span><br><span class="line">       The -b <span class="keyword">option</span> <span class="keyword">sets</span> the <span class="keyword">source</span> IP address <span class="keyword">of</span> the <span class="keyword">query</span> <span class="keyword">to</span> address. This must be a valid address <span class="keyword">on</span> one <span class="keyword">of</span> the host<span class="string">'s network</span><br><span class="line">       interfaces or "0.0.0.0" or "::". An optional port may be specified by appending "#&lt;port&gt;"</span><br><span class="line"></span><br><span class="line">       The default query class (IN for internet) is overridden by the -c option.  class is any valid class, such as HS for Hesiod</span><br><span class="line">       records or CH for Chaosnet records.</span><br><span class="line"></span><br><span class="line">       The -f option makes dig operate in batch mode by reading a list of lookup requests to process from the file filename. The</span><br><span class="line">       file contains a number of queries, one per line. Each entry in the file should be organized in the same way they would be</span><br><span class="line">       presented as queries to dig using the command-line interface.</span><br><span class="line"></span><br><span class="line">       The -m option enables memory usage debugging.</span><br><span class="line"></span><br><span class="line">       If a non-standard port number is to be queried, the -p option is used.  port# is the port number that dig will send its</span><br><span class="line">       queries instead of the standard DNS port number 53. This option would be used to test a name server that has been</span><br><span class="line">       configured to listen for queries on a non-standard port number.</span><br><span class="line"></span><br><span class="line">       The -4 option forces dig to only use IPv4 query transport. The -6 option forces dig to only use IPv6 query transport.</span><br><span class="line"></span><br><span class="line">       The -t option sets the query type to type. It can be any valid query type which is supported in BIND 9. The default query</span><br><span class="line">       type is "A", unless the -x option is supplied to indicate a reverse lookup. A zone transfer can be requested by specifying</span><br><span class="line">       a type of AXFR. When an incremental zone transfer (IXFR) is required, type is set to ixfr=N. The incremental zone transfer</span><br><span class="line">       will contain the changes made to the zone since the serial number in the zone'</span>s SOA <span class="built_in">record</span> was <span class="keyword">N</span>.</span><br><span class="line"></span><br><span class="line">       The -q <span class="keyword">option</span> <span class="keyword">sets</span> the <span class="keyword">query</span> <span class="keyword">name</span> <span class="keyword">to</span> <span class="keyword">name</span>. This useful <span class="keyword">do</span> distinguish the <span class="keyword">name</span> <span class="keyword">from</span> other arguments.</span><br><span class="line"></span><br><span class="line">       <span class="keyword">Reverse</span> lookups <span class="comment">-- mapping addresses to names -- are simplified by the -x option.  addr is an IPv4 address in</span></span><br><span class="line">       dotted-<span class="built_in">decimal</span> notation, <span class="keyword">or</span> a colon-<span class="keyword">delimited</span> IPv6 address. <span class="keyword">When</span> this <span class="keyword">option</span> <span class="keyword">is</span> used, there <span class="keyword">is</span> <span class="keyword">no</span> need <span class="keyword">to</span> provide the <span class="keyword">name</span>,</span><br><span class="line">       <span class="keyword">class</span> <span class="keyword">and</span> <span class="keyword">type</span> arguments.  dig automatically performs a lookup <span class="keyword">for</span> a <span class="keyword">name</span> <span class="keyword">like</span> <span class="number">11.12</span><span class="number">.13</span><span class="number">.10</span>.<span class="keyword">in</span>-addr.arpa <span class="keyword">and</span> <span class="keyword">sets</span> the <span class="keyword">query</span></span><br><span class="line">       <span class="keyword">type</span> <span class="keyword">and</span> <span class="keyword">class</span> <span class="keyword">to</span> PTR <span class="keyword">and</span> <span class="keyword">IN</span> respectively. <span class="keyword">By</span> <span class="keyword">default</span>, IPv6 addresses <span class="keyword">are</span> looked up <span class="keyword">using</span> nibble <span class="keyword">format</span> <span class="keyword">under</span> the IP6.ARPA</span><br><span class="line">       <span class="keyword">domain</span>. <span class="keyword">To</span> <span class="keyword">use</span> the older RFC1886 method <span class="keyword">using</span> the IP6.<span class="built_in">INT</span> <span class="keyword">domain</span> specify the -<span class="keyword">i</span> <span class="keyword">option</span>. <span class="built_in">Bit</span> <span class="keyword">string</span> labels (RFC2874) <span class="keyword">are</span> <span class="keyword">now</span></span><br><span class="line">       experimental <span class="keyword">and</span> <span class="keyword">are</span> <span class="keyword">not</span> attempted.</span><br><span class="line"></span><br><span class="line">       <span class="keyword">To</span> <span class="keyword">sign</span> the DNS queries sent <span class="keyword">by</span> dig <span class="keyword">and</span> their responses <span class="keyword">using</span> <span class="keyword">transaction</span> signatures (TSIG), specify a TSIG <span class="keyword">key</span> <span class="keyword">file</span> <span class="keyword">using</span></span><br><span class="line">       the -<span class="keyword">k</span> <span class="keyword">option</span>. You can also specify the TSIG <span class="keyword">key</span> itself <span class="keyword">on</span> the command line <span class="keyword">using</span> the -y <span class="keyword">option</span>;</span> hmac is the type of the</span><br><span class="line">       TSIG, default HMAC-MD5, name is the name of the TSIG key and key is the actual key. The key is a base-64 encoded string,</span><br><span class="line">       typically generated by dnssec-keygen(8). Caution should be taken when using the -y option on multi-user systems as the key</span><br><span class="line">       can be visible in the output from ps(1) or in the shell's history file. When using TSIG authentication with dig, the name</span><br><span class="line">       server that is queried needs to know the key and algorithm that is being used. In BIND, this is done by providing</span><br><span class="line">       appropriate key and server statements in named.conf.</span><br><span class="line"></span><br><span class="line">Mac OS X NOTICE</span><br><span class="line">       The dig command does not <span class="operator"><span class="keyword">use</span> the host <span class="keyword">name</span> <span class="keyword">and</span> address resolution <span class="keyword">or</span> the DNS <span class="keyword">query</span> routing mechanisms used <span class="keyword">by</span> other</span><br><span class="line">       processes running <span class="keyword">on</span> Mac OS X.  The results <span class="keyword">of</span> <span class="keyword">name</span> <span class="keyword">or</span> address queries printed <span class="keyword">by</span> dig may differ <span class="keyword">from</span> those <span class="keyword">found</span> <span class="keyword">by</span> other</span><br><span class="line">       processes that <span class="keyword">use</span> the Mac OS X <span class="keyword">native</span> <span class="keyword">name</span> <span class="keyword">and</span> address resolution mechanisms.  The results <span class="keyword">of</span> DNS queries may also differ</span><br><span class="line">       <span class="keyword">from</span> queries that <span class="keyword">use</span> the Mac OS X DNS routing <span class="keyword">library</span>.</span><br><span class="line"></span><br><span class="line"><span class="keyword">QUERY</span> OPTIONS</span><br><span class="line">       dig provides a <span class="built_in">number</span> <span class="keyword">of</span> <span class="keyword">query</span> options which affect the way <span class="keyword">in</span> which lookups <span class="keyword">are</span> made <span class="keyword">and</span> the results displayed. <span class="keyword">Some</span> <span class="keyword">of</span></span><br><span class="line">       these <span class="keyword">set</span> <span class="keyword">or</span> <span class="keyword">reset</span> flag bits <span class="keyword">in</span> the <span class="keyword">query</span> header, <span class="keyword">some</span> determine which sections <span class="keyword">of</span> the answer <span class="keyword">get</span> printed, <span class="keyword">and</span> others</span><br><span class="line">       determine the <span class="keyword">timeout</span> <span class="keyword">and</span> retry strategies.</span><br><span class="line"></span><br><span class="line">       <span class="keyword">Each</span> <span class="keyword">query</span> <span class="keyword">option</span> <span class="keyword">is</span> <span class="keyword">identified</span> <span class="keyword">by</span> a keyword preceded <span class="keyword">by</span> a plus <span class="keyword">sign</span> (+). <span class="keyword">Some</span> keywords <span class="keyword">set</span> <span class="keyword">or</span> <span class="keyword">reset</span> an <span class="keyword">option</span>. These may</span><br><span class="line">       be preceded <span class="keyword">by</span> the <span class="keyword">string</span> <span class="keyword">no</span> <span class="keyword">to</span> negate the meaning <span class="keyword">of</span> that keyword. Other keywords assign <span class="keyword">values</span> <span class="keyword">to</span> options <span class="keyword">like</span> the</span><br><span class="line">       <span class="keyword">timeout</span> <span class="built_in">interval</span>. They have the <span class="keyword">form</span> +keyword=<span class="keyword">value</span>. The <span class="keyword">query</span> options <span class="keyword">are</span>:</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]tcp</span><br><span class="line">           <span class="keyword">Use</span> [<span class="keyword">do</span> <span class="keyword">not</span> <span class="keyword">use</span>] TCP <span class="keyword">when</span> querying <span class="keyword">name</span> servers. The <span class="keyword">default</span> behavior <span class="keyword">is</span> <span class="keyword">to</span> <span class="keyword">use</span> UDP unless an AXFR <span class="keyword">or</span> IXFR <span class="keyword">query</span> <span class="keyword">is</span></span><br><span class="line">           requested, <span class="keyword">in</span> which <span class="keyword">case</span> a TCP <span class="keyword">connection</span> <span class="keyword">is</span> used.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]vc</span><br><span class="line">           <span class="keyword">Use</span> [<span class="keyword">do</span> <span class="keyword">not</span> <span class="keyword">use</span>] TCP <span class="keyword">when</span> querying <span class="keyword">name</span> servers. This alternate syntax <span class="keyword">to</span> +[<span class="keyword">no</span>]tcp <span class="keyword">is</span> provided <span class="keyword">for</span> backwards</span><br><span class="line">           <span class="keyword">compatibility</span>. The <span class="string">"vc"</span> stands <span class="keyword">for</span> <span class="string">"virtual circuit"</span>.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]<span class="keyword">ignore</span></span><br><span class="line">           <span class="keyword">Ignore</span> truncation <span class="keyword">in</span> UDP responses instead <span class="keyword">of</span> retrying <span class="keyword">with</span> TCP. <span class="keyword">By</span> <span class="keyword">default</span>, TCP retries <span class="keyword">are</span> performed.</span><br><span class="line"></span><br><span class="line">       +<span class="keyword">domain</span>=somename</span><br><span class="line">           <span class="keyword">Set</span> the <span class="keyword">search</span> <span class="keyword">list</span> <span class="keyword">to</span> contain the single <span class="keyword">domain</span> somename, <span class="keyword">as</span> <span class="keyword">if</span> specified <span class="keyword">in</span> a <span class="keyword">domain</span> directive <span class="keyword">in</span> /etc/resolv.conf,</span><br><span class="line">           <span class="keyword">and</span> <span class="keyword">enable</span> <span class="keyword">search</span> <span class="keyword">list</span> processing <span class="keyword">as</span> <span class="keyword">if</span> the +<span class="keyword">search</span> <span class="keyword">option</span> were given.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]<span class="keyword">search</span></span><br><span class="line">           <span class="keyword">Use</span> [<span class="keyword">do</span> <span class="keyword">not</span> <span class="keyword">use</span>] the <span class="keyword">search</span> <span class="keyword">list</span> defined <span class="keyword">by</span> the searchlist <span class="keyword">or</span> <span class="keyword">domain</span> directive <span class="keyword">in</span> resolv.conf (<span class="keyword">if</span> <span class="keyword">any</span>). The <span class="keyword">search</span> <span class="keyword">list</span></span><br><span class="line">           <span class="keyword">is</span> <span class="keyword">not</span> used <span class="keyword">by</span> <span class="keyword">default</span>.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]showsearch</span><br><span class="line">           Perform [<span class="keyword">do</span> <span class="keyword">not</span> perform] a <span class="keyword">search</span> showing intermediate results.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]defname</span><br><span class="line">           Deprecated, treated <span class="keyword">as</span> a <span class="keyword">synonym</span> <span class="keyword">for</span> +[<span class="keyword">no</span>]<span class="keyword">search</span></span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]aaonly</span><br><span class="line">           <span class="keyword">Sets</span> the <span class="string">"aa"</span> flag <span class="keyword">in</span> the <span class="keyword">query</span>.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]aaflag</span><br><span class="line">           A <span class="keyword">synonym</span> <span class="keyword">for</span> +[<span class="keyword">no</span>]aaonly.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]adflag</span><br><span class="line">           <span class="keyword">Set</span> [<span class="keyword">do</span> <span class="keyword">not</span> <span class="keyword">set</span>] the AD (authentic <span class="keyword">data</span>) <span class="built_in">bit</span> <span class="keyword">in</span> the <span class="keyword">query</span>. This requests the <span class="keyword">server</span> <span class="keyword">to</span> <span class="keyword">return</span> whether all <span class="keyword">of</span> the answer</span><br><span class="line">           <span class="keyword">and</span> authority sections have all been validated <span class="keyword">as</span> secure according <span class="keyword">to</span> the <span class="keyword">security</span> <span class="keyword">policy</span> <span class="keyword">of</span> the <span class="keyword">server</span>. AD=<span class="number">1</span> indicates</span><br><span class="line">           that all <span class="keyword">records</span> have been validated <span class="keyword">as</span> secure <span class="keyword">and</span> the answer <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">from</span> a OPT-<span class="keyword">OUT</span> <span class="keyword">range</span>. AD=<span class="number">0</span> indicate that <span class="keyword">some</span> part</span><br><span class="line">           <span class="keyword">of</span> the answer was insecure <span class="keyword">or</span> <span class="keyword">not</span> validated.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]cdflag</span><br><span class="line">           <span class="keyword">Set</span> [<span class="keyword">do</span> <span class="keyword">not</span> <span class="keyword">set</span>] the CD (checking disabled) <span class="built_in">bit</span> <span class="keyword">in</span> the <span class="keyword">query</span>. This requests the <span class="keyword">server</span> <span class="keyword">to</span> <span class="keyword">not</span> perform DNSSEC <span class="keyword">validation</span></span><br><span class="line">           <span class="keyword">of</span> responses.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]cl</span><br><span class="line">           Display [<span class="keyword">do</span> <span class="keyword">not</span> display] the <span class="keyword">CLASS</span> <span class="keyword">when</span> printing the <span class="built_in">record</span>.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]ttlid</span><br><span class="line">           Display [<span class="keyword">do</span> <span class="keyword">not</span> display] the TTL <span class="keyword">when</span> printing the <span class="built_in">record</span>.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]recurse</span><br><span class="line">           Toggle the setting <span class="keyword">of</span> the RD (recursion desired) <span class="built_in">bit</span> <span class="keyword">in</span> the <span class="keyword">query</span>. This <span class="built_in">bit</span> <span class="keyword">is</span> <span class="keyword">set</span> <span class="keyword">by</span> <span class="keyword">default</span>, which means dig normally</span><br><span class="line">           sends <span class="keyword">recursive</span> queries. Recursion <span class="keyword">is</span> automatically disabled <span class="keyword">when</span> the +nssearch <span class="keyword">or</span> +<span class="keyword">trace</span> <span class="keyword">query</span> options <span class="keyword">are</span> used.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]nssearch</span><br><span class="line">           <span class="keyword">When</span> this <span class="keyword">option</span> <span class="keyword">is</span> <span class="keyword">set</span>, dig attempts <span class="keyword">to</span> find the authoritative <span class="keyword">name</span> servers <span class="keyword">for</span> the zone containing the <span class="keyword">name</span> being</span><br><span class="line">           looked up <span class="keyword">and</span> display the SOA <span class="built_in">record</span> that <span class="keyword">each</span> <span class="keyword">name</span> <span class="keyword">server</span> has <span class="keyword">for</span> the zone.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]<span class="keyword">trace</span></span><br><span class="line">           Toggle tracing <span class="keyword">of</span> the delegation <span class="keyword">path</span> <span class="keyword">from</span> the root <span class="keyword">name</span> servers <span class="keyword">for</span> the <span class="keyword">name</span> being looked up. Tracing <span class="keyword">is</span> disabled <span class="keyword">by</span></span><br><span class="line">           <span class="keyword">default</span>. <span class="keyword">When</span> tracing <span class="keyword">is</span> enabled, dig makes iterative queries <span class="keyword">to</span> resolve the <span class="keyword">name</span> being looked up. It will follow</span><br><span class="line">           referrals <span class="keyword">from</span> the root servers, showing the answer <span class="keyword">from</span> <span class="keyword">each</span> <span class="keyword">server</span> that was used <span class="keyword">to</span> resolve the lookup.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]cmd</span><br><span class="line">           Toggles the printing <span class="keyword">of</span> the <span class="keyword">initial</span> <span class="keyword">comment</span> <span class="keyword">in</span> the <span class="keyword">output</span> identifying the <span class="keyword">version</span> <span class="keyword">of</span> dig <span class="keyword">and</span> the <span class="keyword">query</span> options that</span><br><span class="line">           have been applied. This <span class="keyword">comment</span> <span class="keyword">is</span> printed <span class="keyword">by</span> <span class="keyword">default</span>.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]<span class="keyword">short</span></span><br><span class="line">           Provide a terse answer. The <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">to</span> print the answer <span class="keyword">in</span> a verbose <span class="keyword">form</span>.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]identify</span><br><span class="line">           <span class="keyword">Show</span> [<span class="keyword">or</span> <span class="keyword">do</span> <span class="keyword">not</span> <span class="keyword">show</span>] the IP address <span class="keyword">and</span> port <span class="built_in">number</span> that supplied the answer <span class="keyword">when</span> the +<span class="keyword">short</span> <span class="keyword">option</span> <span class="keyword">is</span> enabled. <span class="keyword">If</span></span><br><span class="line">           <span class="keyword">short</span> <span class="keyword">form</span> answers <span class="keyword">are</span> requested, the <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">to</span> <span class="keyword">show</span> the <span class="keyword">source</span> address <span class="keyword">and</span> port <span class="built_in">number</span> <span class="keyword">of</span> the <span class="keyword">server</span> that</span><br><span class="line">           provided the answer.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]comments</span><br><span class="line">           Toggle the display <span class="keyword">of</span> <span class="keyword">comment</span> <span class="keyword">lines</span> <span class="keyword">in</span> the <span class="keyword">output</span>. The <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">to</span> print comments.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]stats</span><br><span class="line">           This <span class="keyword">query</span> <span class="keyword">option</span> toggles the printing <span class="keyword">of</span> <span class="keyword">statistics</span>: <span class="keyword">when</span> the <span class="keyword">query</span> was made, the <span class="keyword">size</span> <span class="keyword">of</span> the reply <span class="keyword">and</span> so <span class="keyword">on</span>. The</span><br><span class="line">           <span class="keyword">default</span> behavior <span class="keyword">is</span> <span class="keyword">to</span> print the <span class="keyword">query</span> <span class="keyword">statistics</span>.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]qr</span><br><span class="line">           Print [<span class="keyword">do</span> <span class="keyword">not</span> print] the <span class="keyword">query</span> <span class="keyword">as</span> it <span class="keyword">is</span> sent. <span class="keyword">By</span> <span class="keyword">default</span>, the <span class="keyword">query</span> <span class="keyword">is</span> <span class="keyword">not</span> printed.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]question</span><br><span class="line">           Print [<span class="keyword">do</span> <span class="keyword">not</span> print] the question <span class="keyword">section</span> <span class="keyword">of</span> a <span class="keyword">query</span> <span class="keyword">when</span> an answer <span class="keyword">is</span> returned. The <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">to</span> print the question</span><br><span class="line">           <span class="keyword">section</span> <span class="keyword">as</span> a <span class="keyword">comment</span>.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]answer</span><br><span class="line">           Display [<span class="keyword">do</span> <span class="keyword">not</span> display] the answer <span class="keyword">section</span> <span class="keyword">of</span> a reply. The <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">to</span> display it.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]authority</span><br><span class="line">           Display [<span class="keyword">do</span> <span class="keyword">not</span> display] the authority <span class="keyword">section</span> <span class="keyword">of</span> a reply. The <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">to</span> display it.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]additional</span><br><span class="line">           Display [<span class="keyword">do</span> <span class="keyword">not</span> display] the additional <span class="keyword">section</span> <span class="keyword">of</span> a reply. The <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">to</span> display it.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]all</span><br><span class="line">           <span class="keyword">Set</span> <span class="keyword">or</span> <span class="keyword">clear</span> all display flags.</span><br><span class="line"></span><br><span class="line">       +<span class="keyword">time</span>=<span class="keyword">T</span></span><br><span class="line">           <span class="keyword">Sets</span> the <span class="keyword">timeout</span> <span class="keyword">for</span> a <span class="keyword">query</span> <span class="keyword">to</span> <span class="keyword">T</span> seconds. The <span class="keyword">default</span> <span class="keyword">timeout</span> <span class="keyword">is</span> <span class="number">5</span> seconds. An attempt <span class="keyword">to</span> <span class="keyword">set</span> <span class="keyword">T</span> <span class="keyword">to</span> <span class="keyword">less</span> <span class="keyword">than</span> <span class="number">1</span> will</span><br><span class="line">           <span class="keyword">result</span> <span class="keyword">in</span> a <span class="keyword">query</span> <span class="keyword">timeout</span> <span class="keyword">of</span> <span class="number">1</span> <span class="keyword">second</span> being applied.</span><br><span class="line"></span><br><span class="line">       +tries=<span class="keyword">T</span></span><br><span class="line">           <span class="keyword">Sets</span> the <span class="built_in">number</span> <span class="keyword">of</span> times <span class="keyword">to</span> try UDP queries <span class="keyword">to</span> <span class="keyword">server</span> <span class="keyword">to</span> <span class="keyword">T</span> instead <span class="keyword">of</span> the <span class="keyword">default</span>, <span class="number">3.</span> <span class="keyword">If</span> <span class="keyword">T</span> <span class="keyword">is</span> <span class="keyword">less</span> <span class="keyword">than</span> <span class="keyword">or</span> equal <span class="keyword">to</span></span><br><span class="line">           zero, the <span class="built_in">number</span> <span class="keyword">of</span> tries <span class="keyword">is</span> silently rounded up <span class="keyword">to</span> <span class="number">1.</span></span><br><span class="line"></span><br><span class="line">       +retry=<span class="keyword">T</span></span><br><span class="line">           <span class="keyword">Sets</span> the <span class="built_in">number</span> <span class="keyword">of</span> times <span class="keyword">to</span> retry UDP queries <span class="keyword">to</span> <span class="keyword">server</span> <span class="keyword">to</span> <span class="keyword">T</span> instead <span class="keyword">of</span> the <span class="keyword">default</span>, <span class="number">2.</span> Unlike +tries, this does <span class="keyword">not</span></span><br><span class="line">           <span class="keyword">include</span> the <span class="keyword">initial</span> <span class="keyword">query</span>.</span><br><span class="line"></span><br><span class="line">       +ndots=<span class="keyword">D</span></span><br><span class="line">           <span class="keyword">Set</span> the <span class="built_in">number</span> <span class="keyword">of</span> dots that have <span class="keyword">to</span> appear <span class="keyword">in</span> <span class="keyword">name</span> <span class="keyword">to</span> <span class="keyword">D</span> <span class="keyword">for</span> it <span class="keyword">to</span> be considered <span class="keyword">absolute</span>. The <span class="keyword">default</span> <span class="keyword">value</span> <span class="keyword">is</span> that</span><br><span class="line">           defined <span class="keyword">using</span> the ndots <span class="keyword">statement</span> <span class="keyword">in</span> /etc/resolv.conf, <span class="keyword">or</span> <span class="number">1</span> <span class="keyword">if</span> <span class="keyword">no</span> ndots <span class="keyword">statement</span> <span class="keyword">is</span> <span class="keyword">present</span>. <span class="keyword">Names</span> <span class="keyword">with</span> fewer dots <span class="keyword">are</span></span><br><span class="line">           interpreted <span class="keyword">as</span> <span class="keyword">relative</span> <span class="keyword">names</span> <span class="keyword">and</span> will be searched <span class="keyword">for</span> <span class="keyword">in</span> the domains listed <span class="keyword">in</span> the <span class="keyword">search</span> <span class="keyword">or</span> <span class="keyword">domain</span> directive <span class="keyword">in</span></span><br><span class="line">           /etc/resolv.conf.</span><br><span class="line"></span><br><span class="line">       +bufsize=B</span><br><span class="line">           <span class="keyword">Set</span> the UDP message buffer <span class="keyword">size</span> advertised <span class="keyword">using</span> EDNS0 <span class="keyword">to</span> B <span class="keyword">bytes</span>. The maximum <span class="keyword">and</span> <span class="keyword">minimum</span> <span class="keyword">sizes</span> <span class="keyword">of</span> this buffer <span class="keyword">are</span></span><br><span class="line">           <span class="number">65535</span> <span class="keyword">and</span> <span class="number">0</span> respectively. <span class="keyword">Values</span> outside this <span class="keyword">range</span> <span class="keyword">are</span> rounded up <span class="keyword">or</span> down appropriately. <span class="keyword">Values</span> other <span class="keyword">than</span> zero will</span><br><span class="line">           cause a EDNS <span class="keyword">query</span> <span class="keyword">to</span> be sent.</span><br><span class="line"></span><br><span class="line">       +edns=#</span><br><span class="line">           Specify the EDNS <span class="keyword">version</span> <span class="keyword">to</span> <span class="keyword">query</span> <span class="keyword">with</span>. Valid <span class="keyword">values</span> <span class="keyword">are</span> <span class="number">0</span> <span class="keyword">to</span> <span class="number">255.</span> Setting the EDNS <span class="keyword">version</span> will cause a EDNS <span class="keyword">query</span> <span class="keyword">to</span></span><br><span class="line">           be sent.  +noedns clears the remembered EDNS <span class="keyword">version</span>.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]multiline</span><br><span class="line">           Print <span class="keyword">records</span> <span class="keyword">like</span> the SOA <span class="keyword">records</span> <span class="keyword">in</span> a verbose multi-line <span class="keyword">format</span> <span class="keyword">with</span> human-readable comments. The <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">to</span> print</span><br><span class="line">           <span class="keyword">each</span> <span class="built_in">record</span> <span class="keyword">on</span> a single line, <span class="keyword">to</span> facilitate machine parsing <span class="keyword">of</span> the dig <span class="keyword">output</span>.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]onesoa</span><br><span class="line">           Print <span class="keyword">only</span> one (<span class="keyword">starting</span>) SOA <span class="built_in">record</span> <span class="keyword">when</span> performing an AXFR. The <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">to</span> print <span class="keyword">both</span> the <span class="keyword">starting</span> <span class="keyword">and</span> ending SOA</span><br><span class="line">           <span class="keyword">records</span>.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]fail</span><br><span class="line">           <span class="keyword">Do</span> <span class="keyword">not</span> try the <span class="keyword">next</span> <span class="keyword">server</span> <span class="keyword">if</span> you receive a SERVFAIL. The <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">to</span> <span class="keyword">not</span> try the <span class="keyword">next</span> <span class="keyword">server</span> which <span class="keyword">is</span> the <span class="keyword">reverse</span> <span class="keyword">of</span></span><br><span class="line">           <span class="keyword">normal</span> stub resolver behavior.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]besteffort</span><br><span class="line">           Attempt <span class="keyword">to</span> display the <span class="keyword">contents</span> <span class="keyword">of</span> messages which <span class="keyword">are</span> malformed. The <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">to</span> <span class="keyword">not</span> display malformed answers.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]dnssec</span><br><span class="line">           Requests DNSSEC <span class="keyword">records</span> be sent <span class="keyword">by</span> setting the DNSSEC OK <span class="built_in">bit</span> (<span class="keyword">DO</span>) <span class="keyword">in</span> the OPT <span class="built_in">record</span> <span class="keyword">in</span> the additional <span class="keyword">section</span> <span class="keyword">of</span> the</span><br><span class="line">           <span class="keyword">query</span>.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]sigchase</span><br><span class="line">           Chase DNSSEC signature chains. Requires dig be <span class="keyword">compiled</span> <span class="keyword">with</span> -DDIG_SIGCHASE.</span><br><span class="line"></span><br><span class="line">       +trusted-<span class="keyword">key</span>=####</span><br><span class="line">           Specifies a <span class="keyword">file</span> containing trusted <span class="keyword">keys</span> <span class="keyword">to</span> be used <span class="keyword">with</span> +sigchase. <span class="keyword">Each</span> DNSKEY <span class="built_in">record</span> must be <span class="keyword">on</span> its own line.</span><br><span class="line"></span><br><span class="line">           <span class="keyword">If</span> <span class="keyword">not</span> specified, dig will look <span class="keyword">for</span> /etc/trusted-<span class="keyword">key</span>.<span class="keyword">key</span> <span class="keyword">then</span> trusted-<span class="keyword">key</span>.<span class="keyword">key</span> <span class="keyword">in</span> the <span class="keyword">current</span> <span class="keyword">directory</span>.</span><br><span class="line"></span><br><span class="line">           Requires dig be <span class="keyword">compiled</span> <span class="keyword">with</span> -DDIG_SIGCHASE.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]topdown</span><br><span class="line">           <span class="keyword">When</span> chasing DNSSEC signature chains perform a top-down <span class="keyword">validation</span>. Requires dig be <span class="keyword">compiled</span> <span class="keyword">with</span> -DDIG_SIGCHASE.</span><br><span class="line"></span><br><span class="line">       +[<span class="keyword">no</span>]nsid</span><br><span class="line">           <span class="keyword">Include</span> an EDNS <span class="keyword">name</span> <span class="keyword">server</span> <span class="keyword">ID</span> request <span class="keyword">when</span> sending a <span class="keyword">query</span>.</span><br><span class="line"></span><br><span class="line">MULTIPLE QUERIES</span><br><span class="line">       The BIND <span class="number">9</span> implementation <span class="keyword">of</span> dig supports specifying multiple queries <span class="keyword">on</span> the command line (<span class="keyword">in</span> addition <span class="keyword">to</span> supporting the -<span class="keyword">f</span></span><br><span class="line">       batch <span class="keyword">file</span> <span class="keyword">option</span>). <span class="keyword">Each</span> <span class="keyword">of</span> those queries can be supplied <span class="keyword">with</span> its own <span class="keyword">set</span> <span class="keyword">of</span> flags, options <span class="keyword">and</span> <span class="keyword">query</span> options.</span><br><span class="line"></span><br><span class="line">       <span class="keyword">In</span> this <span class="keyword">case</span>, <span class="keyword">each</span> <span class="keyword">query</span> argument represent an individual <span class="keyword">query</span> <span class="keyword">in</span> the command-line syntax described above. <span class="keyword">Each</span> consists</span><br><span class="line">       <span class="keyword">of</span> <span class="keyword">any</span> <span class="keyword">of</span> the standard options <span class="keyword">and</span> flags, the <span class="keyword">name</span> <span class="keyword">to</span> be looked up, an optional <span class="keyword">query</span> <span class="keyword">type</span> <span class="keyword">and</span> <span class="keyword">class</span> <span class="keyword">and</span> <span class="keyword">any</span> <span class="keyword">query</span> options</span><br><span class="line">       that should be applied <span class="keyword">to</span> that <span class="keyword">query</span>.</span><br><span class="line"></span><br><span class="line">       A <span class="keyword">global</span> <span class="keyword">set</span> <span class="keyword">of</span> <span class="keyword">query</span> options, which should be applied <span class="keyword">to</span> all queries, can also be supplied. These <span class="keyword">global</span> <span class="keyword">query</span> options</span><br><span class="line">       must precede the <span class="keyword">first</span> tuple <span class="keyword">of</span> <span class="keyword">name</span>, <span class="keyword">class</span>, <span class="keyword">type</span>, options, flags, <span class="keyword">and</span> <span class="keyword">query</span> options supplied <span class="keyword">on</span> the command line. <span class="keyword">Any</span></span><br><span class="line">       <span class="keyword">global</span> <span class="keyword">query</span> options (<span class="keyword">except</span> the +[<span class="keyword">no</span>]cmd <span class="keyword">option</span>) can be overridden <span class="keyword">by</span> a <span class="keyword">query</span>-specific <span class="keyword">set</span> <span class="keyword">of</span> <span class="keyword">query</span> options. <span class="keyword">For</span> example:</span><br><span class="line"></span><br><span class="line">           dig +qr www.isc.org <span class="keyword">any</span> -x <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> isc.org ns +noqr</span><br><span class="line"></span><br><span class="line">       shows how dig could be used <span class="keyword">from</span> the command line <span class="keyword">to</span> make three lookups: an <span class="keyword">ANY</span> <span class="keyword">query</span> <span class="keyword">for</span> www.isc.org, a <span class="keyword">reverse</span> lookup <span class="keyword">of</span></span><br><span class="line">       <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="keyword">and</span> a <span class="keyword">query</span> <span class="keyword">for</span> the NS <span class="keyword">records</span> <span class="keyword">of</span> isc.org. A <span class="keyword">global</span> <span class="keyword">query</span> <span class="keyword">option</span> <span class="keyword">of</span> +qr <span class="keyword">is</span> applied, so that dig shows the <span class="keyword">initial</span></span><br><span class="line">       <span class="keyword">query</span> it made <span class="keyword">for</span> <span class="keyword">each</span> lookup. The <span class="keyword">final</span> <span class="keyword">query</span> has a <span class="keyword">local</span> <span class="keyword">query</span> <span class="keyword">option</span> <span class="keyword">of</span> +noqr which means that dig will <span class="keyword">not</span> print the</span><br><span class="line">       <span class="keyword">initial</span> <span class="keyword">query</span> <span class="keyword">when</span> it looks up the NS <span class="keyword">records</span> <span class="keyword">for</span> isc.org.</span><br><span class="line"></span><br><span class="line">IDN SUPPORT</span><br><span class="line">       <span class="keyword">If</span> dig has been built <span class="keyword">with</span> IDN (internationalized <span class="keyword">domain</span> <span class="keyword">name</span>) support, it can <span class="keyword">accept</span> <span class="keyword">and</span> display non-<span class="keyword">ASCII</span> <span class="keyword">domain</span> <span class="keyword">names</span>.</span><br><span class="line">       dig appropriately converts <span class="built_in">character</span> <span class="keyword">encoding</span> <span class="keyword">of</span> <span class="keyword">domain</span> <span class="keyword">name</span> <span class="keyword">before</span> sending a request <span class="keyword">to</span> DNS <span class="keyword">server</span> <span class="keyword">or</span> displaying a reply</span><br><span class="line">       <span class="keyword">from</span> the <span class="keyword">server</span>. <span class="keyword">If</span> you<span class="string">'d like to turn off the IDN support for some reason, defines the IDN_DISABLE environment variable.</span><br><span class="line">       The IDN support is disabled if the variable is set when dig runs.</span><br><span class="line"></span><br><span class="line">FILES</span><br><span class="line">       /etc/resolv.conf</span><br><span class="line"></span><br><span class="line">       $&#123;HOME&#125;/.digrc</span><br><span class="line"></span><br><span class="line">SEE ALSO</span><br><span class="line">       host(1), named(8), dnssec-keygen(8), RFC1035.</span><br><span class="line"></span><br><span class="line">BUGS</span><br><span class="line">       There are probably too many query options.</span><br><span class="line"></span><br><span class="line">COPYRIGHT</span><br><span class="line">       Copyright (C) 2004-2010 Internet Systems Consortium, Inc. ("ISC")</span><br><span class="line">       Copyright (C) 2000-2003 Internet Software Consortium.</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="dig_+short">dig +short</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Lyn-Cheung-MBP:~ Lyn$ dig +<span class="keyword">short</span>  googlevideo.com</span><br><span class="line"><span class="number">172.217</span><span class="number">.25</span><span class="number">.228</span></span><br></pre></td></tr></table></figure>
+<h2 id="dig_+nocmd">dig +nocmd</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> </span><br><span class="line">Lyn-Cheung-MBP:~ Lyn$ dig +nocmd @<span class="number">192.168</span><span class="number">.2</span><span class="number">.1</span> www.google.com</span><br><span class="line">;; Got answer:</span><br><span class="line">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: <span class="number">51997</span></span><br><span class="line">;; flags: qr rd ra; QUERY: <span class="number">1</span>, ANSWER: <span class="number">1</span>, AUTHORITY: <span class="number">0</span>, ADDITIONAL: <span class="number">0</span></span><br><span class="line"></span><br><span class="line">;; QUESTION SECTION:</span><br><span class="line">;www.google.com.			IN	A</span><br><span class="line"></span><br><span class="line">;; ANSWER SECTION:</span><br><span class="line">www.google.com.		<span class="number">900</span>	IN	A	<span class="number">216.58</span><span class="number">.200</span><span class="number">.196</span></span><br><span class="line"></span><br><span class="line">;; Query time: <span class="number">274</span> msec</span><br><span class="line">;; SERVER: <span class="number">192.168</span><span class="number">.2</span><span class="number">.1</span><span class="preprocessor">#<span class="number">53</span>(<span class="number">192.168</span><span class="number">.2</span><span class="number">.1</span>)</span></span><br><span class="line">;; WHEN: Sun Jun <span class="number">26</span> <span class="number">19</span>:<span class="number">32</span>:<span class="number">49</span> <span class="number">2016</span></span><br><span class="line">;; MSG SIZE  rcvd: <span class="number">48</span></span><br></pre></td></tr></table></figure>
+<h2 id="dig_-q">dig -q</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Lyn-Cheung-MBP:~ Lyn$ dig -q  www.google.com</span><br><span class="line"></span><br><span class="line">; &lt;&lt;&gt;&gt; DiG <span class="number">9.8</span><span class="number">.3</span>-P1 &lt;&lt;&gt;&gt; -q www.google.com</span><br><span class="line">;; global options: +cmd</span><br><span class="line">;; Got answer:</span><br><span class="line">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: <span class="number">31256</span></span><br><span class="line">;; flags: qr rd ra; QUERY: <span class="number">1</span>, ANSWER: <span class="number">1</span>, AUTHORITY: <span class="number">0</span>, ADDITIONAL: <span class="number">0</span></span><br><span class="line"></span><br><span class="line">;; QUESTION SECTION:</span><br><span class="line">;www.google.com.			IN	A</span><br><span class="line"></span><br><span class="line">;; ANSWER SECTION:</span><br><span class="line">www.google.com.		<span class="number">839</span>	IN	A	<span class="number">216.58</span><span class="number">.200</span><span class="number">.196</span></span><br><span class="line"></span><br><span class="line">;; Query time: <span class="number">0</span> msec</span><br><span class="line">;; SERVER: <span class="number">192.168</span><span class="number">.2</span><span class="number">.1</span><span class="preprocessor">#<span class="number">53</span>(<span class="number">192.168</span><span class="number">.2</span><span class="number">.1</span>)</span></span><br><span class="line">;; WHEN: Sun Jun <span class="number">26</span> <span class="number">19</span>:<span class="number">33</span>:<span class="number">50</span> <span class="number">2016</span></span><br><span class="line">;; MSG SIZE  rcvd: <span class="number">48</span></span><br></pre></td></tr></table></figure>
+<h2 id="dig_+tcp">dig +tcp</h2><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="cpp">Lyn-Cheung-MBP:~ Lyn$ dig +tcp www.google.com</span><br><span class="line"></span><br><span class="line">; &lt;&lt;&gt;&gt; DiG <span class="number">9.8</span><span class="number">.3</span>-P1 &lt;&lt;&gt;&gt; +tcp www.google.com</span><br><span class="line">;; global options: +cmd</span><br><span class="line">;; Got answer:</span><br><span class="line">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: <span class="number">41777</span></span><br><span class="line">;; flags: qr rd ra; QUERY: <span class="number">1</span>, ANSWER: <span class="number">1</span>, AUTHORITY: <span class="number">0</span>, ADDITIONAL: <span class="number">0</span></span><br><span class="line"></span><br><span class="line">;; QUESTION SECTION:</span><br><span class="line">;www.google.com.			IN	A</span><br><span class="line"></span><br><span class="line">;; ANSWER SECTION:</span><br><span class="line">www.google.com.		<span class="number">744</span>	IN	A	<span class="number">216.58</span><span class="number">.200</span><span class="number">.196</span></span><br><span class="line"></span><br><span class="line">;; Query time: <span class="number">5</span> msec</span><br><span class="line">;; SERVER: <span class="number">192.168</span><span class="number">.2</span><span class="number">.1</span><span class="preprocessor">#<span class="number">53</span>(<span class="number">192.168</span><span class="number">.2</span><span class="number">.1</span>)</span></span><br><span class="line">;; WHEN: Sun Jun <span class="number">26</span> <span class="number">19</span>:<span class="number">35</span>:<span class="number">25</span> <span class="number">2016</span></span><br><span class="line">;; MSG SIZE  rcvd: <span class="number">48</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="dig_+trace">dig +trace</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">Lyn-Cheung-MBP:~ Lyn$ dig +trace @<span class="number">192.168</span><span class="number">.2</span><span class="number">.1</span> gooogle.com</span><br><span class="line"></span><br><span class="line">; &lt;&lt;&gt;&gt; DiG <span class="number">9.8</span><span class="number">.3</span>-P1 &lt;&lt;&gt;&gt; +trace @<span class="number">192.168</span><span class="number">.2</span><span class="number">.1</span> gooogle.com</span><br><span class="line">; (<span class="number">1</span> server found)</span><br><span class="line">;; global options: +cmd</span><br><span class="line">.			<span class="number">59872</span>	IN	NS	a.root-servers.net.</span><br><span class="line">.			<span class="number">59872</span>	IN	NS	b.root-servers.net.</span><br><span class="line">.			<span class="number">59872</span>	IN	NS	c.root-servers.net.</span><br><span class="line">.			<span class="number">59872</span>	IN	NS	d.root-servers.net.</span><br><span class="line">.			<span class="number">59872</span>	IN	NS	e.root-servers.net.</span><br><span class="line">.			<span class="number">59872</span>	IN	NS	f.root-servers.net.</span><br><span class="line">.			<span class="number">59872</span>	IN	NS	g.root-servers.net.</span><br><span class="line">.			<span class="number">59872</span>	IN	NS	h.root-servers.net.</span><br><span class="line">.			<span class="number">59872</span>	IN	NS	i.root-servers.net.</span><br><span class="line">.			<span class="number">59872</span>	IN	NS	j.root-servers.net.</span><br><span class="line">.			<span class="number">59872</span>	IN	NS	k.root-servers.net.</span><br><span class="line">.			<span class="number">59872</span>	IN	NS	l.root-servers.net.</span><br><span class="line">.			<span class="number">59872</span>	IN	NS	m.root-servers.net.</span><br><span class="line">;; Received <span class="number">228</span> bytes from <span class="number">192.168</span><span class="number">.2</span><span class="number">.1</span><span class="preprocessor">#<span class="number">53</span>(<span class="number">192.168</span><span class="number">.2</span><span class="number">.1</span>) in <span class="number">4778</span> ms</span></span><br><span class="line"></span><br><span class="line">com.			<span class="number">172800</span>	IN	NS	a.gtld-servers.net.</span><br><span class="line">com.			<span class="number">172800</span>	IN	NS	b.gtld-servers.net.</span><br><span class="line">com.			<span class="number">172800</span>	IN	NS	c.gtld-servers.net.</span><br><span class="line">com.			<span class="number">172800</span>	IN	NS	d.gtld-servers.net.</span><br><span class="line">com.			<span class="number">172800</span>	IN	NS	e.gtld-servers.net.</span><br><span class="line">com.			<span class="number">172800</span>	IN	NS	f.gtld-servers.net.</span><br><span class="line">com.			<span class="number">172800</span>	IN	NS	g.gtld-servers.net.</span><br><span class="line">com.			<span class="number">172800</span>	IN	NS	h.gtld-servers.net.</span><br><span class="line">com.			<span class="number">172800</span>	IN	NS	i.gtld-servers.net.</span><br><span class="line">com.			<span class="number">172800</span>	IN	NS	j.gtld-servers.net.</span><br><span class="line">com.			<span class="number">172800</span>	IN	NS	k.gtld-servers.net.</span><br><span class="line">com.			<span class="number">172800</span>	IN	NS	l.gtld-servers.net.</span><br><span class="line">com.			<span class="number">172800</span>	IN	NS	m.gtld-servers.net.</span><br><span class="line">;; Received <span class="number">489</span> bytes from <span class="number">198.97</span><span class="number">.190</span><span class="number">.53</span><span class="preprocessor">#<span class="number">53</span>(<span class="number">198.97</span><span class="number">.190</span><span class="number">.53</span>) in <span class="number">932</span> ms</span></span><br><span class="line"></span><br><span class="line">gooogle.com.		<span class="number">172800</span>	IN	NS	ns2.google.com.</span><br><span class="line">gooogle.com.		<span class="number">172800</span>	IN	NS	ns1.google.com.</span><br><span class="line">gooogle.com.		<span class="number">172800</span>	IN	NS	ns3.google.com.</span><br><span class="line">gooogle.com.		<span class="number">172800</span>	IN	NS	ns4.google.com.</span><br><span class="line">;; Received <span class="number">172</span> bytes from <span class="number">192.31</span><span class="number">.80</span><span class="number">.30</span><span class="preprocessor">#<span class="number">53</span>(<span class="number">192.31</span><span class="number">.80</span><span class="number">.30</span>) in <span class="number">1347</span> ms</span></span><br><span class="line"></span><br><span class="line">gooogle.com.		<span class="number">300</span>	IN	A	<span class="number">216.58</span><span class="number">.203</span><span class="number">.36</span></span><br><span class="line">;; Received <span class="number">45</span> bytes from <span class="number">216.239</span><span class="number">.38</span><span class="number">.10</span><span class="preprocessor">#<span class="number">53</span>(<span class="number">216.239</span><span class="number">.38</span><span class="number">.10</span>) in <span class="number">217</span> ms</span></span><br></pre></td></tr></table></figure></span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/dig-tcpdump/" rel="tag">#dig, tcpdump</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/09/ios8-cors-prefilght/" rel="next" title="iOS8下CORS请求返回504错误的Dubug记录">
+                <i class="fa fa-chevron-left"></i> iOS8下CORS请求返回504错误的Dubug记录
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/06/26/linux-network-cmd/"
+           data-title="Linux网络抓包命令以及dns查询命令" data-url="http://lyn.s76.org/2016/06/26/linux-network-cmd/">
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/author.png" alt="Lyn's Blog" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Lyn's Blog</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Lyn's Blog about Node.js  Express.js Angular.js HTML5 Mongodb Programing Notes</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#tcpdump"><span class="nav-number">1.</span> <span class="nav-text">tcpdump</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dns_查询_dig"><span class="nav-number">2.</span> <span class="nav-text">dns 查询 dig</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#dig_+short"><span class="nav-number">2.1.</span> <span class="nav-text">dig +short</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dig_+nocmd"><span class="nav-number">2.2.</span> <span class="nav-text">dig +nocmd</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dig_-q"><span class="nav-number">2.3.</span> <span class="nav-text">dig -q</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dig_+tcp"><span class="nav-number">2.4.</span> <span class="nav-text">dig +tcp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dig_+trace"><span class="nav-number">2.5.</span> <span class="nav-text">dig +trace</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2011 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lyn's Blog</span>
+</div>
+
+<div class="powered-by">
+  <a class="theme-link" href="http://hexo.io">Powered by Hexo
+  </a>
+</div>
+
+<div class="theme-info">
+  
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"blog-lyn"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+
+    
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
