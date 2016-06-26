@@ -81,7 +81,7 @@ mbp就成了远程的设备的网关,所有流量就会经过mbp的有线网卡.
 
 mbp就成了远程的设备的网关,所有流量就会经过mbp的有线网卡.
 而且由于远程设备的代码中都是http协议的而不是https的.所以所有的流量都可以说是透明的.">
-<meta property="og:updated_time" content="2016-06-26T16:34:52.000Z">
+<meta property="og:updated_time" content="2016-06-26T16:36:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux网络抓包命令以及dns查询命令">
 <meta name="twitter:description" content="tcpdump因为需要远程抓取一台设备的network记录. 所以需要想办法:
@@ -283,6 +283,7 @@ mbp就成了远程的设备的网关,所有流量就会经过mbp的有线网卡.
 <p>于是就可以抓包下来进行分析了.</p>
 <p>这时候就需要用到tcpdump命令了,先使用tcpdump命令把所有的包储存成在本地的cap文件,然后再把这个cap文件丢到wireshark里面进行分析.</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo tcpdump -XvvennSs <span class="number">0</span> -w  <span class="built_in">log</span>.cap  host <span class="number">10.100</span><span class="number">.100</span><span class="number">.100</span></span><br></pre></td></tr></table></figure>
+<p>ps: 感谢小毅提供的帮助~</p>
 <h1 id="dns_查询_dig">dns 查询 dig</h1><p>在科学上网的过程中,dig命令是非常有帮助的一个命令,能帮你分析dns解析的过程.</p>
 <figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dscacheutil -flushcache  <span class="comment">//mac os中清理dns缓存的命令</span></span><br></pre></td></tr></table></figure>
 <p>先用<code>man dig</code> 查询dig的manual(手册) </p>
