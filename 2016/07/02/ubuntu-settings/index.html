@@ -75,7 +75,7 @@ RSA秘钥登录生成RSA秘钥对mac或者linux用户都可以使用以下命令
 RSA秘钥登录生成RSA秘钥对mac或者linux用户都可以使用以下命令在/home/你的用户名/.ssh文件夹下创建Rsa秘钥
 
 使用下">
-<meta property="og:updated_time" content="2016-07-03T14:39:55.000Z">
+<meta property="og:updated_time" content="2016-07-03T14:42:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Securing your Ubuntu Server">
 <meta name="twitter:description" content="在服务器上部署了linux系统以后,还需要以下操作来确保服务器的安全.
@@ -328,25 +328,38 @@ RSA秘钥登录生成RSA秘钥对mac或者linux用户都可以使用以下命令
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">sudo ufw logging <span class="function_start"><span class="keyword">on</span></span></span><br></pre></td></tr></table></figure>
 <h1 id="Fail2ban">Fail2ban</h1><p>fail2ban 会把恶意尝试ssh登录服务器的主机ip拉进黑名单中</p>
 <h2 id="安装-1">安装</h2><ol>
-<li><p>更新你的系统  </p>
- <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">	apt-get <span class="operator"><span class="keyword">update</span> &amp;&amp; apt-<span class="keyword">get</span> <span class="keyword">upgrade</span> -y</span><br><span class="line">	<span class="string">``</span><span class="string">` </span><br><span class="line"></span><br><span class="line">2.  安装 fail2ban</span></span></span><br></pre></td></tr></table></figure>
-<p> apt-get install fail2ban</p>
- <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">3.</span> 如果你需要email通知服务还需要安装</span><br></pre></td></tr></table></figure>
-<p> apt-get install sendmail</p>
- <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">4.</span> 配置ufw,确保UFW允许ssh访问</span><br></pre></td></tr></table></figure>
-<p> ufw enable<br> ufw allow ssh</p>
- <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">	</span><br><span class="line"><span class="preprocessor">## 配置</span></span><br><span class="line"></span><br><span class="line"><span class="number">1.</span> 切换目录</span><br></pre></td></tr></table></figure>
-<p> cd /etc/fail2ban</p>
- <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">2.</span> 拷贝配置文件</span><br></pre></td></tr></table></figure>
-<p> cp jail.conf jail.local<br> cp fail2ban.conf fail2ban.local</p>
- <figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">	</span><br><span class="line"><span class="number">3</span>. 配置</span><br><span class="line"></span><br><span class="line">	在<span class="escape">`/</span>etc/fail2ban/jail.local<span class="escape">`文</span>件中配置</span><br></pre></td></tr></table></figure>
-<h1 id="“bantime”_is_the_number_of_seconds_that_a_host_is_banned-">“bantime” is the number of seconds that a host is banned.</h1><p> bantime  = 600</p>
-<h1 id="A_host_is_banned_if_it_has_generated_“maxretry”_during_the_last_“findtime”">A host is banned if it has generated “maxretry” during the last “findtime”</h1><h1 id="seconds-">seconds.</h1><p> findtime = 600<br> maxretry = 3</p>
- <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="title">SSH</span> 重试次数</span><br></pre></td></tr></table></figure>
-<p> enabled  = true<br> port     = ssh<br> filter   = sshd<br> logpath  = /var/log/auth.log<br> maxretry = 6<br> ```</p>
+<li><p>更新你的系统   </p>
+ <figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-<span class="built_in">get</span> <span class="keyword">update</span> &amp;&amp; apt-<span class="built_in">get</span> upgrade -y</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装 fail2ban  </p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-<span class="keyword">get</span> install fail2ban</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果你需要email通知服务还需要安装</p>
+ <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-<span class="keyword">get</span> install sendmail</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置ufw,确保UFW允许ssh访问</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ufw <span class="built_in">enable</span></span><br><span class="line">ufw allow ssh</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-</span>
+<h2 id="配置-1">配置</h2><ol>
+<li><p>切换目录</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/fail2ban</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>拷贝配置文件</p>
+</li>
+</ol>
+<pre><code><span class="comment"><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp jail<span class="class">.conf</span> jail<span class="class">.local</span></span><br><span class="line">cp fail2ban<span class="class">.conf</span> fail2ban.local</span><br></pre></td></tr></table></figure></span>
+</code></pre><ol>
+<li><p>配置</p>
+<p> 在<code>/etc/fail2ban/jail.local</code>文件中配置</p>
+</li>
+</ol>
+<pre><code><span class="comment"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># <span class="string">"bantime"</span> is the number of seconds that a host is banned.</span></span><br><span class="line">bantime  = <span class="number">600</span></span><br><span class="line">    </span><br><span class="line"><span class="preprocessor"># A host is banned <span class="keyword">if</span> it has generated <span class="string">"maxretry"</span> during the last <span class="string">"findtime"</span></span></span><br><span class="line"><span class="preprocessor"># seconds.</span></span><br><span class="line">findtime = <span class="number">600</span></span><br><span class="line">maxretry = <span class="number">3</span></span><br></pre></td></tr></table></figure></span>
+
+SSH 重试次数
+
+<span class="comment"><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">enabled  = <span class="value"><span class="keyword">true</span></span></span></span><br><span class="line"><span class="setting">port     = <span class="value">ssh</span></span></span><br><span class="line"><span class="setting">filter   = <span class="value">sshd</span></span></span><br><span class="line"><span class="setting">logpath  = <span class="value">/var/log/auth.log</span></span></span><br><span class="line"><span class="setting">maxretry = <span class="value"><span class="number">6</span></span></span></span><br></pre></td></tr></table></figure></span>
+</code></pre></span>
       
     </div>
 
@@ -483,7 +496,7 @@ RSA秘钥登录生成RSA秘钥对mac或者linux用户都可以使用以下命令
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#新建一个非root用户"><span class="nav-number">1.</span> <span class="nav-text">新建一个非root用户</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RSA秘钥登录"><span class="nav-number">2.</span> <span class="nav-text">RSA秘钥登录</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#生成RSA秘钥对"><span class="nav-number">2.1.</span> <span class="nav-text">生成RSA秘钥对</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改ssh配置文件"><span class="nav-number">2.2.</span> <span class="nav-text">修改ssh配置文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ufw_防火墙"><span class="nav-number">3.</span> <span class="nav-text">ufw 防火墙</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">3.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置"><span class="nav-number">3.2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动ufw"><span class="nav-number">3.3.</span> <span class="nav-text">启动ufw</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#日志功能"><span class="nav-number">3.4.</span> <span class="nav-text">日志功能</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fail2ban"><span class="nav-number">4.</span> <span class="nav-text">Fail2ban</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-1"><span class="nav-number">4.1.</span> <span class="nav-text">安装</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#“bantime”_is_the_number_of_seconds_that_a_host_is_banned-"><span class="nav-number">5.</span> <span class="nav-text">“bantime” is the number of seconds that a host is banned.</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#A_host_is_banned_if_it_has_generated_“maxretry”_during_the_last_“findtime”"><span class="nav-number">6.</span> <span class="nav-text">A host is banned if it has generated “maxretry” during the last “findtime”</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#seconds-"><span class="nav-number">7.</span> <span class="nav-text">seconds.</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#新建一个非root用户"><span class="nav-number">1.</span> <span class="nav-text">新建一个非root用户</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RSA秘钥登录"><span class="nav-number">2.</span> <span class="nav-text">RSA秘钥登录</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#生成RSA秘钥对"><span class="nav-number">2.1.</span> <span class="nav-text">生成RSA秘钥对</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改ssh配置文件"><span class="nav-number">2.2.</span> <span class="nav-text">修改ssh配置文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ufw_防火墙"><span class="nav-number">3.</span> <span class="nav-text">ufw 防火墙</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">3.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置"><span class="nav-number">3.2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动ufw"><span class="nav-number">3.3.</span> <span class="nav-text">启动ufw</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#日志功能"><span class="nav-number">3.4.</span> <span class="nav-text">日志功能</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fail2ban"><span class="nav-number">4.</span> <span class="nav-text">Fail2ban</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-1"><span class="nav-number">4.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置-1"><span class="nav-number">4.2.</span> <span class="nav-text">配置</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
