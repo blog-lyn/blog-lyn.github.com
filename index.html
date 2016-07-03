@@ -425,19 +425,17 @@
 <li>‘cat &gt;&gt; .ssh/authorized_keys’ &lt; ~/.ssh/id_rsa.pub的作用是，将本地的公钥文件~/.ssh/id_rsa.pub，重定向追加到远程文件authorized_keys的末尾。</li>
 <li>这一行命令等同于在linux下运行:ssh-copy-id user@host   </li>
 </ul>
-<h2 id="修改ssh配置文件">修改ssh配置文件</h2><ol>
+<h2 id="修改ssh配置文件">修改ssh配置文件</h2><ul>
 <li><p>在服务器上用vi修改<code>/etc/ssh/sshd_config</code>文件中的这几行  </p>
- <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 修改默认的ssh的<span class="number">22</span>端口到你想要的任意端口 这里修改为<span class="number">38000</span></span></span><br><span class="line">Port <span class="number">38000</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#禁止root用户使用ssh登录</span></span><br><span class="line">PermitRootLogin no</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#禁止用户使用密码登录服务器</span></span><br><span class="line">PasswordAuthentication no</span><br></pre></td></tr></table></figure>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 修改默认的ssh的<span class="number">22</span>端口到你想要的任意端口 这里修改为<span class="number">38000</span></span></span><br><span class="line">Port <span class="number">38000</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#禁止root用户使用ssh登录</span></span><br><span class="line">PermitRootLogin no</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#禁止用户使用密码登录服务器</span></span><br><span class="line">PasswordAuthentication no</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>使用下面的命令来关闭不需要的ipv4或者ipv6 的ssh访问  </p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">'AddressFamily inet'</span> | sudo tee <span class="operator">-a</span> /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">'AddressFamily inet'</span> | sudo tee <span class="operator">-a</span> /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
 </li>
-</ol>
-<ol>
-<li><p>重启ssh服务生效   </p>
- <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">sudo</span> service ssh restart</span><br></pre></td></tr></table></figure>
+<li><p>重启ssh服务生效  </p>
+  <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">sudo</span> service ssh restart</span><br></pre></td></tr></table></figure>
 </li>
-</ol>
+</ul>
 <h1 id="ufw_防火墙">ufw 防火墙</h1><h2 id="安装">安装</h2><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-<span class="keyword">get</span> install ufw</span><br></pre></td></tr></table></figure>
 <h2 id="配置">配置</h2><ul>
 <li>设置默认规则  </li>
