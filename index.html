@@ -464,28 +464,28 @@
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">sudo ufw logging <span class="function_start"><span class="keyword">on</span></span></span><br></pre></td></tr></table></figure>
 <h1 id="Fail2ban">Fail2ban</h1><p>fail2ban 会把恶意尝试ssh登录服务器的主机ip拉进黑名单中</p>
 <h2 id="安装-1">安装</h2><ol>
-<li><p>更新你的系统   </p>
+<li><p>更新你的系统    </p>
  <figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-<span class="built_in">get</span> <span class="keyword">update</span> &amp;&amp; apt-<span class="built_in">get</span> upgrade -y</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>安装 fail2ban  </p>
+<li><p>安装 fail2ban    </p>
 <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-<span class="keyword">get</span> install fail2ban</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>如果你需要email通知服务还需要安装</p>
+<li><p>如果你需要email通知服务还需要安装  </p>
  <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-<span class="keyword">get</span> install sendmail</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>配置ufw,确保UFW允许ssh访问</p>
+<li><p>配置ufw,确保UFW允许ssh访问  </p>
  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ufw <span class="built_in">enable</span></span><br><span class="line">ufw allow ssh</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <h2 id="配置-1">配置</h2><ol>
-<li><p>切换目录</p>
+<li><p>切换目录  </p>
  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/fail2ban</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>拷贝配置文件</p>
+<li><p>拷贝配置文件  </p>
+ <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp jail<span class="class">.conf</span> jail<span class="class">.local</span></span><br><span class="line">cp fail2ban<span class="class">.conf</span> fail2ban.local</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<pre><code><span class="comment"><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp jail<span class="class">.conf</span> jail<span class="class">.local</span></span><br><span class="line">cp fail2ban<span class="class">.conf</span> fail2ban.local</span><br></pre></td></tr></table></figure></span>
-</code></pre><ol>
+<ol>
 <li><p>配置</p>
 <p> 在<code>/etc/fail2ban/jail.local</code>文件中配置</p>
 </li>
