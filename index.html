@@ -475,19 +475,19 @@
  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ufw <span class="built_in">enable</span></span><br><span class="line">ufw allow ssh</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<h2 id="配置-1">配置</h2><ol>
-<li><p>切换目录  </p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/fail2ban</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>拷贝配置文件  </p>
- <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp jail<span class="class">.conf</span> jail<span class="class">.local</span></span><br><span class="line">cp fail2ban<span class="class">.conf</span> fail2ban.local</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<ol>
-<li><p>配置<br> 在<code>/etc/fail2ban/jail.local</code>文件中配置  </p>
- <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># "bantime" is the number of seconds that a host is banned.</span></span><br><span class="line"><span class="setting">bantime  = <span class="value"><span class="number">600</span></span></span></span><br><span class="line"><span class="comment"># A host is banned if it has generated "maxretry" during the last "findtime"</span></span><br><span class="line"><span class="comment"># seconds.</span></span><br><span class="line"><span class="setting">findtime = <span class="value"><span class="number">600</span></span></span></span><br><span class="line"><span class="setting">maxretry = <span class="value"><span class="number">3</span></span></span></span><br><span class="line"></span><br><span class="line"><span class="comment"># SSH 重试次数</span></span><br><span class="line"><span class="setting">enabled  = <span class="value"><span class="keyword">true</span></span></span></span><br><span class="line"><span class="setting">port     = <span class="value">ssh</span></span></span><br><span class="line"><span class="setting">filter   = <span class="value">sshd</span></span></span><br><span class="line"><span class="setting">logpath  = <span class="value">/var/log/auth.log</span></span></span><br><span class="line"><span class="setting">maxretry = <span class="value"><span class="number">6</span></span></span></span><br></pre></td></tr></table></figure></li>
-</ol>
-
+<h2 id="配置-1">配置</h2><ul>
+<li>切换目录  </li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/fail2ban</span><br></pre></td></tr></table></figure>
+<ul>
+<li>拷贝配置文件  </li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp jail<span class="class">.conf</span> jail<span class="class">.local</span></span><br><span class="line">cp fail2ban<span class="class">.conf</span> fail2ban.local</span><br></pre></td></tr></table></figure>
+<ul>
+<li>配置  </li>
+</ul>
+<p>在<code>/etc/fail2ban/jail.local</code>文件中配置  </p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># "bantime" is the number of seconds that a host is banned.</span></span><br><span class="line"><span class="setting">bantime  = <span class="value"><span class="number">600</span></span></span></span><br><span class="line"><span class="comment"># A host is banned if it has generated "maxretry" during the last "findtime"</span></span><br><span class="line"><span class="comment"># seconds.</span></span><br><span class="line"><span class="setting">findtime = <span class="value"><span class="number">600</span></span></span></span><br><span class="line"><span class="setting">maxretry = <span class="value"><span class="number">3</span></span></span></span><br><span class="line">	</span><br><span class="line"><span class="comment"># SSH 重试次数</span></span><br><span class="line"><span class="setting">enabled  = <span class="value"><span class="keyword">true</span></span></span></span><br><span class="line"><span class="setting">port     = <span class="value">ssh</span></span></span><br><span class="line"><span class="setting">filter   = <span class="value">sshd</span></span></span><br><span class="line"><span class="setting">logpath  = <span class="value">/var/log/auth.log</span></span></span><br><span class="line"><span class="setting">maxretry = <span class="value"><span class="number">6</span></span></span></span><br></pre></td></tr></table></figure>
             
           </span>
         
