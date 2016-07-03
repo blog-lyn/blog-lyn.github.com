@@ -90,7 +90,7 @@ ESXI中配置APC的USB设备
 <meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-7-3/44958482.jpg">
 <meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-7-3/42030707.jpg">
 <meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-7-3/72111678.jpg">
-<meta property="og:updated_time" content="2016-07-03T14:21:36.000Z">
+<meta property="og:updated_time" content="2016-07-03T14:26:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ESXI中实现UPS断电自动关闭GEN8的功能">
 <meta name="twitter:description" content="安装ubuntu参考: http://lyn.s76.org/2016/07/02/ubuntu-settings/​    
@@ -333,10 +333,12 @@ ESXI中配置APC的USB设备
 <ul>
 <li><p>生成两个 ~/.ssh 文件：id_rsa 和 id_rsa.pub。</p>
 </li>
-<li><p>对于 ESXi 5.0~6.0，authorized_keys 的位置为：/etc/ssh/keys-<username>/authorized_keys</username></p>
+<li><p>对于 ESXi 5.0~6.0，authorized_keys 的位置为：/etc/ssh/keys-<username>/authorized_keys(root用户对应的就是:/etc/ssh/keys-root/authorized_keys)</username></p>
 </li>
 <li>可以在此文件中存储多个密钥(直接在文件内容后面追加)。</li>
+<li>使用下面的命令上传到指定的目录:</li>
 </ul>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh user<span class="variable">@host</span> <span class="string">'mkdir -p .ssh &amp;&amp; cat &gt;&gt; /etc/ssh/keys-root/authorized_keys'</span> &lt; ~<span class="regexp">/.ssh/id</span>_rsa.pub</span><br></pre></td></tr></table></figure>
 <h2 id="配置-1">配置</h2><p>ssh到exsi,修改ssh config配置文件:<code>/etc/ssh/sshd_config</code>.</p>
 <ul>
 <li>要允许授予 root 访问权限，请在 /etc/ssh/sshd_config 文件中将 PermitRootLogin no 更改为 PermitRootLogin yes。</li>
