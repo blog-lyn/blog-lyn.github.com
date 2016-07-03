@@ -75,7 +75,7 @@ RSA秘钥登录生成RSA秘钥对mac或者linux用户都可以使用以下命令
 RSA秘钥登录生成RSA秘钥对mac或者linux用户都可以使用以下命令在/home/你的用户名/.ssh文件夹下创建Rsa秘钥
 
 使用下">
-<meta property="og:updated_time" content="2016-07-03T14:47:43.000Z">
+<meta property="og:updated_time" content="2016-07-03T14:48:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Securing your Ubuntu Server">
 <meta name="twitter:description" content="在服务器上部署了linux系统以后,还需要以下操作来确保服务器的安全.
@@ -281,17 +281,18 @@ RSA秘钥登录生成RSA秘钥对mac或者linux用户都可以使用以下命令
 </li>
 </ol>
 <ol>
-<li>如果服务器上已有authorized_keys文件:</li>
+<li><p>如果服务器上已有authorized_keys文件:  </p>
+ <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ssh user<span class="variable">@host</span> <span class="string">'mkdir -p .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys'</span> &lt; ~<span class="regexp">/.ssh/id</span>_rsa.pub</span><br></pre></td></tr></table></figure>
+</li>
 </ol>
-<pre><code><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ssh user<span class="variable">@host</span> <span class="string">'mkdir -p .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys'</span> &lt; ~<span class="regexp">/.ssh/id</span>_rsa.pub</span><br></pre></td></tr></table></figure>
-
-
--<span class="ruby">  <span class="string">"$ ssh user@host"</span>，表示登录远程主机；  
-</span>-<span class="ruby">  单引号中的mkdir .ssh &amp;&amp; cat <span class="prompt">&gt;&gt; </span>.ssh/authorized_keys，表示登录后在远程shell上执行的命令：  
-</span>-<span class="ruby">    <span class="string">"$ mkdir -p .ssh"</span>的作用是，如果用户主目录中的.ssh目录不存在，就创建一个；  
-</span>-<span class="ruby">  <span class="string">'cat &gt;&gt; .ssh/authorized_keys'</span> &lt; ~<span class="regexp">/.ssh/id</span>_rsa.pub的作用是，将本地的公钥文件~<span class="regexp">/.ssh/id</span>_rsa.pub，重定向追加到远程文件authorized_keys的末尾。
-</span>-<span class="ruby">  这一行命令等同于在linux下运行<span class="symbol">:ssh-copy-id</span> user<span class="variable">@host</span>   </span>
-</code></pre><h2 id="修改ssh配置文件">修改ssh配置文件</h2><ol>
+<ul>
+<li>“$ ssh user@host”，表示登录远程主机；  </li>
+<li>单引号中的mkdir .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys，表示登录后在远程shell上执行的命令：  </li>
+<li>“$ mkdir -p .ssh”的作用是，如果用户主目录中的.ssh目录不存在，就创建一个；  </li>
+<li>‘cat &gt;&gt; .ssh/authorized_keys’ &lt; ~/.ssh/id_rsa.pub的作用是，将本地的公钥文件~/.ssh/id_rsa.pub，重定向追加到远程文件authorized_keys的末尾。</li>
+<li>这一行命令等同于在linux下运行:ssh-copy-id user@host   </li>
+</ul>
+<h2 id="修改ssh配置文件">修改ssh配置文件</h2><ol>
 <li><p>在服务器上用vi修改<code>/etc/ssh/sshd_config</code>文件中的这几行  </p>
  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 修改默认的ssh的<span class="number">22</span>端口到你想要的任意端口 这里修改为<span class="number">38000</span></span></span><br><span class="line">Port <span class="number">38000</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#禁止root用户使用ssh登录</span></span><br><span class="line">PermitRootLogin no</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#禁止用户使用密码登录服务器</span></span><br><span class="line">PasswordAuthentication no</span><br></pre></td></tr></table></figure>
 </li>
