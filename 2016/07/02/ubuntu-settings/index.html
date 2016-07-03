@@ -75,7 +75,7 @@ RSA秘钥登录生成RSA秘钥对mac或者linux用户都可以使用以下命令
 RSA秘钥登录生成RSA秘钥对mac或者linux用户都可以使用以下命令在/home/你的用户名/.ssh文件夹下创建Rsa秘钥
 
 使用下">
-<meta property="og:updated_time" content="2016-07-03T14:06:59.000Z">
+<meta property="og:updated_time" content="2016-07-03T14:19:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Securing your Ubuntu Server">
 <meta name="twitter:description" content="在服务器上部署了linux系统以后,还需要以下操作来确保服务器的安全.
@@ -282,16 +282,15 @@ RSA秘钥登录生成RSA秘钥对mac或者linux用户都可以使用以下命令
 <ol>
 <li>如果服务器上已有authorized_keys文件:</li>
 </ol>
-<pre><code>&lt;!--￼<span class="number">5</span>--&gt;
-
-
-
-<span class="number">1</span>. <span class="string">"$ ssh user@host"</span>，表示登录远程主机；  
-<span class="number">2</span>.  单引号中的mkdir .ssh &amp;&amp; cat <span class="prompt">&gt;&gt; </span>.ssh/authorized_keys，表示登录后在远程shell上执行的命令：  
-<span class="number">3</span>.  <span class="string">"$ mkdir -p .ssh"</span>的作用是，如果用户主目录中的.ssh目录不存在，就创建一个；  
-<span class="number">4</span>. <span class="string">'cat &gt;&gt; .ssh/authorized_keys'</span> &lt; ~<span class="regexp">/.ssh/id</span>_rsa.pub的作用是，将本地的公钥文件~<span class="regexp">/.ssh/id</span>_rsa.pub，重定向追加到远程文件authorized_keys的末尾。
-<span class="number">5</span>. 这一行命令等同于在linux下运行<span class="symbol">:ssh-copy-id</span> user<span class="variable">@host</span>   
-</code></pre><h2 id="修改ssh配置文件">修改ssh配置文件</h2><ol>
+<pre><code><span class="comment"><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ssh user<span class="variable">@host</span> <span class="string">'mkdir -p .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys'</span> &lt; ~<span class="regexp">/.ssh/id</span>_rsa.pub</span><br></pre></td></tr></table></figure></span>
+</code></pre><ul>
+<li>“$ ssh user@host”，表示登录远程主机；  </li>
+<li>单引号中的mkdir .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys，表示登录后在远程shell上执行的命令：  </li>
+<li>“$ mkdir -p .ssh”的作用是，如果用户主目录中的.ssh目录不存在，就创建一个；  </li>
+<li>‘cat &gt;&gt; .ssh/authorized_keys’ &lt; ~/.ssh/id_rsa.pub的作用是，将本地的公钥文件~/.ssh/id_rsa.pub，重定向追加到远程文件authorized_keys的末尾。</li>
+<li>这一行命令等同于在linux下运行:ssh-copy-id user@host   </li>
+</ul>
+<h2 id="修改ssh配置文件">修改ssh配置文件</h2><ol>
 <li><p>在服务器上用vi修改<code>/etc/ssh/sshd_config</code>文件中的这几行  </p>
  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 修改默认的ssh的<span class="number">22</span>端口到你想要的任意端口 这里修改为<span class="number">38000</span></span></span><br><span class="line">Port <span class="number">38000</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#禁止root用户使用ssh登录</span></span><br><span class="line">PermitRootLogin no</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#禁止用户使用密码登录服务器</span></span><br><span class="line">PasswordAuthentication no</span><br></pre></td></tr></table></figure>
 </li>
@@ -319,10 +318,9 @@ RSA秘钥登录生成RSA秘钥对mac或者linux用户都可以使用以下命令
 </ol>
 <p>//启动防火墙<br>sudo ufw enable<br>//关闭防火墙<br>sudo ufw disable<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">## 日志功能</span></span><br><span class="line"></span><br><span class="line">日志规则可以在`<span class="javascript">/<span class="keyword">var</span>/logs/ufw</span>`文件夹中设置  </span><br><span class="line">规则如下:</span><br></pre></td></tr></table></figure></p>
 <p>[UFW BLOCK]: This location is where the description of the logged event will be located. In this instance, it blocked a connection.<br>IN: If this contains a value, then the event was incoming<br>OUT: If this contain a value, then the event was outgoing<br>MAC: A combination of the destination and source MAC addresses<br>SRC: The IP of the packet source<br>DST: The IP of the packet destination<br>LEN: Packet length<br>TTL: The packet TTL, or time to live. How long it will bounce between routers until it expires, if no destination is found.<br>PROTO: The packet’s protocal<br>SPT: The source port of the package<br>DPT: The destination port of the package<br>WINDOW: The size of the packet the sender can receive<br>SYN URGP: Indicated if a three-way handshake is required. 0 means it is not.<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">开启日志功能</span><br></pre></td></tr></table></figure></p>
-<pre><code>sudo ufw logging on
-<span class="comment"><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor"># Fail2ban</span></span><br><span class="line"></span><br><span class="line">fail2ban 会把恶意尝试ssh登录服务器的主机ip拉进黑名单中</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">## 安装</span></span><br><span class="line"></span><br><span class="line"><span class="number">1.</span> 更新你的系统</span><br></pre></td></tr></table></figure></span>
-
-apt-get update &amp;&amp; apt-get upgrade -y
+<p>sudo ufw logging on</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor"># Fail2ban</span></span><br><span class="line"></span><br><span class="line">fail2ban 会把恶意尝试ssh登录服务器的主机ip拉进黑名单中</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">## 安装</span></span><br><span class="line"></span><br><span class="line"><span class="number">1.</span> 更新你的系统</span><br></pre></td></tr></table></figure>
+<pre><code>apt-get update &amp;&amp; apt-get upgrade -y
 <span class="comment"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">2.</span>  安装 fail2ban</span><br></pre></td></tr></table></figure></span>
 
 apt-get install fail2ban
@@ -340,7 +338,7 @@ cd /etc/fail2ban
 
 cp jail.conf jail.local
 cp fail2ban.conf fail2ban.local
-<span class="comment"><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">3</span>. 配置</span><br><span class="line"></span><br><span class="line">	在<span class="escape">`/</span>etc/fail2ban/jail.local<span class="escape">`文</span>件中配置</span><br></pre></td></tr></table></figure></span>
+<span class="comment"><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">	</span><br><span class="line"><span class="number">3</span>. 配置</span><br><span class="line"></span><br><span class="line">	在<span class="escape">`/</span>etc/fail2ban/jail.local<span class="escape">`文</span>件中配置</span><br></pre></td></tr></table></figure></span>
 
 # "bantime" is the number of seconds that a host is banned.
 bantime  = 600
