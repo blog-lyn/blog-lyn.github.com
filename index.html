@@ -207,6 +207,182 @@
             
             
               
+                <a class="post-title-link" href="/2016/07/02/ubuntu-settings/" itemprop="url">
+                  Securing your Ubuntu Server
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-07-02T23:20:19+08:00" content="2016-07-02">
+              2016-07-02
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/02/ubuntu-settings/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/02/ubuntu-settings/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>在服务器上部署了linux系统以后,还需要以下操作来确保服务器的安全.</p>
+<h1 id="新建一个非root用户">新建一个非root用户</h1><p>使用如下命令新建一个用户 并且把这个用户加到sudo组中</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//新建用户</span></span><br><span class="line">adduser 你的用户名</span><br><span class="line"><span class="comment">//把用户加入到sudo组</span></span><br><span class="line">adduser 你的用户名 sudo</span><br></pre></td></tr></table></figure>
+<h1 id="RSA秘钥登录">RSA秘钥登录</h1><h2 id="生成RSA秘钥对">生成RSA秘钥对</h2><p>mac或者linux用户都可以使用以下命令在/home/你的用户名/.ssh文件夹下创建Rsa秘钥</p>
+<ol>
+<li><p>使用下面的命令,所有选择都直接按enter使用默认值 就会生成这两个秘钥 <code>id_rsa</code> 和  <code>id_rsa.pub</code> </p>
+ <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -<span class="tag">b</span> <span class="number">4096</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在服务器上创建.ssh文件夹</p>
+ <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -<span class="tag">p</span> ~/<span class="class">.ssh</span> &amp;&amp; sudo chmod -R <span class="number">700</span> ~/.ssh/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后从本地的terminal中使用scp命令上传到服务器上</p>
+ <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -<span class="constant">P </span>服务器的ssh端口号  ~<span class="regexp">/.ssh/id</span>_rsa.pub 服务器上的用户名<span class="variable">@203</span>.<span class="number">0</span>.<span class="number">113.10</span><span class="symbol">:~/</span>.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改文件夹权限 </p>
+ <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod <span class="number">700</span> -R ~/.ssh &amp;&amp; chmod <span class="number">600</span> ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p>如果服务器上已有authorized_keys文件:</p>
+ <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">	ssh user<span class="variable">@host</span> <span class="string">'mkdir -p .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys'</span> &lt; ~<span class="regexp">/.ssh/id</span>_rsa.pub</span><br><span class="line">	```	</span><br><span class="line">	 <span class="number">1</span>. <span class="string">"$ ssh user@host"</span>，表示登录远程主机；  </span><br><span class="line">	 <span class="number">2</span>.  单引号中的mkdir .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys，表示登录后在远程shell上执行的命令：  </span><br><span class="line">	 <span class="number">3</span>.  <span class="string">"$ mkdir -p .ssh"</span>的作用是，如果用户主目录中的.ssh目录不存在，就创建一个；  </span><br><span class="line">	 <span class="number">4</span>. <span class="string">'cat &gt;&gt; .ssh/authorized_keys'</span> &lt; ~<span class="regexp">/.ssh/id</span>_rsa.pub的作用是，将本地的公钥文件~<span class="regexp">/.ssh/id</span>_rsa.pub，重定向追加到远程文件authorized_keys的末尾。</span><br><span class="line">	 <span class="number">5</span>. 这一行命令等同于在linux下运行<span class="symbol">:ssh-copy-id</span> user<span class="variable">@host</span> </span><br><span class="line"><span class="comment">## 修改ssh配置文件</span></span><br><span class="line"></span><br><span class="line"><span class="number">1</span>. 在服务器上用vi修改`/etc/ssh/sshd_config`文件中的这几行</span><br></pre></td></tr></table></figure>
+<h1 id="修改默认的ssh的22端口到你想要的任意端口_这里修改为38000">修改默认的ssh的22端口到你想要的任意端口 这里修改为38000</h1><p> Port 38000</p>
+<p> #禁止root用户使用ssh登录<br> PermitRootLogin no</p>
+<p> #禁止用户使用密码登录服务器<br> PasswordAuthentication no</p>
+ <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">2.</span> 使用下面的命令来关闭不需要的ipv4或者ipv6 的ssh访问</span><br></pre></td></tr></table></figure>
+<p> echo ‘AddressFamily inet’ | sudo tee -a /etc/ssh/sshd_config</p>
+ <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">3.</span> 重启ssh服务生效</span><br></pre></td></tr></table></figure>
+<p> sudo service ssh restart</p>
+ <figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">	</span><br><span class="line"><span class="preprocessor"># ufw 防火墙</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">## 安装</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>sudo apt-get install ufw<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">## 配置</span></span><br><span class="line"></span><br><span class="line"><span class="number">1.</span> 设置默认规则</span><br></pre></td></tr></table></figure></p>
+<pre><code>sudo ufw default allow outgoing
+sudo ufw default deny incoming
+<span class="comment"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">2.</span> 增加允许的规则</span><br></pre></td></tr></table></figure></span>
+
+sudo ufw allow ssh
+sudo ufw allow OpenSSH
+sudo ufw allow 22
+sudo ufw allow 80/tcp
+sudo ufw allow http/tcp
+//可以增加udp类的规则
+sudo ufw allow 1725/udp
+<span class="comment"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">3.</span> 屏蔽访问</span><br></pre></td></tr></table></figure></span>
+
+sudo ufw deny 111
+<span class="comment"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">4.</span>  高级规则</span><br></pre></td></tr></table></figure></span>
+
+//允许所有来自该ip的连接
+sudo ufw allow from 123.45.67.89
+//指定访问端口和协议
+sudo ufw allow from 123.45.67.89 to any port 22 proto tcp
+<span class="comment"><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">## 启动ufw</span></span><br></pre></td></tr></table></figure></span>
+</code></pre><p>//启动防火墙<br>sudo ufw enable<br>//关闭防火墙<br>sudo ufw disable<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">## 日志功能</span></span><br><span class="line"></span><br><span class="line">日志规则可以在`<span class="javascript">/<span class="keyword">var</span>/logs/ufw</span>`文件夹中设置  </span><br><span class="line">规则如下:</span><br></pre></td></tr></table></figure></p>
+<p>[UFW BLOCK]: This location is where the description of the logged event will be located. In this instance, it blocked a connection.<br>IN: If this contains a value, then the event was incoming<br>OUT: If this contain a value, then the event was outgoing<br>MAC: A combination of the destination and source MAC addresses<br>SRC: The IP of the packet source<br>DST: The IP of the packet destination<br>LEN: Packet length<br>TTL: The packet TTL, or time to live. How long it will bounce between routers until it expires, if no destination is found.<br>PROTO: The packet’s protocal<br>SPT: The source port of the package<br>DPT: The destination port of the package<br>WINDOW: The size of the packet the sender can receive<br>SYN URGP: Indicated if a three-way handshake is required. 0 means it is not.<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">开启日志功能</span><br></pre></td></tr></table></figure></p>
+<pre><code>sudo ufw logging on
+<span class="comment"><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor"># Fail2ban</span></span><br><span class="line"></span><br><span class="line">fail2ban 会把恶意尝试ssh登录服务器的主机ip拉进黑名单中</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">## 安装</span></span><br><span class="line"></span><br><span class="line"><span class="number">1.</span> 更新你的系统</span><br></pre></td></tr></table></figure></span>
+
+apt-get update &amp;&amp; apt-get upgrade -y
+<span class="comment"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">2.</span>  安装 fail2ban</span><br></pre></td></tr></table></figure></span>
+
+apt-get install fail2ban
+<span class="comment"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">3.</span> 如果你需要email通知服务还需要安装</span><br></pre></td></tr></table></figure></span>
+
+apt-get install sendmail
+<span class="comment"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">4.</span> 配置ufw,确保UFW允许ssh访问</span><br></pre></td></tr></table></figure></span>
+
+ufw enable
+ufw allow ssh
+<span class="comment"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">	</span><br><span class="line"><span class="preprocessor">## 配置</span></span><br><span class="line"><span class="number">1.</span> 切换目录</span><br></pre></td></tr></table></figure></span>
+
+cd /etc/fail2ban
+<span class="comment"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">2.</span> 拷贝配置文件</span><br></pre></td></tr></table></figure></span>
+
+cp jail.conf jail.local
+cp fail2ban.conf fail2ban.local
+<span class="comment"><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">3</span>. 配置</span><br><span class="line"></span><br><span class="line">	在<span class="escape">`/</span>etc/fail2ban/jail.local<span class="escape">`文</span>件中配置</span><br></pre></td></tr></table></figure></span>
+
+# "bantime" is the number of seconds that a host is banned.
+bantime  = 600
+
+# A host is banned if it has generated "maxretry" during the last "findtime"
+# seconds.
+findtime = 600
+maxretry = 3
+
+<span class="comment"><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="title">SSH</span> 重试次数</span><br></pre></td></tr></table></figure></span>
+
+enabled  = true
+port     = ssh
+filter   = sshd
+logpath  = /var/log/auth.log
+maxretry = 6
+```
+</code></pre>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/06/28/3des-of-javascript/" itemprop="url">
                   JavaScript 中 3DES加密解密&ASCII与Hex16进制互相转换
                 </a>
@@ -1341,191 +1517,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/04/17/css-media/" itemprop="url">
-                  Responsive Web Design
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-04-17T22:52:20+08:00" content="2016-04-17">
-              2016-04-17
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/04/17/css-media/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/17/css-media/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="允许网页宽度自动调整">允许网页宽度自动调整</h1><p>“自适应网页设计” 到底是怎么做到的？ </p>
-<p>首先，在网页代码的头部，加入一行viewport元标签。</p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;meta <span class="property">name</span>=<span class="string">"viewport"</span> content=<span class="string">"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"</span> /&gt;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>width 控制Viewport的宽度,可以指定一个值或者设备的宽度,如device-width为设备的宽度(单位为设备缩放比例1:1的像素),上面代码里设置的宽度是取设备宽度;</p>
-<p> initial-scale 原始缩放比例（initial-scale=1）为1.0，即网页初始大小占屏幕面积的100%, 对应的值是一个浮点值,页面呈现大小等于设置原始的宽度乘以initial-scale的值;</p>
-<p> maximum-scale 最大缩放,即允许用户缩放的最大比例,也是乘积关系.一般设置为1:1的比例不会让用户缩放的;</p>
-<p> minimum-scale 最小缩放,如上;</p>
-<p> user-scalable 用户是否可以手动缩放,一般值设为no,不允许用户缩放;</p>
-</blockquote>
-<p>这段代码的大意是让viewport的物理宽度等于设备的分辨率,不允许用户缩放.原始缩放比例（initial-scale=1）为1.0，即网页初始大小占屏幕面积的100%,所有主流浏览器都支持这个设置，包括IE9。</p>
-<h2 id="meta_viewport标签动态改变的方法">meta viewport标签动态改变的方法</h2><h3 id="第一种方法:">第一种方法:</h3><p>可以使用document.write来动态输出meta viewport标签，例如：</p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">document.<span class="command">write</span>('&lt;meta <span class="property">name</span>=<span class="string">"viewport"</span> content=<span class="string">"width=device-width,initial-scale=1"</span>&gt;')</span><br></pre></td></tr></table></figure>
-<h3 id="第二种方法:">第二种方法:</h3><p>通过setAttribute来改变</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">meta</span> <span class="attribute">id</span>=<span class="value">"testViewport"</span> <span class="attribute">name</span>=<span class="value">"viewport"</span> <span class="attribute">content</span>=<span class="value">"width = 380"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript"></span><br><span class="line"><span class="keyword">var</span> mvp = <span class="built_in">document</span>.getElementById(<span class="string">'testViewport'</span>);</span><br><span class="line">mvp.setAttribute(<span class="string">'content'</span>,<span class="string">'width=480'</span>);</span><br><span class="line"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h1 id="CSS_@Media查询">CSS @Media查询</h1><p>引用MDN的描述:</p>
-<blockquote>
-<p> 媒体查询 包含了一个媒体类型和至少一个使用如宽度、高度和颜色等媒体属性来限制样式表范围的表达式。CSS3加入的媒体查询使得无需修改内容便可以使样式应用于某些特定的设备范围。<br>媒体查询包含了一个媒体类型 和如CSS3规范中描述的包含一个或多个表达式的媒体属性，这些媒体属性会被解析成真或假。如果媒体查询中的媒体类型与文档要展示的设备相符则查询结果为真，并且媒体查询中的所有表达式为真。</p>
-<h2 id="在stylesheet_Link_选择加载制定的CSS">在stylesheet Link 选择加载制定的CSS</h2></blockquote>
-<p>“自适应网页设计”的核心，就是CSS3引入的Media Query模块。<br>它的意思就是，自动探测屏幕宽度，然后加载相应的CSS文件。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">&lt;!-- link元素中的CSS媒体查询 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">media</span>=<span class="value">"(max-width: 800px)"</span> <span class="attribute">href</span>=<span class="value">"example.css"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-<p>上面的代码意思是，如果屏幕宽度不超过800像素（max-width: 800px），就加载example.css文件。</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link rel=<span class="string">"stylesheet"</span> <span class="class"><span class="keyword">type</span></span>=<span class="string">"text/css"</span> media=<span class="string">"screen and (min-width: 400px) and (max-device-width: 600px)"</span> href=<span class="string">"smallScreen.css"</span> /&gt;</span><br></pre></td></tr></table></figure>
-<p>如果屏幕宽度在400像素到600像素之间，则加载smallScreen.css文件。<br>除了用html标签加载CSS文件，还可以在现有CSS文件中使用@import来实现加载。<br>但是并不推荐这样做.</p>
-<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">　　<span class="constant">@import</span> url(<span class="string">"tinyScreen.css"</span>) screen <span class="literal">and</span> (<span class="built_in">max</span>-device-width: <span class="number">400</span>px)<span class="comment">;</span></span><br></pre></td></tr></table></figure>
-<p>当媒体查询为真时，相关的样式表或样式规则就会按照正常的级联规则被应用。即使媒体查询返回假， <link> 标签上带有媒体查询的样式表 仍将被下载 （只不过不会被应用）。</p>
-<h2 id="在CSS文件内使用@media规则加载不同的CSS">在CSS文件内使用@media规则加载不同的CSS</h2><p>同一个CSS文件中，也可以根据不同的屏幕分辨率，选择应用不同的CSS规则。</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">　　<span class="at_rule">@<span class="keyword">media</span> screen and (max-device-width: <span class="number">400px</span>) </span>&#123;</span><br><span class="line">　　　　<span class="class">.column</span> <span class="rules">&#123;</span><br><span class="line">　　　　　　<span class="rule"><span class="attribute">float</span>:<span class="value"> none</span></span>;</span><br><span class="line">　　　　　　<span class="rule"><span class="attribute">width</span>:<span class="value">auto</span></span>;</span><br><span class="line">　　　　&#125;</span></span><br><span class="line">　　　　<span class="id">#sidebar</span> <span class="rules">&#123;</span><br><span class="line">　　　　　　<span class="rule"><span class="attribute">display</span>:<span class="value">none</span></span>;</span><br><span class="line">　　　　&#125;</span></span><br><span class="line">　　&#125;</span><br></pre></td></tr></table></figure>
-<p>上面的代码意思是，如果屏幕宽度小于400像素，<br>则column块取消浮动（float:none）、宽度自动调节（width:auto），sidebar块不显示（display:none）。</p>
-<h2 id="媒体属性">媒体属性</h2><p><em>引用自 MDN</em></p>
-<h3 id="媒体查询所有可用的查询方法以及属性">媒体查询所有可用的查询方法以及属性</h3><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">media_query: [[only |<span class="string"> not]? &lt;media_type&gt; [ and &lt;expression&gt; ]*]</span><br><span class="line">  </span>|<span class="string"> &lt;expression&gt; [ and &lt;expression&gt; ]*</span><br><span class="line">expression: ( &lt;media_feature&gt; [: &lt;value&gt;]? )</span><br><span class="line"></span><br><span class="line">&lt;!-- 在不使用 not 或 only 操作符的情况下，媒体类型(media type)是可选的，如果没有设置则默认为 all 。 --&gt;</span><br><span class="line"></span><br><span class="line">media_type: all </span>|<span class="string"> aural </span>|<span class="string"> braille </span>|<span class="string"> handheld </span>|<span class="string"> print </span>|</span><br><span class="line">  projection |<span class="string"> screen </span>|<span class="string"> tty </span>|<span class="string"> tv </span>|<span class="string"> embossed</span><br><span class="line"></span><br><span class="line">media_feature: width </span>|<span class="string"> min-width </span>|<span class="string"> max-width</span><br><span class="line">  </span>|<span class="string"> height </span>|<span class="string"> min-height </span>|<span class="string"> max-height</span><br><span class="line">  </span>|<span class="string"> device-width </span>|<span class="string"> min-device-width </span>|<span class="string"> max-device-width</span><br><span class="line">  </span>|<span class="string"> device-height </span>|<span class="string"> min-device-height </span>|<span class="string"> max-device-height</span><br><span class="line">  </span>|<span class="string"> aspect-ratio </span>|<span class="string"> min-aspect-ratio </span>|<span class="string"> max-aspect-ratio</span><br><span class="line">  </span>|<span class="string"> device-aspect-ratio </span>|<span class="string"> min-device-aspect-ratio </span>|<span class="string"> max-device-aspect-ratio</span><br><span class="line">  </span>|<span class="string"> color </span>|<span class="string"> min-color </span>|<span class="string"> max-color</span><br><span class="line">  </span>|<span class="string"> color-index </span>|<span class="string"> min-color-index </span>|<span class="string"> max-color-index</span><br><span class="line">  </span>|<span class="string"> monochrome </span>|<span class="string"> min-monochrome </span>|<span class="string"> max-monochrome</span><br><span class="line">  </span>|<span class="string"> resolution </span>|<span class="string"> min-resolution </span>|<span class="string"> max-resolution</span><br><span class="line">  </span>|<span class="string"> scan </span>|<span class="string"> grid</span></span><br></pre></td></tr></table></figure>
-<p>大多数媒体属性带有“min-”和“max-”前缀，用于表达“小于等于”和“大于等于”。这避免了使用与HTML和XML冲突的“&lt;”和“&gt;”字符。如果你未向媒体属性指定一个值，并且该特性的实际值不为零，则该表达式被解析为真。</p>
-<p>注意：如果浏览器运行的设备上没有该属性值，包含这个属性值的表达式一般返回假。例如，在语音合成器上查询屏幕长宽比总是返回假。</p>
-<h3 id="颜色（color）">颜色（color）</h3><p>指定输出设备每个像素单元的比特值。如果设备不支持输出颜色，则该值为0。\</p>
-<p>值： <color><br>媒体： visual<br>是否接受 min/max 前缀：是</color></p>
-<p>注意：如果每个颜色单元具有不同数量的比特值，则使用最小的。例如，如果显示器为蓝色和红色提供5比特，而为绿色提供6比特，则认为每个颜色单元有5比特。如果设备使用索引颜色，则使用颜色表中颜色单元的最小比特数。</p>
-<h4 id="示例">示例</h4><p>向所有能显示颜色的设备应用样式表：</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@media</span> <span class="function">all <span class="title">and</span> <span class="params">(color)</span> </span>&#123; ... &#125;</span><br></pre></td></tr></table></figure>
-<p>向每个颜色单元至少有4个比特的设备应用样式表：</p>
-<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">@media</span> all <span class="literal">and</span> (<span class="built_in">min</span>-color: <span class="number">4</span>) &#123; ... &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="颜色索引（color-index）">颜色索引（color-index）</h3><p>指定了输出设备中颜色查询表中的条目数量。</p>
-<p>值：<integer><br>媒体： visual<br>是否接受 min/max 前缀：是</integer></p>
-<h4 id="示例-1">示例</h4><p>向所有使用索引颜色的设备应用样式表，你可以这么做：</p>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@media</span> all <span class="keyword">and</span> (color-<span class="keyword">index</span>) &#123; ... &#125;</span><br></pre></td></tr></table></figure>
-<p>向所有使用至少256个索引颜色的设备应用样式表：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">media</span>=<span class="value">"all and (min-color-index: 256)"</span> <span class="attribute">href</span>=<span class="value">"http://foo.bar.com/stylesheet.css"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-<h3 id="宽高比（aspect-ratio）">宽高比（aspect-ratio）</h3><p>描述了输出设备目标显示区域的宽高比。该值包含两个以“/”分隔的正整数。代表了水平像素数（第一个值）与垂直像素数（第二个值）的比例。</p>
-<p>值：<ratio><br>媒体： visual, tactile<br>是否接受 min/max 前缀：是</ratio></p>
-<h4 id="示例-2">示例</h4><p>下面为显示区域宽高至少为一比一的设备选择了一个特殊的样式表。</p>
-<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">@media</span> screen <span class="literal">and</span> (<span class="built_in">min</span>-aspect-ratio: <span class="number">1</span>/<span class="number">1</span>) &#123; ... &#125;</span><br></pre></td></tr></table></figure>
-<p>这指定了宽高比或者1：1或者更大。换句话说，可视区域或者是正方形或者是宽屏。</p>
-<h3 id="设备宽高比（device-aspect-ratio）">设备宽高比（device-aspect-ratio）</h3><p>描述了输出设备的宽高比。该值包含两个以“/”分隔的正整数。代表了水平像素数（第一个值）与垂直像素数（第二个值）的比例。</p>
-<p>值：<ratio><br>媒体：visual, tactile<br>是否接受 min/max 前缀：是</ratio></p>
-<h4 id="示例-3">示例</h4><p>下面为宽屏设备选择了一个特殊的样式表。<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="at_rule">@media</span> screen and (<span class="attribute">device-aspect-ratio</span>: <span class="number">16</span>/<span class="number">9</span>), screen and (<span class="attribute">device-aspect-ratio</span>: <span class="number">16</span>/<span class="number">10</span>) &#123; ... &#125;</span><br></pre></td></tr></table></figure></p>
-<p>宽高比或者16：9或者16：10。</p>
-<h3 id="设备高度（device-height）">设备高度（device-height）</h3><p>描述了输出设备的高度（整个屏幕或页的高度，而不是仅仅像文档窗口一样的渲染区域）。</p>
-<p>值：<length><br>媒体：visual, tactile<br>是否接受 min/max 前缀：是</length></p>
-<h4 id="示例-4">示例</h4><p>向显示在最大宽度800px的屏幕上的文档应用样式表，你可以这样做：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">media</span>=<span class="value">"screen and (max-device-width: 799px)"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="设备宽度（device-width）">设备宽度（device-width）</h3><p>描述了输出设备的宽度（整个屏幕或页的高度，而不是仅仅像文档窗口一样的渲染区域）。</p>
-<p>值：<length><br>媒体： visual, tactile<br>是否接受 min/max 前缀：是</length></p>
-<h3 id="网格（grid）">网格（grid）</h3><p>判断输出设备是网格设备还是位图设备。如果设备是基于网格的（例如电传打字机终端或只能显示一种字形的电话），该值为1，否则为0。</p>
-<p>值：<integer><br>媒体：all<br>是否接受 min/max 前缀： 否</integer></p>
-<h4 id="示例-5">示例</h4><p>向一个15字符宽度或更窄的手持设备应用样式：<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">@media</span> handheld <span class="literal">and</span> (grid) <span class="literal">and</span> (<span class="built_in">max</span>-width: <span class="number">15</span>em) &#123; ... &#125;</span><br></pre></td></tr></table></figure></p>
-<p>注意：“em” 在网格设备中有不同的意义；一个“em”的实际宽度不得而知，假设1em相当于一个网格单元的宽高。</p>
-<h3 id="高度（height）">高度（height）</h3><p>height 媒体属性描述了输出设备渲染区域（如可视区域的高度或打印机纸盒的高度）的高度。</p>
-<p>值：<length><br>媒体：visual, tactile<br>是否接受 min/max 前缀：是</length></p>
-<p>注意：用户调整窗口大小后，火狐浏览器会根据使用了width和height属性的媒体查询来切换合适的样式表。</p>
-<h3 id="方向（orientation）">方向（orientation）</h3><p>指定了设备处于横屏（宽度大于宽度）模式还是竖屏（高度大于宽度）模式。</p>
-<p>值：landscape | portrait<br>媒体：visual<br>是否接受 min/max 前缀：否</p>
-<h4 id="示例-6">示例</h4><p>向竖屏设备应用样式表：</p>
-<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="at_rule">@media</span> all and (<span class="attribute">orientation</span>: portrait) &#123; ... &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="分辨率（resolution）">分辨率（resolution）</h3><p>指定输出设备的分辨率（像素密度）。分辨率可以用每英寸（dpi）或每厘米（dpcm）的点数来表示。</p>
-<p>值： <resolution><br>媒体： bitmap<br>是否接受 min/max 前缀：是</resolution></p>
-<h4 id="示例-7">示例</h4><p>为每英寸至多300点的打印机应用样式：<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">@media</span> print <span class="literal">and</span> (<span class="built_in">min</span>-resolution: <span class="number">300</span>dpi) &#123; ... &#125;</span><br></pre></td></tr></table></figure></p>
-<p>替换老旧的 (min-device-pixel-ratio: 2) 语法：<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">@media</span> screen <span class="literal">and</span> (<span class="built_in">min</span>-resolution: <span class="number">2</span>dppx) &#123; ... &#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="扫描（scan）">扫描（scan）</h3><p>描述了电视输出设备的扫描过程。</p>
-<p>值： progressive | interlace<br>媒体：tv<br>是否接受 min/max 前缀：否</p>
-<p>示例</p>
-<p>向以顺序方式扫描的电视机上应用样式表：<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="at_rule">@media</span> tv and (<span class="attribute">scan</span>: progressive) &#123; ... &#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="宽度（width）">宽度（width）</h3><p>width 媒体属性描述了输出设备渲染区域（如可视区域的宽度或打印机纸盒的宽度）的宽度。</p>
-<p>值： <length><br>媒体： visual, tactile<br>是否接受 min/max 前缀：是</length></p>
-<p>注意：用户调整窗口大小后，火狐浏览器会根据使用了width和height属性的媒体查询来切换合适的样式表。<br>示例</p>
-<p>如果你想向最小宽度20em的手持设备或屏幕应用样式表，你可以使用这样的查询：</p>
-<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">@media</span> handheld <span class="literal">and</span> (<span class="built_in">min</span>-width: <span class="number">20</span>em), screen <span class="literal">and</span> (<span class="built_in">min</span>-width: <span class="number">20</span>em) &#123; ... &#125;</span><br></pre></td></tr></table></figure>
-<p>这个媒体查询将向最小宽度8.5英寸的打印机应用样式表：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">link</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">media</span>=<span class="value">"print and (min-width: 8.5in)"</span></span><br><span class="line">    <span class="attribute">href</span>=<span class="value">"http://foo.com/mystyle.css"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-<p>这个查询适用于宽度在500px和800px之间的屏幕：</p>
-<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">@media</span> screen <span class="literal">and</span> (<span class="built_in">min</span>-width: <span class="number">500</span>px) <span class="literal">and</span> (<span class="built_in">max</span>-width: <span class="number">800</span>px) &#123; ... &#125;</span><br></pre></td></tr></table></figure>
-<h2 id="更多的例子">更多的例子</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> </span><br><span class="line"><span class="at_rule">@<span class="keyword">media</span> screen and (max-width: <span class="number">1000px</span>) and (min-width: <span class="number">700px</span>) </span>&#123;</span><br><span class="line">    <span class="tag">ul</span> <span class="tag">li</span> <span class="tag">a</span><span class="pseudo">:before</span> <span class="rules">&#123;</span><br><span class="line">        <span class="rule"><span class="attribute">content</span>:<span class="value"> <span class="string">"Email: "</span></span></span>;</span><br><span class="line">        <span class="rule"><span class="attribute">font-style</span>:<span class="value"> italic</span></span>;</span><br><span class="line">        <span class="rule"><span class="attribute">color</span>:<span class="value"> <span class="hexcolor">#666666</span></span></span>;</span><br><span class="line">    &#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面的这段代码的意思是:当屏幕的宽度是在700到1000之间的时候,我们会在Email连接之前用Css 添加一个Email的文字以及设置斜体和颜色.</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* For mobile phones: */</span></span><br><span class="line"><span class="attr_selector">[class*="col-"]</span> <span class="rules">&#123;</span><br><span class="line">    <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">100%</span></span></span>;</span><br><span class="line">&#125;</span></span><br><span class="line"><span class="at_rule">@<span class="keyword">media</span> only screen and (min-width: <span class="number">768px</span>) </span>&#123;</span><br><span class="line">    <span class="comment">/* For desktop: */</span></span><br><span class="line">    <span class="class">.col-1</span> <span class="rules">&#123;<span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">8.33%</span></span></span>;&#125;</span></span><br><span class="line">    <span class="class">.col-2</span> <span class="rules">&#123;<span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">16.66%</span></span></span>;&#125;</span></span><br><span class="line">    <span class="class">.col-3</span> <span class="rules">&#123;<span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">25%</span></span></span>;&#125;</span></span><br><span class="line">    <span class="class">.col-4</span> <span class="rules">&#123;<span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">33.33%</span></span></span>;&#125;</span></span><br><span class="line">    <span class="class">.col-5</span> <span class="rules">&#123;<span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">41.66%</span></span></span>;&#125;</span></span><br><span class="line">    <span class="class">.col-6</span> <span class="rules">&#123;<span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">50%</span></span></span>;&#125;</span></span><br><span class="line">    <span class="class">.col-7</span> <span class="rules">&#123;<span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">58.33%</span></span></span>;&#125;</span></span><br><span class="line">    <span class="class">.col-8</span> <span class="rules">&#123;<span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">66.66%</span></span></span>;&#125;</span></span><br><span class="line">    <span class="class">.col-9</span> <span class="rules">&#123;<span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">75%</span></span></span>;&#125;</span></span><br><span class="line">    <span class="class">.col-10</span> <span class="rules">&#123;<span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">83.33%</span></span></span>;&#125;</span></span><br><span class="line">    <span class="class">.col-11</span> <span class="rules">&#123;<span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">91.66%</span></span></span>;&#125;</span></span><br><span class="line">    <span class="class">.col-12</span> <span class="rules">&#123;<span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">100%</span></span></span>;&#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面的这段代码的意思是: 默认情况下是为手机做的宽度适配(即所有的宽度都是100%),当只有屏幕的宽度大于768像素的时候,才会单独给各个col设置宽度的值. </p>
-<h1 id="当页面为自适应页面时,实现图片自适应的奇妙的解决方法:">当页面为自适应页面时,实现图片自适应的奇妙的解决方法:</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- HTML: --&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="title">p</span> <span class="attribute">class</span>=<span class="value">"image-container"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">img</span> <span class="attribute">src</span>=<span class="value">"xxx.png"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- CSS: --&gt;</span></span><br><span class="line">p.image-container &#123;</span><br><span class="line">  width: 100%;</span><br><span class="line">  height: 0;</span><br><span class="line">  padding-bottom: 60%;</span><br><span class="line">  overflow: hidden;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">p.image-container img &#123;</span><br><span class="line">  width: 100%;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="思路:">思路:</h2><p><em>原作者: zihua-li</em></p>
-<blockquote>
-<p>需求:在保持 item 元素宽高比恒定（如高是宽的 1.618 倍）的情况下，使得 item 元素可以和父元素同比缩放。 </p>
-</blockquote>
-<p>我们知道，如果当 item 元素是图片，同时需要保持的宽高比恰好为图片本身的宽高比时，<br>可以设置 item 的 height 为 auto 即可轻松实现这个需求。<br>然而当 item 元素不是图片或者要保持的宽高比和图片本身的宽高比不同时，这个需求显得很难直接用 CSS 实现。<br>为此我放弃 CSS，直接用 JavaScript 绑定 window 的 onresize 事件来动态获取每个 item 的宽度，从而计算并设置其高度。<br>我一直在使用这个解决方案，直到今天调整样式时，突然想到这个需求竟然是可以只使用 CSS 解决的。<br>首先需要知道，一个元素的 padding，如果值是一个百分比，那这个百分比是相对于其父元素的宽度而言的，即使对于 padding-bottom 和 padding-top 也是如此。<br>另外，在计算 Overflow 时，是将元素的内容区域（即 width / height 对应的区域）和 Padding 区域一起计算的。换句话说，即使将元素的 overflow 设置为 hidden，“溢出”到 Padding 区域的内容也会照常显示。<br>综上两条所述，我们可以使用 padding-bottom 来代替 height 来实现高度与宽度成比例的效果。因为 item 元素的宽度是其父元素宽度的 21%，所以我们将 padding-bottom 设置为它的 1.618 倍，即 33.98%。同时将其 height 设置为 0 以使元素的“高度”等于 padding-bottom 的值，从而实现需要的效果。<br>最后 item 元素的 CSS 样式为：</p>
-<p>.item {<br>  float: left;<br>  margin: 10px 5%;<br>  padding-bottom: 33.98%;<br>  width: 21%;<br>  height: 0;<br>}<br>页面效果见 <a href="http://jsfiddle.net/luin/25BbH/7/，拖动窗口调整页面宽度，item" target="_blank" rel="external">http://jsfiddle.net/luin/25BbH/7/，拖动窗口调整页面宽度，item</a> 元素始终保持恒定的宽高比。</p>
-<h1 id="兼容情况:">兼容情况:</h1><h2 id="@media_screen_属性的浏览器支持情况">@media screen 属性的浏览器支持情况</h2><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-17/99373677.jpg" alt=""></p>
-<h2 id="@media_width_属性浏览器的支持情况">@media width 属性浏览器的支持情况</h2><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-17/7417540.jpg" alt=""></p>
-<h2 id="@Media_Queries支持情况">@Media Queries支持情况</h2><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-18/50675002.jpg" alt=""></p>
-<h1 id="Ref:">Ref:</h1><p><a href="http://www.ruanyifeng.com/blog/2012/05/responsive_web_design.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2012/05/responsive_web_design.html</a> -阮一峰<br><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media#Examples" target="_blank" rel="external">https://developer.mozilla.org/en-US/docs/Web/CSS/@media#Examples</a> -MDN<br><a href="http://zihua.li/2013/12/keep-height-relevant-to-width-using-css/" target="_blank" rel="external">http://zihua.li/2013/12/keep-height-relevant-to-width-using-css/</a> -zihuali</p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1571,7 +1562,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">45</span>
+              <span class="site-state-item-count">46</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
