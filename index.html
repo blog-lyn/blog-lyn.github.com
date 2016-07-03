@@ -416,11 +416,8 @@
  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod <span class="number">700</span> -R ~/.ssh &amp;&amp; chmod <span class="number">600</span> ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<ol>
-<li><p>如果服务器上已有authorized_keys文件:  </p>
- <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ssh user<span class="variable">@host</span> <span class="string">'mkdir -p .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys'</span> &lt; ~<span class="regexp">/.ssh/id</span>_rsa.pub</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
+<p><strong>Tips:</strong> 如果服务器上已有authorized_keys文件:  </p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh user<span class="variable">@host</span> <span class="string">'mkdir -p .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys'</span> &lt; ~<span class="regexp">/.ssh/id</span>_rsa.pub</span><br></pre></td></tr></table></figure>
 <ul>
 <li>“$ ssh user@host”，表示登录远程主机；  </li>
 <li>单引号中的mkdir .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys，表示登录后在远程shell上执行的命令：  </li>

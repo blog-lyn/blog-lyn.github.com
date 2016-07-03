@@ -75,7 +75,7 @@ RSA秘钥登录生成RSA秘钥对mac或者linux用户都可以使用以下命令
 RSA秘钥登录生成RSA秘钥对mac或者linux用户都可以使用以下命令在/home/你的用户名/.ssh文件夹下创建Rsa秘钥
 
 使用下">
-<meta property="og:updated_time" content="2016-07-03T14:48:42.000Z">
+<meta property="og:updated_time" content="2016-07-03T14:51:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Securing your Ubuntu Server">
 <meta name="twitter:description" content="在服务器上部署了linux系统以后,还需要以下操作来确保服务器的安全.
@@ -280,11 +280,8 @@ RSA秘钥登录生成RSA秘钥对mac或者linux用户都可以使用以下命令
  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod <span class="number">700</span> -R ~/.ssh &amp;&amp; chmod <span class="number">600</span> ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<ol>
-<li><p>如果服务器上已有authorized_keys文件:  </p>
- <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ssh user<span class="variable">@host</span> <span class="string">'mkdir -p .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys'</span> &lt; ~<span class="regexp">/.ssh/id</span>_rsa.pub</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
+<p><strong>Tips:</strong> 如果服务器上已有authorized_keys文件:  </p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh user<span class="variable">@host</span> <span class="string">'mkdir -p .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys'</span> &lt; ~<span class="regexp">/.ssh/id</span>_rsa.pub</span><br></pre></td></tr></table></figure>
 <ul>
 <li>“$ ssh user@host”，表示登录远程主机；  </li>
 <li>单引号中的mkdir .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys，表示登录后在远程shell上执行的命令：  </li>
