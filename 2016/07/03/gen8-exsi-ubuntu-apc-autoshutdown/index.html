@@ -43,7 +43,7 @@
 
 
 
-  <meta name="keywords" content="Lyn's blog" />
+  <meta name="keywords" content="esxi, ups," />
 
 
 
@@ -59,16 +59,49 @@
 
 
 
-<meta name="description" content="Lyn&apos;s Blog about Node.js  Express.js Angular.js HTML5 Mongodb Programing Notes">
+<meta name="description" content="安装ubuntu参考 http://lyn.s76.org/2016/07/02/ubuntu-settings/
+ESXI中配置APC的USB设备
+添加usb控制器  
+
+添加usb设备  
+
+开启ESXI的ssh登录&amp;gt;
+
+在esxi的console界面(也就是黄黑色的那个界面)按F2 进入esxi配置界面   
+选择/Select Troubleshooting Options 
+从Tr">
 <meta property="og:type" content="article">
-<meta property="og:title" content="esxi中安装实现UPS断电自动关闭GEN8的功能">
+<meta property="og:title" content="ESXI中实现UPS断电自动关闭GEN8的功能">
 <meta property="og:url" content="http://lyn.s76.org/2016/07/03/gen8-exsi-ubuntu-apc-autoshutdown/index.html">
 <meta property="og:site_name" content="Lyn's Blog">
-<meta property="og:description" content="Lyn&apos;s Blog about Node.js  Express.js Angular.js HTML5 Mongodb Programing Notes">
-<meta property="og:updated_time" content="2016-07-03T08:30:21.000Z">
+<meta property="og:description" content="安装ubuntu参考 http://lyn.s76.org/2016/07/02/ubuntu-settings/
+ESXI中配置APC的USB设备
+添加usb控制器  
+
+添加usb设备  
+
+开启ESXI的ssh登录&amp;gt;
+
+在esxi的console界面(也就是黄黑色的那个界面)按F2 进入esxi配置界面   
+选择/Select Troubleshooting Options 
+从Tr">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-7-3/44958482.jpg">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-7-3/42030707.jpg">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-7-3/72111678.jpg">
+<meta property="og:updated_time" content="2016-07-03T13:48:38.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="esxi中安装实现UPS断电自动关闭GEN8的功能">
-<meta name="twitter:description" content="Lyn&apos;s Blog about Node.js  Express.js Angular.js HTML5 Mongodb Programing Notes">
+<meta name="twitter:title" content="ESXI中实现UPS断电自动关闭GEN8的功能">
+<meta name="twitter:description" content="安装ubuntu参考 http://lyn.s76.org/2016/07/02/ubuntu-settings/
+ESXI中配置APC的USB设备
+添加usb控制器  
+
+添加usb设备  
+
+开启ESXI的ssh登录&amp;gt;
+
+在esxi的console界面(也就是黄黑色的那个界面)按F2 进入esxi配置界面   
+选择/Select Troubleshooting Options 
+从Tr">
 
 
 
@@ -80,7 +113,7 @@
   };
 </script>
 
-  <title> esxi中安装实现UPS断电自动关闭GEN8的功能 | Lyn's Blog </title>
+  <title> ESXI中实现UPS断电自动关闭GEN8的功能 | Lyn's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
@@ -206,7 +239,7 @@
             
             
               
-                esxi中安装实现UPS断电自动关闭GEN8的功能
+                ESXI中实现UPS断电自动关闭GEN8的功能
               
             
           </h1>
@@ -246,11 +279,79 @@
       
 
       
-        <span itemprop="articleBody"></span>
+        <span itemprop="articleBody"><h1 id="安装ubuntu">安装ubuntu</h1><pre><code>参考 <span class="string">http:</span><span class="comment">//lyn.s76.org/2016/07/02/ubuntu-settings/</span>
+</code></pre><h1 id="ESXI中配置APC的USB设备">ESXI中配置APC的USB设备</h1><ol>
+<li><p>添加usb控制器<br>  <img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-7-3/44958482.jpg" alt=""></p>
+</li>
+<li><p>添加usb设备<br> <img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-7-3/42030707.jpg" alt=""><br> <img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-7-3/72111678.jpg" alt=""></p>
+</li>
+<li><p>开启ESXI的ssh登录<br>&gt;</p>
+<ol>
+<li>在esxi的console界面(也就是黄黑色的那个界面)按F2 进入esxi配置界面   </li>
+<li>选择/Select Troubleshooting Options </li>
+<li><p>从Troubleshooting Mode Options 菜单, 选择 Enable ESXi Shell,找到:</p>
+<p>  <code>Enable ESXi Shell</code><br>  <code>Enable SSH</code></p>
+<p>按Enter键来enable .<br>ps: 更多方式可以参考<a href="https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=2030463" target="_blank" rel="external">vm官方的kb</a> :</p>
+</li>
+</ol>
+</li>
+</ol>
+<h1 id="APC_UPS_控件">APC UPS 控件</h1><p>ps:我的ups型号是APC的 bk650</p>
+<h2 id="安装控件">安装控件</h2><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-<span class="keyword">get</span> install apcupsd</span><br></pre></td></tr></table></figure>
+<h2 id="配置">配置</h2><p>使用vi 编辑 <code>/etc/apcupsd/apcupsd.conf</code> 文件</p>
+<ol>
+<li><p>设置name 和usb模式</p>
+ <figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">UPSNAME <span class="variable">&lt;自定义名称&gt;</span> <span class="comment">#这行定义你的UPS名称</span></span><br><span class="line">UPSCABLE usb <span class="comment">#设置UPS的通讯模式为USB模式</span></span><br><span class="line">UPSTYPE usb <span class="comment">#设置UPS类型为usb型</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在DEVICE /dev/ttyS0(UPSTYPE usb下面那行)前面加上#号注释掉</p>
+ <figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># DEVICE /dev/ttyS0</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编辑 /etc/default/apcupsd 中的:</p>
+ <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">ISCONFIGURED=<span class="value"><span class="keyword">yes</span></span></span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p>重启服务</p>
+ <figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">	sudo service apcupsd restart</span><br><span class="line">	<span class="escape">``</span><span class="escape">`	</span></span><br><span class="line">	</span><br><span class="line"><span class="number">5</span>. 测试	APC组件</span><br></pre></td></tr></table></figure>
+<p> sudo apcaccess</p>
+<p> //输出如下:<br> APC      : 001,034,0834<br> DATE     : 2016-07-03 16:27:22 +0800<br> HOSTNAME : 1102Server<br> VERSION  : 3.14.12 (29 March 2014) debian<br> UPSNAME  : APC<br> CABLE    : USB Cable<br> DRIVER   : USB UPS Driver<br> UPSMODE  : Stand Alone<br> STARTTIME: 2016-07-03 16:20:09 +0800<br> MODEL    : Back-UPS 650<br> STATUS   : ONLINE<br> LINEV    : 226.0 Volts<br> LOADPCT  : 30.0 Percent<br> BCHARGE  : 100.0 Percent<br> TIMELEFT : 23.8 Minutes<br> MBATTCHG : 5 Percent<br> MINTIMEL : 3 Minutes<br> MAXTIME  : 0 Seconds<br> SENSE    : Low<br> LOTRANS  : 165.0 Volts<br> HITRANS  : 266.0 Volts<br> ALARMDEL : 30 Seconds<br> BATTV    : 13.5 Volts<br> LASTXFER : Automatic or explicit self test<br> NUMXFERS : 0<br> TONBATT  : 0 Seconds<br> CUMONBATT: 0 Seconds<br> XOFFBATT : N/A<br> STATFLAG : 0x05000008<br> SERIALNO : 3sadsadsa520<br> BATTDATE : 2015-06-15<br> NOMINV   : 220 Volts<br> NOMBATTV : 12.0 Volts<br> FIRMWARE : 822.A3.I USB FW:A3<br> END APC  : 2016-07-03 16:28:04 +0800</p>
+ <figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">	</span><br><span class="line"><span class="number">6</span>. 编辑 <span class="escape">`/</span>etc/apcupsd/apccontrol<span class="escape">` </span>脚本，找到 <span class="escape">`d</span>oshutdown<span class="escape">` </span>将下面<span class="number">3</span>行替换为</span><br></pre></td></tr></table></figure>
+<p> echo “UPS ${2} initiated Shutdown Sequence” | ${WALL}<br> /usr/bin/ssh root@esxi的ip地址   “/sbin/shutdown.sh &amp;&amp; /sbin/poweroff”<br> ;;    </p>
+ <figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">	</span><br><span class="line"><span class="preprocessor"># 配置Ubuntu到ESXI的RSA SSH</span></span><br><span class="line"></span><br><span class="line">为了更安全的免密码登录esxi,还需要配置esxi的rsa秘钥登录:</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">## 生成公钥/私钥</span></span><br><span class="line"></span><br><span class="line">使用命令生成RSA秘钥对</span><br><span class="line">可以参考:</span><br><span class="line">http:<span class="comment">//lyn.s76.org/2016/07/02/ubuntu-settings/</span></span><br></pre></td></tr></table></figure>
+<p>ssh-keygen </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">注意:</span><br><span class="line"></span><br><span class="line"><span class="number">1.</span> 生成两个 ~/.ssh 文件：id_rsa 和 id_rsa.pub。</span><br><span class="line"> </span><br><span class="line"><span class="number">2.</span> 对于 ESXi <span class="number">5.0</span>~<span class="number">6.0</span>，authorized_keys 的位置为：/etc/ssh/keys-&lt;username&gt;/authorized_keys</span><br><span class="line"><span class="number">3.</span> 可以在此文件中存储多个密钥(直接在文件内容后面追加)。</span><br><span class="line"><span class="preprocessor">## 配置</span></span><br><span class="line"></span><br><span class="line">ssh到exsi,修改ssh config配置文件:`/etc/ssh/sshd_config`.</span><br><span class="line"></span><br><span class="line"><span class="number">1.</span> 要允许授予 root 访问权限，请在 /etc/ssh/sshd_config 文件中将 PermitRootLogin no 更改为 PermitRootLogin yes。</span><br><span class="line"><span class="number">2.</span> 要禁用密码登录，请务必将 ChallengeResponseAuthentication 和 PasswordAuthentication 设置为 no。</span><br><span class="line"><span class="number">3.</span> 重新加载服务：</span><br></pre></td></tr></table></figure>
+<p> /etc/init.d/SSH restart</p>
+ <figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">配置好的`<span class="javascript">/etc/ssh/sshd_config</span>`文件:</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="running_from_inetd">running from inetd</h1><h1 id="Port_2200">Port 2200</h1><p>Protocol 2<br>HostKey /etc/ssh/ssh_host_rsa_key<br>HostKey /etc/ssh/ssh_host_dsa_key</p>
+<p>UsePrivilegeSeparation no</p>
+<p>SyslogFacility auth<br>LogLevel info</p>
+<p>PermitRootLogin yes</p>
+<p>PrintMotd yes<br>PrintLastLog no</p>
+<p>TCPKeepAlive yes</p>
+<p>X11Forwarding no</p>
+<p>Ciphers aes128-ctr,aes192-ctr,aes256-ctr,3des-cbc</p>
+<p>MACs hmac-sha2-256,hmac-sha2-512,hmac-sha1,hmac-sha1-96</p>
+<p>UsePAM yes</p>
+<h1 id="only_use_PAM_challenge-response_(keyboard-interactive)">only use PAM challenge-response (keyboard-interactive)</h1><p>PasswordAuthentication no</p>
+<p>Banner /etc/issue</p>
+<p>Subsystem sftp /usr/lib/vmware/openssh/bin/sftp-server -f LOCAL5 -l INFO</p>
+<p>AuthorizedKeysFile /etc/ssh/keys-%u/authorized_keys</p>
+<h1 id="hostsRSAAuthentication_no">hostsRSAAuthentication no</h1><p>ChallengeResponseAuthentication no<br>PasswordAuthentication no<br>PubkeyAuthentication yes</p>
+<h1 id="Timeout_value_of_10_mins-_The_default_value_of_ClientAliveCountMax_is_3-">Timeout value of 10 mins. The default value of ClientAliveCountMax is 3.</h1><h1 id="Hence,_we_get_a_3_*_200_=_600_seconds_timeout_if_the_client_has_been">Hence, we get a  3 * 200 = 600 seconds timeout if the client has been</h1><h1 id="unresponsive-">unresponsive.</h1><p>ClientAliveInterval 200</p>
+<h1 id="sshd(8)_will_refuse_connection_attempts_with_a_probability_of_“rate/100”">sshd(8) will refuse connection attempts with a probability of “rate/100”</h1><h1 id="(30%)_if_there_are_currently_“start”_(10)_unauthenticated_connections-_The">(30%) if there are currently “start” (10) unauthenticated connections.  The</h1><h1 id="probability_increases_linearly_and_all_connection_attempts_are_refused_if_the">probability increases linearly and all connection attempts are refused if the</h1><h1 id="number_of_unauthenticated_connections_reaches_“full”_(100)">number of unauthenticated connections reaches “full” (100)</h1><p>MaxStartups 10:30:200<br>```</p>
+</span>
       
     </div>
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/esxi-ups/" rel="tag">#esxi, ups</a>
+          
+        </div>
       
 
       
@@ -291,7 +392,7 @@
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2016/07/03/gen8-exsi-ubuntu-apc-autoshutdown/"
-           data-title="esxi中安装实现UPS断电自动关闭GEN8的功能" data-url="http://lyn.s76.org/2016/07/03/gen8-exsi-ubuntu-apc-autoshutdown/">
+           data-title="ESXI中实现UPS断电自动关闭GEN8的功能" data-url="http://lyn.s76.org/2016/07/03/gen8-exsi-ubuntu-apc-autoshutdown/">
       </div>
     
   </div>
@@ -349,7 +450,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-count">30</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
@@ -379,7 +480,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目錄</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装ubuntu"><span class="nav-number">1.</span> <span class="nav-text">安装ubuntu</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ESXI中配置APC的USB设备"><span class="nav-number">2.</span> <span class="nav-text">ESXI中配置APC的USB设备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#APC_UPS_控件"><span class="nav-number">3.</span> <span class="nav-text">APC UPS 控件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装控件"><span class="nav-number">3.1.</span> <span class="nav-text">安装控件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置"><span class="nav-number">3.2.</span> <span class="nav-text">配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#running_from_inetd"><span class="nav-number">4.</span> <span class="nav-text">running from inetd</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Port_2200"><span class="nav-number">5.</span> <span class="nav-text">Port 2200</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#only_use_PAM_challenge-response_(keyboard-interactive)"><span class="nav-number">6.</span> <span class="nav-text">only use PAM challenge-response (keyboard-interactive)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hostsRSAAuthentication_no"><span class="nav-number">7.</span> <span class="nav-text">hostsRSAAuthentication no</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Timeout_value_of_10_mins-_The_default_value_of_ClientAliveCountMax_is_3-"><span class="nav-number">8.</span> <span class="nav-text">Timeout value of 10 mins. The default value of ClientAliveCountMax is 3.</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hence,_we_get_a_3_*_200_=_600_seconds_timeout_if_the_client_has_been"><span class="nav-number">9.</span> <span class="nav-text">Hence, we get a  3 * 200 = 600 seconds timeout if the client has been</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#unresponsive-"><span class="nav-number">10.</span> <span class="nav-text">unresponsive.</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sshd(8)_will_refuse_connection_attempts_with_a_probability_of_“rate/100”"><span class="nav-number">11.</span> <span class="nav-text">sshd(8) will refuse connection attempts with a probability of “rate/100”</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#(30%)_if_there_are_currently_“start”_(10)_unauthenticated_connections-_The"><span class="nav-number">12.</span> <span class="nav-text">(30%) if there are currently “start” (10) unauthenticated connections.  The</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#probability_increases_linearly_and_all_connection_attempts_are_refused_if_the"><span class="nav-number">13.</span> <span class="nav-text">probability increases linearly and all connection attempts are refused if the</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#number_of_unauthenticated_connections_reaches_“full”_(100)"><span class="nav-number">14.</span> <span class="nav-text">number of unauthenticated connections reaches “full” (100)</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
