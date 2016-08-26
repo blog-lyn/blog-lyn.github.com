@@ -207,6 +207,128 @@
             
             
               
+                <a class="post-title-link" href="/2016/05/11/react-js-01/" itemprop="url">
+                  react.js-Notes-01
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-05-11T22:08:32+08:00" content="2016-05-11">
+              2016-05-11
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/11/react-js-01/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/11/react-js-01/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="config_before_development">config before development</h1><h2 id="npm">npm</h2><p>use command to initialize your package.json file </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm init <span class="operator">-f</span></span><br></pre></td></tr></table></figure>
+<p>my npm package.json</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "<span class="attribute">name</span>": <span class="value"><span class="string">"Test"</span></span>,</span><br><span class="line">  "<span class="attribute">version</span>": <span class="value"><span class="string">"1.0.0"</span></span>,</span><br><span class="line">  "<span class="attribute">description</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">  "<span class="attribute">main</span>": <span class="value"><span class="string">"index.js"</span></span>,</span><br><span class="line">  "<span class="attribute">scripts</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">dev</span>": <span class="value"><span class="string">"webpack-dev-server --content-base src  --inline --hot"</span></span>,</span><br><span class="line">    "<span class="attribute">lint</span>": <span class="value"><span class="string">"eslint js"</span></span><br><span class="line">  </span>&#125;</span>,</span><br><span class="line">  "<span class="attribute">author</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">  "<span class="attribute">license</span>": <span class="value"><span class="string">"ISC"</span></span>,</span><br><span class="line">  "<span class="attribute">dependencies</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">babel-plugin-add-module-exports</span>": <span class="value"><span class="string">"^0.1.2"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-plugin-react-html-attrs</span>": <span class="value"><span class="string">"^2.0.0"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-plugin-transform-class-properties</span>": <span class="value"><span class="string">"^6.3.13"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-plugin-transform-decorators-legacy</span>": <span class="value"><span class="string">"^1.3.4"</span></span>,</span><br><span class="line">    "<span class="attribute">react</span>": <span class="value"><span class="string">"^15.0.1"</span></span>,</span><br><span class="line">    "<span class="attribute">react-dom</span>": <span class="value"><span class="string">"^15.0.1"</span></span>,</span><br><span class="line">    "<span class="attribute">webpack</span>": <span class="value"><span class="string">"^1.13.0"</span></span><br><span class="line">  </span>&#125;</span>,</span><br><span class="line">  "<span class="attribute">devDependencies</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">babel-core</span>": <span class="value"><span class="string">"^6.7.7"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-eslint</span>": <span class="value"><span class="string">"^6.0.4"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-loader</span>": <span class="value"><span class="string">"^6.2.4"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-preset-es2015</span>": <span class="value"><span class="string">"^6.6.0"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-preset-react</span>": <span class="value"><span class="string">"^6.5.0"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-preset-stage-0</span>": <span class="value"><span class="string">"^6.5.0"</span></span>,</span><br><span class="line">    "<span class="attribute">eslint</span>": <span class="value"><span class="string">"^2.9.0"</span></span>,</span><br><span class="line">    "<span class="attribute">eslint-plugin-react</span>": <span class="value"><span class="string">"^5.0.1"</span></span>,</span><br><span class="line">    "<span class="attribute">webpack-dev-server</span>": <span class="value"><span class="string">"^1.14.1"</span></span><br><span class="line">  </span>&#125;</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+<p>after you edit your package.json file, you can run npm install to install all the dependencies automatically</p>
+<h2 id="webpack">webpack</h2><p>after all the packages is  installled.</p>
+<p>we can config webpack by create webpack.config.js file under your project path.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> debug   = process.env.NODE_ENV !==<span class="string">"production"</span>;</span><br><span class="line"><span class="keyword">var</span> webpack =<span class="built_in">require</span>(<span class="string">'webpack'</span>);</span><br><span class="line"></span><br><span class="line"><span class="module"><span class="keyword">module</span>.exports=</span>&#123;</span><br><span class="line">	context: __dirname+<span class="string">"/src"</span>,</span><br><span class="line">	devtool: debug ? <span class="string">"inline-sourcemap"</span> : <span class="literal">null</span>,</span><br><span class="line">	entry:<span class="string">"./js/scripts.js"</span>,</span><br><span class="line">	output:&#123;</span><br><span class="line">		path: __dirname +<span class="string">"/src"</span>,</span><br><span class="line">		filename:<span class="string">"scripts.min.js"</span></span><br><span class="line">	&#125;,</span><br><span class="line">	devServer:&#123;</span><br><span class="line">		inline:<span class="literal">true</span>,</span><br><span class="line">		port:<span class="number">1336</span></span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="module"><span class="keyword">module</span>:</span>&#123;</span><br><span class="line">		loaders:[</span><br><span class="line">		&#123;</span><br><span class="line">			test:<span class="regexp">/\.js$/</span>,</span><br><span class="line">			exclude:<span class="regexp">/node_modules|bower_components/</span>,</span><br><span class="line">			loader:<span class="string">'babel-loader'</span>,</span><br><span class="line">			query:&#123;</span><br><span class="line">				presets:[<span class="string">'es2015'</span>,<span class="string">'react'</span>,<span class="string">'stage-0'</span>],</span><br><span class="line">				plugins:[<span class="string">'react-html-attrs'</span>,<span class="string">'transform-class-properties'</span>, <span class="string">'transform-decorators-legacy'</span>]</span><br><span class="line">			&#125;</span><br><span class="line">		 &#125;,</span><br><span class="line">	    ]</span><br><span class="line">	&#125;,</span><br><span class="line">	plugins: debug ? []:[</span><br><span class="line">		<span class="keyword">new</span> webpack.optimize.DedupePlugin(),</span><br><span class="line">		<span class="keyword">new</span> webpack.optimize.OccurenceOrderPlugin(),</span><br><span class="line">		<span class="keyword">new</span> webpack.optimize.UglifyJsPlugin(&#123; mangle:<span class="literal">false</span>, sourcemap:<span class="literal">false</span>&#125;),</span><br><span class="line">	],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="eslint">eslint</h2><p>as jshint doesnot support react.js very well,<br>I replace jshint with eslint.<br>you can also install eslint sublime plugin to help you check your code in Sublime.</p>
+<p>install eslint locally in your project folder (you must have package.json file there):</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="keyword">install</span> eslint</span><br></pre></td></tr></table></figure>
+<p>Init eslint config if you don’t have any. Run in your code folder:</p>
+<!--if eslint is installed locally-->
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./node_modules/.bin/eslint <span class="comment">--init</span></span><br></pre></td></tr></table></figure>
+<p>To install via Package Control, do the following:</p>
+<ol>
+<li><p>Within Sublime Text, bring up the Command Palette and type install. Among the commands you should see Package Control: Install Package. If that command is not highlighted, use the keyboard or mouse to select it. There will be a pause of a few seconds while Package Control fetches the list of available plugins.</p>
+</li>
+<li><p>When the plugin list appears, type eslint. Among the entries you should see SublimeLinter-contrib-eslint. If that entry is not highlighted, use the keyboard or mouse to select it.</p>
+</li>
+</ol>
+<p>my .eslintrc config file:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    "<span class="attribute">env</span>": <span class="value">&#123;</span><br><span class="line">        "<span class="attribute">browser</span>": <span class="value"><span class="literal">true</span></span>,</span><br><span class="line">        "<span class="attribute">node</span>": <span class="value"><span class="literal">true</span></span>,</span><br><span class="line">        "<span class="attribute">es6</span>": <span class="value"><span class="literal">true</span></span><br><span class="line">    </span>&#125;</span>,</span><br><span class="line">    "<span class="attribute">extends</span>": <span class="value"><span class="string">"eslint:recommended"</span></span>,</span><br><span class="line">    "<span class="attribute">parser</span>": <span class="value"><span class="string">"babel-eslint"</span></span>,</span><br><span class="line">    "<span class="attribute">ecmaFeatures</span>": <span class="value">&#123;</span><br><span class="line">       "<span class="attribute">jsx</span>": <span class="value"><span class="literal">true</span></span><br><span class="line">    </span>&#125;</span>,</span><br><span class="line">    "<span class="attribute">rules</span>": <span class="value">&#123;</span><br><span class="line">        "<span class="attribute">semi</span>": <span class="value">[<span class="number">2</span>, <span class="string">"always"</span>]</span><br><span class="line">    </span>&#125;</span><br><span class="line">    <span class="string">"plugins"</span>: [</span><br><span class="line">        <span class="string">"react"</span></span><br><span class="line">    ]</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="your_first_react-js_component">your first react.js component</h1><h2 id="Folder_Structure">Folder Structure</h2><p> Lyn-Cheung-MBP:01 Lyn$ find . -print | sed -e ‘s;[^/]*/;|<strong><strong>;g;s;</strong></strong>|; `|;g’</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">|<span class="string">____package.json</span><br><span class="line"></span>|____src</span><br><span class="line">|<span class="string"> </span>|<span class="string">____index.html</span><br><span class="line"></span>|<span class="string"> </span>|____js</span><br><span class="line">|<span class="string"> </span>|<span class="string"> </span>|____components</span><br><span class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____Footer.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|____Header</span><br><span class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____Title.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____Header.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____Layout.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____scripts.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____scripts.min.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string">____scripts.min.js</span><br><span class="line"></span>|<span class="string">____webpack.config.js</span></span><br></pre></td></tr></table></figure>
+<h2 id="Code_files">Code files</h2><p>index.html is very simple:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">title</span>&gt;</span>Some page <span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">	 </span><br><span class="line">	<span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"app"</span>&gt;</span> <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">script</span>  <span class="attribute">src</span>=<span class="value">"./scripts.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>scripts.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> ReactDOM <span class="keyword">from</span> <span class="string">"react-dom"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> Layout <span class="keyword">from</span> <span class="string">"./components/Layout"</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app =<span class="built_in">document</span>.getElementById(<span class="string">'app'</span>);</span><br><span class="line"></span><br><span class="line">ReactDOM.render(<span class="xml"><span class="tag">&lt;<span class="title">Layout</span>/&gt;</span>, app);</span></span><br></pre></td></tr></table></figure>
+<p>Layout.js</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="type">Header</span> from <span class="string">"./Header"</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="type">Footer</span> from <span class="string">"./Footer"</span>;</span><br><span class="line"></span><br><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Layout</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Component</span>&#123;</span></span><br><span class="line"> 	 constructor()&#123;</span><br><span class="line"> 	 	<span class="keyword">super</span>();</span><br><span class="line"> 	 	<span class="keyword">this</span>.state=&#123;</span><br><span class="line"> 	 		title:<span class="string">"Welcome"</span>,</span><br><span class="line"> 	 	&#125;</span><br><span class="line"> 	 &#125;</span><br><span class="line"> 	 changeTitle(title)&#123;</span><br><span class="line"> 	 	<span class="keyword">this</span>.setState(&#123;title&#125;);</span><br><span class="line"> 	 &#125;</span><br><span class="line">	</span><br><span class="line">	render()&#123;</span><br><span class="line">		<span class="keyword">return</span> (</span><br><span class="line">			&lt;div&gt;</span><br><span class="line">				&lt;<span class="type">Header</span> changeTitle=&#123;<span class="keyword">this</span>.changeTitle.bind(<span class="keyword">this</span>)&#125; title=&#123;<span class="keyword">this</span>.state.title&#125; /&gt;</span><br><span class="line">				&lt;<span class="type">Footer</span> /&gt;</span><br><span class="line">			&lt;/div&gt;</span><br><span class="line">			);</span><br><span class="line">	</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Header.js</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="type">Title</span> from <span class="string">"./Header/Title"</span>;</span><br><span class="line"></span><br><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Header</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Component</span>&#123;</span></span><br><span class="line">	 handleChange(e)&#123;</span><br><span class="line">	 	const title =e.target.value;</span><br><span class="line">	 	<span class="keyword">this</span>.props.changeTitle(title);</span><br><span class="line">	 &#125;</span><br><span class="line">	</span><br><span class="line">	render()&#123;</span><br><span class="line">		<span class="keyword">return</span> (</span><br><span class="line">			&lt;div&gt;</span><br><span class="line">				&lt;<span class="type">Title</span>  title=&#123;<span class="keyword">this</span>.props.title&#125; /&gt;</span><br><span class="line">				&lt;input value=&#123;<span class="keyword">this</span>.props.title&#125;  onChange=&#123;<span class="keyword">this</span>.handleChange.bind(<span class="keyword">this</span>)&#125;  /&gt;</span><br><span class="line">			&lt;/div&gt;</span><br><span class="line">		);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Title.js</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</span><br><span class="line"></span><br><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Title</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Component</span>&#123;</span></span><br><span class="line">	 </span><br><span class="line">	</span><br><span class="line">	render()&#123;</span><br><span class="line">		<span class="keyword">return</span> (</span><br><span class="line">			&lt;h1&gt; &#123;<span class="keyword">this</span>.props.title&#125;&lt;/h1&gt;</span><br><span class="line">			);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Footer.js</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</span><br><span class="line"></span><br><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Footer</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Component</span>&#123;</span></span><br><span class="line">	render()&#123;</span><br><span class="line">		<span class="keyword">return</span> (</span><br><span class="line">			&lt;footer&gt; <span class="type">This</span> is <span class="type">Footer</span> &lt;/footer&gt;</span><br><span class="line">			);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Run_your_react-js_on_your_local_sever">Run your react.js on your local sever</h2><p>simply use these commands:</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">webpack</span><br><span class="line"></span><br><span class="line">npm <span class="command">run</span> dev</span><br></pre></td></tr></table></figure>
+<p>then you can visit your first react.js project on your browser by:<br><a href="http://127.0.0.1:1336/" target="_blank" rel="external">http://127.0.0.1:1336/</a> </p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/04/22/css/" itemprop="url">
                   css权重优先级问题
                 </a>
@@ -1351,6 +1473,9 @@
 <li>判断方法是否存在来决定是否需要创建构造函数的原型方法.</li>
 </ul>
 <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//每个实例不想共享的属性:使用构造函数模式</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span><span class="params">(name,age,job)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">this</span>.name = name;</span><br><span class="line">	<span class="keyword">this</span>.age = age;</span><br><span class="line">	<span class="keyword">this</span>.job = job;</span><br><span class="line">	<span class="keyword">this</span>.friends =[<span class="string">"Tom"</span>,<span class="string">"Oliver"</span>];</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//下面的方法只会被初始化一次.</span></span><br><span class="line">	<span class="comment">//还可以使用instanceof来做判断</span></span><br><span class="line">	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="keyword">this</span>.sayName !=<span class="string">"function"</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		Person.prototype.sayname=<span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">			alert(<span class="keyword">this</span>.name);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="一种更简单的实现:">一种更简单的实现:</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">species:<span class="string">"human"</span>,</span><br><span class="line">create: <span class="function"><span class="keyword">function</span>(<span class="params">values</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> instance = <span class="built_in">Object</span>.create(<span class="keyword">this</span>);</span><br><span class="line">	<span class="built_in">Object</span>.keys(values).forEach(<span class="function"><span class="keyword">function</span>(<span class="params">key</span>)</span>&#123;</span><br><span class="line">		instance[key]= values[key];</span><br><span class="line">	&#125;)</span><br><span class="line">	<span class="keyword">return</span> instance;</span><br><span class="line">&#125;,</span><br><span class="line">saySpecies:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="keyword">this</span>.species);</span><br><span class="line">&#125;,</span><br><span class="line">sayName: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'my name is :'</span>+ <span class="keyword">this</span>.name);</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> webDeveloper = person.create(&#123;</span><br><span class="line">	species:<span class="string">"webDeveloper"</span>,</span><br><span class="line">	coding:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="keyword">this</span>.name+ <span class="string">' is coding with '</span>+<span class="keyword">this</span>.skill);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> lyn= webDeveloper.create(&#123;name:<span class="string">"lyn"</span>,skill:<span class="string">"javaScript"</span>&#125;)</span><br><span class="line"></span><br><span class="line">lyn.coding() <span class="comment">// 输出 lyn is coding with javaScript</span></span><br></pre></td></tr></table></figure>
+<p>结构如下:</p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-8-20/71629308.jpg" alt=""></p>
 <h1 id="ES6中的实现">ES6中的实现</h1><p>ES6中 定义面向对象的类,只需要以class开头 然后是类型名,不再需要使用function关键字,只需方法名和圆括号.在constructor方法中定义的是这个类的构造函数.所有的属性和方法都会被添加到原型上.sayName和getOlder方法都是定义在Person.prototype上的.</p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Person&#123;</span><br><span class="line">	<span class="constructor"><span class="keyword">constructor</span>(name, age)</span>&#123;</span><br><span class="line">		<span class="keyword">public</span> name = name;</span><br><span class="line">		<span class="keyword">public</span> age  = age;</span><br><span class="line">		</span><br><span class="line">		sayName()&#123;</span><br><span class="line">			<span class="built_in">console</span>.log(<span class="keyword">this</span>.name);		</span><br><span class="line">		&#125;</span><br><span class="line">		getOlder(years)&#123;</span><br><span class="line">			<span class="keyword">this</span>.age += years;	</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -1503,119 +1628,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/02/23/trans-note-01/" itemprop="url">
-                  采访1Password背后的开发故事（自译）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-02-23T11:58:17+08:00" content="2016-02-23">
-              2016-02-23
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/23/trans-note-01/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/23/trans-note-01/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="Behind_the_App:_The_Story_of_1Password">Behind the App: The Story of 1Password</h1><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-2-22/42337210.jpg" alt=""></p>
-<p>你的网络生活安全的保障不是一件可以开玩笑的事情，但是还是有很多人为了省事在不同的网站使用相同的密码。毫无疑问这是一种不好的习惯，而且安全而复杂的密码一定是一个你难以记住的密码。这也就是为什么你需要一个密码管理工具去管理你的网络密码，比如说使用：1Password。</p>
-<blockquote>
-<p>Securing your online life is no joke, but many people still use the same password across different sites for the sake of convenience. Of course, that’s bad practice and the most secure password is one that you can’t remember. Which is why you need a tool to manager your online security like 1Password.</p>
-</blockquote>
-<p>这个App会为你的网络账号生成随机的复杂且唯一的密码，他会是你最喜欢的密码管家，最近他们最近和收费版本一同推出了带来新功能而且和IOS8兼容的免费增值版本的App</p>
-<p>The app generates random, complex, and unique passwords for all of your logins and then manages them for you. It’s one of your favorite password managers, and they recently adopted a freemium model to coincide with new features and integration with iOS 8.</p>
-<p>这个APP是怎么开发出来的呢？就像很多软件一样，它最开始就是一个没有计划成为消费品的供内部使用的软件，我们与1Password的团队取得了联系去探究App背后的故事。</p>
-<p>How did this security tool come about? Like a lot of software, it started as an internal tool without any real plan to become a consumer product. We caught up with the 1password team at AgileBits to learn more about the story behind the app.</p>
-<h2 id="这个App的灵感是从哪里来的？">这个App的灵感是从哪里来的？</h2><p>你们是为了解决一个过去遇到的问题？还是从什么其他地方获得的灵感？</p>
-<p>就像很多我们喜欢的产品，我们最初是为了解决一个问题，我们的共同发起人：Dave Teare 和 Roustem Karimov 早在2005年就开始讨论这个产品的想法了，因为他们被各种需要密码的服务和为了记忆各种登录所需要的密码搞得头疼。他们想要一种能为保护不同的账号生成不同的唯一的密码的工具。并且能帮他们记住各种登录密码并在需要登录的时候帮助他们自动登录，这样他们就不会在浪费时间在各种密码登录界面了。</p>
-<blockquote>
-<p>Where did the idea for the app come from? Were you trying to solve a problem you’d experienced, or did the inspiration come from somewhere else?<br>Like many of our favorite products, we set out to solve a problem. Dave Teare and Roustem Karimov, our co-founders, were kicking around product ideas back in 2005 but started getting annoyed at how many services they had to sign into and all the passwords they needed to remember. They wanted a tool that would create unique passwords to protect all their accounts, and also remember those passwords and log them in automatically so they could spend less time typing into login forms and more time on what they wanted to do.</p>
-</blockquote>
-<h2 id="当你们有了这个灵感以后，你们的下一步是什么？">当你们有了这个灵感以后，你们的下一步是什么？</h2><p>最有趣的部分就是，原本那是没有下一步的， 我们设想那只是一个三个月的项目，Dave和Roustem当时只是自己使用这个最后成为1Password的工具，直到他们开始向他们在该领域的朋友们展示这个项目并且成功震惊了他们，直到这时他们才意识到他们创造了一个真的很特别的东西！</p>
-<p>After you came up with the idea, what was the next step?<br>The funny part of this story is that, originally, there was no next step. It was supposed to be a three-month project, and Dave and Roustem were just using what eventually became 1Password on their own, internally. It wasn’t until they started showing it to friends in the field and blew their minds that they realized they had created something truly special.</p>
-<h2 id="你们怎么确定在哪个平台开发这个软件作_而忽略哪些平台或者暂时不开发哪些平台？">你们怎么确定在哪个平台开发这个软件作 而忽略哪些平台或者暂时不开发哪些平台？</h2><p>在那个时候，Dave和 Roustem 两个人都离开了上班族的世界和接触Mac，所以那是难以置信的偶然。当时苹果刚推出了OS X 和 IPOD， 社区的发展极为迅速，两位创始人正在折腾新的项目，刚好就知道了OSX和Cocoa，所以这也很好理解他们在Mac上开发了测试版的1Password，看下效果如何。</p>
-<p>Behind the App: The Story of 1Password<br>How did you choose which platforms to target and which to ignore or wait on?<br>Right around this time, Dave and Roustem had both just left the corporate world and discovered the Mac, so it was incredibly serendipitous. Apple was on a roll with OS X and the iPod, and the community was taking off like a rocket ship. Dave and Roustem were tinkering with new projects, getting to know OS X and Cocoa, so it just made sense to try the initial beta version of 1Password on the Mac and see where it went.</p>
-<h2 id="什么是你们曾遇到的最大的障碍？你们是怎么克服它的？">什么是你们曾遇到的最大的障碍？你们是怎么克服它的？</h2><p>我不会说我们遇到了相当多的苦难，但是探索和理解安全软件的背景与更深层次的细节都是1Password不可或缺的基础。它储存了人们的密码，信用卡，大量的个人信息，我们必须知道我们的安全入口，我们必须谨慎的对待我们用户的隐私和担忧，这是一种我们不能轻松承担的特俗的责任。</p>
-<p>What was your biggest roadblock and how did you overcome it?<br>I wouldn’t say it was so much of a roadblock, but exploring and understanding the context and deeper details of making a security product was an essential element to getting 1Password right. It stores people’s passwords, credit cards, and utmost personal info—we have to know our security chops, we have to be mindful of our customers’ privacy and concerns. It is a uniquely personal responsibility that we do not—cannot—take lightly.</p>
-<h2 id="产品上线的时候是什么样的状况？">产品上线的时候是什么样的状况？</h2><p>发布以后让我们大吃一惊，真的。我们以为我们只是创建了一个只有书呆子才会在意的内部的工具。但是我们很快知道我们击中了用户的痛点，一些科技网站发现了它，开始写相关的文章，然后开始制作一些如何使用的教程，当人们开始与其他人讨论你们的作品时，我觉得那是世界上最棒的一种感觉之一。</p>
-<p>另一个很棒的地方就是，用户开始来与我们交流，有一些人会有建议，有一些会抱怨，很多人的表扬和感谢。但归根结底就是：人们很在乎1password，他们希望能成为它的一部分从而使它变的更好用。这也是世界上最棒的一种感觉之一。</p>
-<p>What was launch like for you?<br>Launch blew us away. It really did. We thought we were building an internal tool that mostly nerds would care about, but we quickly learned we struck a nerve. A few tech sites found out about it (“1Passwd” back in those days), started writing about it, then made “how to do this and that” tutorials. When people start telling other people about this thing you made… that’s one of the best feelings in the world.<br>Another great part of the launch was users coming to talk to us. Some had suggestions, some complaints, plenty of praise and thanks, but it all boils down to the same thing: people care so much about 1Password that they want to be a part of it and make it even better. Again, best feeling in the world.</p>
-<h2 id="你们是怎么有效的处理用户的建议和批评的？">你们是怎么有效的处理用户的建议和批评的？</h2><p>我们的合伙人和Ceo建立了一种很棒的企业文化：他们着迷与在各种社交平台上的各种人与人之间的互动，无论是批评还是一般的回馈。我们拥有完善的支持无论什么语言什么国家。而且我们使用协作服务比如Cerberus, Google Drive 积极的与我们的用户交流，并总结反馈的信息。我们使用Jira和basecamp来管理bug报告，讨论和决定改进和增加哪些功能。</p>
-<p>How do you handle user requests and criticisms effectively?<br>our co-founders and CEO built a great culture obsessed with human-to-human interaction for all our social media, criticism, and general feedback. We have a thorough support staff that spans continents and languages, and we use collaborative services like Cerberus, Google Drive, and Respond.ly to talk with our customers and organize feedback. For actual bug reporting, discussion, and deciding what to improve and build, we use Jira and Basecamp.</p>
-<h2 id="现在你们怎么分配你们的时间在开发新的功能和维护已有的那些功能？">现在你们怎么分配你们的时间在开发新的功能和维护已有的那些功能？</h2><p>在所有的在开发列表上的工作任务和所有我们从用户那里获取的想法之间，一定没有什么区别。因为当决定什么时候去开发还是什么时候去改进，是真的很复杂的步骤。如果有功能不正常的时候并且我们从很多的顾客那里获知的时候，这件事就会变成我们的首要任务，因为没有我们的顾客我们就什么都不是。<br>我们的也有一个令人惊喜和感激的测试版程序，那些用户拥有很大的发言权在什么会添加到1password，包括程序的修复和新的功能。比如说我们的mac程序，就有2万5000名客户参加测试。有的时候外部的因素也会影响到我们的计划，包括操作系统的更新计划。从产品推出的第一天起我们的用户期待看到我们推出新的升级，我们尽我们所能去满足我们的用户，但是有时候那也会导致我们会商量是不是把一些新的东西增加到免费升级的小版本中去。</p>
-<p>Now, how do you split time between developing new features and managing existing ones?<br>Between all the tasks already on our list and all the ideas we get from our customers, there is absolutely no shortage of places to take 1Password. As for deciding when it’s time to build and when to improve, that’s a fairly complicated dance. If something isn’t working right and we hear from a lot of customers, it gets top priority; we’d be nothing without our customers.</p>
-<p>We also have (and are grateful for!) a surprisingly active beta program. Those customers have a huge voice in what we add to 1Password, including both fixes and new features. Our Mac program, for example, includes over 25,000 customers.<br>Sometimes external elements can factor into our plans as well, including OS release schedules. It’s no secret that our customers love to see our updates ready by day one, and we try our best to hit that. But sometimes that leads to discussions over whether we need to push Feature Y to a free X.1 update.</p>
-<h2 id="你们会给那些想做类似的项目的人什么建议么？">你们会给那些想做类似的项目的人什么建议么？</h2><p>解决一个个人的问题，那种影响着你和你亲近的朋友们的问题。找到那件事会让你晚上也很兴奋，或者你总是发现你在和你的朋友抱怨相同的事情，但却没有好好思考过这些东西。正视那个问题，看看是不是它已经有了一个解决方案，然后想想你能不能有一个更好的解决方案。这是最好的方式去确定你可以把这件事做到最好并且保持做事的激情无论遇到在这其中遇到好的时期或者坏的，但这两种时期肯定都会出现。</p>
-<p>What advice would you give to others that want to take on a similar project?<br>Solve a personal problem, something that affects you or your closest friends. Find that thing that keeps you up at night, or that you always catch yourself complaining about with friends but might not give a second thought. Look at that problem, see if it might already have a solution, then think about how you can solve it better. It’s the best way to make sure you can do great work and stay passionate through both the good days and the bad, and there will be both.</p>
-<h2 id="原文链接">原文链接</h2><p><a href="http://lifehacker.com/behind-the-app-the-story-of-1password-1643425238" target="_blank" rel="external">http://lifehacker.com/behind-the-app-the-story-of-1password-1643425238</a></p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1661,7 +1673,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">47</span>
+              <span class="site-state-item-count">48</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
