@@ -207,6 +207,128 @@
             
             
               
+                <a class="post-title-link" href="/2016/05/11/react-js-01/" itemprop="url">
+                  react.js-Notes-01
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-05-11T22:08:32+08:00" content="2016-05-11">
+              2016-05-11
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/11/react-js-01/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/11/react-js-01/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="config_before_development">config before development</h1><h2 id="npm">npm</h2><p>use command to initialize your package.json file </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm init <span class="operator">-f</span></span><br></pre></td></tr></table></figure>
+<p>my npm package.json</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "<span class="attribute">name</span>": <span class="value"><span class="string">"Test"</span></span>,</span><br><span class="line">  "<span class="attribute">version</span>": <span class="value"><span class="string">"1.0.0"</span></span>,</span><br><span class="line">  "<span class="attribute">description</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">  "<span class="attribute">main</span>": <span class="value"><span class="string">"index.js"</span></span>,</span><br><span class="line">  "<span class="attribute">scripts</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">dev</span>": <span class="value"><span class="string">"webpack-dev-server --content-base src  --inline --hot"</span></span>,</span><br><span class="line">    "<span class="attribute">lint</span>": <span class="value"><span class="string">"eslint js"</span></span><br><span class="line">  </span>&#125;</span>,</span><br><span class="line">  "<span class="attribute">author</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">  "<span class="attribute">license</span>": <span class="value"><span class="string">"ISC"</span></span>,</span><br><span class="line">  "<span class="attribute">dependencies</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">babel-plugin-add-module-exports</span>": <span class="value"><span class="string">"^0.1.2"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-plugin-react-html-attrs</span>": <span class="value"><span class="string">"^2.0.0"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-plugin-transform-class-properties</span>": <span class="value"><span class="string">"^6.3.13"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-plugin-transform-decorators-legacy</span>": <span class="value"><span class="string">"^1.3.4"</span></span>,</span><br><span class="line">    "<span class="attribute">react</span>": <span class="value"><span class="string">"^15.0.1"</span></span>,</span><br><span class="line">    "<span class="attribute">react-dom</span>": <span class="value"><span class="string">"^15.0.1"</span></span>,</span><br><span class="line">    "<span class="attribute">webpack</span>": <span class="value"><span class="string">"^1.13.0"</span></span><br><span class="line">  </span>&#125;</span>,</span><br><span class="line">  "<span class="attribute">devDependencies</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">babel-core</span>": <span class="value"><span class="string">"^6.7.7"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-eslint</span>": <span class="value"><span class="string">"^6.0.4"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-loader</span>": <span class="value"><span class="string">"^6.2.4"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-preset-es2015</span>": <span class="value"><span class="string">"^6.6.0"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-preset-react</span>": <span class="value"><span class="string">"^6.5.0"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-preset-stage-0</span>": <span class="value"><span class="string">"^6.5.0"</span></span>,</span><br><span class="line">    "<span class="attribute">eslint</span>": <span class="value"><span class="string">"^2.9.0"</span></span>,</span><br><span class="line">    "<span class="attribute">eslint-plugin-react</span>": <span class="value"><span class="string">"^5.0.1"</span></span>,</span><br><span class="line">    "<span class="attribute">webpack-dev-server</span>": <span class="value"><span class="string">"^1.14.1"</span></span><br><span class="line">  </span>&#125;</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+<p>after you edit your package.json file, you can run npm install to install all the dependencies automatically</p>
+<h2 id="webpack">webpack</h2><p>after all the packages is  installled.</p>
+<p>we can config webpack by create webpack.config.js file under your project path.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> debug   = process.env.NODE_ENV !==<span class="string">"production"</span>;</span><br><span class="line"><span class="keyword">var</span> webpack =<span class="built_in">require</span>(<span class="string">'webpack'</span>);</span><br><span class="line"></span><br><span class="line"><span class="module"><span class="keyword">module</span>.exports=</span>&#123;</span><br><span class="line">	context: __dirname+<span class="string">"/src"</span>,</span><br><span class="line">	devtool: debug ? <span class="string">"inline-sourcemap"</span> : <span class="literal">null</span>,</span><br><span class="line">	entry:<span class="string">"./js/scripts.js"</span>,</span><br><span class="line">	output:&#123;</span><br><span class="line">		path: __dirname +<span class="string">"/src"</span>,</span><br><span class="line">		filename:<span class="string">"scripts.min.js"</span></span><br><span class="line">	&#125;,</span><br><span class="line">	devServer:&#123;</span><br><span class="line">		inline:<span class="literal">true</span>,</span><br><span class="line">		port:<span class="number">1336</span></span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="module"><span class="keyword">module</span>:</span>&#123;</span><br><span class="line">		loaders:[</span><br><span class="line">		&#123;</span><br><span class="line">			test:<span class="regexp">/\.js$/</span>,</span><br><span class="line">			exclude:<span class="regexp">/node_modules|bower_components/</span>,</span><br><span class="line">			loader:<span class="string">'babel-loader'</span>,</span><br><span class="line">			query:&#123;</span><br><span class="line">				presets:[<span class="string">'es2015'</span>,<span class="string">'react'</span>,<span class="string">'stage-0'</span>],</span><br><span class="line">				plugins:[<span class="string">'react-html-attrs'</span>,<span class="string">'transform-class-properties'</span>, <span class="string">'transform-decorators-legacy'</span>]</span><br><span class="line">			&#125;</span><br><span class="line">		 &#125;,</span><br><span class="line">	    ]</span><br><span class="line">	&#125;,</span><br><span class="line">	plugins: debug ? []:[</span><br><span class="line">		<span class="keyword">new</span> webpack.optimize.DedupePlugin(),</span><br><span class="line">		<span class="keyword">new</span> webpack.optimize.OccurenceOrderPlugin(),</span><br><span class="line">		<span class="keyword">new</span> webpack.optimize.UglifyJsPlugin(&#123; mangle:<span class="literal">false</span>, sourcemap:<span class="literal">false</span>&#125;),</span><br><span class="line">	],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="eslint">eslint</h2><p>as jshint doesnot support react.js very well,<br>I replace jshint with eslint.<br>you can also install eslint sublime plugin to help you check your code in Sublime.</p>
+<p>install eslint locally in your project folder (you must have package.json file there):</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="keyword">install</span> eslint</span><br></pre></td></tr></table></figure>
+<p>Init eslint config if you don’t have any. Run in your code folder:</p>
+<!--if eslint is installed locally-->
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./node_modules/.bin/eslint <span class="comment">--init</span></span><br></pre></td></tr></table></figure>
+<p>To install via Package Control, do the following:</p>
+<ol>
+<li><p>Within Sublime Text, bring up the Command Palette and type install. Among the commands you should see Package Control: Install Package. If that command is not highlighted, use the keyboard or mouse to select it. There will be a pause of a few seconds while Package Control fetches the list of available plugins.</p>
+</li>
+<li><p>When the plugin list appears, type eslint. Among the entries you should see SublimeLinter-contrib-eslint. If that entry is not highlighted, use the keyboard or mouse to select it.</p>
+</li>
+</ol>
+<p>my .eslintrc config file:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    "<span class="attribute">env</span>": <span class="value">&#123;</span><br><span class="line">        "<span class="attribute">browser</span>": <span class="value"><span class="literal">true</span></span>,</span><br><span class="line">        "<span class="attribute">node</span>": <span class="value"><span class="literal">true</span></span>,</span><br><span class="line">        "<span class="attribute">es6</span>": <span class="value"><span class="literal">true</span></span><br><span class="line">    </span>&#125;</span>,</span><br><span class="line">    "<span class="attribute">extends</span>": <span class="value"><span class="string">"eslint:recommended"</span></span>,</span><br><span class="line">    "<span class="attribute">parser</span>": <span class="value"><span class="string">"babel-eslint"</span></span>,</span><br><span class="line">    "<span class="attribute">ecmaFeatures</span>": <span class="value">&#123;</span><br><span class="line">       "<span class="attribute">jsx</span>": <span class="value"><span class="literal">true</span></span><br><span class="line">    </span>&#125;</span>,</span><br><span class="line">    "<span class="attribute">rules</span>": <span class="value">&#123;</span><br><span class="line">        "<span class="attribute">semi</span>": <span class="value">[<span class="number">2</span>, <span class="string">"always"</span>]</span><br><span class="line">    </span>&#125;</span><br><span class="line">    <span class="string">"plugins"</span>: [</span><br><span class="line">        <span class="string">"react"</span></span><br><span class="line">    ]</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="your_first_react-js_component">your first react.js component</h1><h2 id="Folder_Structure">Folder Structure</h2><p> Lyn-Cheung-MBP:01 Lyn$ find . -print | sed -e ‘s;[^/]*/;|<strong><strong>;g;s;</strong></strong>|; `|;g’</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">|<span class="string">____package.json</span><br><span class="line"></span>|____src</span><br><span class="line">|<span class="string"> </span>|<span class="string">____index.html</span><br><span class="line"></span>|<span class="string"> </span>|____js</span><br><span class="line">|<span class="string"> </span>|<span class="string"> </span>|____components</span><br><span class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____Footer.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|____Header</span><br><span class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____Title.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____Header.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____Layout.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____scripts.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____scripts.min.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string">____scripts.min.js</span><br><span class="line"></span>|<span class="string">____webpack.config.js</span></span><br></pre></td></tr></table></figure>
+<h2 id="Code_files">Code files</h2><p>index.html is very simple:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">title</span>&gt;</span>Some page <span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">	 </span><br><span class="line">	<span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"app"</span>&gt;</span> <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">script</span>  <span class="attribute">src</span>=<span class="value">"./scripts.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>scripts.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> ReactDOM <span class="keyword">from</span> <span class="string">"react-dom"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> Layout <span class="keyword">from</span> <span class="string">"./components/Layout"</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app =<span class="built_in">document</span>.getElementById(<span class="string">'app'</span>);</span><br><span class="line"></span><br><span class="line">ReactDOM.render(<span class="xml"><span class="tag">&lt;<span class="title">Layout</span>/&gt;</span>, app);</span></span><br></pre></td></tr></table></figure>
+<p>Layout.js</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="type">Header</span> from <span class="string">"./Header"</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="type">Footer</span> from <span class="string">"./Footer"</span>;</span><br><span class="line"></span><br><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Layout</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Component</span>&#123;</span></span><br><span class="line"> 	 constructor()&#123;</span><br><span class="line"> 	 	<span class="keyword">super</span>();</span><br><span class="line"> 	 	<span class="keyword">this</span>.state=&#123;</span><br><span class="line"> 	 		title:<span class="string">"Welcome"</span>,</span><br><span class="line"> 	 	&#125;</span><br><span class="line"> 	 &#125;</span><br><span class="line"> 	 changeTitle(title)&#123;</span><br><span class="line"> 	 	<span class="keyword">this</span>.setState(&#123;title&#125;);</span><br><span class="line"> 	 &#125;</span><br><span class="line">	</span><br><span class="line">	render()&#123;</span><br><span class="line">		<span class="keyword">return</span> (</span><br><span class="line">			&lt;div&gt;</span><br><span class="line">				&lt;<span class="type">Header</span> changeTitle=&#123;<span class="keyword">this</span>.changeTitle.bind(<span class="keyword">this</span>)&#125; title=&#123;<span class="keyword">this</span>.state.title&#125; /&gt;</span><br><span class="line">				&lt;<span class="type">Footer</span> /&gt;</span><br><span class="line">			&lt;/div&gt;</span><br><span class="line">			);</span><br><span class="line">	</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Header.js</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="type">Title</span> from <span class="string">"./Header/Title"</span>;</span><br><span class="line"></span><br><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Header</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Component</span>&#123;</span></span><br><span class="line">	 handleChange(e)&#123;</span><br><span class="line">	 	const title =e.target.value;</span><br><span class="line">	 	<span class="keyword">this</span>.props.changeTitle(title);</span><br><span class="line">	 &#125;</span><br><span class="line">	</span><br><span class="line">	render()&#123;</span><br><span class="line">		<span class="keyword">return</span> (</span><br><span class="line">			&lt;div&gt;</span><br><span class="line">				&lt;<span class="type">Title</span>  title=&#123;<span class="keyword">this</span>.props.title&#125; /&gt;</span><br><span class="line">				&lt;input value=&#123;<span class="keyword">this</span>.props.title&#125;  onChange=&#123;<span class="keyword">this</span>.handleChange.bind(<span class="keyword">this</span>)&#125;  /&gt;</span><br><span class="line">			&lt;/div&gt;</span><br><span class="line">		);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Title.js</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</span><br><span class="line"></span><br><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Title</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Component</span>&#123;</span></span><br><span class="line">	 </span><br><span class="line">	</span><br><span class="line">	render()&#123;</span><br><span class="line">		<span class="keyword">return</span> (</span><br><span class="line">			&lt;h1&gt; &#123;<span class="keyword">this</span>.props.title&#125;&lt;/h1&gt;</span><br><span class="line">			);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Footer.js</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</span><br><span class="line"></span><br><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Footer</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Component</span>&#123;</span></span><br><span class="line">	render()&#123;</span><br><span class="line">		<span class="keyword">return</span> (</span><br><span class="line">			&lt;footer&gt; <span class="type">This</span> is <span class="type">Footer</span> &lt;/footer&gt;</span><br><span class="line">			);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Run_your_react-js_on_your_local_sever">Run your react.js on your local sever</h2><p>simply use these commands:</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">webpack</span><br><span class="line"></span><br><span class="line">npm <span class="command">run</span> dev</span><br></pre></td></tr></table></figure>
+<p>then you can visit your first react.js project on your browser by:<br><a href="http://127.0.0.1:1336/" target="_blank" rel="external">http://127.0.0.1:1336/</a> </p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/04/22/css/" itemprop="url">
                   css权重优先级问题
                 </a>
@@ -1487,135 +1609,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/02/27/trans-note-02/" itemprop="url">
-                  七个对我最好的职业建议－Nicholas C. Zakas（自译）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-02-27T13:23:29+08:00" content="2016-02-27">
-              2016-02-27
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/27/trans-note-02/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/27/trans-note-02/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="关于原作者">关于原作者</h1><p>Nicholas C. Zakas（尼古拉斯·泽卡斯），世界Web技术专家，现为雅虎公司界面呈现架构师，负责My Yahoo！和雅虎首页等大访问量站点的设计。尼古拉斯拥有丰富的Web开发和界面设计经验，曾经参与许多大公司的Web解决方案开发。他还是High Performance JavaScript一书的作者，并与他人合作撰写了Professional Ajax和Even Faster Web Sites。尼古拉斯拥有梅里马克学院计算机科学学士学位和埃迪柯特学院的MBA学位。他的Twitter别名是@slicknet。</p>
-<p>The best career advice I’ve received － Posted at October 15, 2013 by Nicholas C. Zakas<br>Tags: Advice Career Mentoring</p>
-<p>我最近有一段和我的同事有一段有趣的讨论.我们列举我们过去的工作，以及我们奇葩的性格可能对我们产生了负面的影响. 而事实是，我刚从学校毕业的时候很混蛋（有些人会说我现在依然很混蛋）。我曾经是傲慢而犀利喜欢讽刺的一个人，总的来说就是很无礼。我觉得我知道我是什么样的人而且还为此很是得意。<br>I recently had an interesting discussion with a colleague. We were recounting our job histories and how our, shall we say colorful personalities, could have negatively impacted us long term. The truth is, I was kind of an asshole coming out of college (some would argue I’m still kind of an asshole, but that’s beside the point). I was arrogant and bitingly sarcastic, a generally irreverent character. I thought I knew it all and was quite proud of myself for it.</p>
-<p>我有一个告诉更有经验的工程师他们做事的方法不对的爱好，尽管大部分的时候都是对的，我并没有一个性格让我以很高效的方式去做到它。在一次特别令人愉快的对话中，一个高级工程师跟我说；“如果你在不闭嘴，我就把你揍出翔来”。我一笑而过，因为我知道他不敢这样，但是一年之后我才知道这不是一个玩笑，他是真的想揍死我！<br>I had a habit of telling more experienced engineers that they were doing things wrong, and despite being right most of the time, I didn’t have the personality to make it effective. During one particularly engaging conversation, one of the senior engineers stopped and said, in these exact words, “I’m going to f<em>*</em>en beat the shit out of you if you don’t shut up.” I laughed it off because I knew he wouldn’t dare, and only years later did I realize the relevance of that statement: it was actually what he wanted to do.</p>
-<p>自从那以后<br>Since that time I’ve grown up a lot, learned to watch what I say, and treat people with respect regardless of defining characteristics. The sarcasm stays in check while in a professional environment; I let it out to play when I’m with good friends. This self-control, along with a lot of other invaluable lessons, came to me not of my own accord, but through the careful guidance of the mentors I’ve had along the way. If not for them, who knows if my interpersonal relationships would have short-circuited my career.</p>
-<p>The truth is that I have been incredibly blessed in my career because of the people I’ve come into contact with. My managers along the way molded a really rough-around-the-edges character into someone I’m proud to be. More than that, because of their influence, I’m not just a good programmer – I’m a good teammate and a good person. So impactful were these people on my life that I frequently recount their advice to the colleagues that I now mentor.</p>
-<p>I also find their advice to be universally applicable, so I’d like to share the things I was told that helped me along the way. Of course, some of these are paraphrased since my memory for exact phrases isn’t all that great, but I believe I’ve captured the important parts correctly.</p>
-<p>Don’t be a short-order cook</p>
-<p>My very first job lasted 8 months because the company shut down. As I was talking with my manager about what I would do next, he gave me this advice:</p>
-<p>Nicholas, you’re worth more than your code. Whatever your next gig is, make sure that you’re not a short-order cook. Don’t accept a job where you’re told exactly what to build and how to build it. You need to work somewhere that appreciates your insights into the product as well as your ability to build it.</p>
-<p>This is something I’ve kept in mind throughout my career. Simply being an implementer isn’t good enough – you need to be involved in the process that leads up to implementation. Good engineers don’t just follow orders, they give feedback to and work with product owners to make the product better. Fortunately, I’ve chosen my jobs wisely and never ended up in a situation where people didn’t respect or value my insights.</p>
-<p>Self-promote</p>
-<p>My second manager at Yahoo pulled me aside one day to give me some advice. He had been watching my work and felt like I was hiding a bit:</p>
-<p>You do great work. I mean really great work. I like how your code looks and that it rarely breaks. The problem is that others don’t see it. In order for you to get credit for the work you’re doing, you have to let people know. You need to do a bit of self-promotion to get noticed.</p>
-<p>It took me a little while to digest what he was saying, but I finally figured it out. If you do good work, but no one knows that you did good work, then it doesn’t really help you. Your manager can back you up but can’t make your case for you. People within the organization need to understand your value, and the best way to do that is to tell people what you did.</p>
-<p>This is advice I give to many of my colleagues now. Self-promoting doesn’t mean, “look at me, I’m awesome.” It means letting people know when you’ve hit major milestones, or when you’ve learned something new. It means showing people the work that you’re proud of. It means celebrating your accomplishments and the accomplishments of others. It means being visible within the organization. The engineer who sits quietly in a corner and just codes away is always a bit mysterious – don’t be like that. A quick email to say, “hey, I finished the new email layout. Let me know what you think” goes a long way.</p>
-<p>It’s about people</p>
-<p>I was very title-driven earlier in my career. I always wanted to know what I had to do to be promoted. During my first one-on-one with my new manager on the Yahoo homepage, I asked what it would take for me to get promoted. His words still ring in my ears:</p>
-<p>At a certain point, you stop being judged on your technical knowledge and start being judged on the way you interact with people.</p>
-<p>I’m not sure I’ve ever received a better insight into the software engineering profession since that time. He was exactly right. At that point, no one was questioning my technical ability. I was known as a guy who wrote good, high-quality code that rarely had bugs. What I lacked was leadership skill.</p>
-<p>Since that time, I’ve seen countless engineers get stuck at one level in their career. Smart people, good code, but the inability to work effectively with others keeps them where they are. Anytime someone feels stuck in their software engineering career, I recount this advice and it has always been right on the money.</p>
-<p>None of this matters</p>
-<p>I went through a period at Yahoo where I was frustrated. Maybe frustrated isn’t the right word, more like angry. I had angry outbursts and was arguing with people constantly. Things were going wrong and I didn’t like that. During one particularly rough day, I asked one of my mentors how he managed to stay calm when so many things were going wrong. His response:</p>
-<p>It’s easy. You see, none of this matters. So some crappy code got checked in, so the site went down. So what? Work can’t be your whole life. These aren’t real problems, they’re work problems. What really matters is what happens outside of work. I go home and my wife is waiting for me. That’s pretty nice.</p>
-<p>I had moved to California from Massachusetts and had a hard time making friends. Work was my life, it was what kept me sane, so when it wasn’t going that meant my life wasn’t going well. This conversation made me realize I had to have something else going on in my life, something I could go back to and forget about the troubles I had at work.</p>
-<p>He was right, once I shifted my mindset and recategorized the annoying things at work as “work things,” I was able to think more clearly. I was able to calm down at work and have much more pleasant interactions with people.</p>
-<p>Authority, your way</p>
-<p>When I was first promoted to principal engineer at Yahoo, I sat down with my director to better understand what the role entailed. I knew I had to be more of a leader, but I was having trouble being authoritative. I asked for help. Here’s what he said:</p>
-<p>I can’t tell you how to be authoritative, that’s something you need to figure out on your own. Different people have different styles. What you need to do is find a style that you can live with, that makes you comfortable. I can’t tell you what that is, but you do need to find it for this position.</p>
-<p>I spent a lot of time that year observing people of authority and how they interacted with others. I took note as to how they walked, how they talked, how they dealt with problem situations. I tried different styles before I finally came across one that worked for me. My style is uniquely me and anyone learning to be in a position of authority has to go through the same growing pains. My advantage was that my mentor clued me about the process up front.</p>
-<p>Moving from “how?” to “what?”</p>
-<p>During a conversation with my manager at Yahoo, I asked what the expectations were with my new position. He answered:</p>
-<p>To this point in your career, you’ve answered the question, “how?” As in, we tell you what needs to be done and you figure out how to do it. At this point, though, you need to answer the question, “what?” I’m expecting you to come and tell me what needs to be done.</p>
-<p>This is the part where I see a lot of engineers get tripped up, and I would have as well if not for this piece of advice. Switching from “how?” to “what?” is very hard and takes time to develop. It also takes a bit of maturity to be left to your own desires as to what you focus on. After all, if you can spend your time on anything you want, you are also solely responsible for what you produce.</p>
-<p>At Box, we call this “running open loop,” meaning that you do your job with minimal oversight and yet still are making a significant positive impact on the engineering organization and the company as a whole. This is the step where many engineers fail to make the leap, and I still give this advice to anyone who is trying to get to the next level.</p>
-<p>Act like you’re in charge</p>
-<p>I had just sat through a meeting where I had nothing to say. During my one-on-one with my director, I mentioned that I was just in a meeting where I had no idea why I was there and had nothing to contribute. He said:</p>
-<p>Don’t ever do that again. If you’re in a meeting, it’s because you are there to participate. If you’re not sure why you’re there, stop and ask. If you’re not needed, leave. You’re in a leadership position, act like it. Don’t go quietly into a room. Just act like you’re in charge and people will believe it.</p>
-<p>In that piece of advice, my mentor had reminded me of a lesson I learned while acting in high school: no one knows when you’re acting. If you’re nervous but act like you’re not, then people won’t know that you’re nervous. The same with leadership. The old phrase fake it til you make it comes to mind. From that point on, I never sat quietly in a meeting. I made sure I only went to meetings that needed me to participate and then I would participate.</p>
-<p>Let them win</p>
-<p>I went through a particular period where there were a lot of arguments on the team. I prided myself on ending those arguments with authority. I had a “my ruling is final” mentality, and my manager noticed that and gave me this piece of advice:</p>
-<p>I see a lot of arguing going on, and I see you pushing through to win a lot. I know that most of the time you are right, but every once in a while let them win. Pick the things that really matter to you and push for those but let the other things go. There’s no need to win every argument.</p>
-<p>This was one piece of advice I resisted initially. I was right nearly all of the time, why would I ever let someone else win? However, as I had grown to trust his instincts, I gave it a shot. The result: there were less arguments. People didn’t feel like they had to get one over on me, and in turn, I became better at identifying things I really didn’t care that much about. I stuck to my guns on important issues and let the others ones get resolved by the other party. The intensity of all conversations dropped considerably.</p>
-<p>Conclusion</p>
-<p>Looking back at the brash guy I was when I graduated college, my career could have ended up very different. I was seen as a malcontent, a smart but hard-to-deal-with guy who people dealt with because they had to. If it weren’t for the mentors I had along the way, as well as some humbling failures early in my career, my interpersonal skills (or lack thereof) could have very well done me in. These days, I regularly seek out those who are more experienced than me and ask for advice. I may no longer make big, glaring mistakes, but I also don’t want to wait for one to happen to seek out the experienced insights of someone I trust.</p>
-<p>The nearly five years I was at Yahoo were some of the most transformative in my career. I got to work on interesting problems at a large scale, but moreso I was blessed with a series of wonderful managers and other mentors within my organization. I credit those conversations with turning me into a person that I’m proud of today, both at work and outside in “real life.”</p>
-<p>If I can leave you with one overriding piece of career advice, it would be this: identify someone at your work that is smarter than you in some way (technically, organizationally, etc.) and attach yourself to them. See if you can regularly have lunch or coffee and pick their brain for the vast amount of knowledge it has. Your career, and maybe even your life, could end up drastically better by doing so.</p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1661,7 +1654,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">48</span>
+              <span class="site-state-item-count">49</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1675,7 +1668,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-count">31</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>

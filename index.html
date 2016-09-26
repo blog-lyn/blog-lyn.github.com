@@ -207,6 +207,111 @@
             
             
               
+                <a class="post-title-link" href="/2016/09/26/redux-notes-01/" itemprop="url">
+                  Redux 快速入门 -- 01
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-09-26T21:25:17+08:00" content="2016-09-26">
+              2016-09-26
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/26/redux-notes-01/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/26/redux-notes-01/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="配置开发环境">配置开发环境</h1><p>对于新手来说,React和Redux都免不了需要配置各种环境.<br>还好ali的开源项目 <a href="https://ant-tool.github.io/quick-start.html" target="_blank" rel="external">Ant-Tool</a>为大家送上了福利,大大降低了入门的难度.</p>
+<h2 id="首先需要确认你的npm版本">首先需要确认你的npm版本</h2><blockquote>
+<p>由于atool 依赖了 babel 6，而 babel 6 在npm2 下会有严重的性能问题, 所以npm版本需要&gt;3)</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">npm -v</span><br><span class="line"><span class="number">3.10</span><span class="number">.8</span></span><br><span class="line"><span class="comment">// 安装手脚架工具</span></span><br><span class="line">npm i antd-init -g</span><br><span class="line"><span class="comment">// 检查版本确认安装成功</span></span><br><span class="line">antd-init -v</span><br><span class="line"><span class="number">1.1</span><span class="number">.2</span></span><br><span class="line"><span class="comment">// 在当前目录下创建文件夹并进入这个文件夹</span></span><br><span class="line">mkdir blog &amp;&amp; cd blog</span><br><span class="line"><span class="comment">//运行手脚架工具 任选其一搭建一个sample</span></span><br><span class="line">antd-init</span><br></pre></td></tr></table></figure>
+<p>配置package.json中的 entry属性:<br>(这个属性和webpack中配置的entry是同一个东西)</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"entry"</span>: &#123;</span><br><span class="line">    <span class="string">"index"</span>: <span class="string">"./src/index.js"</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="遇到的问题:">遇到的问题:</h2><ul>
+<li>在升级npm的过程中由于权限的问题导致升级失败</li>
+</ul>
+<p>解决办法:</p>
+<ul>
+<li>重新安装node,并根据NPM官方的方法选择其中一种来 修改npm的三个目录的权限问题(lib/node_modules, bin,share)    </li>
+<li>只要是不和别人共用同一台电脑,那就可以用下面的方法把npm的文件夹owner修改成自己来解决:</li>
+</ul>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/<span class="regexp">/ 获取npm PATH</span><br><span class="line">npm config get prefix</span><br><span class="line">/usr</span><span class="regexp">/local</span><br><span class="line">/</span><span class="regexp">/ 改变文件夹的owner</span><br><span class="line">sudo chown -R $(whoami) $(npm config get prefix)/</span>&#123;<span class="class"><span class="keyword">lib</span>/<span class="title">node_modules</span>,<span class="title">bin</span>,<span class="title">share</span>&#125;</span></span><br><span class="line">/<span class="regexp">/ 设置 npm 源为淘宝镜像</span><br><span class="line">npm config set registry https:/</span><span class="regexp">/registry.npm.taobao.org</span><br><span class="line">/</span><span class="regexp">/ 更新npm到最新版本</span><br><span class="line">npm install npm -g</span><br><span class="line">/</span><span class="regexp">/ 检查更新后的版本</span><br><span class="line">npm -v</span><br><span class="line">3.10.8</span></span><br></pre></td></tr></table></figure>
+<h2 id="配置格式化工具">配置格式化工具</h2><p>由于A-tool,使用eslint来检查代码风格,且是基于airbnb推荐的编码风格<br>可以选择以下两种方式来配置sublime的格式化功能:</p>
+<h3 id="使用sublime的build功能来格式化:">使用sublime的build功能来格式化:</h3><p>Tools-&gt;Build System-&gt;New Build System…，<br>在新建的脚本文件中添加以下代码，保存为eslint.sublime-build到默认位置。然后运行cmd+b(mac)就可以格式化你的代码了.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">       "<span class="attribute">cmd</span>": <span class="value">[<span class="string">"eslint --fix $file"</span>]</span>,</span><br><span class="line">       "<span class="attribute">shell</span>": <span class="value"><span class="literal">true</span></span>,</span><br><span class="line">       "<span class="attribute">path</span>": <span class="value"><span class="string">"/usr/local/node/v0.12.7/bin"</span></span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+<p>还需要全局安装这些package</p>
+<p><code>npm install eslint-config-airbnb eslint babel-eslint  -g</code></p>
+<h3 id="jsformart">jsformart</h3><p>打开preference&gt;package settings&gt;jsformat&gt;settings user<br>把如下代码粘进去保存即可.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Documentation: https://github.com/beautify-web/js-beautify</span></span><br><span class="line"><span class="comment">// Example URL: https://github.com/victorporof/Sublime-HTMLPrettify/blob/master/.jsbeautifyrc</span></span><br><span class="line"><span class="comment">// Based on Airbnb's JavaScript Style Guide, URL: https://github.com/airbnb/javascript</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Collapse curly brackets</span></span><br><span class="line">    <span class="string">"brace_style"</span>: <span class="string">"collapse"</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Break chained method calls across subsequent lines</span></span><br><span class="line">    <span class="string">"break_chained_methods"</span>: <span class="literal">true</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// End output with newline</span></span><br><span class="line">    <span class="string">"end_with_newline"</span>: <span class="literal">true</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Evaluate code</span></span><br><span class="line">    <span class="string">"eval_code"</span>: <span class="literal">false</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Indentation character</span></span><br><span class="line">    <span class="string">"indent_char"</span>: <span class="string">" "</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Initial indentation level</span></span><br><span class="line">    <span class="string">"indent_level"</span>: <span class="number">0</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Indentation character size</span></span><br><span class="line">    <span class="string">"indent_size"</span>: <span class="number">2</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Indent with tabs, overrides 'indent_size' and 'indent_char'</span></span><br><span class="line">    <span class="string">"indent_with_tabs"</span>: <span class="literal">false</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Enable jslint-stricter mode</span></span><br><span class="line">    <span class="string">"jslint_happy"</span>: <span class="literal">false</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Preserve array indentation</span></span><br><span class="line">    <span class="string">"keep_array_indentation"</span>: <span class="literal">false</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Preserve function indentation</span></span><br><span class="line">    <span class="string">"keep_function_indentation"</span>: <span class="literal">false</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Number of line-breaks to be preserved in one chunk</span></span><br><span class="line">    <span class="string">"max_preserve_newlines"</span>: <span class="number">10</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Preserve newlines</span></span><br><span class="line">    <span class="string">"preserve_newlines"</span>: <span class="literal">true</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Add a space before an anonymous function's parentheses, i.e. function ()</span></span><br><span class="line">    <span class="string">"space_after_anon_function"</span>: <span class="literal">true</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Add a space before the conditional statement i.e. 'if (true)'</span></span><br><span class="line">    <span class="string">"space_before_conditional"</span>: <span class="literal">true</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Add padding spaces within empty parentheses i.e. 'f( )'</span></span><br><span class="line">    <span class="string">"space_in_empty_paren"</span>: <span class="literal">false</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Add padding spaces within parentheses i.e. 'f( a, b )'</span></span><br><span class="line">    <span class="string">"space_in_paren"</span>: <span class="literal">false</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Decode printable characters encoded in xNN notation</span></span><br><span class="line">    <span class="string">"unescape_strings"</span>: <span class="literal">false</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Wrap lines at next opportunity after N characters</span></span><br><span class="line">    <span class="string">"wrap_line_length"</span>: <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// <span class="doctag">Note:</span> Remove the comments when adding to the project</span></span><br></pre></td></tr></table></figure>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/07/03/gen8-exsi-ubuntu-apc-autoshutdown/" itemprop="url">
                   ESXI中实现UPS断电自动关闭GEN8的功能
                 </a>
@@ -1129,11 +1234,13 @@
 <li><code>http://droidyue.com/blog/2014/09/20/interaction-between-java-and-javascript-in-android/index.html</code></li>
 <li><code>http://rensanning.iteye.com/blog/2043049</code></li>
 </ul>
-<h2 id="iOS:">iOS:</h2><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">NSString <span class="keyword">*</span>returnvalue = [webViewstringByEvaluatingJavaScriptFromString:<span class="comment">@"your javascript code string here"];</span></span><br></pre></td></tr></table></figure>
+<h2 id="iOS:">iOS:</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NSString <span class="keyword">*</span>returnvalue = [webViewstringByEvaluatingJavaScriptFromString:<span class="comment">@"your javascript code string here"];</span></span><br></pre></td></tr></table></figure>
 <h3 id="官方文档:-1">官方文档:</h3><ul>
 <li><a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIWebView_Class/" target="_blank" rel="external">https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIWebView_Class/</a></li>
 </ul>
 <h3 id="iOS_实现参考:">iOS 实现参考:</h3><ul>
+<li><a href="https://developer.apple.com/videos/play/wwdc2013/615/" target="_blank" rel="external">https://developer.apple.com/videos/play/wwdc2013/615/</a></li>
 <li><a href="https://github.com/marcuswestin/WebViewJavascriptBridge" target="_blank" rel="external">https://github.com/marcuswestin/WebViewJavascriptBridge</a></li>
 <li><a href="http://dukeland.hk/2013/01/28/adding-JavaScript-interface-to-uiwebview-like-android/" target="_blank" rel="external">http://dukeland.hk/2013/01/28/adding-JavaScript-interface-to-uiwebview-like-android/</a></li>
 </ul>
@@ -1435,128 +1542,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/05/11/react-js-01/" itemprop="url">
-                  react.js-Notes-01
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-05-11T22:08:32+08:00" content="2016-05-11">
-              2016-05-11
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/11/react-js-01/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/11/react-js-01/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="config_before_development">config before development</h1><h2 id="npm">npm</h2><p>use command to initialize your package.json file </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm init <span class="operator">-f</span></span><br></pre></td></tr></table></figure>
-<p>my npm package.json</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "<span class="attribute">name</span>": <span class="value"><span class="string">"Test"</span></span>,</span><br><span class="line">  "<span class="attribute">version</span>": <span class="value"><span class="string">"1.0.0"</span></span>,</span><br><span class="line">  "<span class="attribute">description</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">  "<span class="attribute">main</span>": <span class="value"><span class="string">"index.js"</span></span>,</span><br><span class="line">  "<span class="attribute">scripts</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">dev</span>": <span class="value"><span class="string">"webpack-dev-server --content-base src  --inline --hot"</span></span>,</span><br><span class="line">    "<span class="attribute">lint</span>": <span class="value"><span class="string">"eslint js"</span></span><br><span class="line">  </span>&#125;</span>,</span><br><span class="line">  "<span class="attribute">author</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">  "<span class="attribute">license</span>": <span class="value"><span class="string">"ISC"</span></span>,</span><br><span class="line">  "<span class="attribute">dependencies</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">babel-plugin-add-module-exports</span>": <span class="value"><span class="string">"^0.1.2"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-plugin-react-html-attrs</span>": <span class="value"><span class="string">"^2.0.0"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-plugin-transform-class-properties</span>": <span class="value"><span class="string">"^6.3.13"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-plugin-transform-decorators-legacy</span>": <span class="value"><span class="string">"^1.3.4"</span></span>,</span><br><span class="line">    "<span class="attribute">react</span>": <span class="value"><span class="string">"^15.0.1"</span></span>,</span><br><span class="line">    "<span class="attribute">react-dom</span>": <span class="value"><span class="string">"^15.0.1"</span></span>,</span><br><span class="line">    "<span class="attribute">webpack</span>": <span class="value"><span class="string">"^1.13.0"</span></span><br><span class="line">  </span>&#125;</span>,</span><br><span class="line">  "<span class="attribute">devDependencies</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">babel-core</span>": <span class="value"><span class="string">"^6.7.7"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-eslint</span>": <span class="value"><span class="string">"^6.0.4"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-loader</span>": <span class="value"><span class="string">"^6.2.4"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-preset-es2015</span>": <span class="value"><span class="string">"^6.6.0"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-preset-react</span>": <span class="value"><span class="string">"^6.5.0"</span></span>,</span><br><span class="line">    "<span class="attribute">babel-preset-stage-0</span>": <span class="value"><span class="string">"^6.5.0"</span></span>,</span><br><span class="line">    "<span class="attribute">eslint</span>": <span class="value"><span class="string">"^2.9.0"</span></span>,</span><br><span class="line">    "<span class="attribute">eslint-plugin-react</span>": <span class="value"><span class="string">"^5.0.1"</span></span>,</span><br><span class="line">    "<span class="attribute">webpack-dev-server</span>": <span class="value"><span class="string">"^1.14.1"</span></span><br><span class="line">  </span>&#125;</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
-<p>after you edit your package.json file, you can run npm install to install all the dependencies automatically</p>
-<h2 id="webpack">webpack</h2><p>after all the packages is  installled.</p>
-<p>we can config webpack by create webpack.config.js file under your project path.</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> debug   = process.env.NODE_ENV !==<span class="string">"production"</span>;</span><br><span class="line"><span class="keyword">var</span> webpack =<span class="built_in">require</span>(<span class="string">'webpack'</span>);</span><br><span class="line"></span><br><span class="line"><span class="module"><span class="keyword">module</span>.exports=</span>&#123;</span><br><span class="line">	context: __dirname+<span class="string">"/src"</span>,</span><br><span class="line">	devtool: debug ? <span class="string">"inline-sourcemap"</span> : <span class="literal">null</span>,</span><br><span class="line">	entry:<span class="string">"./js/scripts.js"</span>,</span><br><span class="line">	output:&#123;</span><br><span class="line">		path: __dirname +<span class="string">"/src"</span>,</span><br><span class="line">		filename:<span class="string">"scripts.min.js"</span></span><br><span class="line">	&#125;,</span><br><span class="line">	devServer:&#123;</span><br><span class="line">		inline:<span class="literal">true</span>,</span><br><span class="line">		port:<span class="number">1336</span></span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="module"><span class="keyword">module</span>:</span>&#123;</span><br><span class="line">		loaders:[</span><br><span class="line">		&#123;</span><br><span class="line">			test:<span class="regexp">/\.js$/</span>,</span><br><span class="line">			exclude:<span class="regexp">/node_modules|bower_components/</span>,</span><br><span class="line">			loader:<span class="string">'babel-loader'</span>,</span><br><span class="line">			query:&#123;</span><br><span class="line">				presets:[<span class="string">'es2015'</span>,<span class="string">'react'</span>,<span class="string">'stage-0'</span>],</span><br><span class="line">				plugins:[<span class="string">'react-html-attrs'</span>,<span class="string">'transform-class-properties'</span>, <span class="string">'transform-decorators-legacy'</span>]</span><br><span class="line">			&#125;</span><br><span class="line">		 &#125;,</span><br><span class="line">	    ]</span><br><span class="line">	&#125;,</span><br><span class="line">	plugins: debug ? []:[</span><br><span class="line">		<span class="keyword">new</span> webpack.optimize.DedupePlugin(),</span><br><span class="line">		<span class="keyword">new</span> webpack.optimize.OccurenceOrderPlugin(),</span><br><span class="line">		<span class="keyword">new</span> webpack.optimize.UglifyJsPlugin(&#123; mangle:<span class="literal">false</span>, sourcemap:<span class="literal">false</span>&#125;),</span><br><span class="line">	],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h2 id="eslint">eslint</h2><p>as jshint doesnot support react.js very well,<br>I replace jshint with eslint.<br>you can also install eslint sublime plugin to help you check your code in Sublime.</p>
-<p>install eslint locally in your project folder (you must have package.json file there):</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="keyword">install</span> eslint</span><br></pre></td></tr></table></figure>
-<p>Init eslint config if you don’t have any. Run in your code folder:</p>
-<!--if eslint is installed locally-->
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./node_modules/.bin/eslint <span class="comment">--init</span></span><br></pre></td></tr></table></figure>
-<p>To install via Package Control, do the following:</p>
-<ol>
-<li><p>Within Sublime Text, bring up the Command Palette and type install. Among the commands you should see Package Control: Install Package. If that command is not highlighted, use the keyboard or mouse to select it. There will be a pause of a few seconds while Package Control fetches the list of available plugins.</p>
-</li>
-<li><p>When the plugin list appears, type eslint. Among the entries you should see SublimeLinter-contrib-eslint. If that entry is not highlighted, use the keyboard or mouse to select it.</p>
-</li>
-</ol>
-<p>my .eslintrc config file:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    "<span class="attribute">env</span>": <span class="value">&#123;</span><br><span class="line">        "<span class="attribute">browser</span>": <span class="value"><span class="literal">true</span></span>,</span><br><span class="line">        "<span class="attribute">node</span>": <span class="value"><span class="literal">true</span></span>,</span><br><span class="line">        "<span class="attribute">es6</span>": <span class="value"><span class="literal">true</span></span><br><span class="line">    </span>&#125;</span>,</span><br><span class="line">    "<span class="attribute">extends</span>": <span class="value"><span class="string">"eslint:recommended"</span></span>,</span><br><span class="line">    "<span class="attribute">parser</span>": <span class="value"><span class="string">"babel-eslint"</span></span>,</span><br><span class="line">    "<span class="attribute">ecmaFeatures</span>": <span class="value">&#123;</span><br><span class="line">       "<span class="attribute">jsx</span>": <span class="value"><span class="literal">true</span></span><br><span class="line">    </span>&#125;</span>,</span><br><span class="line">    "<span class="attribute">rules</span>": <span class="value">&#123;</span><br><span class="line">        "<span class="attribute">semi</span>": <span class="value">[<span class="number">2</span>, <span class="string">"always"</span>]</span><br><span class="line">    </span>&#125;</span><br><span class="line">    <span class="string">"plugins"</span>: [</span><br><span class="line">        <span class="string">"react"</span></span><br><span class="line">    ]</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="your_first_react-js_component">your first react.js component</h1><h2 id="Folder_Structure">Folder Structure</h2><p> Lyn-Cheung-MBP:01 Lyn$ find . -print | sed -e ‘s;[^/]*/;|<strong><strong>;g;s;</strong></strong>|; `|;g’</p>
-<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">|<span class="string">____package.json</span><br><span class="line"></span>|____src</span><br><span class="line">|<span class="string"> </span>|<span class="string">____index.html</span><br><span class="line"></span>|<span class="string"> </span>|____js</span><br><span class="line">|<span class="string"> </span>|<span class="string"> </span>|____components</span><br><span class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____Footer.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|____Header</span><br><span class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____Title.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____Header.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____Layout.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____scripts.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____scripts.min.js</span><br><span class="line"></span>|<span class="string"> </span>|<span class="string">____scripts.min.js</span><br><span class="line"></span>|<span class="string">____webpack.config.js</span></span><br></pre></td></tr></table></figure>
-<h2 id="Code_files">Code files</h2><p>index.html is very simple:</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">title</span>&gt;</span>Some page <span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">	 </span><br><span class="line">	<span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"app"</span>&gt;</span> <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">script</span>  <span class="attribute">src</span>=<span class="value">"./scripts.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>scripts.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> ReactDOM <span class="keyword">from</span> <span class="string">"react-dom"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> Layout <span class="keyword">from</span> <span class="string">"./components/Layout"</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app =<span class="built_in">document</span>.getElementById(<span class="string">'app'</span>);</span><br><span class="line"></span><br><span class="line">ReactDOM.render(<span class="xml"><span class="tag">&lt;<span class="title">Layout</span>/&gt;</span>, app);</span></span><br></pre></td></tr></table></figure>
-<p>Layout.js</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="type">Header</span> from <span class="string">"./Header"</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="type">Footer</span> from <span class="string">"./Footer"</span>;</span><br><span class="line"></span><br><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Layout</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Component</span>&#123;</span></span><br><span class="line"> 	 constructor()&#123;</span><br><span class="line"> 	 	<span class="keyword">super</span>();</span><br><span class="line"> 	 	<span class="keyword">this</span>.state=&#123;</span><br><span class="line"> 	 		title:<span class="string">"Welcome"</span>,</span><br><span class="line"> 	 	&#125;</span><br><span class="line"> 	 &#125;</span><br><span class="line"> 	 changeTitle(title)&#123;</span><br><span class="line"> 	 	<span class="keyword">this</span>.setState(&#123;title&#125;);</span><br><span class="line"> 	 &#125;</span><br><span class="line">	</span><br><span class="line">	render()&#123;</span><br><span class="line">		<span class="keyword">return</span> (</span><br><span class="line">			&lt;div&gt;</span><br><span class="line">				&lt;<span class="type">Header</span> changeTitle=&#123;<span class="keyword">this</span>.changeTitle.bind(<span class="keyword">this</span>)&#125; title=&#123;<span class="keyword">this</span>.state.title&#125; /&gt;</span><br><span class="line">				&lt;<span class="type">Footer</span> /&gt;</span><br><span class="line">			&lt;/div&gt;</span><br><span class="line">			);</span><br><span class="line">	</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Header.js</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="type">Title</span> from <span class="string">"./Header/Title"</span>;</span><br><span class="line"></span><br><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Header</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Component</span>&#123;</span></span><br><span class="line">	 handleChange(e)&#123;</span><br><span class="line">	 	const title =e.target.value;</span><br><span class="line">	 	<span class="keyword">this</span>.props.changeTitle(title);</span><br><span class="line">	 &#125;</span><br><span class="line">	</span><br><span class="line">	render()&#123;</span><br><span class="line">		<span class="keyword">return</span> (</span><br><span class="line">			&lt;div&gt;</span><br><span class="line">				&lt;<span class="type">Title</span>  title=&#123;<span class="keyword">this</span>.props.title&#125; /&gt;</span><br><span class="line">				&lt;input value=&#123;<span class="keyword">this</span>.props.title&#125;  onChange=&#123;<span class="keyword">this</span>.handleChange.bind(<span class="keyword">this</span>)&#125;  /&gt;</span><br><span class="line">			&lt;/div&gt;</span><br><span class="line">		);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Title.js</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</span><br><span class="line"></span><br><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Title</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Component</span>&#123;</span></span><br><span class="line">	 </span><br><span class="line">	</span><br><span class="line">	render()&#123;</span><br><span class="line">		<span class="keyword">return</span> (</span><br><span class="line">			&lt;h1&gt; &#123;<span class="keyword">this</span>.props.title&#125;&lt;/h1&gt;</span><br><span class="line">			);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Footer.js</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</span><br><span class="line"></span><br><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Footer</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Component</span>&#123;</span></span><br><span class="line">	render()&#123;</span><br><span class="line">		<span class="keyword">return</span> (</span><br><span class="line">			&lt;footer&gt; <span class="type">This</span> is <span class="type">Footer</span> &lt;/footer&gt;</span><br><span class="line">			);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Run_your_react-js_on_your_local_sever">Run your react.js on your local sever</h2><p>simply use these commands:</p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">webpack</span><br><span class="line"></span><br><span class="line">npm <span class="command">run</span> dev</span><br></pre></td></tr></table></figure>
-<p>then you can visit your first react.js project on your browser by:<br><a href="http://127.0.0.1:1336/" target="_blank" rel="external">http://127.0.0.1:1336/</a> </p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1602,7 +1587,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">48</span>
+              <span class="site-state-item-count">49</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1616,7 +1601,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-count">31</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
