@@ -207,6 +207,121 @@
             
             
               
+                <a class="post-title-link" href="/2016/09/27/redux-note-02/" itemprop="url">
+                  Redux 快速入门 -- 02
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-09-27T21:25:15+08:00" content="2016-09-27">
+              2016-09-27
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/27/redux-note-02/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/27/redux-note-02/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="从redux开始学习react:">从redux开始学习react:</h1><p>React的这套机制,之所以那么有特色(也可以说不那么容易被理解),就是因为他所提出来的flux数据流的概念.</p>
+<p>大家都知道React 只是一层简单的view层,既然只是一层view层,那什么才是最好的管理这个view层的方式呢?react中的数据交互,ajax应该放到哪里去实现呢?</p>
+<p>目前为止看Dan Abramov在flux的理论基础上改进出的Redux是发挥React组件化威力的最佳搭档,既然react是简单的且可以被其他view框架替代的,那么不如先把这个单向数据流的概念搞懂.</p>
+<h1 id="Redux?">Redux?</h1><blockquote>
+<p>Redux is a predictable state container for JavaScript apps.</p>
+</blockquote>
+<p>redux是 JavaScript App 中一个用于可预测state的容器(管理器),为什么是可预测的呢?怎么理解?<br>带着问题去找答案.</p>
+<p>Redux 除了和 React 一起用外，还支持其它界面库。<br>它体小精悍（只有2kB）且没有任何依赖。</p>
+<p>他有三大原则:</p>
+<ul>
+<li>单一数据源</li>
+<li>State 是只读的</li>
+<li>使用纯函数来执行修改</li>
+</ul>
+<h2 id="单一数据源">单一数据源</h2><ul>
+<li>Redux中所有的 state 都以一个对象树的形式储存在一个单一的 store 中。</li>
+<li>通过 store.getState() 可以获取这个对象</li>
+</ul>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-9-27/4367012.jpg" alt=""></p>
+<p>其中post对象的结构如下:</p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-9-27/2099696.jpg" alt=""></p>
+<h2 id="State_是只读的">State 是只读的</h2><ul>
+<li>惟一改变 state 的办法是触发 action，action是一个描述发生什么的对象。</li>
+<li>action 必须要有type属性(默认大写type属性),其他属性都可以自定义.</li>
+</ul>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">dispatch(fetchUser())</span><br><span class="line"><span class="comment">//这里是action文件中的一个action</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fetchUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    type: <span class="string">'FETCH_USER_FULFILLED'</span>,</span><br><span class="line">    payload: &#123;</span><br><span class="line">      name: <span class="string">'lyn'</span>,</span><br><span class="line">      age: <span class="number">35</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-9-27/82500906.jpg" alt=""></p>
+<h2 id="使用纯函数来执行修改">使用纯函数来执行修改</h2><ul>
+<li>reducers 根据触发的 action 来决定如何改变 state 树。</li>
+</ul>
+<p>Reducer 只是一些纯函数，它接收先前的 state 和 action，并返回新的 state。在一个大的应用中,你可以把它拆成多个小的 reducers，分别独立地操作 state tree 的不同部分.</p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-9-27/90881615.jpg" alt=""></p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">export <span class="keyword">default</span> function reducer(<span class="keyword">state</span> = &#123;</span><br><span class="line">  fetching: false,</span><br><span class="line">  fetched: false,</span><br><span class="line">  posts: [],</span><br><span class="line">  error: null,</span><br><span class="line">&#125;, action) &#123;</span><br><span class="line">  switch (action.type) &#123;</span><br><span class="line">    case 'FETCH_POSTS_PENDING':</span><br><span class="line">      &#123;</span><br><span class="line">        return &#123;</span><br><span class="line">          ...<span class="keyword">state</span>,</span><br><span class="line">          fetching: true,</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    case 'FETCH_POSTS_REJECTED':</span><br><span class="line">      &#123;</span><br><span class="line">        return &#123; ...<span class="keyword">state</span>,</span><br><span class="line">          fetching: false,</span><br><span class="line">          error: action.payload,</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    case 'FETCH_POSTS_FULFILLED':</span><br><span class="line">      &#123;</span><br><span class="line">        return &#123;</span><br><span class="line">          ...<span class="keyword">state</span>,</span><br><span class="line">          fetching: false,</span><br><span class="line">          fetched: true,</span><br><span class="line">          posts: action.payload,</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      return &#123;</span><br><span class="line">        ...<span class="keyword">state</span>,</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="实现一个简单的redux实例:">实现一个简单的redux实例:</h1>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/09/26/redux-notes-01/" itemprop="url">
                   Redux 快速入门 -- 01
                 </a>
@@ -256,7 +371,7 @@
 <h2 id="首先需要确认你的npm版本">首先需要确认你的npm版本</h2><blockquote>
 <p>由于atool 依赖了 babel 6，而 babel 6 在npm2 下会有严重的性能问题, 所以npm版本需要&gt;3)</p>
 </blockquote>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">npm -v</span><br><span class="line"><span class="number">3.10</span><span class="number">.8</span></span><br><span class="line"><span class="comment">// 安装手脚架工具</span></span><br><span class="line">npm i antd-init -g</span><br><span class="line"><span class="comment">// 检查版本确认安装成功</span></span><br><span class="line">antd-init -v</span><br><span class="line"><span class="number">1.1</span><span class="number">.2</span></span><br><span class="line"><span class="comment">// 在当前目录下创建文件夹并进入这个文件夹</span></span><br><span class="line">mkdir blog &amp;&amp; cd blog</span><br><span class="line"><span class="comment">//运行手脚架工具 任选其一搭建一个sample</span></span><br><span class="line">antd-init</span><br><span class="line"><span class="comment">// 启动应用</span></span><br><span class="line">npm start</span><br><span class="line"><span class="comment">// 在浏览器中打开</span></span><br><span class="line">open http:<span class="comment">//localhost:8989</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//检查确认npm版本</span></span><br><span class="line">npm -v</span><br><span class="line"><span class="number">3.10</span><span class="number">.8</span></span><br><span class="line"><span class="comment">// 安装手脚架工具</span></span><br><span class="line">npm i antd-init -g</span><br><span class="line"><span class="comment">// 检查版本确认安装成功</span></span><br><span class="line">antd-init -v</span><br><span class="line"><span class="number">1.1</span><span class="number">.2</span></span><br><span class="line"><span class="comment">// 在当前目录下创建文件夹并进入这个文件夹</span></span><br><span class="line">mkdir blog &amp;&amp; cd blog</span><br><span class="line"><span class="comment">//运行手脚架工具 任选其一搭建一个sample</span></span><br><span class="line">antd-init</span><br><span class="line"><span class="comment">// 启动应用</span></span><br><span class="line">npm start</span><br><span class="line"><span class="comment">// 在浏览器中打开</span></span><br><span class="line">open http:<span class="comment">//localhost:8989</span></span><br></pre></td></tr></table></figure>
 <p>配置package.json中的 entry属性:<br>(这个属性和webpack中配置的entry是同一个东西)</p>
 <figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"entry"</span>: &#123;</span><br><span class="line">    <span class="string">"index"</span>: <span class="string">"./src/index.js"</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 <h2 id="遇到的问题:">遇到的问题:</h2><ul>
@@ -1453,98 +1568,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/05/12/react-js-02-router/" itemprop="url">
-                  react.js-Notes-02 react-router
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-05-12T20:34:25+08:00" content="2016-05-12">
-              2016-05-12
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/12/react-js-02-router/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/12/react-js-02-router/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="install_react_router_to_your_project">install react router to your project</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="operator"><span class="keyword">install</span> react-router <span class="comment">--save</span></span></span><br></pre></td></tr></table></figure>
-<h1 id="clean_index-html">clean index.html</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">link</span> <span class="attribute">href</span>=<span class="value">"https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/flatly/bootstrap.min.css"</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">integrity</span>=<span class="value">"sha384-XYCjB+hFAjSbgf9yKUgbysEjaVLOXhCgATTEBpCqT1R3jvG5LGRAK5ZIyRbH5vpX"</span> <span class="attribute">crossorigin</span>=<span class="value">"anonymous"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">title</span>&gt;</span>Some page <span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">style</span> <span class="attribute">type</span>=<span class="value">"text/css"</span>&gt;</span><span class="css"> <span class="class">.md-scroll-mask</span> <span class="rules">&#123; <span class="rule"><span class="attribute">position</span>:<span class="value"> initial</span></span>;&#125;</span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"app"</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"./scripts.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h1 id="-/js/scripts-js">./js/scripts.js</h1><p>import Router Route and IndexRoute</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> ReactDOM <span class="keyword">from</span> <span class="string">"react-dom"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Router, Route, IndexRoute, hashHistory &#125; <span class="keyword">from</span> <span class="string">"react-router"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> Archives  <span class="keyword">from</span> <span class="string">"./pages/Archives"</span>;</span><br><span class="line"><span class="keyword">import</span> Featured <span class="keyword">from</span> <span class="string">"./pages/Featured"</span>;</span><br><span class="line"><span class="keyword">import</span> Layout <span class="keyword">from</span> <span class="string">"./pages/Layout"</span>;</span><br><span class="line"><span class="keyword">import</span> Settings <span class="keyword">from</span> <span class="string">"./pages/Settings"</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = <span class="built_in">document</span>.getElementById(<span class="string">'app'</span>);</span><br><span class="line"></span><br><span class="line">ReactDOM.render(</span><br><span class="line">	<span class="xml"><span class="tag">&lt;<span class="title">Router</span>  <span class="attribute">history</span>=<span class="value">&#123;hashHistory&#125;</span> &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">Route</span> <span class="attribute">path</span>=<span class="value">"/"</span> <span class="attribute">component</span>=<span class="value">&#123;Layout&#125;</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">IndexRoute</span> <span class="attribute">component</span>=<span class="value">&#123;Featured&#125;</span>&gt;</span><span class="tag">&lt;/<span class="title">IndexRoute</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">Route</span> <span class="attribute">path</span>=<span class="value">"archives(/:article)"</span>  <span class="attribute">name</span>=<span class="value">"archives"</span> <span class="attribute">component</span>=<span class="value">&#123;Archives&#125;</span>&gt;</span><span class="tag">&lt;/<span class="title">Route</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">Route</span> <span class="attribute">path</span>=<span class="value">"settings"</span>  <span class="attribute">name</span>=<span class="value">"settings"</span><span class="value">component=&#123;Settings&#125;</span>&gt;</span><span class="tag">&lt;/<span class="title">Route</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">Route</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">Router</span>&gt;</span>,</span><br><span class="line"> app);</span></span><br></pre></td></tr></table></figure>
-<h1 id="-/js/pages/">./js/pages/</h1><h2 id="-/js/pages/Layout-js">./js/pages/Layout.js</h2><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="type">Nav</span> from <span class="string">"../components/layout/Nav"</span>;</span><br><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Layout</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Component</span>&#123;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">render() &#123;</span><br><span class="line">		const&#123; location &#125; =<span class="keyword">this</span>.props;</span><br><span class="line">		const containerStyle = &#123; </span><br><span class="line">			marginTop:  <span class="string">"60px"</span></span><br><span class="line">		&#125;;</span><br><span class="line">	</span><br><span class="line">		<span class="keyword">return</span> (</span><br><span class="line">			&lt;div&gt;</span><br><span class="line">				&lt;<span class="type">Nav</span> location =&#123;location&#125; /&gt;</span><br><span class="line">				&lt;div <span class="class"><span class="keyword">class</span>=</span><span class="string">"container"</span> style=&#123;containerStyle&#125;&gt;</span><br><span class="line">					&lt;div <span class="class"><span class="keyword">class</span>=</span><span class="string">"row"</span>&gt;</span><br><span class="line">		          			&lt;div <span class="class"><span class="keyword">class</span>=</span><span class="string">"col-lg-12"</span>&gt;</span><br><span class="line">								&lt;h1&gt; <span class="type">Hello</span> <span class="type">World</span> &lt;/h1&gt;</span><br><span class="line">								&#123;<span class="keyword">this</span>.props.children&#125;</span><br><span class="line">						&lt;/div&gt;</span><br><span class="line">					&lt;/div&gt;</span><br><span class="line">				&lt;/div&gt;</span><br><span class="line">			&lt;/div&gt;</span><br><span class="line">			</span><br><span class="line">		);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="-/js/pages/Archives-js">./js/pages/Archives.js</h2><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="type">Link</span> &#125; from <span class="string">"react-router"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="type">Article</span> from <span class="string">"../components/Article"</span>;</span><br><span class="line"></span><br><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Archives</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Component</span>&#123;</span></span><br><span class="line"></span><br><span class="line">	render() &#123;</span><br><span class="line">		const &#123; query &#125; = <span class="keyword">this</span>.props.location;</span><br><span class="line">		const &#123; article &#125; = <span class="keyword">this</span>.props.params;</span><br><span class="line">		const &#123; date, filter &#125;  = query;</span><br><span class="line">		<span class="comment">//console.log(this.props);</span></span><br><span class="line">		const <span class="type">Articles</span> = [</span><br><span class="line">			<span class="string">"Some Article"</span>,</span><br><span class="line">			<span class="string">"Some Other Article"</span>,</span><br><span class="line">			<span class="string">"Yet  Another Article "</span>,</span><br><span class="line">			<span class="string">"Still More"</span>,</span><br><span class="line">			<span class="string">"Fake Article"</span>,</span><br><span class="line">			<span class="string">"Partial Another  "</span>,</span><br><span class="line">			<span class="string">"Still More"</span>,</span><br><span class="line">		].map((title, i) =&gt;  &lt;<span class="type">Article</span> key=&#123;i&#125;  title=&#123;title&#125; /&gt; );</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> (</span><br><span class="line">			&lt;div&gt;</span><br><span class="line">				&lt;h1&gt; <span class="type">Archives</span> &lt;/h1&gt;</span><br><span class="line">				&lt;p&gt;hello  <span class="keyword">this</span>  is  archives&lt;/p&gt;</span><br><span class="line">				&lt;h4&gt;date: &#123;date&#125;, filter: &#123;filter&#125; &lt;/h4&gt;</span><br><span class="line">				&lt;div <span class="class"><span class="keyword">class</span>=</span><span class="string">"row"</span>&gt;&#123;<span class="type">Articles</span>&#125;&lt;/div&gt;</span><br><span class="line">			&lt;/div&gt;</span><br><span class="line">			);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="-/js/pages/Featured-js">./js/pages/Featured.js</h2><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="type">Article</span> from <span class="string">"../components/Article"</span>;</span><br><span class="line"></span><br><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Featured</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Component</span>&#123;</span></span><br><span class="line">	render() &#123;</span><br><span class="line">		const <span class="type">Articles</span> = [</span><br><span class="line">			<span class="string">"Some Article"</span>,</span><br><span class="line">			<span class="string">"Some Other Article"</span>,</span><br><span class="line">			<span class="string">"Yet  Another Article "</span>,</span><br><span class="line">			<span class="string">"Still More"</span>,</span><br><span class="line">		].map((title, i) =&gt;  &lt;<span class="type">Article</span> key=&#123;i&#125;  title=&#123;title&#125; /&gt; );</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> (</span><br><span class="line">			&lt;div&gt;</span><br><span class="line">				&lt;div <span class="class"><span class="keyword">class</span>=</span><span class="string">"row"</span>&gt;&#123;<span class="type">Articles</span>&#125;&lt;/div&gt;</span><br><span class="line">			&lt;/div&gt;</span><br><span class="line">			);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="-/js/page/Settings-js">./js/page/Settings.js</h2><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="type">Link</span> &#125; from <span class="string">"react-router"</span>;</span><br><span class="line"></span><br><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Settings</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Component</span>&#123;</span></span><br><span class="line">	render() &#123;</span><br><span class="line">		<span class="keyword">return</span> (</span><br><span class="line">			&lt;div&gt;</span><br><span class="line">				&lt;h1&gt; <span class="type">Settings</span> &lt;/h1&gt;</span><br><span class="line">				&lt;p&gt;hello  <span class="keyword">this</span>  is  <span class="type">Settings</span>&lt;/p&gt;</span><br><span class="line">			&lt;/div&gt;</span><br><span class="line">			);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="-/js/components/layout/">./js/components/layout/</h1><h2 id="-/js/components/layout/Nav-js">./js/components/layout/Nav.js</h2><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="type">IndexLink</span>, <span class="type">Link</span> &#125; from <span class="string">"react-router"</span>;</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Nav</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Component</span>&#123;</span></span><br><span class="line">	constructor()&#123;</span><br><span class="line">		<span class="keyword">super</span>()</span><br><span class="line">		<span class="keyword">this</span>.state=&#123;</span><br><span class="line">			collapsed : <span class="literal">true</span>,</span><br><span class="line">		&#125;;</span><br><span class="line">	&#125;</span><br><span class="line">	toggleCollapse()&#123;</span><br><span class="line">		const collapsed = !<span class="keyword">this</span>.state.collapsed;</span><br><span class="line">		<span class="keyword">this</span>.setState(&#123;collapsed&#125;);</span><br><span class="line">	&#125;</span><br><span class="line">	render() &#123;</span><br><span class="line">		const &#123; location &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">		const &#123; collapsed &#125; = <span class="keyword">this</span>.state;</span><br><span class="line">		const featuredClass = location.pathname ===<span class="string">"/"</span> ? <span class="string">"active"</span>:<span class="string">""</span>;</span><br><span class="line">		const archivesClass = location.pathname.<span class="keyword">match</span>(/^\/archives/) ? <span class="string">"active"</span>:<span class="string">""</span>;</span><br><span class="line">		const settingsClass =  location.pathname.<span class="keyword">match</span>(/^\/settings/) ? <span class="string">"active"</span>:<span class="string">""</span>;</span><br><span class="line">		const navClass = collapsed ? <span class="string">"collapse"</span> : <span class="string">""</span>;</span><br><span class="line">		 </span><br><span class="line">		<span class="keyword">return</span> (</span><br><span class="line">			   &lt;nav <span class="class"><span class="keyword">class</span>=</span><span class="string">"navbar navbar-default navbar-fixed-top"</span> role=<span class="string">"navgation"</span>&gt;</span><br><span class="line">			      &lt;div <span class="class"><span class="keyword">class</span>=</span><span class="string">"container"</span>&gt;</span><br><span class="line">				        &lt;div <span class="class"><span class="keyword">class</span>=</span><span class="string">"navbar-header"</span>&gt;        </span><br><span class="line">				          &lt;button <span class="class"><span class="keyword">class</span>=</span><span class="string">"navbar-toggle"</span> <span class="class"><span class="keyword">type</span>=</span><span class="string">"button"</span> onClick=&#123;<span class="keyword">this</span>.toggleCollapse.bind(<span class="keyword">this</span>)&#125;&gt;</span><br><span class="line">					            &lt;span <span class="class"><span class="keyword">class</span>=</span><span class="string">"icon-bar"</span>&gt;&lt;/span&gt;</span><br><span class="line">					            &lt;span <span class="class"><span class="keyword">class</span>=</span><span class="string">"icon-bar"</span>&gt;&lt;/span&gt;</span><br><span class="line">					            &lt;span <span class="class"><span class="keyword">class</span>=</span><span class="string">"icon-bar"</span>&gt;&lt;/span&gt;</span><br><span class="line">				          &lt;/button&gt;</span><br><span class="line">				        &lt;/div&gt;</span><br><span class="line"></span><br><span class="line">			        	&lt;div <span class="class"><span class="keyword">class</span>=</span>&#123;<span class="string">"navbar-collapse "</span>+ navClass&#125; id=<span class="string">"navbar-main"</span>&gt;</span><br><span class="line">				          &lt;ul <span class="class"><span class="keyword">class</span>=</span><span class="string">"nav navbar-nav"</span>&gt;</span><br><span class="line"></span><br><span class="line">					            &lt;li <span class="class"><span class="keyword">class</span>=</span><span class="string">"&#123;featuredClass&#125;"</span>&gt;</span><br><span class="line">					            &lt;<span class="type">IndexLink</span> to=<span class="string">"/"</span>  onClick=&#123;<span class="keyword">this</span>.toggleCollapse.bind(<span class="keyword">this</span>)&#125;&gt; <span class="type">Featured</span> &lt;/<span class="type">IndexLink</span>&gt;</span><br><span class="line">					            &lt;/li&gt;   </span><br><span class="line">					            &lt;li <span class="class"><span class="keyword">class</span>=</span><span class="string">"&#123;archivesClass&#125;"</span>&gt;</span><br><span class="line">					            &lt;<span class="type">Link</span> to=<span class="string">"archives"</span>  onClick=&#123;<span class="keyword">this</span>.toggleCollapse.bind(<span class="keyword">this</span>)&#125;&gt; <span class="type">Archives</span> &lt;/<span class="type">Link</span>&gt;</span><br><span class="line">					            &lt;/li&gt;   </span><br><span class="line">					            &lt;li <span class="class"><span class="keyword">class</span>=</span><span class="string">"&#123;settingsClass&#125;"</span>&gt;</span><br><span class="line">					            &lt;<span class="type">Link</span> to=<span class="string">"settings"</span>  onClick=&#123;<span class="keyword">this</span>.toggleCollapse.bind(<span class="keyword">this</span>)&#125;&gt; <span class="type">Settings</span> &lt;/<span class="type">Link</span>&gt;</span><br><span class="line">					            &lt;/li&gt;</span><br><span class="line">	 </span><br><span class="line">				          &lt;/ul&gt;</span><br><span class="line">			        	&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">			      &lt;/div&gt;</span><br><span class="line">			    &lt;/nav&gt;</span><br><span class="line">			</span><br><span class="line">			);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="-/js/components">./js/components</h1><h2 id="-/js/components/Article-js">./js/components/Article.js</h2><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</span><br><span class="line"></span><br><span class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">React</span>.<span class="title">Component</span>&#123;</span></span><br><span class="line">	render()&#123;</span><br><span class="line"></span><br><span class="line">		const  &#123; title &#125;= <span class="keyword">this</span>.props;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span>(</span><br><span class="line">		&lt;div <span class="class"><span class="keyword">class</span>=</span><span class="string">"col-md-4"</span>&gt;</span><br><span class="line">				&lt;h2&gt;&#123;title&#125;&lt;/h2&gt;</span><br><span class="line">				&lt;p&gt; <span class="type">Lorem</span> ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</span><br><span class="line">					tempor incididunt ut labore et dolore magna aliqua. <span class="type">Ut</span> enim ad minim veniam,</span><br><span class="line">					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</span><br><span class="line">					consequat. &lt;/p&gt;</span><br><span class="line">				&lt;a <span class="class"><span class="keyword">class</span>=</span><span class="string">"btn btn-default"</span> href=<span class="string">"#"</span>&gt; <span class="type">More</span> <span class="type">Info</span> &lt;/a&gt;</span><br><span class="line">		&lt;/div&gt;</span><br><span class="line">		);</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1590,7 +1613,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">49</span>
+              <span class="site-state-item-count">50</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
