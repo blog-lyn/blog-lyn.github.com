@@ -252,11 +252,11 @@
         
           <span itemprop="articleBody">
             
-              <h1 id="从redux开始学习react:">从redux开始学习react:</h1><p>React的这套机制,之所以那么有特色(也可以说不那么容易被理解),就是因为他所的FLUX单向数据流的概念.</p>
+              <h1 id="从Redux开始学习React:">从Redux开始学习React:</h1><p>React的这套机制,之所以那么有特色(也可以说不那么容易被理解),就是因为他所的FLUX单向数据流的概念.</p>
 <p>大家都知道React 只是一层简单的view层,既然只是一层view层,那什么才是最好的管理这个view层的方式呢?react中的数据交互,ajax应该放到哪里去实现呢?</p>
 <p>目前为止,Dan Abramov在flux的理论基础上改进出的Redux公认地是发挥React组件化威力的最佳搭档.<br>Redux 除了和 React 一起用外，还支持其它界面库。</p>
 <p>既然react不是必须的,那么不如先把redux单向数据流的概念搞清楚,再来看react会更清晰易懂.</p>
-<h1 id="一个简单的redux实例:">一个简单的redux实例:</h1><p>在之前配置好的开发目录中的src文件夹下:</p>
+<h1 id="一个简单的Redux实例:">一个简单的Redux实例:</h1><p>在之前配置好的开发目录中的src文件夹下:</p>
 <ul>
 <li>新建一个index.js文件:</li>
 </ul>
@@ -273,7 +273,7 @@
 <p>Redux is a predictable state container for JavaScript apps.</p>
 </blockquote>
 <p>redux是 JavaScript App 中一个用于可预测state的容器(管理器),为什么是可预测的呢?带着这个问题去找答案.<br>从上面的简单的实例来看,Redux其实很简单, 主要由三个部分组成: Action、Reducer、及 Store.</p>
-<h2 id="redux的三大原则:">redux的三大原则:</h2><ul>
+<h2 id="Redux的三大原则:">Redux的三大原则:</h2><ul>
 <li>单一数据源</li>
 <li>State 是只读的</li>
 <li>使用纯函数(reducer)来执行修改</li>
@@ -286,7 +286,7 @@
 <p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-9-27/4367012.jpg" alt=""></p>
 <p>展开其中的post对象,结构如下:</p>
 <p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-9-27/2099696.jpg" alt=""></p>
-<h2 id="关于store:">关于store:</h2><p>store对象有以下几个方法:</p>
+<h2 id="关于Store:">关于Store:</h2><p>store对象有以下几个方法:</p>
 <ul>
 <li>store.getState() 可以获取当前的state对象.</li>
 <li>store.dispatch(action) 分发action,会立即传到 reducer 来执行。这是触发 state 变化的惟一途径。</li>
