@@ -408,8 +408,7 @@
 <li>只要是不和别人共用同一台电脑,那就可以用下面的方法把npm的文件夹owner修改成自己来解决:</li>
 </ul>
 <figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/<span class="regexp">/ 获取npm PATH</span><br><span class="line">npm config get prefix</span><br><span class="line">/usr</span><span class="regexp">/local</span><br><span class="line">/</span><span class="regexp">/ 改变文件夹的owner</span><br><span class="line">sudo chown -R $(whoami) $(npm config get prefix)/</span>&#123;<span class="class"><span class="keyword">lib</span>/<span class="title">node_modules</span>,<span class="title">bin</span>,<span class="title">share</span>&#125;</span></span><br><span class="line">/<span class="regexp">/ 设置 npm 源为淘宝镜像</span><br><span class="line">npm config set registry https:/</span><span class="regexp">/registry.npm.taobao.org</span><br><span class="line">/</span><span class="regexp">/ 更新npm到最新版本</span><br><span class="line">npm install npm -g</span><br><span class="line">/</span><span class="regexp">/ 检查更新后的版本</span><br><span class="line">npm -v</span><br><span class="line">3.10.8</span></span><br></pre></td></tr></table></figure>
-<h2 id="配置代码检查工具">配置代码检查工具</h2><p>Sublime Text 3</p>
-<p>安装:</p>
+<h2 id="配置Sublime_Text_3代码检查工具">配置Sublime Text 3代码检查工具</h2><p>打开package control install package(cmd+shift+p),安装下面两个插件:</p>
 <ul>
 <li>Sublimelinter</li>
 <li>Sublimelinter-contrib-eslint</li>
