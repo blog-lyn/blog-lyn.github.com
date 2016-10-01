@@ -207,6 +207,165 @@
             
             
               
+                <a class="post-title-link" href="/2016/05/19/JRE-setup-doc/" itemprop="url">
+                  Setup Java Eclipse Tomcat & FreeMarker on Mac
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-05-19T09:07:51+08:00" content="2016-05-19">
+              2016-05-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/19/JRE-setup-doc/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/19/JRE-setup-doc/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h2 id="Install_Homebrew">Install <a href="http://brew.sh/" target="_blank" rel="external">Homebrew</a></h2><ul>
+<li>Open Terminal.</li>
+<li>If you don’t already have Homebrew installed:<ul>
+<li>Run command to install Homebrew.<ul>
+<li><code>ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Make sure that it is up to date.<ul>
+<li><code>brew update</code></li>
+</ul>
+</li>
+<li>Check that there would not be any potential problems in your system.<ul>
+<li><code>brew doctor</code></li>
+</ul>
+</li>
+<li>Upgrade Homebrew packages.<ul>
+<li><code>brew upgrade</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="Install_JAVA_SDK">Install JAVA SDK</h2><p>Check if Java installed</p>
+<p><code>java -version</code></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Lyn-Cheung-MBP: Lyn$ java -version</span><br><span class="line">java version <span class="string">"1.7.0_79"</span></span><br><span class="line"><span class="function"><span class="title">Java</span><span class="params">(TM)</span></span> SE Runtime Environment (build <span class="number">1.7</span>.<span class="number">0</span>_79-b15)</span><br><span class="line">Java <span class="function"><span class="title">HotSpot</span><span class="params">(TM)</span></span> <span class="number">64</span>-Bit Server VM (build <span class="number">24.79</span>-b02, mixed mode)</span><br></pre></td></tr></table></figure>
+<p>Java SE Development Kit 8 Downloads</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/www.oracle.com/technetwork</span><span class="regexp">/java/javase</span><span class="regexp">/downloads/jdk</span>8-downloads-<span class="number">2133151</span>.html</span><br></pre></td></tr></table></figure>
+<p>edit  <code>~/.bash_profile</code></p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cat ~/.bash_profile</span><br><span class="line">export PATH=$&#123;PATH&#125;:/Development/android-sdk/tools</span><br><span class="line">export JAVA_HOME=$(/usr/libexec/java_home)</span><br><span class="line">export PATH=$&#123;JAVA_HOME&#125;/bin:<span class="variable">$PATH</span></span><br><span class="line">export PATH=/usr/local/bin:<span class="variable">$PATH</span></span><br><span class="line">export path=/usr/local/bin:<span class="variable">$path</span></span><br></pre></td></tr></table></figure>
+<p>reload bash_profile</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">source</span> ~/.bash_profile</span><br></pre></td></tr></table></figure>
+<h2 id="Eclipse">Eclipse</h2><ul>
+<li>Download and install latest version of <em>Eclipse IDE for Java EE developers</em> from <a href="http://www.eclipse.org/downloads/" target="_blank" rel="external">Eclipse Downloads</a></li>
+</ul>
+<h3 id="Set_Eclipse_to_use_the_previously_installed_version_of_Java">Set Eclipse to use the previously installed version of Java</h3><ul>
+<li>If you have multiple versions of Java installed, set the Eclipse to use the version installed earlier in these instructions.</li>
+<li><em>Window &gt;&gt; Preferences &gt;&gt; Java &gt;&gt; Installed JREs</em> Add the path to the Java version you installed (e.g. <em>/usr/lib/jvm/java-7-oracle (java-7-oracle)</em> )</li>
+</ul>
+<h2 id="Installing_Tomcat_8">Installing Tomcat 8</h2><ul>
+<li><p><code>brew install tomcat</code>: <a href="http://blog.bolshchikov.net/post/50277857673/installing-tomcat-on-macos-with-homebrew" target="_blank" rel="external">Installing Tomcat on MacOS with homebrew</a></p>
+<ul>
+<li><code>sudo ln -s /usr/local/Cellar/tomcat/8.0.14/libexec /Library/Tomcat</code></li>
+<li><code>sudo chown -R /Library/Tomcat</code></li>
+<li><code>sudo chmod +x /Library/Tomcat/bin/*.sh</code></li>
+</ul>
+</li>
+<li><p>In Eclipse:</p>
+<ul>
+<li><em>Eclipse &gt;&gt; Preferences</em></li>
+<li><em>Server &gt;&gt; Runtime Environment</em></li>
+<li>Click <em>“Add…”</em></li>
+<li>Under <em>“Apache”</em> select <em>“Tomcat v8.0”</em></li>
+<li>Click <em>“Next”</em></li>
+<li>Click <em>“Browse…”</em></li>
+<li>Select the folder where you installed Tomcat (e.g.<em>/usr/local/Cellar/tomcat/8.0.33/libexec</em>)</li>
+<li>Click <em>“Finish”</em></li>
+</ul>
+</li>
+</ul>
+<h2 id="MySQL">MySQL</h2><ul>
+<li>Install MySQL<ul>
+<li><code>brew install mysql</code></li>
+</ul>
+</li>
+<li>To have launchd start mysql at login:<ul>
+<li><code>ln -sfv /usr/local/opt/mysql/*.plist ~/Library/LaunchAgents</code></li>
+</ul>
+</li>
+<li>Then to load mysql now:<ul>
+<li><code>launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist</code></li>
+</ul>
+</li>
+<li>Or, if you don’t want/need launchctl, you can just run:<ul>
+<li><code>mysql.server start</code></li>
+</ul>
+</li>
+</ul>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/05/12/react-js-02-router/" itemprop="url">
                   react.js-Notes-02 react-router
                 </a>
@@ -1453,121 +1612,11 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/03/01/Untitled/" itemprop="url">
-                  gzip压缩JPEG的测试
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-03-01T23:02:37+08:00" content="2016-03-01">
-              2016-03-01
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/03/01/Untitled/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/01/Untitled/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//把714860.jpg用base64encode 以后保存在1.html文件中</span></span><br><span class="line">ls -l <span class="number">1.</span>html</span><br><span class="line">-rw-r—r—  <span class="number">1</span> Lyn  staff  <span class="number">1663962</span>  <span class="number">7</span> <span class="number">16</span> <span class="number">13</span>:<span class="number">34</span> <span class="number">1.</span>html</span><br><span class="line"></span><br><span class="line">ls -l <span class="number">1.</span>html.gz</span><br><span class="line">-rw-r—r—  <span class="number">1</span> Lyn  staff  <span class="number">1228057</span>  <span class="number">7</span> <span class="number">16</span> <span class="number">13</span>:<span class="number">34</span> <span class="number">1.</span>html.gz</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ls -l <span class="number">714860.</span>jpg</span><br><span class="line">-rw-r—r—  <span class="number">1</span> Lyn  staff  <span class="number">1247940</span>  <span class="number">7</span> <span class="number">16</span> <span class="number">11</span>:<span class="number">34</span> <span class="number">714860.</span>jpg</span><br><span class="line"></span><br><span class="line"><span class="comment">//gzip压缩jpg文件</span></span><br><span class="line"></span><br><span class="line">gzip <span class="number">714860.</span>jpg</span><br><span class="line">ls -l <span class="number">714860.</span>jpg.gz</span><br><span class="line">-rw-r—r—  <span class="number">1</span> Lyn  staff  <span class="number">1208091</span>  <span class="number">7</span> <span class="number">16</span> <span class="number">11</span>:<span class="number">34</span> <span class="number">714860.</span>jpg.gz</span><br></pre></td></tr></table></figure>
-<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-7-16/27621189.jpg" alt=""></p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>大小</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>jpg图片</td>
-<td>1247940</td>
-</tr>
-<tr>
-<td>jpg图片使用base64编码</td>
-<td>1663962</td>
-</tr>
-<tr>
-<td>gzip压缩base64编码的jpg</td>
-<td>1228057</td>
-</tr>
-<tr>
-<td>gzip压缩jpg图片</td>
-<td>1208091</td>
-</tr>
-</tbody>
-</table>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1608,7 +1657,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">50</span>
+              <span class="site-state-item-count">51</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
