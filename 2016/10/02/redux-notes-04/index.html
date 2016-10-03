@@ -1,0 +1,693 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+
+  <meta name="description" content="Lyn's Blog about Node.js  Express.js Angular.js HTML5 Mongodb Programing Notes" />
+
+
+
+
+  <meta name="keywords" content="Lyn's blog" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="项目布局为了方便维护,一般会把actions, components, reducers,Store 拆分成单独的文件,并使用export 和 import 来引用.
+参考下面的例子:
+在userActions.js中 export setUserName 
+123456export function setUserName(name) &amp;#123;  return &amp;#123;    type:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redux-note-04 - project structure">
+<meta property="og:url" content="http://lyn.s76.org/2016/10/02/redux-notes-04/index.html">
+<meta property="og:site_name" content="Lyn's Blog">
+<meta property="og:description" content="项目布局为了方便维护,一般会把actions, components, reducers,Store 拆分成单独的文件,并使用export 和 import 来引用.
+参考下面的例子:
+在userActions.js中 export setUserName 
+123456export function setUserName(name) &amp;#123;  return &amp;#123;    type:">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-10-2/66705304.jpg">
+<meta property="og:updated_time" content="2016-10-03T03:49:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redux-note-04 - project structure">
+<meta name="twitter:description" content="项目布局为了方便维护,一般会把actions, components, reducers,Store 拆分成单独的文件,并使用export 和 import 来引用.
+参考下面的例子:
+在userActions.js中 export setUserName 
+123456export function setUserName(name) &amp;#123;  return &amp;#123;    type:">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> redux-note-04 - project structure | Lyn's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e1a1e7f61eef21fbacf4a67a19789441";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lyn's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Node.js Angular.js Express.js HTML5 Mongodb Programing Notes</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                redux-note-04 - project structure
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-10-02T11:34:28+08:00" content="2016-10-02">
+              2016-10-02
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/02/redux-notes-04/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/02/redux-notes-04/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="项目布局">项目布局</h1><p>为了方便维护,一般会把actions, components, reducers,Store 拆分成单独的文件,<br>并使用export 和 import 来引用.</p>
+<p>参考下面的例子:</p>
+<p>在userActions.js中 export setUserName </p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">export</span> <span class="tag">function</span> <span class="tag">setUserName</span>(name) &#123;</span><br><span class="line">  <span class="tag">return</span> &#123;</span><br><span class="line">    <span class="attribute">type</span>: <span class="string">'SET_USER_NAME'</span>,</span><br><span class="line">    <span class="attribute">payload</span>: name,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在需要dispatch action的地方直接 import进来使用:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//引入所有的action </span></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> user <span class="keyword">from</span> <span class="string">'./userActions'</span>;</span><br><span class="line"><span class="comment">//dispatch</span></span><br><span class="line">store.dispatch(user.setUserName(<span class="string">'lyn'</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">//引入具体的action</span></span><br><span class="line"><span class="keyword">import</span> &#123; setUserName &#125; <span class="keyword">from</span> <span class="string">'./userActions'</span></span><br><span class="line">//dispatch</span><br><span class="line">store.dispatch(setUserName(<span class="string">'lyn'</span>));</span><br></pre></td></tr></table></figure>
+<p>具体结构如下:</p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-10-2/66705304.jpg" alt=""></p>
+<p>actions, reudcers 和components 分别放在一个文件夹下.</p>
+<h2 id="连接到_Redux">连接到 Redux</h2><p>我们需要做出两个变化，将 <code>App</code> 组件连接到 Redux 并且让它能够 dispatch actions 以及从 Redux store 读取到 state。</p>
+<p>首先，我们需要获取从之前安装好的 <a href="http://github.com/reactjs/react-redux" target="_blank" rel="external"><code>react-redux</code></a> 提供的 <code>Provider</code>，并且在渲染之前<strong>将根组件包装进</strong>。</p>
+<h4 id="index-js"><code>index.js</code></h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span></span><br><span class="line"><span class="keyword">import</span> &#123; render &#125; <span class="keyword">from</span> <span class="string">'react-dom'</span></span><br><span class="line"><span class="keyword">import</span> &#123; createStore &#125; <span class="keyword">from</span> <span class="string">'redux'</span></span><br><span class="line"><span class="keyword">import</span> &#123; Provider &#125; <span class="keyword">from</span> <span class="string">'react-redux'</span></span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">'./containers/App'</span></span><br><span class="line"><span class="keyword">import</span> todoApp <span class="keyword">from</span> <span class="string">'./reducers'</span></span><br><span class="line"></span><br><span class="line">let store = createStore(todoApp);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> rootElement = <span class="built_in">document</span>.getElementById(<span class="string">'root'</span>)</span><br><span class="line">render(</span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="title">Provider</span> <span class="attribute">store</span>=<span class="value">&#123;store&#125;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">App</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">Provider</span>&gt;</span>,</span><br><span class="line">  rootElement</span><br><span class="line">)</span></span><br></pre></td></tr></table></figure>
+<p>这使得我们的 store 能为下面的组件所用。（在内部，这个是通过 React 的 <a href="http://facebook.github.io/react/docs/context.html" target="_blank" rel="external">“context” 特性</a>实现。）</p>
+<p>接着，我们<strong>想要通过 react-redux 提供的 connect() 方法将包装好的组件连接到Redux</strong>。尽量只做一个顶层的组件，或者 route 处理。从技术上来说你可以将应用中的任何一个组件 <code>connect()</code> 到 Redux store 中，但应该避免这么做，因为这个数据流很难追踪。</p>
+<p><strong>任何一个从 connect() 包装好的组件都可以得到一个 dispatch 方法作为组件的 props，以及得到全局 state 中所需的任何内容。</strong> <code>connect()</code> 的唯一参数是 <strong>selector</strong>。此方法可以从 Redux store 接收到全局的 state，然后返回组件中需要的 props。最简单的情况下，可以返回一个初始的 <code>state</code>，但最好先将其进行转化。</p>
+<p>我们在index.js 使用<code>Provider</code>方法,把store转换成react的props.在store.js,<br>使用connect方法选择store中,component需要的state形成一个新的store.</p>
+<h2 id="index-js-1">index.js</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> ReactDom <span class="keyword">from</span> <span class="string">'react-dom'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Provider &#125; <span class="keyword">from</span> <span class="string">'react-redux'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//引入components</span></span><br><span class="line"><span class="keyword">import</span> Layout <span class="keyword">from</span> <span class="string">'./components/Layout'</span>;</span><br><span class="line"><span class="comment">//引入store</span></span><br><span class="line"><span class="keyword">import</span> store <span class="keyword">from</span> <span class="string">'./store'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//react 把components 绑定到指定的dom节点</span></span><br><span class="line"><span class="keyword">const</span> app = <span class="built_in">document</span>.getElementById(<span class="string">'app'</span>);</span><br><span class="line">ReactDom.render(<span class="xml"><span class="tag">&lt;<span class="title">Provider</span> <span class="attribute">store</span>=<span class="value">&#123;store&#125;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">Layout</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">Provider</span>&gt;</span>, app);</span></span><br></pre></td></tr></table></figure>
+<h2 id="store-js">store.js</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  applyMiddleware,</span><br><span class="line">  createStore,</span><br><span class="line">  compose,</span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">'redux'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 引入middleware</span></span><br><span class="line"><span class="keyword">import</span> logger <span class="keyword">from</span> <span class="string">'redux-logger'</span>;</span><br><span class="line"><span class="keyword">import</span> thunk <span class="keyword">from</span> <span class="string">'redux-thunk'</span>;</span><br><span class="line"><span class="keyword">import</span> promise <span class="keyword">from</span> <span class="string">'redux-promise-middleware'</span>;</span><br><span class="line"><span class="comment">//引入createStore 需要的reducers</span></span><br><span class="line"><span class="keyword">import</span> reducer <span class="keyword">from</span> <span class="string">'./reducers'</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> middleware = applyMiddleware(promise(), thunk, logger());</span><br><span class="line"> </span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> createStore(reducer, compose(</span><br><span class="line">  middleware,</span><br><span class="line">  <span class="built_in">window</span>.devToolsExtension ? <span class="built_in">window</span>.devToolsExtension() : f =&gt; f</span><br><span class="line">));</span><br><span class="line"><span class="comment">// 不需要devtool的话,就不需要compose.</span></span><br><span class="line"><span class="comment">// export default createStore(reducer, initialState, middleware);</span></span><br></pre></td></tr></table></figure>
+<h2 id="components_目录">components 目录</h2><h3 id="Layout-js">Layout.js</h3><figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">import React <span class="keyword">from</span> 'react';</span><br><span class="line">import &#123; connect &#125; <span class="keyword">from</span> 'react-redux';</span><br><span class="line">import &#123; fetchUser &#125; <span class="keyword">from</span> '../actions/<span class="keyword">user</span>Actions';</span><br><span class="line">import &#123; fetchPosts &#125; <span class="keyword">from</span> '../actions/postsActions';</span><br><span class="line"></span><br><span class="line">//接收整个 Redux store 的 <span class="keyword">state</span> 作为 props，然后返回一个传入到组件 props 的对象.</span><br><span class="line">@connect((store) =&gt; &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    <span class="keyword">user</span>: store.<span class="keyword">user</span>.<span class="keyword">user</span>,</span><br><span class="line">    <span class="keyword">user</span>Fetched: store.<span class="keyword">user</span>.fetched,</span><br><span class="line">    post: store.post.posts,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">export <span class="keyword">default</span> class Layout extends React.Component &#123;</span><br><span class="line">  componentWillMount() &#123;</span><br><span class="line">    this.props.dispatch(fetchUser());</span><br><span class="line">  &#125;</span><br><span class="line">  fetchPost() &#123;</span><br><span class="line">    this.props.dispatch(fetchPosts());</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    const &#123; <span class="keyword">user</span>, post &#125; = this.props;</span><br><span class="line">    if (!post.length) &#123;</span><br><span class="line">      return (<span class="variable">&lt;div&gt;</span> <span class="variable">&lt;h1&gt;</span> welcome &#123;<span class="keyword">user</span>.name&#125;<span class="variable">&lt;/h1&gt;</span></span><br><span class="line">      <span class="variable">&lt;button onClick=&#123;this.fetchPost.bind(this)&#125;&gt;</span> check your posts <span class="variable">&lt;/button&gt;</span><span class="variable">&lt;/div&gt;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    const mappedPosts = post.map(item =&gt; <span class="variable">&lt;li key=&#123;item.id&#125;&gt;</span> &#123;item.text&#125;<span class="variable">&lt;/li&gt;</span>)</span><br><span class="line">    return (<span class="variable">&lt;div&gt;</span></span><br><span class="line">      <span class="variable">&lt;h1&gt;</span> &#123;<span class="keyword">user</span>.name&#125;<span class="variable">&lt;/h1&gt;</span></span><br><span class="line">      <span class="variable">&lt;ul&gt;</span>&#123;mappedPosts&#125;<span class="variable">&lt;/ul&gt;</span></span><br><span class="line">    <span class="variable">&lt;/div&gt;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="关于_connect">关于 connect</h3><p>如果没有引入修饰符@ (需要引入<code>babel-plugin-transform-decorators-legacy</code>转换为es5 )</p>
+<p>那么需要像这样Connect Component:<br><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">let Layout = connect(&#123;</span><br><span class="line">   <span class="built_ins">user</span>: store.<span class="built_ins">user</span>.<span class="built_ins">user</span>,</span><br><span class="line">&#125;)(Layout);</span><br></pre></td></tr></table></figure></p>
+<h4 id="connect_function_:">connect function :</h4><ul>
+<li><p>函数将被调用两次。第一次是设置参数，第二次是组件与 Redux store 连接：connect(mapStateToProps, mapDispatchToProps, mergeProps)(MyComponent)。</p>
+</li>
+<li><p>connect 函数不会修改传入的 React 组件，返回的是一个新的已与 Redux store 连接的组件，而且你应该使用这个新组件。</p>
+</li>
+<li><p>mapStateToProps 函数接收整个 Redux store 的 state 作为 props，然后返回一个传入到组件 props 的对象。该函数被称之为 selector。参考使用 reselect 高效地组合多个 selector ，并对 收集到的数据进行处理。</p>
+</li>
+<li><p><code>[mapStateToProps(state, [ownProps]): stateProps] (Function)</code>: 如果定义该参数，组件将会监听 Redux store 的变化。任何时候，只要 Redux store 发生改变，mapStateToProps 函数就会被调用。该回调函数必须返回一个纯对象，这个对象会与组件的 props 合并。如果你省略了这个参数，你的组件将不会监听 Redux store。如果指定了该回调函数中的第二个参数 ownProps，则该参数的值为传递到组件的 props，而且只要组件接收到新的 props，mapStateToProps 也会被调用。 </p>
+</li>
+</ul>
+<h2 id="reducers目录">reducers目录</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; combineReducers &#125; <span class="keyword">from</span> <span class="string">'redux'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> post <span class="keyword">from</span> <span class="string">'./postReducer'</span>;</span><br><span class="line"><span class="keyword">import</span> user <span class="keyword">from</span> <span class="string">'./userReducer'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> combineReducers(&#123;</span><br><span class="line">  post,</span><br><span class="line">  user,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="postReducer-js">postReducer.js</h3><figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">export <span class="keyword">default</span> function reducer(<span class="keyword">state</span> = &#123;</span><br><span class="line">  fetching: false,</span><br><span class="line">  fetched: false,</span><br><span class="line">  posts: [],</span><br><span class="line">  error: null,</span><br><span class="line">&#125;, action) &#123;</span><br><span class="line">  switch (action.type) &#123;</span><br><span class="line">    case 'FETCH_POSTS_PENDING':</span><br><span class="line">      &#123;</span><br><span class="line">        return &#123;</span><br><span class="line">          ...<span class="keyword">state</span>,</span><br><span class="line">          fetching: true,</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    case 'FETCH_POSTS_REJECTED':</span><br><span class="line">      &#123;</span><br><span class="line">        return &#123; ...<span class="keyword">state</span>,</span><br><span class="line">          fetching: false,</span><br><span class="line">          error: action.payload,</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    case 'FETCH_POSTS_FULFILLED':</span><br><span class="line">      &#123;</span><br><span class="line">        return &#123;</span><br><span class="line">          ...<span class="keyword">state</span>,</span><br><span class="line">          fetching: false,</span><br><span class="line">          fetched: true,</span><br><span class="line">          posts: action.payload,</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      return &#123;</span><br><span class="line">        ...<span class="keyword">state</span>,</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="userReducer-js">userReducer.js</h3><figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">export <span class="keyword">default</span> function reducer(<span class="keyword">state</span> = &#123;</span><br><span class="line">  fetching: false,</span><br><span class="line">  fetched: false,</span><br><span class="line">  <span class="keyword">user</span>: &#123;</span><br><span class="line">    id: null,</span><br><span class="line">    name: null,</span><br><span class="line">    age: null,</span><br><span class="line">  &#125;,</span><br><span class="line">  error: null,</span><br><span class="line">&#125;, action) &#123;</span><br><span class="line">  switch (action.type) &#123;</span><br><span class="line">    case 'FETCH_USER_PENDING':</span><br><span class="line">      &#123;</span><br><span class="line">        //<span class="keyword">state</span>.name =action.payload;</span><br><span class="line">        return &#123;</span><br><span class="line">          ...<span class="keyword">state</span>,</span><br><span class="line">          fetching: true,</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    case 'FETCH_USER_REJECTED':</span><br><span class="line"></span><br><span class="line">      &#123;</span><br><span class="line">        //<span class="keyword">state</span>.name =action.payload;</span><br><span class="line">        return &#123;</span><br><span class="line">          ...<span class="keyword">state</span>,</span><br><span class="line">          fetching: false,</span><br><span class="line">          error: action.payload,</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    case 'FETCH_USER_FULFILLED':</span><br><span class="line">      &#123;</span><br><span class="line">        return &#123;</span><br><span class="line">          ...<span class="keyword">state</span>,</span><br><span class="line">          fetching: false,</span><br><span class="line">          fetched: true,</span><br><span class="line">          <span class="keyword">user</span>: action.payload,</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      return &#123;</span><br><span class="line">        ...<span class="keyword">state</span>,</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="actions目录">actions目录</h2><h2 id="userActions-js">userActions.js</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">fetchUser</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    type: <span class="string">'FETCH_USER_FULFILLED'</span>,</span><br><span class="line">    payload: &#123;</span><br><span class="line">      name: <span class="string">'lyn'</span>,</span><br><span class="line">      age: <span class="number">35</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">setUserName</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    type: <span class="string">'SET_USER_NAME'</span>,</span><br><span class="line">    payload: name,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">setUserAge</span>(<span class="params">age</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    type: <span class="string">'SET_USER_AGE'</span>,</span><br><span class="line">    payload: age,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="postActions-js">postActions.js</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//uasage examples:</span></span><br><span class="line"><span class="comment">// import * as user from './userActions';</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// user.setUserName('lyn');</span></span><br><span class="line"><span class="comment">// import &#123; setUserName &#125; from './userActions'</span></span><br><span class="line"><span class="comment">// setUserName('lyn');</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//thunk need return function</span></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">fetchPosts</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">dispatch</span>) </span>&#123;</span><br><span class="line">    dispatch(&#123;</span><br><span class="line">      type: <span class="string">'FETCH_POSTS_PENDING'</span>,</span><br><span class="line">    &#125;);</span><br><span class="line">    axios.get(<span class="string">'/api/posts'</span>)</span><br><span class="line">    .then((res) =&gt; &#123;</span><br><span class="line">      dispatch(&#123;</span><br><span class="line">        type: <span class="string">'FETCH_POSTS_FULFILLED'</span>,</span><br><span class="line">        payload: res.data.data,</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">    .catch((err) =&gt; &#123;</span><br><span class="line">      dispatch(&#123;</span><br><span class="line">        type: <span class="string">'FETCH_POSTS_REJECTED'</span>,</span><br><span class="line">        payload: err,</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">addPost</span>(<span class="params">id, text</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    type: <span class="string">'ADD_POST'</span>,</span><br><span class="line">    payload: &#123;</span><br><span class="line">      id,</span><br><span class="line">      text,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">updatePost</span>(<span class="params">id, text</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    type: <span class="string">'UPDATE_POST'</span>,</span><br><span class="line">    payload: &#123;</span><br><span class="line">      id,</span><br><span class="line">      text,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">deletePost</span>(<span class="params">id</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    type: <span class="string">'DELETE_POST'</span>,</span><br><span class="line">    payload: id,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/29/redux-notes-03/" rel="next" title="redux-notes-03 常用的middleware">
+                <i class="fa fa-chevron-left"></i> redux-notes-03 常用的middleware
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/02/redux-notes-04/"
+           data-title="redux-note-04 - project structure" data-url="http://lyn.s76.org/2016/10/02/redux-notes-04/">
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/author.png" alt="Lyn's Blog" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Lyn's Blog</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Lyn's Blog about Node.js  Express.js Angular.js HTML5 Mongodb Programing Notes</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">52</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#项目布局"><span class="nav-number">1.</span> <span class="nav-text">项目布局</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#连接到_Redux"><span class="nav-number">1.1.</span> <span class="nav-text">连接到 Redux</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#index-js"><span class="nav-number">1.1.0.1.</span> <span class="nav-text">index.js</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#index-js-1"><span class="nav-number">1.2.</span> <span class="nav-text">index.js</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#store-js"><span class="nav-number">1.3.</span> <span class="nav-text">store.js</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#components_目录"><span class="nav-number">1.4.</span> <span class="nav-text">components 目录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Layout-js"><span class="nav-number">1.4.1.</span> <span class="nav-text">Layout.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于_connect"><span class="nav-number">1.4.2.</span> <span class="nav-text">关于 connect</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#connect_function_:"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">connect function :</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reducers目录"><span class="nav-number">1.5.</span> <span class="nav-text">reducers目录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#postReducer-js"><span class="nav-number">1.5.1.</span> <span class="nav-text">postReducer.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#userReducer-js"><span class="nav-number">1.5.2.</span> <span class="nav-text">userReducer.js</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#actions目录"><span class="nav-number">1.6.</span> <span class="nav-text">actions目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#userActions-js"><span class="nav-number">1.7.</span> <span class="nav-text">userActions.js</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#postActions-js"><span class="nav-number">1.7.1.</span> <span class="nav-text">postActions.js</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2011 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lyn's Blog</span>
+</div>
+
+<div class="powered-by">
+  <a class="theme-link" href="http://hexo.io">Powered by Hexo
+  </a>
+</div>
+
+<div class="theme-info">
+  
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"blog-lyn"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+
+    
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

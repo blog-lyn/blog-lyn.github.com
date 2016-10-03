@@ -207,6 +207,140 @@
             
             
               
+                <a class="post-title-link" href="/2016/03/05/javaScript-Object-Oriented-Prototype-link/" itemprop="url">
+                  JavaScript使用原型链实现继承以及Es6中的实现
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-03-05T22:49:33+08:00" content="2016-03-05">
+              2016-03-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/05/javaScript-Object-Oriented-Prototype-link/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/05/javaScript-Object-Oriented-Prototype-link/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="JavaScript使用原型链实现继承">JavaScript使用原型链实现继承</h1><ul>
+<li>ECMAScript 支持面向对象编程,但在ES6之前不使用类或者接口.</li>
+</ul>
+<h1 id="原型链">原型链</h1><ul>
+<li><p>JavaScript主要是通过原型链(prototype chain)来实现的继承,原型链的实现是通过创建”超类”的一个实例并且把这个实例赋值给”子类”构造函数的prototype指针.这样子类型就可以访问超类里的所有方法和属性.</p>
+</li>
+<li><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-15/87102920.jpg" alt=""></p>
+</li>
+</ul>
+<h1 id="原型式继承">原型式继承</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//超类的构造函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.property = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//给超类定义共享的原型方法</span></span><br><span class="line">SuperType.prototype.getSuperValue = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.subproperty = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//子类的构造函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.subproperty = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//这里实现继承</span></span><br><span class="line">SubType.prototype = <span class="keyword">new</span> SuperType();</span><br><span class="line"></span><br><span class="line">SubType.prototype.getSubValue = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.subproperty;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> SubType();</span><br><span class="line"><span class="built_in">console</span>.log(instance.getSuperValue()); <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//确定原型和实例的关系</span></span><br><span class="line"><span class="built_in">console</span>.log(instance <span class="keyword">instanceof</span> <span class="built_in">Object</span>)       <span class="comment">//true</span></span><br><span class="line"><span class="built_in">console</span>.log(instance <span class="keyword">instanceof</span> SuperType)    <span class="comment">//true</span></span><br><span class="line"><span class="built_in">console</span>.log(instance <span class="keyword">instanceof</span> SubType)      <span class="comment">//true		</span></span><br><span class="line"><span class="comment">//正确的增加定义子类的方法</span></span><br><span class="line">SubType.prototype.getSubVaule = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.subproperty;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//正确的重写超类的方法</span></span><br><span class="line">SubType.prototype.getSuperValue =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//错误的定义方法会导致继承失效.</span></span><br><span class="line">SubType.prototype = &#123;</span><br><span class="line">	someMethod: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="comment">// method do something</span></span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> anotherInstance = <span class="keyword">new</span> SubType();</span><br><span class="line"><span class="built_in">console</span>.log(getSuperValue()); <span class="comment">// error 因为上面的代码将子类的prototype从指向超累的一个实例替换成了一个对象字面量.</span></span><br></pre></td></tr></table></figure>
+<h2 id="优点&amp;缺点">优点&amp;缺点</h2><ul>
+<li>所有的子类实例都共享超累的属性,如果修改了超类的属性那么新建的实例都会受到影响</li>
+<li>创建子类型实例的时候,不能在不影响所有对象实例的前提下向超类型的构造函数传递参数.</li>
+</ul>
+<h2 id="ES5中的的原型式继承">ES5中的的原型式继承</h2><p> 如果只需要一个对象与另一个对象保持类似,而且在不同的对象之间共享相同的引用类型的的值的情况下可以使用这种Object.create方法.相当于把传入的对象(第一个参数)进行一次浅复制.这个特性会在后面的寄生组合式继承中用到.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person=&#123;</span><br><span class="line">	name:<span class="string">"lyn"</span>,</span><br><span class="line">	numbers:[<span class="string">"1"</span>,<span class="string">"2"</span>,<span class="string">"3"</span>]</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> anotherPerson = <span class="built_in">Object</span>.create(person);</span><br><span class="line">anotherPerson.name= <span class="string">"Cheung"</span>; <span class="comment">//覆盖原型对象中的值</span></span><br><span class="line">anotherPerson.numbers.push(<span class="string">"5"</span>); <span class="comment">//修改共享的原型对象的属性</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> otherPerson = <span class="built_in">Object</span>.create(person,&#123;</span><br><span class="line">		name:&#123;</span><br><span class="line">			value:<span class="string">"Lee"</span></span><br><span class="line">		&#125;</span><br><span class="line">&#125;); <span class="comment">//第二个参数会覆盖原型对象上的同名属性</span></span><br><span class="line">otherPerson.numbers.push(<span class="string">"6"</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(person.numbers)<span class="comment">// "1,2,3,5,6"</span></span><br></pre></td></tr></table></figure>
+<h1 id="借用构造函数继承">借用构造函数继承</h1><p>为了实现向超类的构造函数传递参数,可以使用借用构造函数继承</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">SuperType(name)&#123;</span><br><span class="line">   <span class="keyword">this</span>.name = name;</span><br><span class="line">   <span class="keyword">this</span>.colors=[<span class="string">'red'</span>,<span class="string">'green'</span>,<span class="string">'yellow'</span>];</span><br><span class="line">&#125;</span><br><span class="line">SubType()&#123;</span><br><span class="line">	<span class="comment">//实现继承</span></span><br><span class="line">	SuperType.call(<span class="keyword">this</span>,<span class="string">"lyn"</span>);<span class="comment">//在构造函数中给属性或方法赋值</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> instance1 = <span class="keyword">new</span> SubType();</span><br><span class="line">instance1.colors.push(<span class="string">"black"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(instance1.colors);<span class="comment">//"red,green,yellow,black"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> instance2 = <span class="keyword">new</span> SubType();</span><br><span class="line"><span class="built_in">console</span>.log(instance2.colors);<span class="comment">//"red,blue,green"</span></span><br></pre></td></tr></table></figure>
+<h2 id="优点&amp;缺点-1">优点&amp;缺点</h2><ul>
+<li>因为只借用了构造函数,所以构造函数模式的弊端(参考前一篇blog):所有方法和属性都在构造函数中定义,相同的功能的函数都是不同的实例,因此函数复用就无从谈起了.</li>
+<li>在超类的原型中定义的方法对于子类型来说也是不可见的.</li>
+</ul>
+<h1 id="组合式继承(combination_inheritance)">组合式继承(combination inheritance)</h1><p>组合继承:将原型链模式和借用构造函数模式相结合,发挥二者长处的一种模式.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.name =name;</span><br><span class="line">	<span class="keyword">this</span>.colors=[<span class="string">"red"</span>,<span class="string">"blue"</span>,<span class="string">"green"</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>.<span class="title">prototype</span>.<span class="title">sayName</span> =<span class="title">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params">name,age</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//继承方法,传递参数</span></span><br><span class="line">	SuperType.call(<span class="keyword">this</span>,name);</span><br><span class="line">	<span class="keyword">this</span>.age = age;</span><br><span class="line">&#125;</span><br><span class="line">SubType.prototype = <span class="keyword">new</span> SuperType();</span><br><span class="line">SubType.prototype.constructor= SubType;</span><br><span class="line">SubType.prototype.sayAge =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="keyword">this</span>.age);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> instance1 = <span class="keyword">new</span> SubType(<span class="string">"lyn"</span>,<span class="number">27</span>);</span><br><span class="line">instance1.colors.push(<span class="string">"black"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(instance1.colors); <span class="comment">//"red, blue, green, black"</span></span><br><span class="line">instance1.sayName();   <span class="comment">//lyn</span></span><br><span class="line">instance1.sayAge();	<span class="comment">//27	</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> instance2 = <span class="keyword">new</span> SubType(<span class="string">"Cheung"</span>,<span class="number">23</span>);</span><br><span class="line"><span class="built_in">console</span>.log(instance2.colors); <span class="comment">// "red,blue,green"</span></span><br><span class="line">instance2.sayName();    <span class="comment">// "Cheung"</span></span><br><span class="line">instance2.sayAge();  	<span class="comment">//  23</span></span><br></pre></td></tr></table></figure>
+<p>实现步骤:</p>
+<ol>
+<li>SuperType在自己的构造函数中定义了2个属性: name,colors</li>
+<li>SuperType的原型中定义了自己的方法sayName.</li>
+<li>SubType的构造函数在调用SuperType的构造函数的时候传入了name参数</li>
+<li>SubType的原型中也定义了自己的方法sayAge</li>
+</ol>
+<p>这样两个不同的实例就可以拥有不同的属性但是共享/复用同样的方法了.</p>
+<h2 id="优点&amp;缺点-2">优点&amp;缺点</h2><h3 id="优点:">优点:</h3><ul>
+<li>避免了原型链和借用构造函数的缺点,融合了他们的优点</li>
+<li>instanceof 和 isPrototypeOf() 也能识别组合式继承实现的对象.</li>
+</ul>
+<h3 id="缺点:">缺点:</h3><ul>
+<li>调用了两次SuperType的构造函数:(第一次是在把SuperType的实例赋值给SubType的原型时 ,第二次 是在SubType的构造函数中又call了一次).这个可以使用寄生组合继承来解决</li>
+</ul>
+<h1 id="寄生组合式继承">寄生组合式继承</h1><p>通过借用构造函数来继承属性,通过使用Object.create方法对SuperType的prototype进行浅复制实现对超类的继承,然后再讲结果指定给子类型的原型.寄生组合式继承的基本模式如下:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inheritPrototype</span>(<span class="params">subType,superType</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> prototypeTemp =<span class="built_in">Object</span>(superType.prototype); <span class="comment">//创建超类型原型的副本</span></span><br><span class="line">	prototypeTemp.constructor = subType;  <span class="comment">//为创建的副本指定构造函数</span></span><br><span class="line">	subType.prototype = prototypeTemp;   <span class="comment">//将创建的副本赋值给子类的原型</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有了这个函数我们就可以替换掉组合式继承中为子类原型赋值的语句了.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.name =name;</span><br><span class="line">	<span class="keyword">this</span>.colors=[<span class="string">"red"</span>,<span class="string">"blue"</span>,<span class="string">"green"</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>.<span class="title">prototype</span>.<span class="title">sayName</span> =<span class="title">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params">name,age</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//继承方法,传递参数</span></span><br><span class="line">	SuperType.call(<span class="keyword">this</span>,name);</span><br><span class="line">	<span class="keyword">this</span>.age = age;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">inheritPrototype(SubType,SuperType); <span class="comment">//为子类原型赋值</span></span><br><span class="line"></span><br><span class="line">SubType.prototype.sayAge = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="keyword">this</span>.age);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="优点&amp;缺点:">优点&amp;缺点:</h2><ul>
+<li>只调用了一次SuperType构造函数,这样就避免了SubType.prototype重复创建属性.</li>
+<li>原型链可以保持不变,因此可以使用instanceof 和 isPrototypeOf()检测创建的对象</li>
+<li>寄生组合式继承是引用类型最理想的继承范式.</li>
+</ul>
+<h1 id="ES6中的继承实现">ES6中的继承实现</h1><p>Es6中有了extends 关键字可以实现继承,而不用在关心借用构造函数或者原型链来实现.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Person&#123;</span><br><span class="line">    <span class="constructor"><span class="keyword">constructor</span>(name, age)</span>&#123;</span><br><span class="line">        <span class="keyword">public</span> name = name;</span><br><span class="line">        <span class="keyword">public</span> age  = age;</span><br><span class="line">        </span><br><span class="line">        sayName()&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="keyword">this</span>.name);     </span><br><span class="line">        &#125;</span><br><span class="line">        getOlder(years)&#123;</span><br><span class="line">            <span class="keyword">this</span>.age += years;  </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Employee extends Person&#123;</span><br><span class="line">	<span class="constructor"><span class="keyword">constructor</span>(name,age)</span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(name,age); <span class="comment">//借用Person的构造函数</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码与西面的代码实现了相同的继承效果</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Employee</span><span class="params">(name,age)</span></span>&#123;</span><br><span class="line">	Person.call(<span class="keyword">this</span>,name,age);</span><br><span class="line">&#125;</span><br><span class="line">Employee.prototype = <span class="keyword">new</span> Person;</span><br></pre></td></tr></table></figure>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/03/01/Untitled/" itemprop="url">
                   gzip压缩JPEG的测试
                 </a>
@@ -1378,99 +1512,6 @@ conn.pipe(upperCasing).pipe(conn);
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/02/04/nodejs-note-19/" itemprop="url">
-                  Asynchronous Programming -06 async.parallel
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-02-04T00:33:51+08:00" content="2016-02-04">
-              2016-02-04
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/04/nodejs-note-19/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/04/nodejs-note-19/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h2 id="parallel(tasks,_[callback])">parallel(tasks, [callback])</h2><p>Run the <code>tasks</code> array of functions in parallel, without waiting until the previous<br>function has completed. If any of the functions pass an error to its<br>callback, the main <code>callback</code> is immediately called with the value of the error.<br>Once the <code>tasks</code> have completed, the results are passed to the final <code>callback</code> as an<br>array.</p>
-<p><strong>Note:</strong> <code>parallel</code> is about kicking-off I/O tasks in parallel, not about parallel execution of code.  If your tasks do not use any timers or perform any I/O, they will actually be executed in series.  Any synchronous setup sections for each task will happen one after the other.  JavaScript remains single-threaded.</p>
-<p>It is also possible to use an object instead of an array. Each property will be<br>run as a function and the results will be passed to the final <code>callback</code> as an object<br>instead of an array. This can be a more readable way of handling results from parallel.</p>
-<p><strong>Arguments</strong></p>
-<ul>
-<li><code>tasks</code> - An array or object containing functions to run. Each function is passed<br>a <code>callback(err, result)</code> which it must call on completion with an error <code>err</code><br>(which can be <code>null</code>) and an optional <code>result</code> value.</li>
-<li><code>callback(err, results)</code> - An optional callback to run once all the functions<br>have completed successfully. This function gets a results array (or object) containing all<br>the result arguments passed to the task callbacks.</li>
-</ul>
-<p><strong>Example</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span>.parallel([</span><br><span class="line">    <span class="function"><span class="keyword">function</span>(<span class="params">callback</span>)</span>&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            callback(<span class="literal">null</span>, <span class="string">'one'</span>);</span><br><span class="line">        &#125;, <span class="number">200</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="function"><span class="keyword">function</span>(<span class="params">callback</span>)</span>&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            callback(<span class="literal">null</span>, <span class="string">'two'</span>);</span><br><span class="line">        &#125;, <span class="number">100</span>);</span><br><span class="line">    &#125;</span><br><span class="line">],</span><br><span class="line"><span class="comment">// optional callback</span></span><br><span class="line"><span class="function"><span class="keyword">function</span>(<span class="params">err, results</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// the results array will equal ['one','two'] even though</span></span><br><span class="line">    <span class="comment">// the second function had a shorter timeout.</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// an example using an object instead of an array</span></span><br><span class="line"><span class="keyword">async</span>.parallel(&#123;</span><br><span class="line">    one: <span class="function"><span class="keyword">function</span>(<span class="params">callback</span>)</span>&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            callback(<span class="literal">null</span>, <span class="number">1</span>);</span><br><span class="line">        &#125;, <span class="number">200</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    two: <span class="function"><span class="keyword">function</span>(<span class="params">callback</span>)</span>&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            callback(<span class="literal">null</span>, <span class="number">2</span>);</span><br><span class="line">        &#125;, <span class="number">100</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,</span><br><span class="line"><span class="function"><span class="keyword">function</span>(<span class="params">err, results</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// results is now equals to: &#123;one: 1, two: 2&#125;</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h2 id="apply_async-parallel_in_our_example">apply async.parallel in our example</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="keyword">async</span> = <span class="built_in">require</span>(<span class="string">'async'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> dir = path.join(__dirname, <span class="string">'temp'</span>);</span><br><span class="line"><span class="keyword">var</span> source = __filename;</span><br><span class="line"><span class="keyword">var</span> target = path.join(dir, <span class="string">'target'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> context;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> parallelOperations=[	 </span><br><span class="line">	fs.mkdir.bind(context, dir),</span><br><span class="line">	fs.readFile.bind(context, source)</span><br><span class="line">];</span><br><span class="line"><span class="keyword">var</span>  opreations = [</span><br><span class="line">	<span class="function"><span class="keyword">function</span>(<span class="params">cb</span>)</span>&#123;</span><br><span class="line">		<span class="keyword">async</span>.parallel(parallelOperations, cb);</span><br><span class="line">	&#125;,</span><br><span class="line">	extractResult(<span class="number">1</span>),</span><br><span class="line">	fs.writeFile.bind(context, target)</span><br><span class="line">];</span><br><span class="line"> </span><br><span class="line"><span class="keyword">async</span>.waterfall(opreations, done);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">done</span>(<span class="params">err</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (err)&#123;</span><br><span class="line">		handleError(err);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">'all done'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">extractResult</span>(<span class="params">pos</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">results,callback</span>)</span>&#123;</span><br><span class="line">		str = results.toString(<span class="string">'utf-8'</span>);</span><br><span class="line">		<span class="built_in">console</span>.log(str);</span><br><span class="line">		callback(<span class="literal">null</span>, results[pos]);</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">handleError</span>(<span class="params">err</span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.error(err);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="keyword">async</span> = <span class="built_in">require</span>(<span class="string">'async'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> dir = path.join(__dirname, <span class="string">'temp'</span>);</span><br><span class="line"><span class="keyword">var</span> source = __filename;</span><br><span class="line"><span class="keyword">var</span> target = path.join(dir, <span class="string">'target'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> context;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span>  opreations = [</span><br><span class="line">	parallel(</span><br><span class="line">	fs.mkdir.bind(context, dir),</span><br><span class="line">	fs.readFile.bind(context, source)),</span><br><span class="line">	extractResult(<span class="number">1</span>),</span><br><span class="line">	fs.writeFile.bind(context, target)</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span>.waterfall(opreations, done);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">done</span>(<span class="params">err</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (err)&#123;</span><br><span class="line">		handleError(err);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">'all done'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">parallel</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> ops = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>);</span><br><span class="line">	<span class="comment">//Array.prototype.slice.call(arguments)能将具有length属性的对象转成数组</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">cb</span>)</span>&#123;</span><br><span class="line">		<span class="keyword">async</span>.parallel(ops,cb);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">extractResult</span>(<span class="params">pos</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">results,callback</span>)</span>&#123;</span><br><span class="line">		str = results.toString(<span class="string">'utf-8'</span>);</span><br><span class="line">		<span class="built_in">console</span>.log(str);</span><br><span class="line">		<span class="comment">//检查结果</span></span><br><span class="line">		callback(<span class="literal">null</span>, results[pos]);</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">handleError</span>(<span class="params">err</span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.error(err);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1516,7 +1557,7 @@ conn.pipe(upperCasing).pipe(conn);
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">51</span>
+              <span class="site-state-item-count">52</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
