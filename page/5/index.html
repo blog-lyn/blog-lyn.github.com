@@ -207,6 +207,110 @@
             
             
               
+                <a class="post-title-link" href="/2015/12/01/nodejs-note-11/" itemprop="url">
+                  How to learn Node.js -- Using less and lessMiddleware to complie css file
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-12-01T23:52:25+08:00" content="2015-12-01">
+              2015-12-01
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/12/01/nodejs-note-11/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/01/nodejs-note-11/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="Why_using_less_?">Why using less ?</h1><p>less is an extension to CSS, Less is not only backwards compatible with CSS, but the extra features it adds use existing CSS syntax.</p>
+<p>it add some features to make css file more easy to maintain in development, for example:</p>
+<h2 id="Variables">Variables</h2><p>We can add variables in less:</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">@color:</span> <span class="hexcolor">#4D926F</span>;</span><br><span class="line"></span><br><span class="line"><span class="id">#header</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="variable">@color</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">h2</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="variable">@color</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Mixins">Mixins</h2><p> You can mix-in class selectors and id selectors, e.g.<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class">.a</span>, <span class="id">#b</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: red;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class">.mixin-class</span> &#123;</span><br><span class="line">  <span class="class">.a</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="class">.mixin-id</span> &#123;</span><br><span class="line">  <span class="id">#b</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p> which results in:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class">.a</span>, <span class="id">#b</span> <span class="rules">&#123;</span><br><span class="line">  <span class="rule"><span class="attribute">color</span>:<span class="value"> red</span></span>;</span><br><span class="line">&#125;</span></span><br><span class="line"><span class="class">.mixin-class</span> <span class="rules">&#123;</span><br><span class="line">  <span class="rule"><span class="attribute">color</span>:<span class="value"> red</span></span>;</span><br><span class="line">&#125;</span></span><br><span class="line"><span class="class">.mixin-id</span> <span class="rules">&#123;</span><br><span class="line">  <span class="rule"><span class="attribute">color</span>:<span class="value"> red</span></span>;</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="Nested_Rules">Nested Rules</h2><p>Less enable us to use nesting instead of, or in combination with cascading:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="id">#header</span> <span class="tag">h1</span> <span class="rules">&#123;</span><br><span class="line">    <span class="rule"><span class="attribute">font-size</span>:<span class="value"> <span class="number">26px</span></span></span>;</span><br><span class="line">    <span class="rule"><span class="attribute">font-weight</span>:<span class="value"> bold</span></span>;</span><br><span class="line">&#125;</span></span><br><span class="line"><span class="id">#header</span> <span class="tag">p</span> <span class="rules">&#123;</span><br><span class="line">    <span class="rule"><span class="attribute">font-size</span>:<span class="value"> <span class="number">12px</span></span></span>;</span><br><span class="line">&#125;</span></span><br><span class="line"><span class="id">#header</span> <span class="tag">p</span> <span class="tag">a</span> <span class="rules">&#123;</span><br><span class="line">    <span class="rule"><span class="attribute">text-decoration</span>:<span class="value"> none</span></span>;</span><br><span class="line">&#125;</span></span><br><span class="line"><span class="id">#header</span> <span class="tag">p</span> <span class="tag">a</span><span class="pseudo">:hover</span> <span class="rules">&#123;</span><br><span class="line">    <span class="rule"><span class="attribute">border-width</span>:<span class="value"> <span class="number">1px</span></span></span>;</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>In Less, we can also write it this way:</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="id">#header</span> &#123;</span><br><span class="line">    <span class="tag">h1</span> &#123;</span><br><span class="line">        <span class="attribute">font-size</span>: <span class="number">26px</span>;</span><br><span class="line">        <span class="attribute">font-weight</span>: bold;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="tag">p</span> &#123;</span><br><span class="line">        <span class="attribute">font-size</span>: <span class="number">12px</span>;</span><br><span class="line">        <span class="tag">a</span> &#123;</span><br><span class="line">            <span class="attribute">text-decoration</span>: none;</span><br><span class="line">            <span class="keyword">&amp;</span><span class="pseudo">:hover</span> &#123;</span><br><span class="line">                <span class="attribute">border-width</span>: <span class="number">1px</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>This looks more nature like html structrue </p>
+<h1 id="Install_lessMiddleware">Install lessMiddleware</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="operator"><span class="keyword">install</span> <span class="keyword">less</span>-middleware <span class="comment">--save</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="Usage">Usage</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">lessMiddleware</span><span class="params">(source, [&#123;options&#125;])</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="Express">Express</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> lessMiddleware = <span class="keyword">require</span>(<span class="string">'less-middleware'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line">app.<span class="keyword">use</span>(lessMiddleware(__dirname + <span class="string">'/public'</span>));</span><br><span class="line">app.<span class="keyword">use</span>(express.<span class="keyword">static</span>(__dirname + <span class="string">'/public'</span>));</span><br></pre></td></tr></table></figure>
+<h1 id="configure_lessMiddleware">configure lessMiddleware</h1><h2 id="options">options</h2><p>The following options can be used to control the behavior of the middleware:</p>
+<p> <img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-1-16/54670514.jpg" alt=""><br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">|Option |Description                 |Default|</span><br><span class="line">|<span class="comment">---|---|---|</span></span><br><span class="line">|debug  |<span class="operator"><span class="keyword">Show</span> more verbose <span class="keyword">logging</span>?	|<span class="literal">false</span>  |</span><br><span class="line">|dest	 |Destination <span class="keyword">directory</span> <span class="keyword">to</span> <span class="keyword">output</span> the <span class="keyword">compiled</span> .css files.	Same <span class="keyword">directory</span> <span class="keyword">as</span> <span class="keyword">less</span> <span class="keyword">source</span> files.<span class="keyword">force</span> <span class="keyword">Always</span> re-compile <span class="keyword">less</span> files <span class="keyword">on</span> <span class="keyword">each</span> request. |<span class="literal">false</span></span><br><span class="line">|once	|<span class="keyword">Only</span> recompile once <span class="keyword">after</span> <span class="keyword">each</span> <span class="keyword">server</span> restart. Useful <span class="keyword">for</span> reducing disk <span class="keyword">i</span>/o <span class="keyword">on</span> production.	|<span class="literal">false</span></span><br><span class="line">|pathRoot	|Common root <span class="keyword">of</span> the <span class="keyword">source</span> <span class="keyword">and</span> destination. It <span class="keyword">is</span> prepended <span class="keyword">to</span> <span class="keyword">both</span> the <span class="keyword">source</span> <span class="keyword">and</span> destination <span class="keyword">before</span> being used.	|<span class="literal">null</span></span><br><span class="line">|postprocess	|<span class="keyword">Object</span> containing functions relevant <span class="keyword">to</span> preprocessing <span class="keyword">data</span>.postprocess.css	<span class="keyword">Function</span> that modifies the <span class="keyword">compiled</span> css <span class="keyword">output</span> <span class="keyword">before</span> being <span class="keyword">stored</span>.	|<span class="keyword">function</span>(css, req)&#123;...&#125;</span><br><span class="line">|preprocess	|<span class="keyword">Object</span> containing functions relevant <span class="keyword">to</span> preprocessing <span class="keyword">data</span>.preprocess.<span class="keyword">less</span>	<span class="keyword">Function</span> that modifies the <span class="keyword">raw</span> <span class="keyword">less</span> <span class="keyword">output</span> <span class="keyword">before</span> being parsed <span class="keyword">and</span> <span class="keyword">compiled</span>.	|<span class="keyword">function</span>(src, req)&#123;...&#125;</span><br><span class="line">|preprocess.<span class="keyword">path</span>|	<span class="keyword">Function</span> that modifies the <span class="keyword">less</span> pathname <span class="keyword">before</span> being loaded <span class="keyword">from</span> the filesystem.	|<span class="keyword">function</span>(pathname, req)&#123;...&#125;</span><br><span class="line">|preprocess.importPaths |	<span class="keyword">Function</span> that modifies the <span class="keyword">import</span> paths used <span class="keyword">by</span> the <span class="keyword">less</span> parser per request.|<span class="keyword">function</span>(paths, req)&#123;...&#125;</span><br><span class="line">|render|	Options <span class="keyword">for</span> the <span class="keyword">less</span> render. See the “render Options” <span class="keyword">section</span> below.	|…</span><br><span class="line">|storeCss|	<span class="keyword">Function</span> that <span class="keyword">is</span> <span class="keyword">in</span> charge <span class="keyword">of</span> storing the css <span class="keyword">in</span> the filesystem.	|<span class="keyword">function</span>(pathname, css, req, <span class="keyword">next</span>)&#123;...&#125;</span><br><span class="line">|cacheFile	|<span class="keyword">Path</span> <span class="keyword">to</span> a <span class="keyword">JSON</span> <span class="keyword">file</span> that will be used <span class="keyword">to</span> <span class="keyword">cache</span> <span class="keyword">less</span> <span class="keyword">data</span> across <span class="keyword">server</span> restarts. This can greatly speed up <span class="keyword">initial</span> <span class="keyword">load</span> <span class="keyword">time</span> <span class="keyword">after</span> a <span class="keyword">server</span> restart - <span class="keyword">if</span> the <span class="keyword">less</span> files haven’<span class="keyword">t</span> <span class="keyword">changed</span> <span class="keyword">and</span> the css files still exist, specifying this <span class="keyword">option</span> will mean that the <span class="keyword">less</span> files don’<span class="keyword">t</span> need <span class="keyword">to</span> be recompiled <span class="keyword">after</span> a <span class="keyword">server</span> restart.|</span></span><br></pre></td></tr></table></figure></p>
+<p>We’ll use the compress option in the compiler. We don’t want to compress in development mode, so we’ll  do the App.env !== ‘development` trick.</p>
+<p>Note that if compress is set to true, then the dumpLineNumbers option is effectively ignored.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Configure less</span></span><br><span class="line"><span class="keyword">var</span> lessMiddleware = <span class="built_in">require</span>(<span class="string">'less-middleware'</span>)</span><br><span class="line">  , lessMiddlewareOptions = &#123;</span><br><span class="line">      dest: App.appPath(<span class="string">'/public'</span>)</span><br><span class="line">    , relativeUrls: <span class="literal">true</span></span><br><span class="line">    , force: App.env === <span class="string">'development'</span></span><br><span class="line">    , once: App.env !== <span class="string">'development'</span></span><br><span class="line">    , debug: App.env === <span class="string">'development'</span></span><br><span class="line">    , preprocess: &#123;</span><br><span class="line">        path: <span class="function"><span class="keyword">function</span>(<span class="params">pathname,req</span>) </span>&#123;</span><br><span class="line">          <span class="built_in">console</span>.log(pathname)</span><br><span class="line">          <span class="keyword">return</span> pathname.replace(<span class="string">'/stylesheets'</span>, <span class="string">''</span>)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  , lessParserOptions = &#123;</span><br><span class="line">      dumpLineNumbers: <span class="string">'mediaquery'</span></span><br><span class="line">    &#125;</span><br><span class="line">  , lessCompilerOptions = &#123;</span><br><span class="line">      compress: App.env !== <span class="string">'development'</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">App.app.use(lessMiddleware(</span><br><span class="line">  App.appPath(<span class="string">'app/stylesheets'</span>)</span><br><span class="line">, lessMiddlewareOptions</span><br><span class="line">, lessParserOptions</span><br><span class="line">, lessCompilerOptions</span><br><span class="line">))</span><br></pre></td></tr></table></figure>
+<p>/app/stylesheets/dummy.less</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// example of nesting styles and a variable</span></span><br><span class="line"><span class="variable">@administrator-text-color:</span> <span class="hexcolor">#00B4FF</span>;</span><br><span class="line"></span><br><span class="line"><span class="class">.system_message</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="hexcolor">#EEE</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">15px</span>;</span><br><span class="line"></span><br><span class="line">  <span class="tag">p</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="variable">@administrator-text-color</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2015/11/15/nodejs-note-10/" itemprop="url">
                   How to learn Node.js -- mongoose validation &unique records in mongodb
                 </a>
@@ -1225,99 +1329,6 @@ Validation occurs<span class="function"> pre(</span>'save'<span class="function"
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2015/06/28/hellowordnodejs/" itemprop="url">
-                  How to learn Node.js - 01 hello world !
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2015-06-28T00:40:11+08:00" content="2015-06-28">
-              2015-06-28
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/06/28/hellowordnodejs/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/06/28/hellowordnodejs/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="Try_Node-js_in_Read-Eval-Print_Loop_mode_first">Try Node.js in Read-Eval-Print Loop mode first</h1><figure class="highlight monkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"> Lyn-Cheung-MBP:node Lyn$ node</span><br><span class="line">&gt; <span class="number">50</span>+<span class="number">50</span></span><br><span class="line"><span class="number">100</span></span><br><span class="line">&gt; console</span><br><span class="line">Console &#123;</span><br><span class="line">  <span class="built_in">log</span>: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</span><br><span class="line">  info: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</span><br><span class="line">  warn: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</span><br><span class="line">  <span class="built_in">error</span>: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</span><br><span class="line">  dir: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</span><br><span class="line">  time: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</span><br><span class="line">  timeEnd: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</span><br><span class="line">  trace: [<span class="function"><span class="keyword">Function</span>:</span> bound trace],</span><br><span class="line">  assert: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</span><br><span class="line">  Console: [<span class="function"><span class="keyword">Function</span>:</span> Console] &#125;</span><br><span class="line">&gt; console.<span class="built_in">log</span>(<span class="string">"hello REPL"</span>)</span><br><span class="line">hello REPL</span><br><span class="line">undefined</span><br><span class="line">&gt; var foo = <span class="string">"toy!"</span></span><br><span class="line">undefined</span><br><span class="line">&gt; foo</span><br><span class="line"><span class="comment">'toy!'</span></span><br><span class="line">&gt;</span><br><span class="line">(^C again <span class="keyword">to</span> quit)</span><br><span class="line">&gt;</span><br><span class="line">Lyn-Cheung-MBP:node Lyn$</span><br></pre></td></tr></table></figure>
-<h1 id="Run_Node-js_code_in_files">Run Node.js code in files</h1><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim <span class="keyword">server</span>.js</span><br></pre></td></tr></table></figure>
-<p>Then enter insert mode to write your code </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br><span class="line"></span><br><span class="line">http.createServer(<span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">        res.writeHead(<span class="number">200</span>,&#123;<span class="string">'Content-Type'</span>:<span class="string">'text/plain'</span>&#125;);</span><br><span class="line">                res.end(<span class="string">'hello world \n'</span>);</span><br><span class="line">&#125;).listen(<span class="number">1337</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'Server running at http://127.0.0.1:1337/'</span>);</span><br></pre></td></tr></table></figure>
-<p>then Save this file in VIM by type “w” </p>
-<p>after this, we can run Node.js file in another iTerm terminal(press command + shift + d)</p>
-<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Lyn-Cheung-MBP:<span class="keyword">node</span><span class="identifier"> </span><span class="title">Lyn</span>$ <span class="keyword">node</span><span class="identifier"> </span><span class="title">hello</span>.js                  </span><br><span class="line"></span><br><span class="line">Server running at http://<span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">1337</span>/</span><br></pre></td></tr></table></figure>
-<p>then you can access to this server in your browser by <a href="http://127.0.0.1:1337/" target="_blank" rel="external">http://127.0.0.1:1337/</a> </p>
-<p>req = request<br>res = responde</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> http =<span class="built_in">require</span>(<span class="string">'http'</span>)</span><br><span class="line">	, handler =<span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>)</span>&#123;</span><br><span class="line">		res.writeHead(<span class="number">200</span>,&#123;<span class="string">'Content-Type'</span>:<span class="string">'text/plain'</span>&#125;);</span><br><span class="line">		res.end(<span class="string">'Hello World\n'</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	, sever = http.createServer(handler)</span><br><span class="line"></span><br><span class="line">server.listen(<span class="number">1337</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'Server running at http://127.0.0.1:1337/'</span>);</span><br></pre></td></tr></table></figure>
-<p>here is  a clear way  to explain the relation  between http (Node.js moduel), createServer (moduel function) and handler (the parameters of createServer)</p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1363,7 +1374,7 @@ Validation occurs<span class="function"> pre(</span>'save'<span class="function"
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">52</span>
+              <span class="site-state-item-count">53</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

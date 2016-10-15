@@ -1,0 +1,693 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+
+  <meta name="description" content="Lyn's Blog about Node.js  Express.js Angular.js HTML5 Mongodb Programing Notes" />
+
+
+
+
+  <meta name="keywords" content="Lyn's blog" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="工作中有一个工程需要运行在centos环境下,然而又不想在centos下进行编码和调试,于是就想还是用docker来映射container的端口到主机下,并且把代码的目录映射到centos的docker container中.
+几年前docker刚出来时,玩过几天,但是由于没有做笔记,把内容都忘光了,时隔几年,docker已经在微服务的互联网浪潮中大显光彩.趁此机会复习一下docker的常用命令.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker 笔记">
+<meta property="og:url" content="http://lyn.s76.org/2016/10/15/docker-notes-01/index.html">
+<meta property="og:site_name" content="Lyn's Blog">
+<meta property="og:description" content="工作中有一个工程需要运行在centos环境下,然而又不想在centos下进行编码和调试,于是就想还是用docker来映射container的端口到主机下,并且把代码的目录映射到centos的docker container中.
+几年前docker刚出来时,玩过几天,但是由于没有做笔记,把内容都忘光了,时隔几年,docker已经在微服务的互联网浪潮中大显光彩.趁此机会复习一下docker的常用命令.">
+<meta property="og:updated_time" content="2016-10-15T07:46:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="docker 笔记">
+<meta name="twitter:description" content="工作中有一个工程需要运行在centos环境下,然而又不想在centos下进行编码和调试,于是就想还是用docker来映射container的端口到主机下,并且把代码的目录映射到centos的docker container中.
+几年前docker刚出来时,玩过几天,但是由于没有做笔记,把内容都忘光了,时隔几年,docker已经在微服务的互联网浪潮中大显光彩.趁此机会复习一下docker的常用命令.">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> docker 笔记 | Lyn's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e1a1e7f61eef21fbacf4a67a19789441";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lyn's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Node.js Angular.js Express.js HTML5 Mongodb Programing Notes</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                docker 笔记
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-10-15T14:48:55+08:00" content="2016-10-15">
+              2016-10-15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/15/docker-notes-01/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/15/docker-notes-01/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>工作中有一个工程需要运行在centos环境下,然而又不想在centos下进行编码和调试,于是就想还是用docker来映射container的端口到主机下,并且把代码的目录映射到centos的docker container中.</p>
+<p>几年前docker刚出来时,玩过几天,但是由于没有做笔记,把内容都忘光了,时隔几年,docker已经在微服务的互联网浪潮中大显光彩.趁此机会复习一下docker的常用命令.<br>于是有了下面的折腾过程:</p>
+<p>简单解释的几个名词 :</p>
+<ol>
+<li>docker 当然指的就是蓝色的小鲸鱼啦  </li>
+<li>container 是集装箱的意思 也就是鲸鱼背上的那些集装箱.也就是镜像运行的结果,我们代码运行的环境.</li>
+</ol>
+<h2 id="下载安装_Docker">下载安装 Docker</h2><p>首先把几年前装的旧版本先删除掉,再去官网下载docker的安装文件.</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 清理工作 先查看有哪些machine</span><br><span class="line"></span><br><span class="line">docker-machine <span class="keyword">ls</span> </span><br><span class="line">docker-machine <span class="keyword">rm</span> `docker-machine <span class="keyword">ls</span>`</span><br><span class="line">sudo <span class="keyword">rm</span> /usr/<span class="keyword">local</span>/bin/docker</span><br><span class="line">sudo <span class="keyword">rm</span> /usr/<span class="keyword">local</span>/bin/docker-compose</span><br><span class="line">sudo <span class="keyword">rm</span> /usr/<span class="keyword">local</span>/bin/docker-machine</span><br></pre></td></tr></table></figure>
+<p>安装完成后小鲸鱼就会出现在任务栏中了.</p>
+<p>windows版本需要windows10才支持docker,且需要打开hyper-V(打开后会与VMware有冲突).</p>
+<h2 id="编写dockerFile">编写dockerFile</h2><p>内容如下:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Dockerfile</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">FROM</span> centos:latest</span><br><span class="line"><span class="built_in">MAINTAINER</span> Lyn</span><br><span class="line"></span><br><span class="line"><span class="built_in">LABEL</span> <span class="bash">Name=<span class="string">"centos/tailorc"</span></span><br><span class="line"></span></span><br><span class="line"><span class="comment"># 上面是设置docker的镜像来源,下面是升级并安装项目依赖文件,并设置暴露的端口.</span></span><br><span class="line"><span class="comment"># RUN可以有多个 而CMD则指的是container执行后运行的命令.只能有一条,如果有多条那么只会运行最后一条.</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">yum --assumeyes --setopt=tsflags=nodocs update  </span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">yum -y  install libevent gtk2 alsa-lib  libXt    </span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">yum clean all</span><br><span class="line"></span><span class="built_in">EXPOSE</span> <span class="number">1306</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">CMD</span> <span class="bash">[<span class="string">"/bin/bash"</span>]</span></span><br></pre></td></tr></table></figure>
+<h2 id="build_docker镜像">build docker镜像</h2><blockquote>
+<p>-f 参数 是指定dockerFile的路径. -t 则是为新建的镜像指定tag name和version</p>
+</blockquote>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">docker</span> <span class="keyword">build </span>-f <span class="string">"/Users/Lyn/Tailor/dockerFile"</span> -t tailor:<span class="number">1</span>.<span class="number">0</span> .</span><br></pre></td></tr></table></figure>
+<p>build 成功以后可以通过<code>docker images</code>命令来查看系统中所有的docker镜像:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Lyn-Cheung-MBP:Tailor Lyn$ docker images</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">tailor              <span class="number">1.0</span>                 <span class="number">74f</span>386530eb3        <span class="number">27</span> minutes ago      <span class="number">510</span> MB</span><br><span class="line">centos              latest              <span class="number">980e0</span>e4c79ec        <span class="number">5</span> weeks ago         <span class="number">196.8</span> MB</span><br></pre></td></tr></table></figure>
+<h2 id="run_docker镜像">run docker镜像</h2><p>运行下面这个命令就会启动一个标签叫tailorC的container,并进入到container的终端中(输入exit 会退出terminal并关闭这个container的运行,可以通过<code>docker start &lt;container的name&gt;</code> 来重新启动container)</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run  -v /Users/Lyn/folder:/opt/Tailor -<span class="tag">p</span> <span class="number">1306</span>:<span class="number">1306</span>  --name tailorC  -t -<span class="tag">i</span>  tailor:<span class="number">1.0</span></span><br></pre></td></tr></table></figure>
+<h3 id="参数解析:">参数解析:</h3><ol>
+<li>-v 指的是volume 把本地的目录映射挂载到container的指定目录中</li>
+<li>-p 指的是Port 把host主机的端口的浏览转发到container的指定端口</li>
+<li>–name 指的是给container指定别名.</li>
+<li>-t 指的是terminal 选项让Docker分配一个伪终端（pseudo-tty）并绑定到容器的标准输入上</li>
+<li>-i 则让容器的标准输入保持打开。</li>
+</ol>
+<p>最后跟着的是镜像的名字<br>也可以在镜像名字后面再跟上默认执行的[CMD]如果有这个参数那么就会覆盖dockerFile中的[CMD]命令</p>
+<p>进入container的terminal以后就可以运行想要的运行的命令了.</p>
+<h3 id="访问container的服务">访问container的服务</h3><p>只要container中的服务启动<br>在本地的浏览器中 访问<code>http://127.0.0.1:1306/</code>就相当于是访问container中的1306端口了. </p>
+<h2 id="查看运行的docker_container">查看运行的docker container</h2><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -<span class="literal">a</span></span><br></pre></td></tr></table></figure>
+<p>运行结果如下:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Lyn$ docker ps -a</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                    NAMES</span><br><span class="line"><span class="number">80</span>ac33b9d175        tailor:<span class="number">1.0</span>          <span class="string">"/bin/bash"</span>         <span class="number">4</span> hours ago         Up <span class="number">2</span> minutes        <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>:<span class="number">1306</span>-&gt;<span class="number">1306</span>/tcp   tailorC</span><br></pre></td></tr></table></figure>
+<h3 id="查看docker的网络配置">查看docker的网络配置</h3><p>当web服务有问题时,我们可以检查docker的网络配置</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Lyn$ docker network ls</span><br><span class="line">NETWORK ID          NAME                DRIVER              SCOPE</span><br><span class="line"><span class="number">18</span>ed300147f8        bridge              bridge              <span class="built_in">local</span>               </span><br><span class="line"><span class="number">02</span>d2c77c1549        host                host                <span class="built_in">local</span>               </span><br><span class="line"><span class="number">8</span>b3894017396        <span class="literal">none</span>                <span class="built_in">null</span>                <span class="built_in">local</span></span><br></pre></td></tr></table></figure>
+<h3 id="查看具体的网络配置:">查看具体的网络配置:</h3><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">Lyn$ docker network inspect bridge</span><br><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">"Name"</span>: <span class="string">"bridge"</span>,</span><br><span class="line">        <span class="string">"Id"</span>: <span class="string">"18ed300147f8ea03e7e94fc4ae289fdd50508c0fb8582520931843d409d9bf0b"</span>,</span><br><span class="line">        <span class="string">"Scope"</span>: <span class="string">"local"</span>,</span><br><span class="line">        <span class="string">"Driver"</span>: <span class="string">"bridge"</span>,</span><br><span class="line">        <span class="string">"EnableIPv6"</span>: false,</span><br><span class="line">        <span class="string">"IPAM"</span>: &#123;</span><br><span class="line">            <span class="string">"Driver"</span>: <span class="string">"default"</span>,</span><br><span class="line">            <span class="string">"Options"</span>: null,</span><br><span class="line">            <span class="string">"Config"</span>: [</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="string">"Subnet"</span>: <span class="string">"172.17.0.0/16"</span>,</span><br><span class="line">                    <span class="string">"Gateway"</span>: <span class="string">"172.17.0.1"</span></span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"Internal"</span>: false,</span><br><span class="line">        <span class="string">"Containers"</span>: &#123;</span><br><span class="line">            <span class="string">"80ac33b9d175f91416cae336dfd52f4bcce5a0741dbb0c06d4c1c55d44d7d019"</span>: &#123;</span><br><span class="line">                <span class="string">"Name"</span>: <span class="string">"tailorC"</span>,</span><br><span class="line">                <span class="string">"EndpointID"</span>: <span class="string">"801d9177f10ac31475a3c1dcd2de46cbe1009c352fe1e12e6eae0888a705fdc5"</span>,</span><br><span class="line">                <span class="string">"MacAddress"</span>: <span class="string">"02:42:ac:11:00:02"</span>,</span><br><span class="line">                <span class="string">"IPv4Address"</span>: <span class="string">"172.17.0.2/16"</span>,</span><br><span class="line">                <span class="string">"IPv6Address"</span>: <span class="string">""</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"Options"</span>: &#123;</span><br><span class="line">            <span class="string">"com.docker.network.bridge.default_bridge"</span>: <span class="string">"true"</span>,</span><br><span class="line">            <span class="string">"com.docker.network.bridge.enable_icc"</span>: <span class="string">"true"</span>,</span><br><span class="line">            <span class="string">"com.docker.network.bridge.enable_ip_masquerade"</span>: <span class="string">"true"</span>,</span><br><span class="line">            <span class="string">"com.docker.network.bridge.host_binding_ipv4"</span>: <span class="string">"0.0.0.0"</span>,</span><br><span class="line">            <span class="string">"com.docker.network.bridge.name"</span>: <span class="string">"docker0"</span>,</span><br><span class="line">            <span class="string">"com.docker.network.driver.mtu"</span>: <span class="string">"1500"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"Labels"</span>: &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h2 id="清理_docker">清理 docker</h2><h3 id="删除指定的镜像">删除指定的镜像</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">docker</span> <span class="tag">rmi</span> <span class="tag">tailor</span><span class="pseudo">:1</span><span class="class">.0</span></span><br></pre></td></tr></table></figure>
+<h3 id="移除_dangling_镜像">移除 dangling 镜像</h3><p>也就是在build过程下载和产生的镜像</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">docker</span> images -qf dangling=<span class="built_in">true</span> | xargs docker rmi</span><br></pre></td></tr></table></figure>
+<h3 id="移除_dangling_volumes">移除 dangling volumes</h3><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_ins">volume</span> ls -qf dangling=true | xargs -r docker <span class="built_ins">volume</span> rm</span><br></pre></td></tr></table></figure>
+<h3 id="删除已经没有运行的containers">删除已经没有运行的containers</h3><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm <span class="escape">`d</span>ocker ps -aq`</span><br></pre></td></tr></table></figure>
+<h3 id="kill_所有正在运行的_containers">kill 所有正在运行的 containers</h3><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="keyword">kill</span> <span class="string">`docker ps -aq`</span></span><br></pre></td></tr></table></figure>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/02/redux-notes-04/" rel="next" title="redux-note-04 - project structure">
+                <i class="fa fa-chevron-left"></i> redux-note-04 - project structure
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/15/docker-notes-01/"
+           data-title="docker 笔记" data-url="http://lyn.s76.org/2016/10/15/docker-notes-01/">
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/author.png" alt="Lyn's Blog" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Lyn's Blog</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Lyn's Blog about Node.js  Express.js Angular.js HTML5 Mongodb Programing Notes</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">53</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#下载安装_Docker"><span class="nav-number">1.</span> <span class="nav-text">下载安装 Docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编写dockerFile"><span class="nav-number">2.</span> <span class="nav-text">编写dockerFile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#build_docker镜像"><span class="nav-number">3.</span> <span class="nav-text">build docker镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#run_docker镜像"><span class="nav-number">4.</span> <span class="nav-text">run docker镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#参数解析:"><span class="nav-number">4.1.</span> <span class="nav-text">参数解析:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问container的服务"><span class="nav-number">4.2.</span> <span class="nav-text">访问container的服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看运行的docker_container"><span class="nav-number">5.</span> <span class="nav-text">查看运行的docker container</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看docker的网络配置"><span class="nav-number">5.1.</span> <span class="nav-text">查看docker的网络配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看具体的网络配置:"><span class="nav-number">5.2.</span> <span class="nav-text">查看具体的网络配置:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#清理_docker"><span class="nav-number">6.</span> <span class="nav-text">清理 docker</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#删除指定的镜像"><span class="nav-number">6.1.</span> <span class="nav-text">删除指定的镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#移除_dangling_镜像"><span class="nav-number">6.2.</span> <span class="nav-text">移除 dangling 镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#移除_dangling_volumes"><span class="nav-number">6.3.</span> <span class="nav-text">移除 dangling volumes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除已经没有运行的containers"><span class="nav-number">6.4.</span> <span class="nav-text">删除已经没有运行的containers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kill_所有正在运行的_containers"><span class="nav-number">6.5.</span> <span class="nav-text">kill 所有正在运行的 containers</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2011 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lyn's Blog</span>
+</div>
+
+<div class="powered-by">
+  <a class="theme-link" href="http://hexo.io">Powered by Hexo
+  </a>
+</div>
+
+<div class="theme-info">
+  
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"blog-lyn"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+
+    
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

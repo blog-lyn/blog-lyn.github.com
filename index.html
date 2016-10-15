@@ -207,6 +207,131 @@
             
             
               
+                <a class="post-title-link" href="/2016/10/15/docker-notes-01/" itemprop="url">
+                  docker 笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-10-15T14:48:55+08:00" content="2016-10-15">
+              2016-10-15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/15/docker-notes-01/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/15/docker-notes-01/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>工作中有一个工程需要运行在centos环境下,然而又不想在centos下进行编码和调试,于是就想还是用docker来映射container的端口到主机下,并且把代码的目录映射到centos的docker container中.</p>
+<p>几年前docker刚出来时,玩过几天,但是由于没有做笔记,把内容都忘光了,时隔几年,docker已经在微服务的互联网浪潮中大显光彩.趁此机会复习一下docker的常用命令.<br>于是有了下面的折腾过程:</p>
+<p>简单解释的几个名词 :</p>
+<ol>
+<li>docker 当然指的就是蓝色的小鲸鱼啦  </li>
+<li>container 是集装箱的意思 也就是鲸鱼背上的那些集装箱.也就是镜像运行的结果,我们代码运行的环境.</li>
+</ol>
+<h2 id="下载安装_Docker">下载安装 Docker</h2><p>首先把几年前装的旧版本先删除掉,再去官网下载docker的安装文件.</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 清理工作 先查看有哪些machine</span><br><span class="line"></span><br><span class="line">docker-machine <span class="keyword">ls</span> </span><br><span class="line">docker-machine <span class="keyword">rm</span> `docker-machine <span class="keyword">ls</span>`</span><br><span class="line">sudo <span class="keyword">rm</span> /usr/<span class="keyword">local</span>/bin/docker</span><br><span class="line">sudo <span class="keyword">rm</span> /usr/<span class="keyword">local</span>/bin/docker-compose</span><br><span class="line">sudo <span class="keyword">rm</span> /usr/<span class="keyword">local</span>/bin/docker-machine</span><br></pre></td></tr></table></figure>
+<p>安装完成后小鲸鱼就会出现在任务栏中了.</p>
+<p>windows版本需要windows10才支持docker,且需要打开hyper-V(打开后会与VMware有冲突).</p>
+<h2 id="编写dockerFile">编写dockerFile</h2><p>内容如下:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Dockerfile</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">FROM</span> centos:latest</span><br><span class="line"><span class="built_in">MAINTAINER</span> Lyn</span><br><span class="line"></span><br><span class="line"><span class="built_in">LABEL</span> <span class="bash">Name=<span class="string">"centos/tailorc"</span></span><br><span class="line"></span></span><br><span class="line"><span class="comment"># 上面是设置docker的镜像来源,下面是升级并安装项目依赖文件,并设置暴露的端口.</span></span><br><span class="line"><span class="comment"># RUN可以有多个 而CMD则指的是container执行后运行的命令.只能有一条,如果有多条那么只会运行最后一条.</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">yum --assumeyes --setopt=tsflags=nodocs update  </span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">yum -y  install libevent gtk2 alsa-lib  libXt    </span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">yum clean all</span><br><span class="line"></span><span class="built_in">EXPOSE</span> <span class="number">1306</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">CMD</span> <span class="bash">[<span class="string">"/bin/bash"</span>]</span></span><br></pre></td></tr></table></figure>
+<h2 id="build_docker镜像">build docker镜像</h2><blockquote>
+<p>-f 参数 是指定dockerFile的路径. -t 则是为新建的镜像指定tag name和version</p>
+</blockquote>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">docker</span> <span class="keyword">build </span>-f <span class="string">"/Users/Lyn/Tailor/dockerFile"</span> -t tailor:<span class="number">1</span>.<span class="number">0</span> .</span><br></pre></td></tr></table></figure>
+<p>build 成功以后可以通过<code>docker images</code>命令来查看系统中所有的docker镜像:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Lyn-Cheung-MBP:Tailor Lyn$ docker images</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">tailor              <span class="number">1.0</span>                 <span class="number">74f</span>386530eb3        <span class="number">27</span> minutes ago      <span class="number">510</span> MB</span><br><span class="line">centos              latest              <span class="number">980e0</span>e4c79ec        <span class="number">5</span> weeks ago         <span class="number">196.8</span> MB</span><br></pre></td></tr></table></figure>
+<h2 id="run_docker镜像">run docker镜像</h2><p>运行下面这个命令就会启动一个标签叫tailorC的container,并进入到container的终端中(输入exit 会退出terminal并关闭这个container的运行,可以通过<code>docker start &lt;container的name&gt;</code> 来重新启动container)</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run  -v /Users/Lyn/folder:/opt/Tailor -<span class="tag">p</span> <span class="number">1306</span>:<span class="number">1306</span>  --name tailorC  -t -<span class="tag">i</span>  tailor:<span class="number">1.0</span></span><br></pre></td></tr></table></figure>
+<h3 id="参数解析:">参数解析:</h3><ol>
+<li>-v 指的是volume 把本地的目录映射挂载到container的指定目录中</li>
+<li>-p 指的是Port 把host主机的端口的浏览转发到container的指定端口</li>
+<li>–name 指的是给container指定别名.</li>
+<li>-t 指的是terminal 选项让Docker分配一个伪终端（pseudo-tty）并绑定到容器的标准输入上</li>
+<li>-i 则让容器的标准输入保持打开。</li>
+</ol>
+<p>最后跟着的是镜像的名字<br>也可以在镜像名字后面再跟上默认执行的[CMD]如果有这个参数那么就会覆盖dockerFile中的[CMD]命令</p>
+<p>进入container的terminal以后就可以运行想要的运行的命令了.</p>
+<h3 id="访问container的服务">访问container的服务</h3><p>只要container中的服务启动<br>在本地的浏览器中 访问<code>http://127.0.0.1:1306/</code>就相当于是访问container中的1306端口了. </p>
+<h2 id="查看运行的docker_container">查看运行的docker container</h2><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -<span class="literal">a</span></span><br></pre></td></tr></table></figure>
+<p>运行结果如下:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Lyn$ docker ps -a</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                    NAMES</span><br><span class="line"><span class="number">80</span>ac33b9d175        tailor:<span class="number">1.0</span>          <span class="string">"/bin/bash"</span>         <span class="number">4</span> hours ago         Up <span class="number">2</span> minutes        <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>:<span class="number">1306</span>-&gt;<span class="number">1306</span>/tcp   tailorC</span><br></pre></td></tr></table></figure>
+<h3 id="查看docker的网络配置">查看docker的网络配置</h3><p>当web服务有问题时,我们可以检查docker的网络配置</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Lyn$ docker network ls</span><br><span class="line">NETWORK ID          NAME                DRIVER              SCOPE</span><br><span class="line"><span class="number">18</span>ed300147f8        bridge              bridge              <span class="built_in">local</span>               </span><br><span class="line"><span class="number">02</span>d2c77c1549        host                host                <span class="built_in">local</span>               </span><br><span class="line"><span class="number">8</span>b3894017396        <span class="literal">none</span>                <span class="built_in">null</span>                <span class="built_in">local</span></span><br></pre></td></tr></table></figure>
+<h3 id="查看具体的网络配置:">查看具体的网络配置:</h3><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">Lyn$ docker network inspect bridge</span><br><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">"Name"</span>: <span class="string">"bridge"</span>,</span><br><span class="line">        <span class="string">"Id"</span>: <span class="string">"18ed300147f8ea03e7e94fc4ae289fdd50508c0fb8582520931843d409d9bf0b"</span>,</span><br><span class="line">        <span class="string">"Scope"</span>: <span class="string">"local"</span>,</span><br><span class="line">        <span class="string">"Driver"</span>: <span class="string">"bridge"</span>,</span><br><span class="line">        <span class="string">"EnableIPv6"</span>: false,</span><br><span class="line">        <span class="string">"IPAM"</span>: &#123;</span><br><span class="line">            <span class="string">"Driver"</span>: <span class="string">"default"</span>,</span><br><span class="line">            <span class="string">"Options"</span>: null,</span><br><span class="line">            <span class="string">"Config"</span>: [</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="string">"Subnet"</span>: <span class="string">"172.17.0.0/16"</span>,</span><br><span class="line">                    <span class="string">"Gateway"</span>: <span class="string">"172.17.0.1"</span></span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"Internal"</span>: false,</span><br><span class="line">        <span class="string">"Containers"</span>: &#123;</span><br><span class="line">            <span class="string">"80ac33b9d175f91416cae336dfd52f4bcce5a0741dbb0c06d4c1c55d44d7d019"</span>: &#123;</span><br><span class="line">                <span class="string">"Name"</span>: <span class="string">"tailorC"</span>,</span><br><span class="line">                <span class="string">"EndpointID"</span>: <span class="string">"801d9177f10ac31475a3c1dcd2de46cbe1009c352fe1e12e6eae0888a705fdc5"</span>,</span><br><span class="line">                <span class="string">"MacAddress"</span>: <span class="string">"02:42:ac:11:00:02"</span>,</span><br><span class="line">                <span class="string">"IPv4Address"</span>: <span class="string">"172.17.0.2/16"</span>,</span><br><span class="line">                <span class="string">"IPv6Address"</span>: <span class="string">""</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"Options"</span>: &#123;</span><br><span class="line">            <span class="string">"com.docker.network.bridge.default_bridge"</span>: <span class="string">"true"</span>,</span><br><span class="line">            <span class="string">"com.docker.network.bridge.enable_icc"</span>: <span class="string">"true"</span>,</span><br><span class="line">            <span class="string">"com.docker.network.bridge.enable_ip_masquerade"</span>: <span class="string">"true"</span>,</span><br><span class="line">            <span class="string">"com.docker.network.bridge.host_binding_ipv4"</span>: <span class="string">"0.0.0.0"</span>,</span><br><span class="line">            <span class="string">"com.docker.network.bridge.name"</span>: <span class="string">"docker0"</span>,</span><br><span class="line">            <span class="string">"com.docker.network.driver.mtu"</span>: <span class="string">"1500"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"Labels"</span>: &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h2 id="清理_docker">清理 docker</h2><h3 id="删除指定的镜像">删除指定的镜像</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">docker</span> <span class="tag">rmi</span> <span class="tag">tailor</span><span class="pseudo">:1</span><span class="class">.0</span></span><br></pre></td></tr></table></figure>
+<h3 id="移除_dangling_镜像">移除 dangling 镜像</h3><p>也就是在build过程下载和产生的镜像</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">docker</span> images -qf dangling=<span class="built_in">true</span> | xargs docker rmi</span><br></pre></td></tr></table></figure>
+<h3 id="移除_dangling_volumes">移除 dangling volumes</h3><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_ins">volume</span> ls -qf dangling=true | xargs -r docker <span class="built_ins">volume</span> rm</span><br></pre></td></tr></table></figure>
+<h3 id="删除已经没有运行的containers">删除已经没有运行的containers</h3><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm <span class="escape">`d</span>ocker ps -aq`</span><br></pre></td></tr></table></figure>
+<h3 id="kill_所有正在运行的_containers">kill 所有正在运行的 containers</h3><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="keyword">kill</span> <span class="string">`docker ps -aq`</span></span><br></pre></td></tr></table></figure>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/10/02/redux-notes-04/" itemprop="url">
                   redux-note-04 - project structure
                 </a>
@@ -1404,180 +1529,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/05/30/installEsxiOnGen8/" itemprop="url">
-                  Mac 环境下 Hp Gen8 microServer安装 Esxi Synology DSM
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-05-30T20:33:03+08:00" content="2016-05-30">
-              2016-05-30
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/30/installEsxiOnGen8/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/30/installEsxiOnGen8/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="结构设计">结构设计</h1><ul>
-<li>ESXI安装在TF卡/U盘上(8gb肯定足够用了)</li>
-<li>SSD上装虚拟机</li>
-<li>raid1直通虚拟机作数据存储</li>
-</ul>
-<blockquote>
-<p>esxi读取是在启动时读取一次的,启动完成后，ESXi就在内存中运行了。<br>所以Esxi直接安装在MicroSD上。安装完毕后把卡拔下来，做一个完整的克隆备份或者直接克隆一个MicroSD实体卡以备不测</p>
-</blockquote>
-<h1 id="HP_gen8_相关工具">HP gen8 相关工具</h1><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/8170796.jpg" alt=""></p>
-<blockquote>
-<p>HP Gen8有自己的一套底层的管理系统,这里先讲一个小故事:<br>Gen8是当时在淘宝上买的,结果卖家亲自开车过来送货,同时还在淘宝卖家那里买了内存条,当时就说插上看看有没有问题(卖家车上自带电源逆变器,没有显示器). 结果开机半天了都还没有听到蜂鸣器的声音,于是我们拿着Gen8去路边的打印店借用显示器看下是什么原因.结果打印店的显示器都不方便拆线,卖家就问有没有网线,只要有网线就够了.<br>结果我们就插了一根网线到Gen8的ILO console口.在浏览器上访问gen8的ip地址,用机箱上自带的账号密码就登陆上ILO管理系统.发现确实是卡在了内存自检上.于是卖家就换了一根新的内存条给我.</p>
-</blockquote>
-<p>这就是服务器和普通PC相比的的神奇之处了吧.即使内存条有问题,Gen8底层的管理系统也可以启动起来,然后我们就可以方便的远程连接到ILO上看到服务器当前的状况.<br>可以查看服务器的各种信息.还可以在web页面上启动.net或者Java的远程桌面.(要在ie或者Safari下面打开ILO才行.)<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/90646810.jpg" alt=""></p>
-<p>ILO的高级功能需要输入一个license-key 可以到淘宝去购买,很便宜.</p>
-<h2 id="ILO">ILO</h2><h2 id="ADM">ADM</h2><h1 id="安装_ESXI_6-0_u2">安装 ESXI 6.0 u2</h1><h2 id="准备一个USB键盘">准备一个USB键盘</h2><p>因为mac的键盘和esxi还是ilo的映射不太正确,在安装过程中会出现F11按了不能被识别的情况,这时候就需要使用直接连接在Gen8上面的物理键盘按一下F11了.</p>
-<h2 id="下载HPE_Custom_Image_for_ESXi_6-0_U2">下载HPE Custom Image for ESXi 6.0 U2</h2><ul>
-<li><a href="https://my.vmware.com/web/vmware/details?downloadGroup=OEM-ESXI60U2-HPE&amp;productId=491" target="_blank" rel="external">https://my.vmware.com/web/vmware/details?downloadGroup=OEM-ESXI60U2-HPE&amp;productId=491</a> </li>
-<li>Version: 6.0 U2</li>
-<li>Release Date:2016-04-07</li>
-</ul>
-<p>下载好了以后,在Windows下就是在系统里挂载这个iSO然后像下面一样的勾选.<br>然而Hp的ILO对mac支持不是很好,能运行起来但是看不见选择加载的ISO.所以变通一下:把刚下载的esxi的ISO文件作为光驱挂载在Mac的PD9里的Windows上.(是不是特别绕?)还是直接看图:<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-30/87630709.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-30/78457314.jpg" alt=""></p>
-<p>然后输入GEN8 dhcp或得到的ip启动ILO.选择virtual device 加载刚才的光驱.</p>
-<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-30/79146767.jpg" alt=""></p>
-<p>然后插上Usb键盘. 这时候就可以开机了</p>
-<p>然后如果BIOS里的启动顺序是出厂的设置的话,那么等漫长的自检过了以后就会开始读取虚拟DVD里的镜像了.(注意 你的mac最好是使用网线,而且要和ilo在同一局域网内.不然加载会很慢,因为这里加载的iso实际上是在你的mac硬盘上的)</p>
-<p>然后就会出现启动选择界面,当然选择install ESXI 然后就会开始加载了</p>
-<p>加载好了以后就会要你选择安装的磁盘位置,设置管理员密码,然后就会按F11确认就开始安装了,因为ISO文件都只有300多MB所以安装的速度还是很快的.(这里为了防止装错.我是只插上了U盘其他的设备都没有接.)<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/83348189.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/31566859.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/41675492.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/78129151.jpg" alt=""></p>
-<p>安装好了以后会提示重启.这时候就需要把网线接进Gen8的另外两个网口上了(或者其中之一),然后在管理界面就会提示你去浏览器上打开esxi的ip地址配置虚拟机.<br>接下来的就比较简单了:<br>和普通的VMware配置虚拟机没有什么区别.因为VMware的客户端只有Windows的,所以我就没有安装专业的配置客户端,而是全部都在VMware的web管理页面上操作的.对了,这个时候就需要输入你的VMwarelicense了.<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/6061113.jpg" alt=""></p>
-<p>这时候就可以在开机自检的时候按F5去HPSSA(HP smart storage Administrator)中初始化你的磁盘了,如果是单块硬盘就只能加载成raid0才能识别.</p>
-<h3 id="RDM">RDM</h3><p>磁盘直通,也就是把完整的一块Raid或者一块SATA 直接映射成为一个VMdk,然后虚拟机可以通过加载这个vmdk硬盘文件,实现passthrough. </p>
-<p>在配置好虚拟机以后,在web管理页面或者ilo中按F2进入管理界面,启用SSH<br>然后ssh 上esxi<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh root@<span class="number">192.168</span><span class="number">.1</span><span class="number">.222</span>(你的esxi的dhcpIP地址)</span><br></pre></td></tr></table></figure></p>
-<p>然后使用以下的命令获取到你要RDM的磁盘信息</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> ls <span class="regexp">/dev/</span>disks</span><br><span class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span>L0</span><br><span class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span><span class="string">L0:</span><span class="number">1</span></span><br><span class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span><span class="string">L0:</span><span class="number">5</span></span><br><span class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span><span class="string">L0:</span><span class="number">6</span></span><br><span class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span><span class="string">L0:</span><span class="number">7</span></span><br><span class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span><span class="string">L0:</span><span class="number">8</span></span><br><span class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span><span class="string">L0:</span><span class="number">9</span></span><br><span class="line">naa<span class="number">.600508</span>b1001c0f178bbb175b496a3f68</span><br><span class="line">naa<span class="number">.600508</span><span class="string">b1001c0f178bbb175b496a3f68:</span><span class="number">1</span></span><br><span class="line">naa<span class="number">.600508</span>b1001c2031e2eb51ae0420a11f</span><br></pre></td></tr></table></figure>
-<p>通过下面的命令获取到volumes下面的SSD系统盘的名称</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ls vmfs/volumes/ -l</span><br><span class="line">total <span class="number">1792</span></span><br><span class="line">drwxr-xr-t    <span class="number">1</span> root     root          <span class="number">2100</span> Jul <span class="number">19</span> <span class="number">23</span>:<span class="number">57</span> <span class="number">55</span>a7da09-<span class="number">6</span>a7727f6-d50b-<span class="number">70106f</span>3eb224</span><br><span class="line">drwxr-xr-x    <span class="number">1</span> root     root             <span class="number">8</span> Jan  <span class="number">1</span>  <span class="number">1970</span> <span class="number">55</span>a834d9-c3bb963e-<span class="number">218</span>c-<span class="number">70106f</span>3eb224</span><br><span class="line">lrwxr-xr-x    <span class="number">1</span> root     root            <span class="number">35</span> Jul <span class="number">20</span> <span class="number">00</span>:<span class="number">35</span> SSD-&gt; <span class="number">55</span>a7da09-<span class="number">6</span>a7727f6-d50b-<span class="number">70106f</span>3eb224</span><br><span class="line">drwxr-xr-x    <span class="number">1</span> root     root             <span class="number">8</span> Jan  <span class="number">1</span>  <span class="number">1970</span> e052ace5-bc3d44fd-<span class="number">4</span>b45-<span class="number">39</span>d0f75d754e</span><br><span class="line">drwxr-xr-x    <span class="number">1</span> root     root             <span class="number">8</span> Jan  <span class="number">1</span>  <span class="number">1970</span> f0811cef-d4c5ddf9-<span class="number">1088</span>-<span class="number">94015e0</span>ad7d9</span><br></pre></td></tr></table></figure>
-<p>请自行替换磁盘（naa.xxx）、ssd系统盘（system）、虚拟磁盘文件（*.vmdk）的名称，创建成功后会在ssd系统目录下出现于磁盘容量相同的vmdk文件。然后就可以添加这个vmdk作为现有硬盘到虚拟机使用了.</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmkfstools -z <span class="regexp">/vmfs/</span>devices<span class="regexp">/disks/</span>naa.<span class="number">600508</span>b1001c94879db735b10944bfc2<span class="regexp">/vmfs/</span>volumes<span class="regexp">/system/</span>raid0.vmdk</span><br></pre></td></tr></table></figure>
-<p>查看vmdk映射内容</p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="variable">@localhost</span><span class="symbol">:/vmfs/volumes/</span><span class="number">55</span>a7da09-<span class="number">6</span>a7727f6-d50b-<span class="number">70106</span>f3eb224] cat <span class="constant">Raid1.</span>vmdk</span><br><span class="line"><span class="comment"># Disk DescriptorFile</span></span><br><span class="line">version=<span class="number">1</span></span><br><span class="line">encoding=<span class="string">"UTF-8"</span></span><br><span class="line"><span class="constant">CID=</span>fffffffe</span><br><span class="line">parentCID=ffffffff</span><br><span class="line">isNativeSnapshot=<span class="string">"no"</span></span><br><span class="line">createType=<span class="string">"vmfsPassthroughRawDeviceMap"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Extent description</span></span><br><span class="line"><span class="constant">RW </span><span class="number">5860467632</span> <span class="constant">VMFSRDM </span><span class="string">"Raid1-rdmp.vmdk"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The Disk Data Base</span></span><br><span class="line"><span class="comment">#DDB</span></span><br><span class="line"></span><br><span class="line">ddb.adapterType = <span class="string">"lsilogic"</span></span><br><span class="line">ddb.geometry.cylinders = <span class="string">"364797"</span></span><br><span class="line">ddb.geometry.heads = <span class="string">"255"</span></span><br><span class="line">ddb.geometry.sectors = <span class="string">"63"</span></span><br><span class="line">ddb.longContentID = <span class="string">"b1655129dd033737e3ead76ffffffffe"</span></span><br><span class="line">ddb.uuid = <span class="string">"60 00 C2 94 d1 90 d9 b1-11 6e 14 90 58 0d 39 0f"</span></span><br><span class="line">ddb.virtualHWVersion = <span class="string">"11"</span></span><br></pre></td></tr></table></figure>
-<h3 id="RDM官方文档参考:">RDM官方文档参考:</h3><p>要使用 ESXi/ESX 主机配置本地存储上的 RDM，需要满足以下两个条件：</p>
-<ul>
-<li><p>候选设备必须支持 SCSI Inquiry 重要产品数据 (VPD) 页面代码 0x83，该代码用于直接寻址和与 RDM 设备通信。有关 SCSI 感知代码的详细信息，请参见 Understanding SCSI Check Conditions in VMkernel logs during rescan operations (1010244)。</p>
-</li>
-<li><p>候选设备必须导出可使 ESXi/ESX 主机唯一标识用作 RDM 的设备的全局序列号。<br>注意：充当 RDM 的此功能可能在一些本地控制器及其连接的存储上不可用。请联系您的硬件供应商以确认您的控制器是否支持所需条件，并寻求任何技术支持。</p>
-</li>
-</ul>
-<p>如果您有合适的控制器，则可以将本地设备配置为 RDM。必须使用命令行界面 (CLI) 将本地存储设备配置为 RDM，无法通过 vSphere Client 执行此操作。</p>
-<p>要将本地设备配置为 RDM 磁盘，请执行以下操作：<br>打开与 ESXi/ESX 主机的 SSH 会话。<br>运行以下命令列出已连接到 ESXi 主机的磁盘：</p>
-<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ls</span> -<span class="keyword">l</span> /vmfs/devices/disks</span><br></pre></td></tr></table></figure>
-<p>在列表中，标识要配置为 RDM 的本地设备，并复制设备名称。</p>
-<p><strong>注意</strong>：设备名称将很可能使用 t10. 前缀，类似于以下名称：<code>t10.F405E46494C4540046F455B64787D285941707D203F45765</code></p>
-<p>要将设备配置为 RDM，并将 RDM 指针文件输出到您所选的目标，请运行以下命令：</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmkfstools -z <span class="regexp">/vmfs/</span>devices<span class="regexp">/disks/</span>diskname<span class="regexp">/vmfs/</span>volumes<span class="regexp">/datastorename/</span>vmfolder<span class="regexp">/vmname.vmdk</span></span><br></pre></td></tr></table></figure>
-<p>例如：</p>
-<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmkfstools -z /vmfs/devices/disks/t10.F<span class="number">405E46494</span>C<span class="number">4540046F45</span><span class="number">5B64787D28</span><span class="number">5941707D203</span>F45765 /vmfs/volumes/Datastore2/localrdm1/localrdm1.vmdk</span><br></pre></td></tr></table></figure>
-<p>注意：新创建的 RDM 指针文件的大小显示为与其映射到的裸设备相同的大小，它是一个虚拟文件，不占用任何存储空间。</p>
-<p>如果已创建 RDM 指针文件，请使用 vSphere Client 将 RDM 连接到虚拟机：</p>
-<ol>
-<li>右键单击要将 RDM 磁盘添加到的虚拟机。</li>
-<li>单击编辑设置。</li>
-<li>单击添加…</li>
-<li>选择硬盘。</li>
-<li>选择使用现有虚拟磁盘。</li>
-<li>浏览到步骤 5 中保存 RDM 指针的目录，选择 RDM 指针文件，然后单击下一步。</li>
-<li>选择要将磁盘连接到的虚拟 SCSI 控制器，然后单击下一步。</li>
-<li>单击完成。</li>
-</ol>
-<p>现在，虚拟机清单中的新硬盘应显示为映射的裸 LUN。</p>
-<p><strong>注意:</strong></p>
-<ul>
-<li>由于此虚拟机现有已连接的本地磁盘迁移，因此无法使用 vMotion。</li>
-<li>如果需要从虚拟机中移除本地 RDM 映射，只需对共享存储 RDM 应用相同步骤。在 vSphere Client 中，右键单击虚拟机，单击编辑设置，选择 RDM 然后单击从磁盘删除。此操作不会删除磁盘中的数据，而仅删除 RDM 映射文件。</li>
-</ul>
-<h3 id="ESXI磁盘分区(不是必须的)">ESXI磁盘分区(不是必须的)</h3><p>如果你的磁盘之前安装过别的系统导致esxi下无法正确加载 可以参考以下方法 重新分区.</p>
-<p>ssh到esxi 上后使用 Fdisk 或者 esxi 提供的分区工具 可以删除原有分区,然后直接在虚拟机中进行格式化</p>
-<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost:~] fdisk /dev/disks/naa.<span class="number">600508b100</span><span class="number">1c2031e2</span>eb51ae0420a11f</span><br><span class="line">Command Action</span><br><span class="line">a	toggle a bootable flag</span><br><span class="line">b	edit bsd disklabel</span><br><span class="line">c	toggle the dos compatibility flag</span><br><span class="line">d	delete a partition</span><br><span class="line">l	list known partition types</span><br><span class="line">n	add a new partition</span><br><span class="line">o	create a new empty DOS partition table</span><br><span class="line">p	print the partition table</span><br><span class="line">q	quit without saving changes</span><br><span class="line">s	create a new empty Sun disklabel</span><br><span class="line">t	change a partition's system id</span><br><span class="line">u	change display/entry units</span><br><span class="line">v	verify the partition table</span><br><span class="line">w	write table to disk and exit</span><br><span class="line">x	extra functionality (experts only)</span><br><span class="line"></span><br><span class="line">[root@localhost:~] ls /vmfs/devices/disks/</span><br><span class="line"></span><br><span class="line">[root@localhost:~] partedUtil getptbl /vmfs/devices/disks/naa.<span class="number">600508b100</span><span class="number">1c2031e2</span>eb51ae0420a11f</span><br><span class="line">msdos</span><br><span class="line"><span class="number">364797 255</span> <span class="number">63 58604676</span>32</span><br><span class="line"><span class="number">1 63 42949</span><span class="number">61684 131 0</span></span><br><span class="line">Usage:</span><br><span class="line"> Get Partitions : get &lt;diskName&gt;</span><br><span class="line"> Set Partitions : set &lt;diskName&gt; ["partNum startSector endSector type attr"]*</span><br><span class="line"> Delete Partition : delete &lt;diskName&gt; &lt;partNum&gt;</span><br><span class="line"> Resize Partition : resize &lt;diskName&gt; &lt;partNum&gt; &lt;start&gt; &lt;end&gt;</span><br><span class="line"> Get Partitions : getptbl &lt;diskName&gt;</span><br><span class="line"> Set Partitions : setptbl &lt;diskName&gt; &lt;label&gt; ["partNum startSector endSector type/guid attr"]*</span><br><span class="line"> Fix Partition Table : fix &lt;diskName&gt;</span><br><span class="line"> Create New Label (all existing data will be lost): mklabel &lt;diskName&gt; &lt;label&gt;</span><br><span class="line"> Show commonly used partition type guids : showGuids</span><br><span class="line"> Get usable first and last sectors : getUsableSectors &lt;diskName&gt;</span><br><span class="line"> Fix GPT Table interactively : fixGpt &lt;diskName&gt;</span><br><span class="line"></span><br><span class="line">[root@localhost:~] partedUtil delete /vmfs/devices/disks/naa.<span class="number">600508b100</span><span class="number">1c2031e2</span>eb51ae0420a11f 1</span><br><span class="line"></span><br><span class="line">[root@localhost:~] partedUtil showGuids</span><br><span class="line"> Partition Type       GUID</span><br><span class="line"> vmfs                 AA<span class="number">31E02A400</span>F11DB<span class="number">9590000C29</span>11D1B8</span><br><span class="line"> vmkDiagnostic        <span class="number">9D27538040</span>AD11DBBF<span class="number">97000C2911</span>D1B8</span><br><span class="line"> vsan                 381CFCCC<span class="number">728811E09</span>2EE<span class="number">000C2911</span>D0B2</span><br><span class="line"> virsto               <span class="number">77719A0</span>CA<span class="number">4A011E3</span><span class="keyword">A</span><span class="number">47E000C29</span>745A24</span><br><span class="line"> VMware Reserved      9198EFFC31C011DB<span class="number">8F78000C29</span>11D1B8</span><br><span class="line"> Basic Data           EBD<span class="number">0A0A2B9</span>E<span class="number">5443387C06</span><span class="number">8B6B72699</span>C7</span><br><span class="line"> Linux Swap           0657FD6DA4AB<span class="number">43C484E50</span><span class="number">933C84B4</span>F4F</span><br><span class="line"> Linux Lvm            E<span class="number">6D6D379</span>F<span class="number">50744C2A23</span>C<span class="number">238F2A3</span>DF928</span><br><span class="line"> Linux Raid           <span class="keyword">A</span><span class="number">19D880F05</span>FC4D3BA<span class="number">006743F0</span>F84911E</span><br><span class="line"> Efi System           C<span class="number">12A7328F81</span>F11D2BA<span class="number">4B00A0C93</span>EC93B</span><br><span class="line"> Microsoft Reserved   E<span class="number">3C9E3160</span>B5C4DB8817DF92DF00215AE</span><br><span class="line"> Unused Entry         <span class="number">00000000000</span><span class="number">00000000000</span><span class="number">0000000000</span></span><br></pre></td></tr></table></figure>
-<h2 id="黑群辉的安装">黑群辉的安装</h2><p>到下面的网址上去下载两个文件:</p>
-<blockquote>
-<p>xpenology.me/downloads/</p>
-</blockquote>
-<ul>
-<li>第一个是DSM_DS3615xs_5644.pat,这个是群辉的升级文件,一会儿在配置群辉的时候会用上.</li>
-<li>第二个是XPEnoboot_DS3615xs_5.2-5644.4.vmdk的启动文件</li>
-</ul>
-<ol>
-<li>先上传vmdk文件到服务器的磁盘上,在虚拟机里加载vmdk文件作为第二块硬盘(注意添加的时候选择现有的硬盘).</li>
-<li>选择启动虚拟机</li>
-<li>在群辉助手中去配置和升级DSM系统记得选择PAT文件的时候选择我们刚才下载的那个Pat文件.(不想下载群辉助手也可以直接在群辉的ip地址后面加上端口号:5000去访问web管理页面.)<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/70593634.jpg" alt=""></li>
-<li>升级设置完毕以后会要求重启,这时候可能会出现黑裙启动不起来的问题,报missing operating Syetem的错.这时候检查一下虚拟机的硬盘启动顺序.或者直接删除刚才添加的第二块20mb的硬盘,按照步骤一重新添加一次群辉的启动vmdk文件.</li>
-</ol>
-<h3 id="加载RDM的Raid1作为数据储存">加载RDM的Raid1作为数据储存</h3><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/75391528.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/95718109.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/88694438.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/4528211.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/97145984.jpg" alt=""><br>Raid1就没必要检查磁盘奇偶了 因为实在太慢了…..<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/28774652.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/19661986.jpg" alt=""></p>
-<h1 id="测试">测试</h1><p>上传写入速度 55mb/s 下载速度117Mb/s</p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1623,7 +1574,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">52</span>
+              <span class="site-state-item-count">53</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
