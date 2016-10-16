@@ -274,7 +274,7 @@
 <h2 id="run_docker镜像">run docker镜像</h2><p>运行下面这个命令就会启动一个标签叫tailorC的container,并进入到container的终端中(输入exit 会退出terminal并关闭这个container的运行,可以通过<code>docker start &lt;container的name&gt;</code> 来重新启动container)</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run  -v /Users/Lyn/folder:/opt/Tailor -<span class="tag">p</span> <span class="number">1306</span>:<span class="number">1306</span>  --name tailorC  -t -<span class="tag">i</span>  tailor:<span class="number">1.0</span></span><br></pre></td></tr></table></figure>
 <h3 id="参数解析:">参数解析:</h3><ol>
-<li>-v 指的是volume 把本地的目录映射挂载到container的指定目录中</li>
+<li>-v 指的是volume 把本地的目录映射挂载到container的指定目录中 </li>
 <li>-p 指的是Port 把host主机的端口的浏览转发到container的指定端口</li>
 <li>–name 指的是给container指定别名.</li>
 <li>-t 指的是terminal 选项让Docker分配一个伪终端（pseudo-tty）并绑定到容器的标准输入上</li>
@@ -282,6 +282,11 @@
 </ol>
 <p>最后跟着的是镜像的名字<br>也可以在镜像名字后面再跟上默认执行的[CMD]如果有这个参数那么就会覆盖dockerFile中的[CMD]命令</p>
 <p>进入container的terminal以后就可以运行想要的运行的命令了.</p>
+<h3 id="权限问题">权限问题</h3><p>如果要执行挂载进来的路径中的代码,需要注意两个问题:</p>
+<ol>
+<li>需要在docker的preference中设置允许挂载这个路径的文件.</li>
+<li>在container中可能需要使用 <code>chmod -R 777 &lt;Container中具体路径位置&gt;</code> 命令来修改挂载目录的权限</li>
+</ol>
 <h3 id="访问container的服务">访问container的服务</h3><p>只要container中的服务启动<br>在本地的浏览器中 访问<code>http://127.0.0.1:1306/</code>就相当于是访问container中的1306端口了. </p>
 <h2 id="查看运行的docker_container">查看运行的docker container</h2><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -<span class="literal">a</span></span><br></pre></td></tr></table></figure>
 <p>运行结果如下:</p>
