@@ -207,6 +207,140 @@
             
             
               
+                <a class="post-title-link" href="/2016/03/14/nodeJs-iOnic-Config/" itemprop="url">
+                  iOnic Cordova Mac下的开发环境部署
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-03-14T13:53:17+08:00" content="2016-03-14">
+              2016-03-14
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/14/nodeJs-iOnic-Config/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/14/nodeJs-iOnic-Config/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="Install_Node-js">Install Node.js</h1><blockquote>
+<p>@author: Lyn </p>
+</blockquote>
+<h2 id="安装Mac软件安装管理器：HomeBrew">安装Mac软件安装管理器：HomeBrew</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ruby <span class="operator">-e</span> <span class="string">"<span class="variable">$(curl -fsSL -k https://raw.githubusercontent.com/Homebrew/install/master/install7)</span>"</span></span><br></pre></td></tr></table></figure>
+<h2 id="安装Node-js版本管理器_NVM">安装Node.js版本管理器 NVM</h2><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install nvm</span><br></pre></td></tr></table></figure>
+<h2 id="使用NVM安装Node-js">使用NVM安装Node.js</h2><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm install <span class="keyword">node</span><span class="identifier"> </span><span class="title">&amp;&amp; nvm</span> alias default <span class="keyword">node</span><span class="identifier"></span><span class="title"></span></span><br></pre></td></tr></table></figure>
+<h2 id="检查Node-js是否安装成功">检查Node.js是否安装成功</h2><p>在终端输入下面的命令检查Node和NPM的版本，安装成功的话会返回版本号：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line">v4<span class="number">.2</span><span class="number">.1</span></span><br><span class="line">npm -v</span><br><span class="line"><span class="number">2.14</span><span class="number">.7</span></span><br></pre></td></tr></table></figure>
+<h1 id="Install_Xcode">Install Xcode</h1><blockquote>
+<p>（iOS SDK）Apple 开发者网站可以下载Xcode 或者AppStore安装 </p>
+</blockquote>
+<h1 id="Install_Cordova,_Ionic">Install Cordova, Ionic</h1><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$sudo</span> npm install cordova ionic ios-sim -g</span><br></pre></td></tr></table></figure>
+<h1 id="Install_JAVA">Install JAVA</h1><p>Java SE Development  Kit</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/www.oracle.com/technetwork</span><span class="regexp">/java/javase</span><span class="regexp">/downloads/jdk</span>7-downloads-<span class="number">1880260</span>.html</span><br></pre></td></tr></table></figure>
+<h1 id="Install_Android_sdk">Install Android sdk</h1><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install <span class="keyword">android-sdk</span></span><br></pre></td></tr></table></figure>
+<h2 id="Android_Studio_(选装)">Android Studio (选装)</h2><blockquote>
+<p><a href="https://developer.android.com/sdk/index.html" target="_blank" rel="external">https://developer.android.com/sdk/index.html</a></p>
+</blockquote>
+<h1 id="Install_Git">Install Git</h1><p> 终端安装Git 如果安装过，请跳过。</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install git</span><br></pre></td></tr></table></figure>
+<p>如果是想更新Git版本：</p>
+<p>先安装：</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install git</span><br></pre></td></tr></table></figure>
+<p>然后新建一个目录，把原来的移动到这个目录去<br>命令如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo cd /usr/bin</span><br><span class="line">sudo mkdir old-git-<span class="number">1.7</span><span class="number">.5</span><span class="number">.4</span></span><br><span class="line">sudo mv git* old-git-<span class="number">1.7</span><span class="number">.5</span><span class="number">.4</span></span><br></pre></td></tr></table></figure>
+<h1 id="Install_Apache_Ant">Install Apache Ant</h1><blockquote>
+<p>还是使用 brew</p>
+</blockquote>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span>install ant</span><br></pre></td></tr></table></figure>
+<h1 id="Add_Android_sdk_in_your_path">Add Android sdk in your path</h1><blockquote>
+<p>在终端打开和编辑: “.bash_profile” - 添加以下变量:</p>
+</blockquote>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=$(/usr/libexec/java_home)</span><br><span class="line">export PATH=$&#123;JAVA_HOME&#125;/bin:<span class="variable">$PATH</span></span><br><span class="line">export PATH=/usr/local/bin:<span class="variable">$PATH</span></span><br><span class="line">export JAVA_HOME=<span class="string">"/usr/libexec/java_home -v '1.7*'"</span></span><br><span class="line">export ANDROID_HOME=/usr/local/opt/android-sdk</span><br></pre></td></tr></table></figure>
+<p>如果还安装了Android Studio，还需要添加这一行： </p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export <span class="constant">PATH=</span><span class="variable">$&#123;</span><span class="constant">PATH&#125;</span><span class="symbol">:/Applications/Android</span>\ <span class="constant">Studio.</span>app/sdk/platform-<span class="symbol">tools:</span>/<span class="constant">Applications/Android\</span> <span class="constant">Studio.</span>app/sdk/tools</span><br></pre></td></tr></table></figure>
+<h1 id="Restart_Ur_Mac">Restart Ur Mac</h1><p>或者使用这个命令重新加载环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.bash_profile</span><br></pre></td></tr></table></figure>
+<p>检查环境变量：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo $PATH </span><br><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>Library<span class="regexp">/Java/</span>JavaVirtualMachines<span class="regexp">/jdk1.7.0_79.jdk/</span>Contents<span class="regexp">/Home/</span><span class="string">bin:</span><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>Library<span class="regexp">/Java/</span>JavaVirtualMachines<span class="regexp">/jdk1.7.0_79.jdk/</span>Contents<span class="regexp">/Home/</span><span class="string">bin:</span><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>Library<span class="regexp">/Java/</span>JavaVirtualMachines<span class="regexp">/jdk1.7.0_79.jdk/</span>Contents<span class="regexp">/Home/</span><span class="string">bin:</span><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>usr<span class="regexp">/bin:/</span><span class="string">bin:</span><span class="regexp">/usr/</span><span class="string">sbin:</span><span class="regexp">/sbin:/</span>Development<span class="regexp">/android-sdk/</span>platform-<span class="string">tools:</span><span class="regexp">/Development/</span>android-sdk<span class="regexp">/tools:/</span>Development<span class="regexp">/android-sdk/</span><span class="string">tools:</span><span class="regexp">/Development/</span>android-sdk<span class="regexp">/tools:/</span>Development<span class="regexp">/android-sdk/</span><span class="string">tools:</span><span class="regexp">/Development/</span>android-sdk<span class="regexp">/tools:/</span>Development<span class="regexp">/android-sdk/</span>tools</span><br></pre></td></tr></table></figure>
+<h1 id="建立一个新的项目">建立一个新的项目</h1><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ionic <span class="built_in">start</span> oneApp</span><br><span class="line">$ cd oneApp</span><br><span class="line">$ ionic <span class="built_in">platform</span> <span class="built_in">add</span> ios</span><br><span class="line">$ ionic <span class="built_in">platform</span> <span class="built_in">add</span> android</span><br></pre></td></tr></table></figure>
+<p>编译这个空项目：</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">ionic</span> <span class="keyword">build </span>ios</span><br></pre></td></tr></table></figure>
+<p>启动模拟器来显示新建的项目：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ionic <span class="built_in">emulate</span> ios</span><br></pre></td></tr></table></figure>
+<p>如果遇到文件权限的问题，修改文件权限：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chmod -R <span class="number">777</span> ~/.yourfile</span><br></pre></td></tr></table></figure>
+<h1 id="其他的Cordova的命令：">其他的Cordova的命令：</h1><h2 id="Create_New_Project">Create New Project</h2> <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cordova create hello com.example.hello <span class="string">"HelloWorld"</span></span><br><span class="line"><span class="variable">$ </span>cd hello</span><br><span class="line"><span class="variable">$ </span>cordova platform add ios</span><br><span class="line"><span class="variable">$ </span>cordova prepare</span><br></pre></td></tr></table></figure>
+<h2 id="Deploy_the_app">Deploy the app</h2><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cordova build</span><br></pre></td></tr></table></figure>
+<h2 id="部署App到iOS设备:">部署App到iOS设备:</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cordova <span class="command">run</span> ios <span class="comment">--device</span></span><br></pre></td></tr></table></figure>
+<h2 id="部署App到iOS_xCode模拟器">部署App到iOS xCode模拟器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cordova <span class="built_in">emulate</span> ios</span><br></pre></td></tr></table></figure>
+<h2 id="查看所有可以用的模拟器列表">查看所有可以用的模拟器列表</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cordova <span class="command">run</span> ios <span class="comment">--list</span></span><br></pre></td></tr></table></figure>
+<h2 id="使用指定的手机模拟器">使用指定的手机模拟器</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cordova <span class="command">run</span> ios <span class="comment">--target=target_name  </span></span><br><span class="line">cordova <span class="command">run</span> ios <span class="comment">--target="iPhone-6") //指定使用iPhone6作为模拟器</span></span><br></pre></td></tr></table></figure>
+<h1 id="参考链接">参考链接</h1><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/ionicframework.com/getting</span>-started/</span><br><span class="line"><span class="symbol">http:</span>/<span class="regexp">/cordova.apache.org/docs</span><span class="regexp">/en/latest</span><span class="regexp">/guide/platforms</span><span class="regexp">/android/index</span>.html</span><br></pre></td></tr></table></figure>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/03/10/nodejs-gulp-01/" itemprop="url">
                   Node.js gulp notes
                 </a>
@@ -541,116 +675,6 @@
 <p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-8-20/71629308.jpg" alt=""></p>
 <h1 id="ES6中的实现">ES6中的实现</h1><p>ES6中 定义面向对象的类,只需要以class开头 然后是类型名,不再需要使用function关键字,只需方法名和圆括号.在constructor方法中定义的是这个类的构造函数.所有的属性和方法都会被添加到原型上.sayName和getOlder方法都是定义在Person.prototype上的.</p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Person&#123;</span><br><span class="line">	<span class="constructor"><span class="keyword">constructor</span>(name, age)</span>&#123;</span><br><span class="line">		<span class="keyword">public</span> name = name;</span><br><span class="line">		<span class="keyword">public</span> age  = age;</span><br><span class="line">		</span><br><span class="line">		sayName()&#123;</span><br><span class="line">			<span class="built_in">console</span>.log(<span class="keyword">this</span>.name);		</span><br><span class="line">		&#125;</span><br><span class="line">		getOlder(years)&#123;</span><br><span class="line">			<span class="keyword">this</span>.age += years;	</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/03/01/Untitled/" itemprop="url">
-                  gzip压缩JPEG的测试
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-03-01T23:02:37+08:00" content="2016-03-01">
-              2016-03-01
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/03/01/Untitled/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/01/Untitled/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//把714860.jpg用base64encode 以后保存在1.html文件中</span></span><br><span class="line">ls -l <span class="number">1.</span>html</span><br><span class="line">-rw-r—r—  <span class="number">1</span> Lyn  staff  <span class="number">1663962</span>  <span class="number">7</span> <span class="number">16</span> <span class="number">13</span>:<span class="number">34</span> <span class="number">1.</span>html</span><br><span class="line"></span><br><span class="line">ls -l <span class="number">1.</span>html.gz</span><br><span class="line">-rw-r—r—  <span class="number">1</span> Lyn  staff  <span class="number">1228057</span>  <span class="number">7</span> <span class="number">16</span> <span class="number">13</span>:<span class="number">34</span> <span class="number">1.</span>html.gz</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ls -l <span class="number">714860.</span>jpg</span><br><span class="line">-rw-r—r—  <span class="number">1</span> Lyn  staff  <span class="number">1247940</span>  <span class="number">7</span> <span class="number">16</span> <span class="number">11</span>:<span class="number">34</span> <span class="number">714860.</span>jpg</span><br><span class="line"></span><br><span class="line"><span class="comment">//gzip压缩jpg文件</span></span><br><span class="line"></span><br><span class="line">gzip <span class="number">714860.</span>jpg</span><br><span class="line">ls -l <span class="number">714860.</span>jpg.gz</span><br><span class="line">-rw-r—r—  <span class="number">1</span> Lyn  staff  <span class="number">1208091</span>  <span class="number">7</span> <span class="number">16</span> <span class="number">11</span>:<span class="number">34</span> <span class="number">714860.</span>jpg.gz</span><br></pre></td></tr></table></figure>
-<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-7-16/27621189.jpg" alt=""></p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>大小</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>jpg图片</td>
-<td>1247940</td>
-</tr>
-<tr>
-<td>jpg图片使用base64编码</td>
-<td>1663962</td>
-</tr>
-<tr>
-<td>gzip压缩base64编码的jpg</td>
-<td>1228057</td>
-</tr>
-<tr>
-<td>gzip压缩jpg图片</td>
-<td>1208091</td>
-</tr>
-</tbody>
-</table>
 
             
           </span>
