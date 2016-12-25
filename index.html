@@ -256,13 +256,14 @@
         
           <span itemprop="articleBody">
             
-              <h1 id="kcp">kcp</h1><p>项目地址:<a href="https://github.com/xtaci/kcptun" target="_blank" rel="external">https://github.com/xtaci/kcptun</a></p>
+              <h1 id="Kcptun">Kcptun</h1><p>项目地址:<a href="https://github.com/xtaci/kcptun" target="_blank" rel="external">https://github.com/xtaci/kcptun</a></p>
 <h1 id="效果:">效果:</h1><p>先看下效果:<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-12-25/58961318-file_1482679564423_934a.png" alt=""></p>
 <h2 id="运行逻辑:">运行逻辑:</h2><blockquote>
-<p>将TCP包转成加密的UDP包,浪费10~</p>
+<p>将TCP包转成加密的UDP包,能以比 TCP 浪费10%-20%的带宽的代价，换取平均延迟降低 30%-40%，且最大延迟降低三倍的传输效果。</p>
+<p>Kcptun 是KCP 协议的一个简单应用，可以用于任意 TCP 网络程序的传输承载，以提高网络流畅度，降低掉线情况。由于 Kcptun 使用 Go 语言编写，内存占用低（经测试，在64M内存服务器上稳定运行），而且适用于所有平台，甚至 Arm 平台。</p>
 </blockquote>
 <p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-12-25/72476905-file_1482677511680_6e9f.png" alt=""></p>
-<h1 id="服务端自动安装">服务端自动安装</h1><p>SS+kcp 一键安装脚本:</p>
+<h1 id="服务端自动安装">服务端自动安装</h1><p>kcptun 一键安装脚本:</p>
 <h2 id="kcp-server:">kcp-server:</h2><blockquote>
 <p><a href="https://github.com/clangcn/kcp-server" target="_blank" rel="external">https://github.com/clangcn/kcp-server</a></p>
 </blockquote>
