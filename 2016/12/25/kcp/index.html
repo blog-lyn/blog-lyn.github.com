@@ -1,0 +1,758 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+
+  <meta name="description" content="Lyn's Blog about Node.js  Express.js Angular.js HTML5 Mongodb Programing Notes" />
+
+
+
+
+  <meta name="keywords" content="Lyn's blog" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="kcp项目地址:https://github.com/xtaci/kcptun
+效果:先看下效果:
+运行逻辑:
+将TCP包转成加密的UDP包,浪费10~
+
+
+服务端自动安装SS+kcp 一键安装脚本:
+kcp-server:
+https://github.com/clangcn/kcp-server
+
+Install123wget --no-check-certificate https://gi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kcp-config">
+<meta property="og:url" content="http://lyn.s76.org/2016/12/25/kcp/index.html">
+<meta property="og:site_name" content="Lyn's Blog">
+<meta property="og:description" content="kcp项目地址:https://github.com/xtaci/kcptun
+效果:先看下效果:
+运行逻辑:
+将TCP包转成加密的UDP包,浪费10~
+
+
+服务端自动安装SS+kcp 一键安装脚本:
+kcp-server:
+https://github.com/clangcn/kcp-server
+
+Install123wget --no-check-certificate https://gi">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-12-25/58961318-file_1482679564423_934a.png">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-12-25/72476905-file_1482677511680_6e9f.png">
+<meta property="og:updated_time" content="2016-12-25T15:50:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kcp-config">
+<meta name="twitter:description" content="kcp项目地址:https://github.com/xtaci/kcptun
+效果:先看下效果:
+运行逻辑:
+将TCP包转成加密的UDP包,浪费10~
+
+
+服务端自动安装SS+kcp 一键安装脚本:
+kcp-server:
+https://github.com/clangcn/kcp-server
+
+Install123wget --no-check-certificate https://gi">
+<meta name="twitter:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-12-25/58961318-file_1482679564423_934a.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> kcp-config | Lyn's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-36568696-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lyn's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Node.js Angular.js Express.js HTML5 Mongodb Programing Notes</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                kcp-config
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-12-25T22:10:21+08:00" content="2016-12-25">
+              2016-12-25
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/12/25/kcp/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/25/kcp/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="kcp">kcp</h1><p>项目地址:<a href="https://github.com/xtaci/kcptun" target="_blank" rel="external">https://github.com/xtaci/kcptun</a></p>
+<h1 id="效果:">效果:</h1><p>先看下效果:<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-12-25/58961318-file_1482679564423_934a.png" alt=""></p>
+<h2 id="运行逻辑:">运行逻辑:</h2><blockquote>
+<p>将TCP包转成加密的UDP包,浪费10~</p>
+</blockquote>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-12-25/72476905-file_1482677511680_6e9f.png" alt=""></p>
+<h1 id="服务端自动安装">服务端自动安装</h1><p>SS+kcp 一键安装脚本:</p>
+<h2 id="kcp-server:">kcp-server:</h2><blockquote>
+<p><a href="https://github.com/clangcn/kcp-server" target="_blank" rel="external">https://github.com/clangcn/kcp-server</a></p>
+</blockquote>
+<h3 id="Install">Install</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">wget --no-check-certificate https://github.com/clangcn/kcp-server/raw/master/install-kcp-server.sh -O ./install-kcp-server.sh</div><div class="line">chmod 500 ./install-kcp-server.sh</div><div class="line">./install-kcp-server.sh install</div></pre></td></tr></table></figure>
+<h3 id="UnInstall">UnInstall</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./install-kcp-server.sh uninstall</div></pre></td></tr></table></figure>
+<h3 id="Update">Update</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./install-kcp-server.sh update</div></pre></td></tr></table></figure>
+<h3 id="服务器管理">服务器管理</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Usage: /etc/init.d/kcp-server &#123;start|stop|restart|status&#125;</div></pre></td></tr></table></figure>
+<h1 id="手动安装">手动安装</h1><p>步骤:</p>
+<ol>
+<li>使用<code>wget</code>下载解压到有权限的目录,可以使用 <code>chown</code>改变文件夹所有者为自己解决权限问题,</li>
+<li>给解压出来的程序添加运行权限<code>chmod +x ./server_linux_amd64</code>.</li>
+<li>开放TCP要使用的防火墙的端口.<code>UDP</code>和<code>TCP</code>都打开</li>
+<li>在解压目录下配置配置文件 config.json,配置本地的ss服务器地址为<code>127.0.0.1</code></li>
+<li>在服务上增加启动脚本<code>start.sh</code></li>
+<li>rc.local中设置开机任务</li>
+</ol>
+<h2 id="关于下载:">关于下载:</h2><p>分别在sever上和client端下载对应的版本,每个压缩包里都包含一个可以运行的客户端和服务端(client_linux_amd64和server_linux_amd64).</p>
+<p>比如:</p>
+<ul>
+<li>server上使用wget下载linux版本(kcptun-linux-amd64-20161222.tar.gz,并使用./server_linux_amd64 运行),</li>
+<li>本地使用的Mac的编译版本 (kcptun-darwin-amd64-20161222.tar.gz)</li>
+</ul>
+<p>Ps:</p>
+<ul>
+<li>下载地址: <a href="https://github.com/xtaci/kcptun/releases" target="_blank" rel="external">https://github.com/xtaci/kcptun/releases</a> </li>
+<li>注意 sever和client上的版本需要一致.</li>
+</ul>
+<h2 id="关于配置防火墙">关于配置防火墙</h2><h3 id="配置iptables的方式">配置iptables的方式</h3><p>在/etc/iptables.firewall.rules 中增加</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">-A INPUT -<span class="selector-tag">p</span> udp --dport 你的vRay2端口 -j ACCEPT</div></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo iptables-restore &lt; /etc/iptables<span class="selector-class">.firewall</span><span class="selector-class">.rules</span> <span class="comment">//加载配置的iptables 规则</span></div><div class="line"></div><div class="line">sudo iptables -L  <span class="comment">//查看是否配置生效</span></div></pre></td></tr></table></figure>
+<h3 id="ufw配置防火墙">ufw配置防火墙</h3><p>如果觉得iptable太麻烦可以使用ufw<br>首先，用如下命令来检查下系统上是否已经安装了 UFW 。</p>
+<ul>
+<li><code>$ sudo dpkg --get-selections | grep ufw</code></li>
+</ul>
+<p>如还没有安装，可以使用 apt 命令来安装，如下所示：</p>
+<ul>
+<li><code>$ sudo apt-get install ufw</code></li>
+</ul>
+<h4 id="常用命令:">常用命令:</h4><figure class="highlight sqf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">sudo ufw  status        <span class="comment">//查询显示ufw状态以及规则</span></div><div class="line">sudo ufw  enable|disable|<span class="built_in">reload</span> <span class="comment">//启动\关闭\重启</span></div><div class="line">sudo ufw logging on|off|LEVEL   <span class="comment">//日志 启动\关闭\级别</span></div><div class="line"></div><div class="line"><span class="keyword">To</span>                      <span class="built_in">Action</span>      <span class="keyword">From</span></div><div class="line">--                     ------      ----</div><div class="line"><span class="number">24</span>                      ALLOW       Anywhere</div></pre></td></tr></table></figure>
+<h4 id="配置端口:">配置端口:</h4><figure class="highlight vala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta"># 把25替换成你的v2ray端口</span></div><div class="line">ufw allow <span class="number">25</span>/udp </div><div class="line"></div><div class="line"><span class="meta"># 可以使用这个命令为动态端口需要开放一段端口(这个例子中是12290~12300这个10个端口) </span></div><div class="line">sudo ufw allow <span class="number">12290</span>:<span class="number">12300</span>/udp </div><div class="line"></div><div class="line"><span class="meta">#检查是否生效</span></div><div class="line">sudo ufw  status</div></pre></td></tr></table></figure>
+<h2 id="关于kcp配置参数:">关于kcp配置参数:</h2><h3 id="两端参数必须一致的有:">两端参数必须一致的有:</h3><ul>
+<li>datashard –前向纠错 默认 10</li>
+<li>parityshard –前向纠错 默认 3</li>
+<li>nocomp –是否关闭压缩 默认 false</li>
+<li>key –密钥 建议自己设置</li>
+<li>crypt –加密算法 建议使用aes128以上的加密方式</li>
+</ul>
+<p>其余为两边可独立设定的参数</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">GLOBAL OPTIONS:</div><div class="line">   --localaddr <span class="keyword">value</span>, -<span class="function">l <span class="keyword">value</span>   local listen <span class="title">address</span> (<span class="params"><span class="keyword">default</span>: <span class="string">":12948"</span></span>)</span></div><div class="line">   --remoteaddr <span class="keyword">value</span>, -r <span class="keyword">value</span>  kcp server <span class="title">address</span> (<span class="params"><span class="keyword">default</span>: <span class="string">"vps:29900"</span></span>)</div><div class="line">   --key <span class="keyword">value</span>                   pre-shared secret between client and <span class="title">server</span> (<span class="params"><span class="keyword">default</span>: <span class="string">"it's a secrect"</span></span>) [$KCPTUN_KEY]</div><div class="line">   --crypt <span class="keyword">value</span>                 aes, aes-128, aes-192, salsa20, blowfish, twofish, cast5, 3des, tea, xtea, xor, <span class="title">none</span> (<span class="params"><span class="keyword">default</span>: <span class="string">"aes"</span></span>)</div><div class="line">   --mode <span class="keyword">value</span>                  profiles: fast3, fast2, fast, <span class="title">normal</span> (<span class="params"><span class="keyword">default</span>: <span class="string">"fast"</span></span>)</div><div class="line">   --conn <span class="keyword">value</span>                  <span class="keyword">set</span> num of UDP connections to <span class="title">server</span> (<span class="params"><span class="keyword">default</span>: <span class="number">1</span></span>)</div><div class="line">   --autoexpire <span class="keyword">value</span>            <span class="keyword">set</span> auto expiration <span class="title">time</span>(<span class="params"><span class="keyword">in</span> seconds</span>) <span class="keyword">for</span> a single UDP connection, 0 to <span class="title">disable</span> (<span class="params"><span class="keyword">default</span>: <span class="number">0</span></span>)</div><div class="line">   --mtu <span class="keyword">value</span>                   <span class="keyword">set</span> maximum transmission unit <span class="keyword">for</span> UDP <span class="title">packets</span> (<span class="params"><span class="keyword">default</span>: <span class="number">1350</span></span>)</div><div class="line">   --sndwnd <span class="keyword">value</span>                <span class="keyword">set</span> send window <span class="title">size</span>(<span class="params">num of packets</span>) (<span class="params"><span class="keyword">default</span>: <span class="number">128</span></span>)</div><div class="line">   --rcvwnd <span class="keyword">value</span>                <span class="keyword">set</span> receive window <span class="title">size</span>(<span class="params">num of packets</span>) (<span class="params"><span class="keyword">default</span>: <span class="number">1024</span></span>)</div><div class="line">   --datashard <span class="keyword">value</span>             <span class="keyword">set</span> reed-solomon erasure coding - <span class="title">datashard</span> (<span class="params"><span class="keyword">default</span>: <span class="number">10</span></span>)</div><div class="line">   --parityshard <span class="keyword">value</span>           <span class="keyword">set</span> reed-solomon erasure coding - <span class="title">parityshard</span> (<span class="params"><span class="keyword">default</span>: <span class="number">3</span></span>)</div><div class="line">   --dscp <span class="keyword">value</span>                  <span class="keyword">set</span> <span class="title">DSCP</span>(<span class="params"><span class="number">6</span>bit</span>) (<span class="params"><span class="keyword">default</span>: <span class="number">0</span></span>)</div><div class="line">   --nocomp                      disable compression</div><div class="line">   --log <span class="keyword">value</span>                   specify a log file to output, <span class="keyword">default</span> goes to stderr</div><div class="line">   -c <span class="keyword">value</span>                      config <span class="keyword">from</span> json file, which will <span class="keyword">override</span> the command <span class="keyword">from</span> shell</div><div class="line">   --help, -h                    show help</div><div class="line">   --version, -v                 print the version</div></pre></td></tr></table></figure>
+<h3 id="简易窗口自我调优方法：">简易窗口自我调优方法：</h3><ul>
+<li>第一步：同时在两端逐步增大client rcvwnd和server sndwnd;</li>
+<li>第二步：尝试下载，观察如果带宽利用率（服务器＋客户端两端都要观察）接近物理带宽则停止，否则跳转到第一步。</li>
+</ul>
+<p>Ps: 建议调整到能正常观看油管的程度就可以了,不要设置太高的client rcvwnd和server sndwnd 不然很容易被运营商封端口.(我这边电信只需要设置server的sndwnd:1024就可以实现观看10000kps的速度了)</p>
+<h3 id="SS的设置">SS的设置</h3><p>SS设置只需要把原来配置中ss服务器IP替换成<code>127.0.0.1</code>即可, 因为KCP会监听config.json中localaddr字段设置的本地的SS端口,并自动转发到服务器端的端口上.</p>
+<h3 id="客户端的config-json">客户端的config.json</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="string">"localaddr"</span>: <span class="string">":8888"</span>, <span class="comment">//本地需要被加速的端口</span></div><div class="line">  <span class="string">"remoteaddr"</span>: <span class="string">"服务端的ip地址:18888"</span>,<span class="comment">//服务端的kcp端口</span></div><div class="line">  <span class="string">"key"</span>: <span class="string">"你在服务器端设置的秘钥"</span>,</div><div class="line">  <span class="string">"crypt"</span>: <span class="string">"salsa20"</span>,<span class="comment">//加密方式 需要和服务器端一致</span></div><div class="line">  <span class="string">"mode"</span>: <span class="string">"fast"</span>,<span class="comment">//重传的频率 一般设置fast就可以了 重传的越多约浪费流量 响应就越快</span></div><div class="line">  <span class="string">"mtu"</span>: <span class="number">1350</span>,</div><div class="line">  <span class="string">"sndwnd"</span>: <span class="number">256</span>,</div><div class="line">  <span class="string">"rcvwnd"</span>: <span class="number">2048</span>,</div><div class="line">  <span class="string">"datashard"</span>:<span class="number">10</span>,</div><div class="line">  <span class="string">"parityshard"</span>: <span class="number">3</span>,</div><div class="line">  <span class="string">"dscp"</span>: <span class="number">0</span>,</div><div class="line">  <span class="string">"conn"</span>: <span class="number">1</span>,</div><div class="line">  <span class="string">"autoexpire"</span>: <span class="number">60</span>,</div><div class="line">  <span class="string">"nocomp"</span>: <span class="literal">false</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="服务端的config-json">服务端的config.json</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="string">"listen"</span>: <span class="string">"服务器的ip地址:18888"</span>,</div><div class="line">    <span class="string">"target"</span>: <span class="string">"127.0.0.1:8888"</span>,<span class="comment">//服务端的kcp端口</span></div><div class="line">    <span class="string">"key"</span>: <span class="string">"你的秘钥"</span>,<span class="comment">//加密方式 需要和客户端端一致</span></div><div class="line">    <span class="string">"crypt"</span>: <span class="string">"salsa20"</span>,<span class="comment">//加密方式 需要和服务器端一致</span></div><div class="line">    <span class="string">"mode"</span>: <span class="string">"fast"</span>,<span class="comment">//重传的频率 一般设置fast就可以了 重传的越多约浪费流量 响应就越快</span></div><div class="line">    <span class="string">"mtu"</span>: <span class="number">1350</span>,</div><div class="line">    <span class="string">"sndwnd"</span>: <span class="number">1024</span>,</div><div class="line">    <span class="string">"rcvwnd"</span>: <span class="number">2048</span>,</div><div class="line">    <span class="string">"datashard"</span>: <span class="number">10</span>,</div><div class="line">    <span class="string">"parityshard"</span>: <span class="number">3</span>,</div><div class="line">    <span class="string">"dscp"</span>: <span class="number">0</span>,</div><div class="line">    <span class="string">"nocomp"</span>: <span class="literal">false</span>,</div><div class="line">    <span class="string">"acknodelay"</span>: <span class="literal">false</span>,</div><div class="line">    <span class="string">"nc"</span>: <span class="number">1</span>,</div><div class="line">    <span class="string">"sockbuf"</span>: <span class="number">4194304</span>,</div><div class="line">    <span class="string">"keepalive"</span>: <span class="number">10</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="启动脚本:">启动脚本:</h2><p>为了方便我们用vi写一个非常简单的启动脚本 命名为start.sh:</p>
+<ol>
+<li><p><code>vim start.sh</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line">/你的kcp路径/server_linux_amd64 -c /你的配置文件路径/config.json</div></pre></td></tr></table></figure>
+</li>
+<li><p>给sh脚本增加运行权限:<code>chmod +x start.sh</code></p>
+</li>
+<li><p>编辑/etc/rc.local文件,增加一行:</p>
+</li>
+</ol>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="regexp">/你的kcp路径/</span>start.sh &amp;&gt;<span class="regexp">/dev/</span><span class="keyword">null</span> &amp;</div></pre></td></tr></table></figure></span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/22/v2ray-config/" rel="next" title="v2ray-config">
+                <i class="fa fa-chevron-left"></i> v2ray-config
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/12/25/kcp/"
+           data-title="kcp-config" data-url="http://lyn.s76.org/2016/12/25/kcp/">
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/author.png" alt="Lyn's Blog" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Lyn's Blog</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Lyn's Blog about Node.js  Express.js Angular.js HTML5 Mongodb Programing Notes</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">55</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#kcp"><span class="nav-number">1.</span> <span class="nav-text">kcp</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#效果:"><span class="nav-number">2.</span> <span class="nav-text">效果:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#运行逻辑:"><span class="nav-number">2.1.</span> <span class="nav-text">运行逻辑:</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#服务端自动安装"><span class="nav-number">3.</span> <span class="nav-text">服务端自动安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#kcp-server:"><span class="nav-number">3.1.</span> <span class="nav-text">kcp-server:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Install"><span class="nav-number">3.1.1.</span> <span class="nav-text">Install</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UnInstall"><span class="nav-number">3.1.2.</span> <span class="nav-text">UnInstall</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Update"><span class="nav-number">3.1.3.</span> <span class="nav-text">Update</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务器管理"><span class="nav-number">3.1.4.</span> <span class="nav-text">服务器管理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#手动安装"><span class="nav-number">4.</span> <span class="nav-text">手动安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于下载:"><span class="nav-number">4.1.</span> <span class="nav-text">关于下载:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于配置防火墙"><span class="nav-number">4.2.</span> <span class="nav-text">关于配置防火墙</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置iptables的方式"><span class="nav-number">4.2.1.</span> <span class="nav-text">配置iptables的方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ufw配置防火墙"><span class="nav-number">4.2.2.</span> <span class="nav-text">ufw配置防火墙</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#常用命令:"><span class="nav-number">4.2.2.1.</span> <span class="nav-text">常用命令:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置端口:"><span class="nav-number">4.2.2.2.</span> <span class="nav-text">配置端口:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于kcp配置参数:"><span class="nav-number">4.3.</span> <span class="nav-text">关于kcp配置参数:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#两端参数必须一致的有:"><span class="nav-number">4.3.1.</span> <span class="nav-text">两端参数必须一致的有:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简易窗口自我调优方法："><span class="nav-number">4.3.2.</span> <span class="nav-text">简易窗口自我调优方法：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SS的设置"><span class="nav-number">4.3.3.</span> <span class="nav-text">SS的设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端的config-json"><span class="nav-number">4.3.4.</span> <span class="nav-text">客户端的config.json</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务端的config-json"><span class="nav-number">4.3.5.</span> <span class="nav-text">服务端的config.json</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动脚本:"><span class="nav-number">4.4.</span> <span class="nav-text">启动脚本:</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2011 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lyn's Blog</span>
+</div>
+
+<div class="powered-by">
+  <a class="theme-link" href="http://hexo.io">Powered by Hexo
+  </a>
+</div>
+
+<div class="theme-info">
+  
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"blog-lyn"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+
+    
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
