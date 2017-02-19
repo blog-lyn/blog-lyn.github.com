@@ -211,6 +211,237 @@
             
             
               
+                <a class="post-title-link" href="/2017/02/19/generator-yield/" itemprop="url">
+                  Generators  入门
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2017-02-19T22:20:18+08:00" content="2017-02-19">
+              2017-02-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/02/19/generator-yield/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/19/generator-yield/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>相比起ES6中引入的其他概念 Generator 算是一个比较难以理解的 <code>黑科技</code>了.</p>
+<p>Generator的引入使得js中的异步调用语法更像是同步语法.但是yield 一开始接触的时候,总给人感觉难以理解.</p>
+<p>今天总结下Generator的用法.</p>
+<h1 id="配置环境">配置环境</h1><h2 id="package-json">package.json</h2><p>为了在node中使用es6语法,先创建package.json,用babel来转换es6语法</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"name"</span>: <span class="string">"generator"</span>,</div><div class="line">  <span class="attr">"version"</span>: <span class="string">"1.0.0"</span>,</div><div class="line">  <span class="attr">"description"</span>: <span class="string">"about generator"</span>,</div><div class="line">  <span class="attr">"main"</span>: <span class="string">"main.js"</span>,</div><div class="line">  <span class="attr">"scripts"</span>: &#123;</div><div class="line">    <span class="attr">"start"</span>: <span class="string">"babel-node main.js"</span>,</div><div class="line">    <span class="attr">"build"</span>: <span class="string">"babel src --out-dir lib"</span></div><div class="line">  &#125;,</div><div class="line">  <span class="attr">"author"</span>: <span class="string">""</span>,</div><div class="line">  <span class="attr">"license"</span>: <span class="string">"MIT"</span>,</div><div class="line">  <span class="attr">"dependencies"</span>: &#123;</div><div class="line">    <span class="attr">"node-fetch"</span>: <span class="string">"^1.6.3"</span></div><div class="line">  &#125;,</div><div class="line">  <span class="attr">"devDependencies"</span>: &#123;</div><div class="line">    <span class="attr">"babel-cli"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-core"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-es2015-destructuring"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-es2015-modules-commonjs"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-es2015-parameters"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-es2015-spread"</span>: <span class="string">"^6.8.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-strict-mode"</span>: <span class="string">"^6.18.0"</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="-babelrc">.babelrc</h2><p>和package.json同一级目录下的<code>.babelrc</code> 是babel的配置文件.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"plugins"</span>: [</div><div class="line">    <span class="string">"transform-strict-mode"</span>,</div><div class="line">    <span class="string">"transform-es2015-modules-commonjs"</span>,</div><div class="line">    <span class="string">"transform-es2015-spread"</span>,</div><div class="line">    <span class="string">"transform-es2015-destructuring"</span>,</div><div class="line">    <span class="string">"transform-es2015-parameters"</span></div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="从一个简单的异步调用开始">从一个简单的异步调用开始</h1><p>除了<code>generator</code>,es6中还引入了<code>promise</code>,我们先使用<code>promise</code>和<code>fetch</code> 来实现一个简单的异步调用</p>
+<p>关于<code>fetch</code>是xhr的升级实现:</p>
+<ul>
+<li>对generator/yield，async/await 更加友好,它将返回结果包装在promise中.</li>
+<li>提供了对response.json()的转换方法提供对json数据的原生支持.</li>
+<li>更多细节参考:<code>https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch</code></li>
+</ul>
+<h2 id="promise异步调用代码如下:">promise异步调用代码如下:</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> fetch = <span class="built_in">require</span>(<span class="string">'node-fetch'</span>);</div><div class="line"></div><div class="line">fetch(<span class="string">'http://jsonplaceholder.typicode.com/posts/1'</span>)</div><div class="line"> .then(<span class="function"><span class="params">response</span> =&gt;</span> response.json())</div><div class="line"> .then(<span class="function"><span class="params">post</span> =&gt;</span> post.title)</div><div class="line"> .then(<span class="function"><span class="params">x</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'Title is:'</span>, x))</div></pre></td></tr></table></figure>
+<h3 id="运行:">运行:</h3><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">bash-<span class="number">3.2</span>$ npm <span class="literal">start</span></div><div class="line"></div><div class="line">&gt; generator@<span class="number">1.0</span>.<span class="number">0</span> <span class="literal">start</span> </div><div class="line">&gt; babel-<span class="keyword">node</span> <span class="title">main</span>.js</div><div class="line"></div><div class="line">Title is: sunt aut facere repellat provident occaecati excepturi optio reprehenderit</div></pre></td></tr></table></figure>
+<h2 id="试试generator_:">试试generator :</h2><h3 id="引入co">引入<code>co</code></h3><p><code>npm install co --save</code></p>
+<figure class="highlight qml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> fetch = <span class="built_in">require</span>(<span class="string">'node-fetch'</span>);</div><div class="line"><span class="keyword">const</span> co = <span class="built_in">require</span>(<span class="string">'co'</span>);</div><div class="line"></div><div class="line">co(<span class="function"><span class="keyword">function</span>* (<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> <span class="built_in">url</span> = <span class="string">'http://jsonplaceholder.typicode.com/posts/1'</span>;</div><div class="line">  <span class="keyword">const</span> response = <span class="keyword">yield</span> fetch(<span class="built_in">url</span>);</div><div class="line">  <span class="keyword">const</span> post = <span class="keyword">yield</span> response.json();</div><div class="line">  <span class="keyword">const</span> title = post.title;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'Title is:'</span>, title);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h3 id="运行结果:">运行结果:</h3><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">bash-<span class="number">3.2</span>$ npm <span class="literal">start</span></div><div class="line"></div><div class="line">&gt; generator@<span class="number">1.0</span>.<span class="number">0</span> <span class="literal">start</span>  </div><div class="line">&gt; babel-<span class="keyword">node</span> <span class="title">main</span>.js</div><div class="line"></div><div class="line">Title is: sunt aut facere repellat provident occaecati excepturi optio reprehenderit</div><div class="line">bash-<span class="number">3.2</span>$</div></pre></td></tr></table></figure>
+<h2 id="实现一个函数取代co">实现一个函数取代<code>co</code></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> fetch = <span class="built_in">require</span>(<span class="string">'node-fetch'</span>);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">run</span>(<span class="params">generator</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> iterator = generator();</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'iterator:'</span>, iterator);</div><div class="line">  <span class="keyword">const</span> iteration = iterator.next();</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'iteration:'</span>, iteration);</div><div class="line">  <span class="keyword">const</span> promise = iteration.value;</div><div class="line">  promise.then(<span class="function">(<span class="params">response</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">const</span> anotherIterator = iterator.next(response);</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'anotherIterator :'</span>, anotherIterator);</div><div class="line">    <span class="keyword">const</span> anotherPromise = anotherIterator.value;</div><div class="line">    anotherPromise.then(<span class="function"><span class="params">post</span> =&gt;</span> iterator.next(post));</div><div class="line">  &#125;)</div><div class="line">&#125;</div><div class="line"></div><div class="line">run(<span class="function"><span class="keyword">function</span>* (<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> url = <span class="string">'http://jsonplaceholder.typicode.com/posts/1'</span>;</div><div class="line">  <span class="keyword">const</span> response = <span class="keyword">yield</span> fetch(url);</div><div class="line">  <span class="keyword">const</span> post = <span class="keyword">yield</span> response.json();</div><div class="line">  <span class="keyword">const</span> title = post.title;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'Title is:'</span>, title);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h3 id="运行结果">运行结果</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">bash<span class="number">-3.2</span>$ npm start</div><div class="line"></div><div class="line">&gt; generator@<span class="number">1.0</span><span class="number">.0</span> start  </div><div class="line">&gt; babel-node main.js</div><div class="line"><span class="symbol"></span></div><div class="line">iterator: &#123;&#125;</div><div class="line"><span class="string">iteration:</span> &#123; <span class="string">value:</span> Promise &#123; &lt;pending&gt; &#125;, <span class="string">done:</span> <span class="literal">false</span> &#125;</div><div class="line"><span class="string">anotherIterator :</span> &#123; <span class="string">value:</span> Promise &#123; &lt;pending&gt; &#125;, <span class="string">done:</span> <span class="literal">false</span> &#125;</div><div class="line">Title <span class="string">is:</span> sunt aut facere repellat provident occaecati excepturi optio reprehenderit</div></pre></td></tr></table></figure>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/2017/02/14/redux-saga-js/" itemprop="url">
+                  redux-saga的简单入门
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2017-02-14T21:37:45+08:00" content="2017-02-14">
+              2017-02-14
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/02/14/redux-saga-js/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/14/redux-saga-js/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="Redux-saga">Redux-saga</h1><p>在之前的blog中,我们在react应用中把油副作用的部分都放在了action函数中,把异步调用包装成一个thunk 函数.也能满足我们实际的需求,那为什么还需要redux-saga呢?</p>
+<ol>
+<li>redux-sage的异步调用部分,都是很标准的依赖注入(<code>dependencies injection</code>)的写法</li>
+<li>因为有依赖注入的写法,我们可以很方便的在单元测试中使用一些fake函数来模拟异步调用.</li>
+<li>综上saga实际上是在testablity上比thunk来处理异步更有优势.</li>
+<li>由于使用了generator函数, 所以可以在局部保持一个state 来实现一些thunk不太方便实现的功能.</li>
+<li>代码看上去更加类似同步编程(<code>sync</code>)</li>
+</ol>
+<p>劣势:</p>
+<ol>
+<li><code>generator</code> 和 <code>yield</code>的概念,无疑增加团队的学习成本.  </li>
+</ol>
+<h1 id="安装">安装</h1><p>很简单: <code>npm intsall redux-saga --save</code></p>
+<h1 id="middleWare">middleWare</h1><p>为了拦截到指定的action,我们需要在middleware中监听指定的<code>action.type</code></p>
+<p>所以我们在createStore时候需要在middleware中加入 redux-saga</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123;</div><div class="line">  applyMiddleware,</div><div class="line">  createStore,</div><div class="line">&#125; <span class="keyword">from</span> <span class="string">'redux'</span>;</div><div class="line"><span class="keyword">import</span> createSageMiddleWare <span class="keyword">from</span> <span class="string">'redux-saga'</span>;</div><div class="line"><span class="keyword">import</span> logger <span class="keyword">from</span> <span class="string">'redux-logger'</span>;</div><div class="line"> </div><div class="line"><span class="keyword">import</span> reducer <span class="keyword">from</span> <span class="string">'./reducers'</span>;</div><div class="line"><span class="keyword">import</span> rootSaga <span class="keyword">from</span> <span class="string">'./services/sagas'</span>;</div><div class="line"></div><div class="line"><span class="comment">// 创建saga中间件实例</span></div><div class="line"><span class="keyword">const</span> sagaMiddleware = createSageMiddleWare();</div><div class="line"><span class="comment">// 将saga中间件合并到redux中间件数组集合中.</span></div><div class="line"><span class="keyword">const</span> middleware = applyMiddleware(sagaMiddleware, logger());</div><div class="line"></div><div class="line"><span class="comment">//依赖于 reducers和 中间件来创建一个Store.</span></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> createStore(reducer, middleware);</div><div class="line"></div><div class="line"><span class="comment">// 需要在创建Store以后通过run()方法调用rootSaga</span></div><div class="line">sagaMiddleware.run(rootSaga);</div></pre></td></tr></table></figure>
+<h1 id="sagas">sagas</h1><ul>
+<li>我们先把<code>rootsaga</code> <code>watchsaga</code> <code>workersaga</code> 写在一个文件中 <code>./services/sagas.js</code></li>
+<li>当文件大了以后可以进行拆分.</li>
+<li>调用顺序如下:</li>
+</ul>
+<ol>
+<li>rootsaga 被middleware调用 </li>
+<li><code>rootsaga</code>中<code>yield</code>引用 <code>watchsaga</code></li>
+<li><code>watchsaga</code>中调用具体的<code>worker</code>来执行异步操作. </li>
+</ol>
+<h2 id="常用Api:">常用Api:</h2><ul>
+<li><code>take</code> 获取指定类型(action.type)的action.</li>
+<li><code>takeEvery</code> 多个action 每个都会触发.</li>
+<li><code>takelatest</code> 多个action时,只执行最后一个,自动cancel前面take的actions</li>
+<li><code>call</code> 阻塞式异步调用,第一个参数是要调用的generator函数,后面的参数是传递的参数.会阻塞直到promise返回结果.如果阻塞时有其他action,那么这些action都会错过,不会被执行.</li>
+<li><code>fork</code> 非阻塞时调用,可以理解为子任务单独处理.每个action都会得到处理,不会错过执行的时机.</li>
+<li><code>put</code>  相当于是<code>disptach</code>函数,用于在generator中dispatch <code>action</code></li>
+<li><code>cancel</code>  可以取消fork出来的子任务, 将在当前执行的任务中抛出一个 SagaCancellationException 类型的异常,可以通过try catch捕捉到,但是这个错误并不会向上冒泡.</li>
+<li><code>race</code> 返回先完成的任务,自动cancel其他的.参考如下:</li>
+</ul>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; race, take, <span class="built_in">put</span> &#125; from <span class="string">'redux-saga/effects'</span></div><div class="line"></div><div class="line">function* fetchPostsWithTimeout() &#123;</div><div class="line">  <span class="keyword">const</span> &#123;posts, timeout&#125; = <span class="built_in">yield</span> race(&#123;</div><div class="line">    posts   : call(fetchApi, <span class="string">'/posts'</span>),</div><div class="line">    timeout : call(<span class="built_in">delay</span>, <span class="number">1000</span>)</div><div class="line">  &#125;)</div><div class="line"></div><div class="line">  <span class="built_in">if</span>(posts)</div><div class="line">    <span class="built_in">put</span>(&#123;type: <span class="string">'POSTS_RECEIVED'</span>, posts&#125;)</div><div class="line">  <span class="built_in">else</span></div><div class="line">    <span class="built_in">put</span>(&#123;type: <span class="string">'TIMEOUT_ERROR'</span>&#125;)</div><div class="line">&#125;</div><div class="line">``` </div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#<span class="meta"># rootsaga</span></div><div class="line"></div><div class="line">这里<span class="built_in">yield</span>了一个数组,素组中的generator是并发执行的.不会相互影响.</div></pre></td></tr></table></figure>
+<p>import { take, fork, call, put } from ‘redux-saga/effects’;<br>import { takeEvery } from ‘redux-saga’;</p>
+<p>export default function* rootSaga() {<br>  yield [<br>    watchPostRequests(),<br>  ];<br>}<br><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">## watchsaga</div><div class="line"></div><div class="line">监听`FETCH_POSTS `类型的action.并且调用fetchPost函数.</div></pre></td></tr></table></figure></p>
+<p>function* watchPostRequests() {<br>  yield takeEvery(‘FETCH_POSTS’, fetchPost);<br>}<br><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">`takeEvery` 与下面的`while(<span class="literal">true</span>)&#123; yield fork()&#125;`的写法实现同样效果.</div></pre></td></tr></table></figure></p>
+<p> //The watcher: watch actions and coordinate worker tasks<br> function* watchPostRequests() {<br>  while (true) {<br>     const url = ‘/api/posts’;<br>     const action = yield take(‘FETCH_POSTS’);<br>      console.log(‘catch action from dispatch’, action);<br>      yield fork(fetchPost, url);<br>    }<br> }<br><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">## workersaga</div><div class="line"></div><div class="line">使用`call`阻塞式的执行异步调用.直到返回结果后使用`put`来dispatch action.</div></pre></td></tr></table></figure></p>
+<p>import axios from ‘axios’;</p>
+<p>// The worker: perform the requested task<br>function* fetchPost(action) {<br>  try {<br>    console.log(‘catch action from dispatch’, action);<br>    yield put({ type: ‘FETCH_POSTS_PENDING’ });<br>    const res = yield call(axios.get, ‘/api/posts’);<br>    yield put({<br>      type: ‘FETCH_POSTS_FULFILLED’,<br>      payload: res.data.data,<br>    });<br>  } catch (e) {<br>    yield put({<br>      type: ‘FETCH_POSTS_REJECTED’,<br>      payload: e.message,<br>    });<br>  }<br>}<br>```</p>
+<h1 id="参考:">参考:</h1><ul>
+<li><a href="http://leonshi.com/redux-saga-in-chinese/docs/advanced/ComposingSagas.html" target="_blank" rel="external">http://leonshi.com/redux-saga-in-chinese/docs/advanced/ComposingSagas.html</a></li>
+<li><a href="https://github.com/superRaytin/redux-saga-in-chinese" target="_blank" rel="external">https://github.com/superRaytin/redux-saga-in-chinese</a></li>
+</ul>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/12/25/kcp/" itemprop="url">
                   kcp-config
                 </a>
@@ -304,7 +535,7 @@
 <li><code>$ sudo apt-get install ufw</code></li>
 </ul>
 <h4 id="常用命令:">常用命令:</h4><figure class="highlight sqf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">sudo ufw  status        <span class="comment">//查询显示ufw状态以及规则</span></div><div class="line">sudo ufw  enable|disable|<span class="built_in">reload</span> <span class="comment">//启动\关闭\重启</span></div><div class="line">sudo ufw logging on|off|LEVEL   <span class="comment">//日志 启动\关闭\级别</span></div><div class="line"></div><div class="line"><span class="keyword">To</span>                      <span class="built_in">Action</span>      <span class="keyword">From</span></div><div class="line">--                     ------      ----</div><div class="line"><span class="number">24</span>                      ALLOW       Anywhere</div></pre></td></tr></table></figure>
-<h4 id="配置端口:">配置端口:</h4><figure class="highlight vala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta"># 把25替换成你的v2ray端口</span></div><div class="line">ufw allow <span class="number">25</span>/udp </div><div class="line"></div><div class="line"><span class="meta"># 可以使用这个命令为动态端口需要开放一段端口(这个例子中是12290~12300这个10个端口) </span></div><div class="line">sudo ufw allow <span class="number">12290</span>:<span class="number">12300</span>/udp </div><div class="line"></div><div class="line"><span class="meta">#检查是否生效</span></div><div class="line">sudo ufw  status</div></pre></td></tr></table></figure>
+<h4 id="配置端口:">配置端口:</h4><figure class="highlight vala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta"># 把25替换成你的kcptun端口</span></div><div class="line">ufw allow <span class="number">25</span>/udp </div><div class="line"></div><div class="line"><span class="meta"># 可以使用这个命令为动态端口需要开放一段端口(这个例子中是12290~12300这个10个端口) </span></div><div class="line">sudo ufw allow <span class="number">12290</span>:<span class="number">12300</span>/udp </div><div class="line"></div><div class="line"><span class="meta">#检查是否生效</span></div><div class="line">sudo ufw  status</div></pre></td></tr></table></figure>
 <h2 id="关于kcp配置参数:">关于kcp配置参数:</h2><h3 id="两端参数必须一致的有:">两端参数必须一致的有:</h3><ul>
 <li>datashard –前向纠错 默认 10</li>
 <li>parityshard –前向纠错 默认 3</li>
@@ -327,7 +558,7 @@
 <h2 id="启动脚本:">启动脚本:</h2><p>为了方便我们用vi写一个非常简单的启动脚本 命名为start.sh:</p>
 <ol>
 <li><p><code>vim start.sh</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line">/你的kcp路径/server_linux_amd64 -c /你的配置文件路径/config.json</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line">nohup  /你的kcp路径/server_linux_amd64 -c /你的配置文件路径/config.json&gt; /dev/null  2&gt;&amp;1  &amp;</div></pre></td></tr></table></figure>
 </li>
 <li><p>给sh脚本增加运行权限:<code>chmod +x start.sh</code></p>
 </li>
@@ -1269,321 +1500,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/07/03/gen8-exsi-ubuntu-apc-autoshutdown/" itemprop="url">
-                  ESXI中实现UPS断电自动关闭GEN8的功能
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-07-03T16:29:03+08:00" content="2016-07-03">
-              2016-07-03
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/03/gen8-exsi-ubuntu-apc-autoshutdown/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/03/gen8-exsi-ubuntu-apc-autoshutdown/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="安装ubuntu">安装ubuntu</h1><p>参考: <a href="http://lyn.s76.org/2016/07/02/ubuntu-settings/">http://lyn.s76.org/2016/07/02/ubuntu-settings/</a><br>​    </p>
-<h1 id="ESXI中配置APC的USB设备">ESXI中配置APC的USB设备</h1><ol>
-<li><p>添加usb控制器<br> <img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-7-3/44958482.jpg" alt=""></p>
-</li>
-<li><p>添加usb设备<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-7-3/42030707.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-7-3/72111678.jpg" alt=""></p>
-</li>
-<li><p>开启ESXI的ssh登录  </p>
-</li>
-<li><p>在esxi的console界面(也就是黄黑色的那个界面)按F2 进入esxi配置界面   </p>
-</li>
-<li>选择/Select Troubleshooting Options </li>
-<li><p>从Troubleshooting Mode Options 菜单, 选择 Enable ESXi Shell,找到:</p>
-<pre><code><span class="escape">`E</span>nable ESXi Shell<span class="escape">` </span> 
-<span class="escape">`E</span>nable SSH`
-</code></pre><p>按Enter键来enable .<br>ps: 更多方式可以参考<a href="https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;cmd=displayKC&amp;externalId=2030463" target="_blank" rel="external">vm官方的kb</a> :</p>
-</li>
-</ol>
-<h1 id="APC_UPS控件">APC UPS控件</h1><p>ps:我的ups型号是APC的 bk650</p>
-<h2 id="安装控件">安装控件</h2><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-<span class="keyword">get</span> install apcupsd</div></pre></td></tr></table></figure>
-<h2 id="配置">配置</h2><p>使用vi 编辑 <code>/etc/apcupsd/apcupsd.conf</code> 文件</p>
-<ol>
-<li><p>设置name 和usb模式  </p>
-<figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">UPSNAME <span class="params">&lt;自定义名称&gt;</span> <span class="meta">#这行定义你的UPS名称</span></div><div class="line">UPSCABLE usb <span class="meta">#设置UPS的通讯模式为USB模式</span></div><div class="line">UPSTYPE usb <span class="meta">#设置UPS类型为usb型</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>注释DEVICE /dev/ttyS0</p>
-<p>(UPSTYPE usb下面那行)前面加上#号注释掉  </p>
-<figure class="highlight vala"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta"># DEVICE /dev/ttyS0</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>编辑 /etc/default/apcupsd 中的: </p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">ISCONFIGURED</span>=<span class="literal">yes</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>重启服务   </p>
-<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">sudo service apcupsd restart</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>测试APC组件  </p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">sudo apcaccess</div><div class="line"></div><div class="line"><span class="comment">// 输出结果:</span></div><div class="line"><span class="string">APC      :</span> <span class="number">001</span>,<span class="number">034</span>,<span class="number">0834</span></div><div class="line"><span class="string">DATE     :</span> <span class="number">2016</span><span class="number">-07</span><span class="number">-03</span> <span class="number">16</span>:<span class="number">27</span>:<span class="number">22</span> +<span class="number">0800</span></div><div class="line"><span class="string">HOSTNAME :</span> <span class="number">1102</span>Server</div><div class="line"><span class="string">VERSION  :</span> <span class="number">3.14</span><span class="number">.12</span> (<span class="number">29</span> March <span class="number">2014</span>) debian</div><div class="line"><span class="string">UPSNAME  :</span> APC</div><div class="line"><span class="string">CABLE    :</span> USB Cable</div><div class="line"><span class="string">DRIVER   :</span> USB UPS Driver</div><div class="line"><span class="string">UPSMODE  :</span> Stand Alone</div><div class="line"><span class="string">STARTTIME:</span> <span class="number">2016</span><span class="number">-07</span><span class="number">-03</span> <span class="number">16</span>:<span class="number">20</span>:<span class="number">09</span> +<span class="number">0800</span></div><div class="line"><span class="string">MODEL    :</span> Back-UPS <span class="number">650</span></div><div class="line"><span class="string">STATUS   :</span> ONLINE</div><div class="line"><span class="string">LINEV    :</span> <span class="number">226.0</span> Volts</div><div class="line"><span class="string">LOADPCT  :</span> <span class="number">30.0</span> Percent</div><div class="line"><span class="string">BCHARGE  :</span> <span class="number">100.0</span> Percent</div><div class="line"><span class="string">TIMELEFT :</span> <span class="number">23.8</span> Minutes</div><div class="line"><span class="string">MBATTCHG :</span> <span class="number">5</span> Percent</div><div class="line"><span class="string">MINTIMEL :</span> <span class="number">3</span> Minutes</div><div class="line"><span class="string">MAXTIME  :</span> <span class="number">0</span> Seconds</div><div class="line"><span class="string">SENSE    :</span> Low</div><div class="line"><span class="string">LOTRANS  :</span> <span class="number">165.0</span> Volts</div><div class="line"><span class="string">HITRANS  :</span> <span class="number">266.0</span> Volts</div><div class="line"><span class="string">ALARMDEL :</span> <span class="number">30</span> Seconds</div><div class="line"><span class="string">BATTV    :</span> <span class="number">13.5</span> Volts</div><div class="line"><span class="string">LASTXFER :</span> Automatic or explicit self test</div><div class="line"><span class="string">NUMXFERS :</span> <span class="number">0</span></div><div class="line"><span class="string">TONBATT  :</span> <span class="number">0</span> Seconds</div><div class="line"><span class="string">CUMONBATT:</span> <span class="number">0</span> Seconds</div><div class="line"><span class="string">XOFFBATT :</span> N/A</div><div class="line"><span class="string">STATFLAG :</span> <span class="number">0x05000008</span></div><div class="line"><span class="string">SERIALNO :</span> <span class="number">3</span>sadsadsa520</div><div class="line"><span class="string">BATTDATE :</span> <span class="number">2015</span><span class="number">-06</span><span class="number">-15</span></div><div class="line"><span class="string">NOMINV   :</span> <span class="number">220</span> Volts</div><div class="line"><span class="string">NOMBATTV :</span> <span class="number">12.0</span> Volts</div><div class="line"><span class="string">FIRMWARE :</span> <span class="number">822.</span>A3.I USB <span class="string">FW:</span>A3</div><div class="line">END <span class="string">APC  :</span> <span class="number">2016</span><span class="number">-07</span><span class="number">-03</span> <span class="number">16</span>:<span class="number">28</span>:<span class="number">04</span> +<span class="number">0800</span></div></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="修改apc任务脚本">修改apc任务脚本</h2><p> 编辑 <code>/etc/apcupsd/apccontrol</code> 脚本，找到 <code>doshutdown</code> 将下面3行替换为  </p>
-   <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">echo</span> <span class="string">"UPS <span class="variable">$&#123;2&#125;</span> initiated Shutdown Sequence"</span> | <span class="variable">$&#123;WALL&#125;</span></div><div class="line">/usr/bin/ssh root@esxi的ip地址   <span class="string">"/sbin/shutdown.sh &amp;&amp; /sbin/poweroff"</span></div><div class="line">;;</div></pre></td></tr></table></figure>
-<h1 id="配置Ubuntu到ESXI的RSA_SSH">配置Ubuntu到ESXI的RSA SSH</h1><p>为了更安全的免密码登录esxi,还需要配置esxi的rsa秘钥登录:</p>
-<h2 id="生成公钥/私钥">生成公钥/私钥</h2><p>使用命令生成RSA秘钥对<br>可以参考:<br><a href="http://lyn.s76.org/2016/07/02/ubuntu-settings/">http://lyn.s76.org/2016/07/02/ubuntu-settings/</a></p>
-<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">ssh-keygen</span></div></pre></td></tr></table></figure>
-<p>注意:</p>
-<ul>
-<li><p>生成两个 ~/.ssh 文件：id_rsa 和 id_rsa.pub。</p>
-</li>
-<li><p>对于 ESXi 5.0~6.0，authorized_keys 的位置为：/etc/ssh/keys-<username>/authorized_keys(root用户对应的就是:/etc/ssh/keys-root/authorized_keys)</username></p>
-</li>
-<li>可以在此文件中存储多个密钥(直接在文件内容后面追加)。</li>
-<li>使用下面的命令上传到指定的目录:</li>
-</ul>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh user<span class="variable">@host</span> <span class="string">'mkdir -p .ssh &amp;&amp; cat &gt;&gt; /etc/ssh/keys-root/authorized_keys'</span> &lt; ~<span class="regexp">/.ssh/id</span>_rsa.pub</div></pre></td></tr></table></figure>
-<h2 id="配置-1">配置</h2><p>ssh到exsi,修改ssh config配置文件:<code>/etc/ssh/sshd_config</code>.</p>
-<ul>
-<li>要允许授予 root 访问权限，请在 /etc/ssh/sshd_config 文件中将 PermitRootLogin no 更改为 PermitRootLogin yes。</li>
-<li>要禁用密码登录，请务必将 ChallengeResponseAuthentication 和 PasswordAuthentication 设置为 no。</li>
-<li><p>重新加载服务：</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="regexp">/etc/i</span>nit.d<span class="regexp">/SSH restart</span></div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>配置好的<code>/etc/ssh/sshd_config</code>文件:</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># running from inetd</span></div><div class="line"><span class="comment"># Port 2200</span></div><div class="line"><span class="attribute">Protocol</span> <span class="number">2</span></div><div class="line">HostKey /etc/ssh/ssh_host_rsa_key</div><div class="line">HostKey /etc/ssh/ssh_host_dsa_key</div><div class="line"></div><div class="line">UsePrivilegeSeparation <span class="literal">no</span></div><div class="line"></div><div class="line">SyslogFacility auth</div><div class="line">LogLevel <span class="literal">info</span></div><div class="line"></div><div class="line">PermitRootLogin <span class="literal">yes</span></div><div class="line"></div><div class="line">PrintMotd <span class="literal">yes</span></div><div class="line">PrintLastLog <span class="literal">no</span></div><div class="line"></div><div class="line">TCPKeepAlive <span class="literal">yes</span></div><div class="line"></div><div class="line">X11Forwarding <span class="literal">no</span></div><div class="line"></div><div class="line">Ciphers aes128-ctr,aes192-ctr,aes256-ctr,3des-cbc</div><div class="line"></div><div class="line">MACs hmac-sha2-<span class="number">256</span>,hmac-sha2-<span class="number">512</span>,hmac-sha1,hmac-sha1-<span class="number">96</span></div><div class="line"></div><div class="line">UsePAM <span class="literal">yes</span></div><div class="line"><span class="comment"># only use PAM challenge-response (keyboard-interactive)</span></div><div class="line">PasswordAuthentication <span class="literal">no</span></div><div class="line"></div><div class="line"></div><div class="line">Banner /etc/issue</div><div class="line"></div><div class="line">Subsystem sftp /usr/lib/vmware/openssh/bin/sftp-server -f LOCAL5 -l INFO</div><div class="line"></div><div class="line">AuthorizedKeysFile /etc/ssh/keys-%u/authorized_keys</div><div class="line"></div><div class="line"><span class="comment"># hostsRSAAuthentication no</span></div><div class="line">ChallengeResponseAuthentication <span class="literal">no</span></div><div class="line">PasswordAuthentication <span class="literal">no</span></div><div class="line">PubkeyAuthentication <span class="literal">yes</span></div><div class="line"></div><div class="line"><span class="comment"># Timeout value of 10 mins. The default value of ClientAliveCountMax is 3.</span></div><div class="line"><span class="comment"># Hence, we get a  3 * 200 = 600 seconds timeout if the client has been</span></div><div class="line"><span class="comment"># unresponsive.</span></div><div class="line">ClientAliveInterval <span class="number">200</span></div><div class="line"></div><div class="line"><span class="comment"># sshd(8) will refuse connection attempts with a probability of “rate/100”</span></div><div class="line"><span class="comment"># (30%) if there are currently “start” (10) unauthenticated connections.  The</span></div><div class="line"><span class="comment"># probability increases linearly and all connection attempts are refused if the</span></div><div class="line"><span class="comment"># number of unauthenticated connections reaches “full” (100)</span></div><div class="line">MaxStartups <span class="number">10</span>:<span class="number">30</span>:<span class="number">200</span></div></pre></td></tr></table></figure>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/07/02/ubuntu-settings/" itemprop="url">
-                  Securing your Ubuntu Server
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-07-02T23:20:19+08:00" content="2016-07-02">
-              2016-07-02
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/02/ubuntu-settings/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/02/ubuntu-settings/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <p>在服务器上部署了linux系统以后,还需要以下操作来确保服务器的安全.</p>
-<h1 id="新建一个非root用户">新建一个非root用户</h1><p>使用如下命令新建一个用户 并且把这个用户加到sudo组中</p>
-<figure class="highlight 1c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//新建用户</span></div><div class="line">adduser 你的用户名</div><div class="line"><span class="comment">//把用户加入到sudo组</span></div><div class="line">adduser 你的用户名 sudo</div></pre></td></tr></table></figure>
-<h1 id="RSA秘钥登录">RSA秘钥登录</h1><h2 id="生成RSA秘钥对">生成RSA秘钥对</h2><p>mac或者linux用户都可以使用以下命令在/home/你的用户名/.ssh文件夹下创建Rsa秘钥</p>
-<ol>
-<li><p>使用下面的命令,所有选择都直接按enter使用默认值 就会生成这两个秘钥 <code>id_rsa</code> 和  <code>id_rsa.pub</code> </p>
- <figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh-keygen -<span class="selector-tag">b</span> <span class="number">4096</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>在服务器上创建.ssh文件夹</p>
- <figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mkdir -<span class="selector-tag">p</span> ~/<span class="selector-class">.ssh</span> &amp;&amp; sudo chmod -R <span class="number">700</span> ~/.ssh/</div></pre></td></tr></table></figure>
-</li>
-<li><p>然后从本地的terminal中使用scp命令上传到服务器上</p>
- <figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scp -P 服务器的ssh端口号  ~<span class="regexp">/.ssh/id</span>_rsa.pub 服务器上的用户名<span class="variable">@203</span>.<span class="number">0</span>.<span class="number">113.10</span><span class="symbol">:~/</span>.ssh/authorized_keys</div></pre></td></tr></table></figure>
-</li>
-<li><p>修改文件夹权限 </p>
-<p>用下面的命令修改:</p>
- <figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo chmod <span class="number">700</span> -R ~/.ssh &amp;&amp; chmod <span class="number">600</span> ~/.ssh/authorized_keys</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p><strong>Tips:</strong> 如果服务器上已有authorized_keys文件:  </p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh user<span class="variable">@host</span> <span class="string">'mkdir -p .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys'</span> &lt; ~<span class="regexp">/.ssh/id</span>_rsa.pub</div></pre></td></tr></table></figure>
-<ul>
-<li>“$ ssh user@host”，表示登录远程主机；  </li>
-<li>单引号中的mkdir .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys，表示登录后在远程shell上执行的命令：  </li>
-<li>“$ mkdir -p .ssh”的作用是，如果用户主目录中的.ssh目录不存在，就创建一个；  </li>
-<li>‘cat &gt;&gt; .ssh/authorized_keys’ &lt; ~/.ssh/id_rsa.pub的作用是，将本地的公钥文件~/.ssh/id_rsa.pub，重定向追加到远程文件authorized_keys的末尾。</li>
-<li>这一行命令等同于在linux下运行:ssh-copy-id user@host   </li>
-</ul>
-<h2 id="修改ssh配置文件">修改ssh配置文件</h2><ul>
-<li><p>在服务器上用vi修改<code>/etc/ssh/sshd_config</code>文件中的这几行  </p>
-  <figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 修改默认的ssh的22端口到你想要的任意端口 这里修改为38000</span></div><div class="line"><span class="attribute">Port</span> <span class="number">38000</span></div><div class="line"></div><div class="line"><span class="comment">#禁止root用户使用ssh登录</span></div><div class="line">PermitRootLogin <span class="literal">no</span></div><div class="line"></div><div class="line"><span class="comment">#禁止用户使用密码登录服务器</span></div><div class="line">PasswordAuthentication <span class="literal">no</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>使用下面的命令来关闭不需要的ipv4或者ipv6 的ssh访问  </p>
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">echo</span> <span class="string">'AddressFamily inet'</span> | sudo tee <span class="_">-a</span> /etc/ssh/sshd_config</div></pre></td></tr></table></figure>
-</li>
-<li><p>重启ssh服务生效  </p>
-  <figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">sudo service ssh restart</span></div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h1 id="ufw_防火墙">ufw 防火墙</h1><h2 id="安装">安装</h2><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-<span class="keyword">get</span> install ufw</div></pre></td></tr></table></figure>
-<h2 id="配置">配置</h2><ul>
-<li>设置默认规则  </li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">sudo</span> ufw <span class="keyword">default</span> allow outgoing</div><div class="line"><span class="title">sudo</span> ufw <span class="keyword">default</span> deny incoming</div></pre></td></tr></table></figure>
-<ul>
-<li>增加允许的规则  </li>
-</ul>
-<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">sudo ufw allow ssh</div><div class="line">sudo ufw allow OpenSSH</div><div class="line">sudo ufw allow <span class="number">22</span></div><div class="line">sudo ufw allow <span class="number">80</span>/tcp</div><div class="line">sudo ufw allow http/tcp</div><div class="line">sudo ufw allow <span class="number">1725</span>/udp</div></pre></td></tr></table></figure>
-<ul>
-<li>屏蔽访问</li>
-</ul>
-<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo ufw <span class="keyword">deny</span> <span class="number">111</span></div></pre></td></tr></table></figure>
-<ul>
-<li>高级规则  </li>
-</ul>
-<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//允许所有来自该ip的连接</span></div><div class="line">sudo ufw allow from <span class="number">123.45</span><span class="number">.67</span><span class="number">.89</span></div><div class="line"><span class="comment">//指定访问端口和协议</span></div><div class="line">sudo ufw allow from <span class="number">123.45</span><span class="number">.67</span><span class="number">.89</span> to any port <span class="number">22</span> proto tcp</div></pre></td></tr></table></figure>
-<h2 id="启动ufw">启动ufw</h2><figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//启动防火墙</span></div><div class="line">sudo ufw <span class="keyword">enable</span></div><div class="line"><span class="comment">//关闭防火墙</span></div><div class="line">sudo ufw <span class="keyword">disable</span></div></pre></td></tr></table></figure>
-<h2 id="日志功能">日志功能</h2><p>日志规则可以在<code>/var/logs/ufw</code>文件夹中设置<br>规则如下:</p>
-<figure class="highlight vhdl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">[UFW <span class="keyword">BLOCK</span>]: This location <span class="keyword">is</span> where the description <span class="keyword">of</span> the logged event will be located. <span class="keyword">In</span> this instance, it blocked a connection.</div><div class="line"><span class="keyword">IN</span>: <span class="keyword">If</span> this contains a value, <span class="keyword">then</span> the event was incoming</div><div class="line"><span class="keyword">OUT</span>: <span class="keyword">If</span> this contain a value, <span class="keyword">then</span> the event was outgoing</div><div class="line">MAC: A combination <span class="keyword">of</span> the destination <span class="keyword">and</span> source MAC addresses</div><div class="line">SRC: The IP <span class="keyword">of</span> the packet source</div><div class="line">DST: The IP <span class="keyword">of</span> the packet destination</div><div class="line">LEN: Packet length</div><div class="line">TTL: The packet TTL, <span class="keyword">or</span> <span class="built_in">time</span> <span class="keyword">to</span> live. How long it will bounce between routers <span class="keyword">until</span> it expires, <span class="keyword">if</span> no destination <span class="keyword">is</span> found.</div><div class="line">PROTO: The packet’s protocal</div><div class="line">SPT: The source <span class="keyword">port</span> <span class="keyword">of</span> the <span class="keyword">package</span></div><div class="line">DPT: The destination <span class="keyword">port</span> <span class="keyword">of</span> the <span class="keyword">package</span></div><div class="line">WINDOW: The size <span class="keyword">of</span> the packet the sender can receive</div><div class="line">SYN URGP: Indicated <span class="keyword">if</span> a three-way handshake <span class="keyword">is</span> required. <span class="number">0</span> means it <span class="keyword">is</span> <span class="keyword">not</span>.</div></pre></td></tr></table></figure>
-<p>开启日志功能</p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">sudo ufw logging <span class="keyword">on</span></div></pre></td></tr></table></figure>
-<h1 id="Fail2ban">Fail2ban</h1><p>fail2ban 会把恶意尝试ssh登录服务器的主机ip拉进黑名单中</p>
-<h2 id="安装-1">安装</h2><ol>
-<li><p>更新你的系统    </p>
- <figure class="highlight q"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-<span class="built_in">get</span> <span class="keyword">update</span> &amp;&amp; apt-<span class="built_in">get</span> upgrade -y</div></pre></td></tr></table></figure>
-</li>
-<li><p>安装 fail2ban    </p>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-<span class="keyword">get</span> install fail2ban</div></pre></td></tr></table></figure>
-</li>
-<li><p>如果你需要email通知服务还需要安装  </p>
- <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-<span class="keyword">get</span> install sendmail</div></pre></td></tr></table></figure>
-</li>
-<li><p>配置ufw,确保UFW允许ssh访问  </p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ufw <span class="built_in">enable</span></div><div class="line">ufw allow ssh</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="配置-1">配置</h2><ul>
-<li>切换目录  </li>
-</ul>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cd <span class="regexp">/etc/</span>fail2ban</div></pre></td></tr></table></figure>
-<ul>
-<li>拷贝配置文件  </li>
-</ul>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cp jail<span class="selector-class">.conf</span> jail<span class="selector-class">.local</span></div><div class="line">cp fail2ban<span class="selector-class">.conf</span> fail2ban.local</div></pre></td></tr></table></figure>
-<ul>
-<li>配置  </li>
-</ul>
-<p>在<code>/etc/fail2ban/jail.local</code>文件中配置  </p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># "bantime" is the number of seconds that a host is banned.</span></div><div class="line"><span class="attr">bantime</span>  = <span class="number">600</span></div><div class="line"><span class="comment"># A host is banned if it has generated "maxretry" during the last "findtime"</span></div><div class="line"><span class="comment"># seconds.</span></div><div class="line"><span class="attr">findtime</span> = <span class="number">600</span></div><div class="line"><span class="attr">maxretry</span> = <span class="number">3</span></div><div class="line">	</div><div class="line"><span class="comment"># SSH 重试次数</span></div><div class="line"><span class="attr">enabled</span>  = <span class="literal">true</span></div><div class="line"><span class="attr">port</span>     = ssh</div><div class="line"><span class="attr">filter</span>   = sshd</div><div class="line"><span class="attr">logpath</span>  = /var/log/auth.log</div><div class="line"><span class="attr">maxretry</span> = <span class="number">6</span></div></pre></td></tr></table></figure>
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1629,7 +1545,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">55</span>
+              <span class="site-state-item-count">57</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

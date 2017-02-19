@@ -60,19 +60,19 @@
 
 
 <meta name="description" content="在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.
-运行环境(Execution Context)在 ECMA 262 3rd edition中: Execution Context决定了在执行栈中运行的代码所能访问的变量,函数.很多人总是把这个概念和作用域混淆,而实际上作用域ScopeChain只">
+运行环境(Execution Context)在 ECMA 262 3rd edition中: Execution Context决定了在执行栈中运行的代码所能访问的变量,函数.很多人总是把这个概念和作用域链混淆,而实际上作用域链ScopeChai">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Javascript 中的 运行环境(Execution Context),  作用域链(Scope Chain), this & 闭包(Closure)概念">
 <meta property="og:url" content="http://lyn.s76.org/2016/03/18/JS-execution-context/index.html">
 <meta property="og:site_name" content="Lyn's Blog">
 <meta property="og:description" content="在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.
-运行环境(Execution Context)在 ECMA 262 3rd edition中: Execution Context决定了在执行栈中运行的代码所能访问的变量,函数.很多人总是把这个概念和作用域混淆,而实际上作用域ScopeChain只">
+运行环境(Execution Context)在 ECMA 262 3rd edition中: Execution Context决定了在执行栈中运行的代码所能访问的变量,函数.很多人总是把这个概念和作用域链混淆,而实际上作用域链ScopeChai">
 <meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-18/73084259.jpg">
-<meta property="og:updated_time" content="2017-01-10T15:43:40.000Z">
+<meta property="og:updated_time" content="2017-01-13T07:05:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Javascript 中的 运行环境(Execution Context),  作用域链(Scope Chain), this & 闭包(Closure)概念">
 <meta name="twitter:description" content="在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.
-运行环境(Execution Context)在 ECMA 262 3rd edition中: Execution Context决定了在执行栈中运行的代码所能访问的变量,函数.很多人总是把这个概念和作用域混淆,而实际上作用域ScopeChain只">
+运行环境(Execution Context)在 ECMA 262 3rd edition中: Execution Context决定了在执行栈中运行的代码所能访问的变量,函数.很多人总是把这个概念和作用域链混淆,而实际上作用域链ScopeChai">
 <meta name="twitter:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-18/73084259.jpg">
 
 
@@ -256,56 +256,57 @@
 
       
         <span itemprop="articleBody"><p>在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.</p>
-<h1 id="运行环境(Execution_Context)">运行环境(Execution Context)</h1><p>在 ECMA 262 3rd edition中: Execution Context决定了在执行栈中运行的代码所能访问的变量,函数.很多人总是把这个概念和作用域混淆,而实际上作用域ScopeChain只是Execution Context的一部分.</p>
+<h1 id="运行环境(Execution_Context)">运行环境(Execution Context)</h1><p>在 ECMA 262 3rd edition中: Execution Context决定了在执行栈中运行的代码所能访问的变量,函数.很多人总是把这个概念和作用域链混淆,而实际上作用域链ScopeChain只是Execution Context的一部分.</p>
 <ul>
 <li><p>可以暂时简单地理解为能在执行栈中独立完整运行的代码,它由三个部分的内容组成:</p>
 <ul>
-<li>作用域链(Scope Chain)</li>
+<li>作用域链(Scope Chain) </li>
 <li>变量对象(Variable Object) </li>
-<li>Execution Context的this 指针.</li>
+<li>Execution Context的this指针.</li>
 </ul>
 </li>
 <li><p>下面三种情况都会生成一个新的Execution Context:</p>
 <ul>
-<li>初始化全局时</li>
+<li>初始化全局环境时</li>
 <li>声明一个函数时</li>
 <li>执行Eval()时</li>
 </ul>
 </li>
 </ul>
-<h2 id="作用域链(scope_Chain)">作用域链(scope Chain)</h2><p>当构造一个function时,就会自动生成的这个function的[[scope]]属性.[[scope]]会把当前Execution Context的 AO或VO添加到function[[scope]]属性的最前端(也就是作用域链的最前端).所以内部的[[scope]]是如何被定义的对于我们理解Execution Conetext来说很重要.</p>
+<h2 id="作用域链(scope_Chain)">作用域链(scope Chain)</h2><p>当声明一个function时,就会自动生成的这个function的<code>[[scope]]</code>属性.<code>[[scope]</code>]会把当前Execution Context的 AO或VO添加到function<code>[[scope]]</code>属性的最前端(也就是作用域链的最前端).所以内部的[[scope]]是如何被定义的对于我们理解Execution Conetext来说很重要.</p>
 <p>在 ECMAScript 中所定义的函数都可以看成是object对象,他们是在从实例化代码中声明的函数,执行函数表达式或者调用构造函数的时候中被创建的.这里分成两种情况:</p>
 <ul>
 <li><p>当调用构造函数创建实例对象时. 构造函数中会包含一个[[scope]]属性指向一个只包含了全局对象(global object)的作用域链(scope chain).</p>
 </li>
-<li><p>当函数实例对象是被函数声明或函数表达式创建的,会创建一个函数内部的[[scope]]属性,这个属性指向的是当前函数所在的的Execution Context的作用域链(scope chain).</p>
+<li><p>当函数对象是被函数声明或函数表达式创建的,会创建一个函数内部的<code>[[scope]]</code>属性,<br>函数内部的<code>[[scope]]</code> 指向全局对象的<code>[[scope]]</code>属性, 最后形成一个作用域链(scope chain).</p>
 </li>
 </ul>
-<p>最简单的一个例子:在全局环境下声明一个函数:</p>
+<p>最简单的一个例子,在全局环境下声明一个函数:</p>
 <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">exampleFunc</span><span class="params">(formalParameter)</span></span>&#123;</div><div class="line">    ...   <span class="comment">// 函数体 function body code</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <ul>
-<li>在全局执行环境实例化变量的时候会生成相关联的函数对象,全局执行环境包含一个作用链域,这个作用域链指向的就是全局对象(global object 作为VO使用).</li>
-<li>因此在创建的函数对象时(就是在global object中创建一个名字为exampleFunc的属性时),函数对象实例的[[scope]]内部属性会指向一个只包含global object的作用域链. </li>
+<li>在全局执行环境声明变量的时候会生成相关联的函数对象,全局执行环境包含一个简单的scopeChain,指向的就是全局对象(global object 作为VO使用).</li>
+<li>因此在创建的函数对象时(就是在<code>global object</code>中创建一个名字为<code>exampleFunc</code>的方法属性时),函数对象实例的<code>[[scope]]</code>内部属性会指向一个只包含<code>global object</code>的作用域链. </li>
 <li>当像下面的函数表达式在一个全局的execution context中执行的时候,也会分配一个类似的作用域链.</li>
 </ul>
 <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> exampleFuncRef = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">    ...   <span class="comment">// 函数体 function body code</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>在一个新的函数内部函数声明或函数表达式会使新建的内部函数的[[scope]]属性指向外部部函数的execution context.</p>
+<p>在一个函数内部函数声明或函数表达式会使新建的内部函数的<code>[[scope]]</code>属性指向外部部函数的<code>execution context</code>.</p>
 <p>参考以下代码:</p>
 <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">outerFunc</span><span class="params">(formalParameter)</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">innerFunc</span><span class="params">()</span></span>&#123;</div><div class="line">        ... <span class="comment">// innerfunc的函数体 </span></div><div class="line">    &#125;</div><div class="line">    ...  <span class="comment">// outerFunc的函数体 the rest of the outer function body.</span></div><div class="line">&#125;</div><div class="line">outerFunc( <span class="number">5</span> );</div></pre></td></tr></table></figure>
 <ul>
-<li><p>外部的函数对象是在global execution context中的创建VO的时候创建的,所以它的[[scope]]属性只包含了global object.</p>
+<li><p>外部的函数对象是在<code>global execution context</code>中的创建VO的时候创建的,所以它的<code>[[scope]]</code>属性会指向<code>global object</code>.</p>
 </li>
-<li><p>当全局环境下的代码执行到调用 outerFunc 函数的时候,创建一个新的执行环境(execution context)和outerFunc函数对象的AO或是VO, 而AO/VO对象会被添加到outerFunc的scopechain作用域链的最前端.链的后端指向outerFunc的函数对象的[[scope]]属性(这里就是 global object).</p>
+<li><p>当全局环境下的代码执行到调用 <code>outerFunc</code>函数的时候,创建一个新的执行环境(execution context)和outerFunc函数对象的AO/VO, outerFunc的<code>scopechain</code>(作用域链)的前端会指向outerFunc函数对象的AO/VO.链的后端指向outerFunc的函数对象的<code>[[scope]]</code>属性(这里就是 global object).</p>
 </li>
-<li><p>在为outerFunc生成VO/AO的时候,就会创建innerFunc的函数对象,而这个函数对象的[[scope chain]]会指向innerFunc被创建时的execution context的作用域链(也就是outerFunc的作用域链).  </p>
+<li><p>在为outerFunc生成VO/AO的时候,就会创建innerFunc的函数对象,而这个函数对象的<code>[[scope chain]]</code>会指向innerFunc被创建时的execution context的作用域链(也就是outerFunc的<code>scopechain</code>(作用域链)).  </p>
 </li>
-<li><p>所有的这些步骤都是自动的而且是决定于代码的结构和执行.execution context的作用域链定义了函数对象的[[scope]]属性.而函数的[[scope]]属性定义了函数的execution context的范围.</p>
+<li><p>所有的这些步骤都是自动的而且是决定于代码的结构和代码执行所处的环境.execution context的作用域链定义了函数对象的[[scope]]属性.而函数的[[scope]]属性定义了函数的execution context的范围.</p>
 </li>
+<li>当执行代码时需要查找指定的变量或者函数时,会顺着作用域链一层一层的向上查找每一层的AO/VO对象,直到global层位置,如果global的VO中都没有包含执行所需的变量或者函数,就会返回undefined.</li>
 </ul>
 <h2 id="Execution_Context中的AO和VO:">Execution Context中的AO和VO:</h2><p>变量对象(Variable Object)和激活/活动对象(Activation Object)</p>
 <h3 id="变量对象(Variable_Object)">变量对象(Variable Object)</h3><p>在不同的环境是指的下面二者中的一个:</p>
 <ul>
-<li><p>global object,储存着所有的全局变量(像是: 浏览器里的 window, document或console对象)</p>
+<li><p>global object,储存着所有的全局变量(像是: 浏览器里的 document或console对象)</p>
 </li>
 <li><p>Activation object:在一个函数的局部环境下是使用的AO作为VO,定义了ECMAScript的作用域 (这时候: <code>AO===VO //true</code>)</p>
 </li>
@@ -543,7 +544,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">55</span>
+              <span class="site-state-item-count">57</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

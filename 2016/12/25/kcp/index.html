@@ -75,7 +75,7 @@ Kcptun 是KCP 协议的一个简单应用，可以用于任意 TCP 网络程序�
 Kcptun 是KCP 协议的一个简单应用，可以用于任意 TCP 网络程序的传输承载，以提高网络流畅度，降低掉线情况。由于 Kcptun">
 <meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-12-25/58961318-file_1482679564423_934a.png">
 <meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-12-25/72476905-file_1482677511680_6e9f.png">
-<meta property="og:updated_time" content="2017-01-07T13:24:44.000Z">
+<meta property="og:updated_time" content="2017-02-19T15:00:08.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kcp-config">
 <meta name="twitter:description" content="Kcptun项目地址:https://github.com/xtaci/kcptun
@@ -313,7 +313,7 @@ Kcptun 是KCP 协议的一个简单应用，可以用于任意 TCP 网络程序�
 <li><code>$ sudo apt-get install ufw</code></li>
 </ul>
 <h4 id="常用命令:">常用命令:</h4><figure class="highlight sqf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">sudo ufw  status        <span class="comment">//查询显示ufw状态以及规则</span></div><div class="line">sudo ufw  enable|disable|<span class="built_in">reload</span> <span class="comment">//启动\关闭\重启</span></div><div class="line">sudo ufw logging on|off|LEVEL   <span class="comment">//日志 启动\关闭\级别</span></div><div class="line"></div><div class="line"><span class="keyword">To</span>                      <span class="built_in">Action</span>      <span class="keyword">From</span></div><div class="line">--                     ------      ----</div><div class="line"><span class="number">24</span>                      ALLOW       Anywhere</div></pre></td></tr></table></figure>
-<h4 id="配置端口:">配置端口:</h4><figure class="highlight vala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta"># 把25替换成你的v2ray端口</span></div><div class="line">ufw allow <span class="number">25</span>/udp </div><div class="line"></div><div class="line"><span class="meta"># 可以使用这个命令为动态端口需要开放一段端口(这个例子中是12290~12300这个10个端口) </span></div><div class="line">sudo ufw allow <span class="number">12290</span>:<span class="number">12300</span>/udp </div><div class="line"></div><div class="line"><span class="meta">#检查是否生效</span></div><div class="line">sudo ufw  status</div></pre></td></tr></table></figure>
+<h4 id="配置端口:">配置端口:</h4><figure class="highlight vala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta"># 把25替换成你的kcptun端口</span></div><div class="line">ufw allow <span class="number">25</span>/udp </div><div class="line"></div><div class="line"><span class="meta"># 可以使用这个命令为动态端口需要开放一段端口(这个例子中是12290~12300这个10个端口) </span></div><div class="line">sudo ufw allow <span class="number">12290</span>:<span class="number">12300</span>/udp </div><div class="line"></div><div class="line"><span class="meta">#检查是否生效</span></div><div class="line">sudo ufw  status</div></pre></td></tr></table></figure>
 <h2 id="关于kcp配置参数:">关于kcp配置参数:</h2><h3 id="两端参数必须一致的有:">两端参数必须一致的有:</h3><ul>
 <li>datashard –前向纠错 默认 10</li>
 <li>parityshard –前向纠错 默认 3</li>
@@ -336,7 +336,7 @@ Kcptun 是KCP 协议的一个简单应用，可以用于任意 TCP 网络程序�
 <h2 id="启动脚本:">启动脚本:</h2><p>为了方便我们用vi写一个非常简单的启动脚本 命名为start.sh:</p>
 <ol>
 <li><p><code>vim start.sh</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line">/你的kcp路径/server_linux_amd64 -c /你的配置文件路径/config.json</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line">nohup  /你的kcp路径/server_linux_amd64 -c /你的配置文件路径/config.json&gt; /dev/null  2&gt;&amp;1  &amp;</div></pre></td></tr></table></figure>
 </li>
 <li><p>给sh脚本增加运行权限:<code>chmod +x start.sh</code></p>
 </li>
@@ -361,6 +361,10 @@ Kcptun 是KCP 协议的一个简单应用，可以用于任意 TCP 网络程序�
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/14/redux-saga-js/" rel="prev" title="redux-saga的简单入门">
+                redux-saga的简单入门 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -432,7 +436,7 @@ Kcptun 是KCP 协议的一个简单应用，可以用于任意 TCP 网络程序�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">55</span>
+              <span class="site-state-item-count">57</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

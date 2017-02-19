@@ -211,6 +211,290 @@
             
             
               
+                <a class="post-title-link" href="/2016/04/22/css/" itemprop="url">
+                  css权重优先级问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-04-22T11:58:01+08:00" content="2016-04-22">
+              2016-04-22
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/22/css/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/22/css/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>CSS的选择器是有权重的，当不同选择器的样式设置有冲突时，会采用权重高的选择器设置样式。<br>权重（即优先级）的规则如下，权重越高，优先级越高：<br>  同一个元素可以使用多个规则来指定它的同一样式（比如字体颜色），每个规则都有自己的选择器。显然最终只有一个规则起作用（不可能一个字既是红色又是绿色），那么该规则的特殊性最高，特殊性即css优先级。<br> 很多人仅仅知道选择器优先级：ID&gt;class&gt;元素选择器，而不知道ID的优先级为什么大于class的优先级。</p>
+<h1 id="那么css优先级到底是怎么计算的呢？">那么css优先级到底是怎么计算的呢？</h1><p>选择器的特殊性值表述为4个部分，用0,0,0,0表示：<br> 行间样式，加1,0,0,0.<br> ID选择器的特殊性值，加0,1,0,0。<br> 类选择器、属性选择器或伪类，加0,0,1,0。<br> 元素和伪元素，加0,0,0,1。<br> 通配选择器*对特殊性没有贡献，即0,0,0,0。</p>
+<p> 最后比较特殊的一个标志!important（权重），它没有特殊性值，但它的优先级是最高的，为了方便记忆，可以认为它的特殊性值为1,0,0,0,0。<br> 选择器特殊性值是从左向右排序的，特殊性值1,0,0,0大于以0开头的所有特殊性值，即便它是0,99,99,99，优先级依然比1,0,0,0要低。</p>
+<p>  很多人都知道a标签有四种状态：链接访问前、链接访问后、鼠标滑过、激活，分别对应四种伪类:link、:visited、:hover、:active，并且这四个伪类如果对同一个元素设置同一个属性，那它们的声明顺序还有一定要求，一般大家都遵循“爱恨原则LVHA”（LoVe HAte），为什么是这个顺序？不能是其它顺序吗？<br>  根据css优先级计算规则，伪类的特殊性值是0,0,1,0，4个伪类的特殊性值相同，那么后面声明的规则优先级高。当鼠标滑过a链接时，满足:link和:hover两个伪类，要改变a标签的颜色，就必须将:hover伪类在:link伪类后面声明；同理，当鼠标点击激活a链接时，同时满足:link、:hover、:active三种状态，要显示a标签激活时的样式（:active），必须将:active声明放到:link和:hover之后。因此得出LVHA这个顺序。这个顺序能不能变？可以，但也只有:link和:visited可以交换位置，因为一个链接要么访问过要么没访问过，不可能同时满足，也就不存在覆盖的问题。</p>
+<h1 id="简单的理解方式:">简单的理解方式:</h1><p>标签选择器、伪类及伪对象：优先积分1<br>类选择器、属性选择器：优先积分10<br>ID选择器：优先积分100<br>其他选择器（通配符等）：0<br>根据以上优先积分，统计样式表中出现的每个选择器的个数，再相加，最终得出的分数就是某个选择器的优先级别。</p>
+<p>例如：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">p</span> = <span class="number">1</span></div><div class="line"></div><div class="line"><span class="selector-tag">p</span><span class="selector-class">.myColor</span> = <span class="number">1</span>+<span class="number">10</span> = <span class="number">11</span></div><div class="line"></div><div class="line"><span class="selector-class">.myColor</span> = <span class="number">10</span></div><div class="line"></div><div class="line"><span class="selector-id">#myColor</span> = <span class="number">100</span></div></pre></td></tr></table></figure></p>
+<p>再次说明：!important关键字 &gt; style属性 &gt; 以上选择器</p>
+<blockquote>
+<p>前面提到!important属性，!important是用来使IE6和IE7、IE8、火狐(Firefox)、google等浏览器做兼容的，但IE6不能执行!important。当 !important 规则被应用在一个样式声明中时,该样式声明会覆盖CSS中任何其他的声明, 无论它处在声明列表中的哪个位置. 尽管如此, !important规则还是与优先级毫无关系.使用 !important不是一个好习惯，因为它改变了你样式表本来的级联规则，从而难以调试。</p>
+</blockquote>
+<h1 id="在使用!important时需要注意：">在使用!important时需要注意：</h1><p>Never 永远不要在全站范围的 css 上使用 !important<br>Only 只在需要覆盖全站或外部 css（例如引用的 ExtJs 或者YUI ）的特定页面中使用  !important<br>Never 永远不要在你的插件中使用 !important<br>Always 要优化考虑使用样式规则的优先级来解决问题而不是 !important<br>什么时候应该使用：</p>
+<h2 id="A)_一种情况">A) 一种情况</h2><p>  你的网站上有一个设定了全站样式的CSS文件，同时你（或是你同事）写了一些效果通常都是很差的行内样式（行内样式的优先级是最高的）。在这种情况下，你就可以在你全局的CSS文件中写一些!important的样式来覆盖掉那些直接写在元素上的行内样式。</p>
+<h2 id="B)_另一种情况">B) 另一种情况</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="selector-id">#someElement</span> <span class="selector-tag">p</span> &#123;  </div><div class="line">    <span class="attribute">color</span>: blue;  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line"><span class="selector-tag">p</span><span class="selector-class">.awesome</span> &#123;  </div><div class="line">    <span class="attribute">color</span>: red;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>  在外层有 #someElement 的情况下，你怎样能使 awesome 的段落变成红色呢？这种情况下，如果不使用!important，第一条规则永远比第二条的优先级更高。</p>
+<h2 id="怎样覆盖掉_!important：">怎样覆盖掉 !important：</h2><p>很简单，你只需要再加一条!important 的CSS语句，将其应用到更高优先级的选择器（在原有基础上添加额外的标签、class或id选择器）上；或是保持选择器一样，但添加的位置需要在原有声明的后面（优先级相同的情况下，后边定义的会覆盖前边定义的）。<br>[html] view plain copy print?</p>
+<p>#test.a{<br>  color: red !important;     <!--尽管这条声明在前，但是仍会覆盖下边的样式--><br>}<br>a{<br>  color: green !important;<br>}<br>或：<br>[html] view plain copy print?<br>a{<br>  color: green !important;<br>}<br>a{<br>  color: red !important;     <!--同样的选择器，后边的声明会覆盖前边的--><br>}  </p>
+<h1 id="link:">link:</h1><p><a href="http://blog.csdn.net/lzgs_4/article/details/43446303" target="_blank" rel="external">http://blog.csdn.net/lzgs_4/article/details/43446303</a></p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/2016/04/17/css-media/" itemprop="url">
+                  Responsive Web Design
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-04-17T22:52:20+08:00" content="2016-04-17">
+              2016-04-17
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/17/css-media/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/17/css-media/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="允许网页宽度自动调整">允许网页宽度自动调整</h1><p>“自适应网页设计” 到底是怎么做到的？ </p>
+<p>首先，在网页代码的头部，加入一行viewport元标签。</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;meta <span class="attr">name="viewport"</span> <span class="attr">content="width=device-width,</span> <span class="attr">initial-scale=1.0,</span> <span class="attr">maximum-scale=1.0,</span> <span class="attr">user-scalable=0"</span> /&gt;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>width 控制Viewport的宽度,可以指定一个值或者设备的宽度,如device-width为设备的宽度(单位为设备缩放比例1:1的像素),上面代码里设置的宽度是取设备宽度;</p>
+<p> initial-scale 原始缩放比例（initial-scale=1）为1.0，即网页初始大小占屏幕面积的100%, 对应的值是一个浮点值,页面呈现大小等于设置原始的宽度乘以initial-scale的值;</p>
+<p> maximum-scale 最大缩放,即允许用户缩放的最大比例,也是乘积关系.一般设置为1:1的比例不会让用户缩放的;</p>
+<p> minimum-scale 最小缩放,如上;</p>
+<p> user-scalable 用户是否可以手动缩放,一般值设为no,不允许用户缩放;</p>
+</blockquote>
+<p>这段代码的大意是让viewport的物理宽度等于设备的分辨率,不允许用户缩放.原始缩放比例（initial-scale=1）为1.0，即网页初始大小占屏幕面积的100%,所有主流浏览器都支持这个设置，包括IE9。</p>
+<h2 id="meta_viewport标签动态改变的方法">meta viewport标签动态改变的方法</h2><h3 id="第一种方法:">第一种方法:</h3><p>可以使用document.write来动态输出meta viewport标签，例如：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">document.<span class="built_in">write</span>('&lt;meta <span class="built_in">name</span>=<span class="string">"viewport"</span> content=<span class="string">"width=device-width,initial-scale=1"</span>&gt;')</div></pre></td></tr></table></figure>
+<h3 id="第二种方法:">第二种方法:</h3><p>通过setAttribute来改变</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">id</span>=<span class="string">"testViewport"</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width = 380"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></div><div class="line"><span class="keyword">var</span> mvp = <span class="built_in">document</span>.getElementById(<span class="string">'testViewport'</span>);</div><div class="line">mvp.setAttribute(<span class="string">'content'</span>,<span class="string">'width=480'</span>);</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+<h1 id="CSS_@Media查询">CSS @Media查询</h1><p>引用MDN的描述:</p>
+<blockquote>
+<p> 媒体查询 包含了一个媒体类型和至少一个使用如宽度、高度和颜色等媒体属性来限制样式表范围的表达式。CSS3加入的媒体查询使得无需修改内容便可以使样式应用于某些特定的设备范围。<br>媒体查询包含了一个媒体类型 和如CSS3规范中描述的包含一个或多个表达式的媒体属性，这些媒体属性会被解析成真或假。如果媒体查询中的媒体类型与文档要展示的设备相符则查询结果为真，并且媒体查询中的所有表达式为真。</p>
+<h2 id="在stylesheet_Link_选择加载制定的CSS">在stylesheet Link 选择加载制定的CSS</h2></blockquote>
+<p>“自适应网页设计”的核心，就是CSS3引入的Media Query模块。<br>它的意思就是，自动探测屏幕宽度，然后加载相应的CSS文件。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"> <span class="comment">&lt;!-- link元素中的CSS媒体查询 --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">media</span>=<span class="string">"(max-width: 800px)"</span> <span class="attr">href</span>=<span class="string">"example.css"</span> /&gt;</span></div></pre></td></tr></table></figure>
+<p>上面的代码意思是，如果屏幕宽度不超过800像素（max-width: 800px），就加载example.css文件。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;link rel=<span class="string">"stylesheet"</span> <span class="class"><span class="keyword">type</span></span>=<span class="string">"text/css"</span> media=<span class="string">"screen and (min-width: 400px) and (max-device-width: 600px)"</span> href=<span class="string">"smallScreen.css"</span> /&gt;</div></pre></td></tr></table></figure>
+<p>如果屏幕宽度在400像素到600像素之间，则加载smallScreen.css文件。<br>除了用html标签加载CSS文件，还可以在现有CSS文件中使用@import来实现加载。<br>但是并不推荐这样做.</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">　　@<span class="keyword">import</span> url(<span class="string">"tinyScreen.css"</span>) screen and (<span class="built_in">max</span>-device-<span class="built_in">width</span>: <span class="number">400</span>px);</div></pre></td></tr></table></figure>
+<p>当媒体查询为真时，相关的样式表或样式规则就会按照正常的级联规则被应用。即使媒体查询返回假， <link> 标签上带有媒体查询的样式表 仍将被下载 （只不过不会被应用）。</p>
+<h2 id="在CSS文件内使用@media规则加载不同的CSS">在CSS文件内使用@media规则加载不同的CSS</h2><p>同一个CSS文件中，也可以根据不同的屏幕分辨率，选择应用不同的CSS规则。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">　　@<span class="keyword">media</span> screen and (max-device-width: <span class="number">400px</span>) &#123;</div><div class="line">　　　　<span class="selector-class">.column</span> &#123;</div><div class="line">　　　　　　<span class="attribute">float</span>: none;</div><div class="line">　　　　　　<span class="attribute">width</span>:auto;</div><div class="line">　　　　&#125;</div><div class="line">　　　　<span class="selector-id">#sidebar</span> &#123;</div><div class="line">　　　　　　<span class="attribute">display</span>:none;</div><div class="line">　　　　&#125;</div><div class="line">　　&#125;</div></pre></td></tr></table></figure>
+<p>上面的代码意思是，如果屏幕宽度小于400像素，<br>则column块取消浮动（float:none）、宽度自动调节（width:auto），sidebar块不显示（display:none）。</p>
+<h2 id="媒体属性">媒体属性</h2><p><em>引用自 MDN</em></p>
+<h3 id="媒体查询所有可用的查询方法以及属性">媒体查询所有可用的查询方法以及属性</h3><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">media_query: [[only | <span class="keyword">not</span>]? &lt;media_type&gt; [ <span class="keyword">and</span> &lt;expression&gt; ]*]</div><div class="line">  | &lt;expression&gt; [ <span class="keyword">and</span> &lt;expression&gt; ]*</div><div class="line">expression: ( &lt;media_feature&gt; [: &lt;value&gt;]? )</div><div class="line"></div><div class="line">&lt;!-- 在不使用 <span class="keyword">not</span> 或 only 操作符的情况下，媒体类型(media type)是可选的，如果没有设置则默认为 all 。 --&gt;</div><div class="line"></div><div class="line">media_type: all | aural | braille | handheld | <span class="built_in">print</span> |</div><div class="line">  projection | screen | tty | tv | embossed</div><div class="line"></div><div class="line">media_feature: <span class="built_in">width</span> | <span class="built_in">min</span>-<span class="built_in">width</span> | <span class="built_in">max</span>-<span class="built_in">width</span></div><div class="line">  | <span class="built_in">height</span> | <span class="built_in">min</span>-<span class="built_in">height</span> | <span class="built_in">max</span>-<span class="built_in">height</span></div><div class="line">  | device-<span class="built_in">width</span> | <span class="built_in">min</span>-device-<span class="built_in">width</span> | <span class="built_in">max</span>-device-<span class="built_in">width</span></div><div class="line">  | device-<span class="built_in">height</span> | <span class="built_in">min</span>-device-<span class="built_in">height</span> | <span class="built_in">max</span>-device-<span class="built_in">height</span></div><div class="line">  | aspect-ratio | <span class="built_in">min</span>-aspect-ratio | <span class="built_in">max</span>-aspect-ratio</div><div class="line">  | device-aspect-ratio | <span class="built_in">min</span>-device-aspect-ratio | <span class="built_in">max</span>-device-aspect-ratio</div><div class="line">  | <span class="built_in">color</span> | <span class="built_in">min</span>-<span class="built_in">color</span> | <span class="built_in">max</span>-<span class="built_in">color</span></div><div class="line">  | <span class="built_in">color</span>-index | <span class="built_in">min</span>-<span class="built_in">color</span>-index | <span class="built_in">max</span>-<span class="built_in">color</span>-index</div><div class="line">  | monochrome | <span class="built_in">min</span>-monochrome | <span class="built_in">max</span>-monochrome</div><div class="line">  | <span class="built_in">resolution</span> | <span class="built_in">min</span>-<span class="built_in">resolution</span> | <span class="built_in">max</span>-<span class="built_in">resolution</span></div><div class="line">  | scan | <span class="built_in">grid</span></div></pre></td></tr></table></figure>
+<p>大多数媒体属性带有“min-”和“max-”前缀，用于表达“小于等于”和“大于等于”。这避免了使用与HTML和XML冲突的“&lt;”和“&gt;”字符。如果你未向媒体属性指定一个值，并且该特性的实际值不为零，则该表达式被解析为真。</p>
+<p>注意：如果浏览器运行的设备上没有该属性值，包含这个属性值的表达式一般返回假。例如，在语音合成器上查询屏幕长宽比总是返回假。</p>
+<h3 id="颜色（color）">颜色（color）</h3><p>指定输出设备每个像素单元的比特值。如果设备不支持输出颜色，则该值为0。\</p>
+<p>值： <color><br>媒体： visual<br>是否接受 min/max 前缀：是</color></p>
+<p>注意：如果每个颜色单元具有不同数量的比特值，则使用最小的。例如，如果显示器为蓝色和红色提供5比特，而为绿色提供6比特，则认为每个颜色单元有5比特。如果设备使用索引颜色，则使用颜色表中颜色单元的最小比特数。</p>
+<h4 id="示例">示例</h4><p>向所有能显示颜色的设备应用样式表：</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@media <span class="literal">all</span> <span class="literal">and</span> (color) &#123; <span class="params">...</span> &#125;</div></pre></td></tr></table></figure>
+<p>向每个颜色单元至少有4个比特的设备应用样式表：</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@media <span class="literal">all</span> <span class="literal">and</span> (<span class="keyword">min</span><span class="params">-color</span>: <span class="number">4</span>) &#123; <span class="params">...</span> &#125;</div></pre></td></tr></table></figure>
+<h3 id="颜色索引（color-index）">颜色索引（color-index）</h3><p>指定了输出设备中颜色查询表中的条目数量。</p>
+<p>值：<integer><br>媒体： visual<br>是否接受 min/max 前缀：是</integer></p>
+<h4 id="示例-1">示例</h4><p>向所有使用索引颜色的设备应用样式表，你可以这么做：</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@media <span class="literal">all</span> <span class="literal">and</span> (color<span class="params">-index</span>) &#123; <span class="params">...</span> &#125;</div></pre></td></tr></table></figure>
+<p>向所有使用至少256个索引颜色的设备应用样式表：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">media</span>=<span class="string">"all and (min-color-index: 256)"</span> <span class="attr">href</span>=<span class="string">"http://foo.bar.com/stylesheet.css"</span> /&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="宽高比（aspect-ratio）">宽高比（aspect-ratio）</h3><p>描述了输出设备目标显示区域的宽高比。该值包含两个以“/”分隔的正整数。代表了水平像素数（第一个值）与垂直像素数（第二个值）的比例。</p>
+<p>值：<ratio><br>媒体： visual, tactile<br>是否接受 min/max 前缀：是</ratio></p>
+<h4 id="示例-2">示例</h4><p>下面为显示区域宽高至少为一比一的设备选择了一个特殊的样式表。</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@media screen <span class="literal">and</span> (<span class="keyword">min</span><span class="params">-aspect</span><span class="params">-ratio</span>: <span class="number">1</span>/<span class="number">1</span>) &#123; <span class="params">...</span> &#125;</div></pre></td></tr></table></figure>
+<p>这指定了宽高比或者1：1或者更大。换句话说，可视区域或者是正方形或者是宽屏。</p>
+<h3 id="设备宽高比（device-aspect-ratio）">设备宽高比（device-aspect-ratio）</h3><p>描述了输出设备的宽高比。该值包含两个以“/”分隔的正整数。代表了水平像素数（第一个值）与垂直像素数（第二个值）的比例。</p>
+<p>值：<ratio><br>媒体：visual, tactile<br>是否接受 min/max 前缀：是</ratio></p>
+<h4 id="示例-3">示例</h4><p>下面为宽屏设备选择了一个特殊的样式表。<br><figure class="highlight hsp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@media <span class="keyword">screen</span> <span class="keyword">and</span> (device-aspect-ratio: <span class="number">16</span>/<span class="number">9</span>), <span class="keyword">screen</span> <span class="keyword">and</span> (device-aspect-ratio: <span class="number">16</span>/<span class="number">10</span>) &#123; ... &#125;</div></pre></td></tr></table></figure></p>
+<p>宽高比或者16：9或者16：10。</p>
+<h3 id="设备高度（device-height）">设备高度（device-height）</h3><p>描述了输出设备的高度（整个屏幕或页的高度，而不是仅仅像文档窗口一样的渲染区域）。</p>
+<p>值：<length><br>媒体：visual, tactile<br>是否接受 min/max 前缀：是</length></p>
+<h4 id="示例-4">示例</h4><p>向显示在最大宽度800px的屏幕上的文档应用样式表，你可以这样做：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">media</span>=<span class="string">"screen and (max-device-width: 799px)"</span> /&gt;</span></div></pre></td></tr></table></figure></p>
+<h3 id="设备宽度（device-width）">设备宽度（device-width）</h3><p>描述了输出设备的宽度（整个屏幕或页的高度，而不是仅仅像文档窗口一样的渲染区域）。</p>
+<p>值：<length><br>媒体： visual, tactile<br>是否接受 min/max 前缀：是</length></p>
+<h3 id="网格（grid）">网格（grid）</h3><p>判断输出设备是网格设备还是位图设备。如果设备是基于网格的（例如电传打字机终端或只能显示一种字形的电话），该值为1，否则为0。</p>
+<p>值：<integer><br>媒体：all<br>是否接受 min/max 前缀： 否</integer></p>
+<h4 id="示例-5">示例</h4><p>向一个15字符宽度或更窄的手持设备应用样式：<br><figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@media handheld <span class="literal">and</span> (grid) <span class="literal">and</span> (<span class="keyword">max</span><span class="params">-width</span>: <span class="number">15</span>em) &#123; <span class="params">...</span> &#125;</div></pre></td></tr></table></figure></p>
+<p>注意：“em” 在网格设备中有不同的意义；一个“em”的实际宽度不得而知，假设1em相当于一个网格单元的宽高。</p>
+<h3 id="高度（height）">高度（height）</h3><p>height 媒体属性描述了输出设备渲染区域（如可视区域的高度或打印机纸盒的高度）的高度。</p>
+<p>值：<length><br>媒体：visual, tactile<br>是否接受 min/max 前缀：是</length></p>
+<p>注意：用户调整窗口大小后，火狐浏览器会根据使用了width和height属性的媒体查询来切换合适的样式表。</p>
+<h3 id="方向（orientation）">方向（orientation）</h3><p>指定了设备处于横屏（宽度大于宽度）模式还是竖屏（高度大于宽度）模式。</p>
+<p>值：landscape | portrait<br>媒体：visual<br>是否接受 min/max 前缀：否</p>
+<h4 id="示例-6">示例</h4><p>向竖屏设备应用样式表：</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@media <span class="literal">all</span> <span class="literal">and</span> (orientation: portrait) &#123; <span class="params">...</span> &#125;</div></pre></td></tr></table></figure>
+<h3 id="分辨率（resolution）">分辨率（resolution）</h3><p>指定输出设备的分辨率（像素密度）。分辨率可以用每英寸（dpi）或每厘米（dpcm）的点数来表示。</p>
+<p>值： <resolution><br>媒体： bitmap<br>是否接受 min/max 前缀：是</resolution></p>
+<h4 id="示例-7">示例</h4><p>为每英寸至多300点的打印机应用样式：<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@media <span class="built_in">print</span> <span class="keyword">and</span> (min-resolution: <span class="number">300</span>dpi) &#123; ... &#125;</div></pre></td></tr></table></figure></p>
+<p>替换老旧的 (min-device-pixel-ratio: 2) 语法：<br><figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@media screen <span class="literal">and</span> (<span class="keyword">min</span><span class="params">-resolution</span>: <span class="number">2</span>dppx) &#123; <span class="params">...</span> &#125;</div></pre></td></tr></table></figure></p>
+<h3 id="扫描（scan）">扫描（scan）</h3><p>描述了电视输出设备的扫描过程。</p>
+<p>值： progressive | interlace<br>媒体：tv<br>是否接受 min/max 前缀：否</p>
+<p>示例</p>
+<p>向以顺序方式扫描的电视机上应用样式表：<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@media</span> <span class="function">tv <span class="title">and</span> <span class="params">(scan: progressive)</span> </span>&#123; ... &#125;</div></pre></td></tr></table></figure></p>
+<h3 id="宽度（width）">宽度（width）</h3><p>width 媒体属性描述了输出设备渲染区域（如可视区域的宽度或打印机纸盒的宽度）的宽度。</p>
+<p>值： <length><br>媒体： visual, tactile<br>是否接受 min/max 前缀：是</length></p>
+<p>注意：用户调整窗口大小后，火狐浏览器会根据使用了width和height属性的媒体查询来切换合适的样式表。<br>示例</p>
+<p>如果你想向最小宽度20em的手持设备或屏幕应用样式表，你可以使用这样的查询：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@media handheld <span class="built_in">and</span> (<span class="built_in">min</span>-width: <span class="number">20</span><span class="keyword">em</span>), screen <span class="built_in">and</span> (<span class="built_in">min</span>-width: <span class="number">20</span><span class="keyword">em</span>) &#123; ... &#125;</div></pre></td></tr></table></figure>
+<p>这个媒体查询将向最小宽度8.5英寸的打印机应用样式表：</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;link <span class="attr">rel="stylesheet"</span> <span class="attr">media="print</span> <span class="literal">and</span> (min-width: <span class="number">8.5</span><span class="keyword">in</span>)<span class="string">"</span></div><div class="line">    href="http://foo.com/mystyle.css<span class="string">" /&gt;</span></div></pre></td></tr></table></figure>
+<p>这个查询适用于宽度在500px和800px之间的屏幕：</p>
+<figure class="highlight hsp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@media <span class="keyword">screen</span> <span class="keyword">and</span> (min-<span class="keyword">width</span>: <span class="number">500</span>px) <span class="keyword">and</span> (max-<span class="keyword">width</span>: <span class="number">800</span>px) &#123; ... &#125;</div></pre></td></tr></table></figure>
+<h2 id="更多的例子">更多的例子</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> </div><div class="line">@<span class="keyword">media</span> screen and (max-width: <span class="number">1000px</span>) and (min-width: <span class="number">700px</span>) &#123;</div><div class="line">    <span class="selector-tag">ul</span> <span class="selector-tag">li</span> <span class="selector-tag">a</span><span class="selector-pseudo">:before</span> &#123;</div><div class="line">        <span class="attribute">content</span>: <span class="string">"Email: "</span>;</div><div class="line">        <span class="attribute">font-style</span>: italic;</div><div class="line">        <span class="attribute">color</span>: <span class="number">#666666</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面的这段代码的意思是:当屏幕的宽度是在700到1000之间的时候,我们会在Email连接之前用Css 添加一个Email的文字以及设置斜体和颜色.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* For mobile phones: */</span></div><div class="line"><span class="selector-attr">[class*="col-"]</span> &#123;</div><div class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</div><div class="line">&#125;</div><div class="line">@<span class="keyword">media</span> only screen and (min-width: <span class="number">768px</span>) &#123;</div><div class="line">    <span class="comment">/* For desktop: */</span></div><div class="line">    <span class="selector-class">.col-1</span> &#123;<span class="attribute">width</span>: <span class="number">8.33%</span>;&#125;</div><div class="line">    <span class="selector-class">.col-2</span> &#123;<span class="attribute">width</span>: <span class="number">16.66%</span>;&#125;</div><div class="line">    <span class="selector-class">.col-3</span> &#123;<span class="attribute">width</span>: <span class="number">25%</span>;&#125;</div><div class="line">    <span class="selector-class">.col-4</span> &#123;<span class="attribute">width</span>: <span class="number">33.33%</span>;&#125;</div><div class="line">    <span class="selector-class">.col-5</span> &#123;<span class="attribute">width</span>: <span class="number">41.66%</span>;&#125;</div><div class="line">    <span class="selector-class">.col-6</span> &#123;<span class="attribute">width</span>: <span class="number">50%</span>;&#125;</div><div class="line">    <span class="selector-class">.col-7</span> &#123;<span class="attribute">width</span>: <span class="number">58.33%</span>;&#125;</div><div class="line">    <span class="selector-class">.col-8</span> &#123;<span class="attribute">width</span>: <span class="number">66.66%</span>;&#125;</div><div class="line">    <span class="selector-class">.col-9</span> &#123;<span class="attribute">width</span>: <span class="number">75%</span>;&#125;</div><div class="line">    <span class="selector-class">.col-10</span> &#123;<span class="attribute">width</span>: <span class="number">83.33%</span>;&#125;</div><div class="line">    <span class="selector-class">.col-11</span> &#123;<span class="attribute">width</span>: <span class="number">91.66%</span>;&#125;</div><div class="line">    <span class="selector-class">.col-12</span> &#123;<span class="attribute">width</span>: <span class="number">100%</span>;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面的这段代码的意思是: 默认情况下是为手机做的宽度适配(即所有的宽度都是100%),当只有屏幕的宽度大于768像素的时候,才会单独给各个col设置宽度的值. </p>
+<h1 id="当页面为自适应页面时,实现图片自适应的奇妙的解决方法:">当页面为自适应页面时,实现图片自适应的奇妙的解决方法:</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- HTML: --&gt;</span></div><div class="line"> <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"image-container"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"xxx.png"</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line"><span class="comment">&lt;!-- CSS: --&gt;</span></div><div class="line">p.image-container &#123;</div><div class="line">  width: 100%;</div><div class="line">  height: 0;</div><div class="line">  padding-bottom: 60%;</div><div class="line">  overflow: hidden;</div><div class="line">&#125;</div><div class="line"></div><div class="line">p.image-container img &#123;</div><div class="line">  width: 100%;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="思路:">思路:</h2><p><em>原作者: zihua-li</em></p>
+<blockquote>
+<p>需求:在保持 item 元素宽高比恒定（如高是宽的 1.618 倍）的情况下，使得 item 元素可以和父元素同比缩放。 </p>
+</blockquote>
+<p>我们知道，如果当 item 元素是图片，同时需要保持的宽高比恰好为图片本身的宽高比时，<br>可以设置 item 的 height 为 auto 即可轻松实现这个需求。<br>然而当 item 元素不是图片或者要保持的宽高比和图片本身的宽高比不同时，这个需求显得很难直接用 CSS 实现。<br>为此我放弃 CSS，直接用 JavaScript 绑定 window 的 onresize 事件来动态获取每个 item 的宽度，从而计算并设置其高度。<br>我一直在使用这个解决方案，直到今天调整样式时，突然想到这个需求竟然是可以只使用 CSS 解决的。<br>首先需要知道，一个元素的 padding，如果值是一个百分比，那这个百分比是相对于其父元素的宽度而言的，即使对于 padding-bottom 和 padding-top 也是如此。<br>另外，在计算 Overflow 时，是将元素的内容区域（即 width / height 对应的区域）和 Padding 区域一起计算的。换句话说，即使将元素的 overflow 设置为 hidden，“溢出”到 Padding 区域的内容也会照常显示。<br>综上两条所述，我们可以使用 padding-bottom 来代替 height 来实现高度与宽度成比例的效果。因为 item 元素的宽度是其父元素宽度的 21%，所以我们将 padding-bottom 设置为它的 1.618 倍，即 33.98%。同时将其 height 设置为 0 以使元素的“高度”等于 padding-bottom 的值，从而实现需要的效果。<br>最后 item 元素的 CSS 样式为：</p>
+<p>.item {<br>  float: left;<br>  margin: 10px 5%;<br>  padding-bottom: 33.98%;<br>  width: 21%;<br>  height: 0;<br>}<br>页面效果见 <a href="http://jsfiddle.net/luin/25BbH/7/，拖动窗口调整页面宽度，item" target="_blank" rel="external">http://jsfiddle.net/luin/25BbH/7/，拖动窗口调整页面宽度，item</a> 元素始终保持恒定的宽高比。</p>
+<h1 id="兼容情况:">兼容情况:</h1><h2 id="@media_screen_属性的浏览器支持情况">@media screen 属性的浏览器支持情况</h2><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-17/99373677.jpg" alt=""></p>
+<h2 id="@media_width_属性浏览器的支持情况">@media width 属性浏览器的支持情况</h2><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-17/7417540.jpg" alt=""></p>
+<h2 id="@Media_Queries支持情况">@Media Queries支持情况</h2><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-18/50675002.jpg" alt=""></p>
+<h1 id="Ref:">Ref:</h1><p><a href="http://www.ruanyifeng.com/blog/2012/05/responsive_web_design.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2012/05/responsive_web_design.html</a> -阮一峰<br><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media#Examples" target="_blank" rel="external">https://developer.mozilla.org/en-US/docs/Web/CSS/@media#Examples</a> -MDN<br><a href="http://zihua.li/2013/12/keep-height-relevant-to-width-using-css/" target="_blank" rel="external">http://zihua.li/2013/12/keep-height-relevant-to-width-using-css/</a> -zihuali</p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/04/10/js-single-thread-concepts/" itemprop="url">
                   JavaScript的单线程运行机制笔记
                 </a>
@@ -400,56 +684,57 @@
           <span itemprop="articleBody">
             
               <p>在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.</p>
-<h1 id="运行环境(Execution_Context)">运行环境(Execution Context)</h1><p>在 ECMA 262 3rd edition中: Execution Context决定了在执行栈中运行的代码所能访问的变量,函数.很多人总是把这个概念和作用域混淆,而实际上作用域ScopeChain只是Execution Context的一部分.</p>
+<h1 id="运行环境(Execution_Context)">运行环境(Execution Context)</h1><p>在 ECMA 262 3rd edition中: Execution Context决定了在执行栈中运行的代码所能访问的变量,函数.很多人总是把这个概念和作用域链混淆,而实际上作用域链ScopeChain只是Execution Context的一部分.</p>
 <ul>
 <li><p>可以暂时简单地理解为能在执行栈中独立完整运行的代码,它由三个部分的内容组成:</p>
 <ul>
-<li>作用域链(Scope Chain)</li>
+<li>作用域链(Scope Chain) </li>
 <li>变量对象(Variable Object) </li>
-<li>Execution Context的this 指针.</li>
+<li>Execution Context的this指针.</li>
 </ul>
 </li>
 <li><p>下面三种情况都会生成一个新的Execution Context:</p>
 <ul>
-<li>初始化全局时</li>
+<li>初始化全局环境时</li>
 <li>声明一个函数时</li>
 <li>执行Eval()时</li>
 </ul>
 </li>
 </ul>
-<h2 id="作用域链(scope_Chain)">作用域链(scope Chain)</h2><p>当构造一个function时,就会自动生成的这个function的[[scope]]属性.[[scope]]会把当前Execution Context的 AO或VO添加到function[[scope]]属性的最前端(也就是作用域链的最前端).所以内部的[[scope]]是如何被定义的对于我们理解Execution Conetext来说很重要.</p>
+<h2 id="作用域链(scope_Chain)">作用域链(scope Chain)</h2><p>当声明一个function时,就会自动生成的这个function的<code>[[scope]]</code>属性.<code>[[scope]</code>]会把当前Execution Context的 AO或VO添加到function<code>[[scope]]</code>属性的最前端(也就是作用域链的最前端).所以内部的[[scope]]是如何被定义的对于我们理解Execution Conetext来说很重要.</p>
 <p>在 ECMAScript 中所定义的函数都可以看成是object对象,他们是在从实例化代码中声明的函数,执行函数表达式或者调用构造函数的时候中被创建的.这里分成两种情况:</p>
 <ul>
 <li><p>当调用构造函数创建实例对象时. 构造函数中会包含一个[[scope]]属性指向一个只包含了全局对象(global object)的作用域链(scope chain).</p>
 </li>
-<li><p>当函数实例对象是被函数声明或函数表达式创建的,会创建一个函数内部的[[scope]]属性,这个属性指向的是当前函数所在的的Execution Context的作用域链(scope chain).</p>
+<li><p>当函数对象是被函数声明或函数表达式创建的,会创建一个函数内部的<code>[[scope]]</code>属性,<br>函数内部的<code>[[scope]]</code> 指向全局对象的<code>[[scope]]</code>属性, 最后形成一个作用域链(scope chain).</p>
 </li>
 </ul>
-<p>最简单的一个例子:在全局环境下声明一个函数:</p>
+<p>最简单的一个例子,在全局环境下声明一个函数:</p>
 <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">exampleFunc</span><span class="params">(formalParameter)</span></span>&#123;</div><div class="line">    ...   <span class="comment">// 函数体 function body code</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <ul>
-<li>在全局执行环境实例化变量的时候会生成相关联的函数对象,全局执行环境包含一个作用链域,这个作用域链指向的就是全局对象(global object 作为VO使用).</li>
-<li>因此在创建的函数对象时(就是在global object中创建一个名字为exampleFunc的属性时),函数对象实例的[[scope]]内部属性会指向一个只包含global object的作用域链. </li>
+<li>在全局执行环境声明变量的时候会生成相关联的函数对象,全局执行环境包含一个简单的scopeChain,指向的就是全局对象(global object 作为VO使用).</li>
+<li>因此在创建的函数对象时(就是在<code>global object</code>中创建一个名字为<code>exampleFunc</code>的方法属性时),函数对象实例的<code>[[scope]]</code>内部属性会指向一个只包含<code>global object</code>的作用域链. </li>
 <li>当像下面的函数表达式在一个全局的execution context中执行的时候,也会分配一个类似的作用域链.</li>
 </ul>
 <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> exampleFuncRef = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">    ...   <span class="comment">// 函数体 function body code</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>在一个新的函数内部函数声明或函数表达式会使新建的内部函数的[[scope]]属性指向外部部函数的execution context.</p>
+<p>在一个函数内部函数声明或函数表达式会使新建的内部函数的<code>[[scope]]</code>属性指向外部部函数的<code>execution context</code>.</p>
 <p>参考以下代码:</p>
 <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">outerFunc</span><span class="params">(formalParameter)</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">innerFunc</span><span class="params">()</span></span>&#123;</div><div class="line">        ... <span class="comment">// innerfunc的函数体 </span></div><div class="line">    &#125;</div><div class="line">    ...  <span class="comment">// outerFunc的函数体 the rest of the outer function body.</span></div><div class="line">&#125;</div><div class="line">outerFunc( <span class="number">5</span> );</div></pre></td></tr></table></figure>
 <ul>
-<li><p>外部的函数对象是在global execution context中的创建VO的时候创建的,所以它的[[scope]]属性只包含了global object.</p>
+<li><p>外部的函数对象是在<code>global execution context</code>中的创建VO的时候创建的,所以它的<code>[[scope]]</code>属性会指向<code>global object</code>.</p>
 </li>
-<li><p>当全局环境下的代码执行到调用 outerFunc 函数的时候,创建一个新的执行环境(execution context)和outerFunc函数对象的AO或是VO, 而AO/VO对象会被添加到outerFunc的scopechain作用域链的最前端.链的后端指向outerFunc的函数对象的[[scope]]属性(这里就是 global object).</p>
+<li><p>当全局环境下的代码执行到调用 <code>outerFunc</code>函数的时候,创建一个新的执行环境(execution context)和outerFunc函数对象的AO/VO, outerFunc的<code>scopechain</code>(作用域链)的前端会指向outerFunc函数对象的AO/VO.链的后端指向outerFunc的函数对象的<code>[[scope]]</code>属性(这里就是 global object).</p>
 </li>
-<li><p>在为outerFunc生成VO/AO的时候,就会创建innerFunc的函数对象,而这个函数对象的[[scope chain]]会指向innerFunc被创建时的execution context的作用域链(也就是outerFunc的作用域链).  </p>
+<li><p>在为outerFunc生成VO/AO的时候,就会创建innerFunc的函数对象,而这个函数对象的<code>[[scope chain]]</code>会指向innerFunc被创建时的execution context的作用域链(也就是outerFunc的<code>scopechain</code>(作用域链)).  </p>
 </li>
-<li><p>所有的这些步骤都是自动的而且是决定于代码的结构和执行.execution context的作用域链定义了函数对象的[[scope]]属性.而函数的[[scope]]属性定义了函数的execution context的范围.</p>
+<li><p>所有的这些步骤都是自动的而且是决定于代码的结构和代码执行所处的环境.execution context的作用域链定义了函数对象的[[scope]]属性.而函数的[[scope]]属性定义了函数的execution context的范围.</p>
 </li>
+<li>当执行代码时需要查找指定的变量或者函数时,会顺着作用域链一层一层的向上查找每一层的AO/VO对象,直到global层位置,如果global的VO中都没有包含执行所需的变量或者函数,就会返回undefined.</li>
 </ul>
 <h2 id="Execution_Context中的AO和VO:">Execution Context中的AO和VO:</h2><p>变量对象(Variable Object)和激活/活动对象(Activation Object)</p>
 <h3 id="变量对象(Variable_Object)">变量对象(Variable Object)</h3><p>在不同的环境是指的下面二者中的一个:</p>
 <ul>
-<li><p>global object,储存着所有的全局变量(像是: 浏览器里的 window, document或console对象)</p>
+<li><p>global object,储存着所有的全局变量(像是: 浏览器里的 document或console对象)</p>
 </li>
 <li><p>Activation object:在一个函数的局部环境下是使用的AO作为VO,定义了ECMAScript的作用域 (这时候: <code>AO===VO //true</code>)</p>
 </li>
@@ -949,13 +1234,20 @@
 <li>调用了两次SuperType的构造函数:(第一次是在把SuperType的实例赋值给SubType的原型时 ,第二次 是在SubType的构造函数中又call了一次).这个可以使用寄生组合继承来解决</li>
 </ul>
 <h1 id="寄生组合式继承">寄生组合式继承</h1><p>通过借用构造函数来继承属性,通过使用Object.create方法对SuperType的prototype进行浅复制实现对超类的继承,然后再将结果指定给子类型的原型.寄生组合式继承的基本模式如下:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">inheritPrototype</span>(<span class="params">subType,superType</span>)</span>&#123;</div><div class="line">	<span class="keyword">var</span> prototypeTemp =<span class="built_in">Object</span>(superType.prototype); <span class="comment">//创建超类型原型的副本</span></div><div class="line">	prototypeTemp.constructor = subType;  <span class="comment">//为创建的副本指定构造函数</span></div><div class="line">	subType.prototype = prototypeTemp;   <span class="comment">//将创建的副本赋值给子类的原型</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">inheritPrototype</span>(<span class="params">subType,superType</span>)</span>&#123;</div><div class="line">	<span class="keyword">var</span> prototypeTemp =<span class="built_in">Object</span>.create(superType.prototype); <span class="comment">//创建超类型原型的副本</span></div><div class="line">	prototypeTemp.constructor = subType;  <span class="comment">//为创建的副本指定构造函数</span></div><div class="line">	subType.prototype = prototypeTemp;   <span class="comment">//将创建的副本赋值给子类的原型</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Object.create方法可以简单理解为是使用Object.setPrototypeOf()方法设置原型.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">objectCreate</span>(<span class="params">proto</span>)</span>&#123;</div><div class="line">	<span class="keyword">const</span> obj=&#123;&#125;</div><div class="line">	<span class="built_in">Object</span>.setPrototypeOf(Obj,proto)</div><div class="line">	<span class="keyword">return</span> obj</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>有了这个函数我们就可以替换掉组合式继承中为子类原型赋值的语句了.</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params">name</span>)</span>&#123;</div><div class="line">	<span class="keyword">this</span>.name =name;</div><div class="line">	<span class="keyword">this</span>.colors=[<span class="string">"red"</span>,<span class="string">"blue"</span>,<span class="string">"green"</span>];</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>.<span class="title">prototype</span>.<span class="title">sayName</span> =<span class="title">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</div><div class="line">&#125;;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params">name,age</span>)</span>&#123;</div><div class="line">	<span class="comment">//继承方法,传递参数</span></div><div class="line">	SuperType.call(<span class="keyword">this</span>,name);</div><div class="line">	<span class="keyword">this</span>.age = age;</div><div class="line">&#125;</div><div class="line"></div><div class="line">inheritPrototype(SubType,SuperType); <span class="comment">//为子类原型赋值</span></div><div class="line"></div><div class="line">SubType.prototype.sayAge = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="keyword">this</span>.age);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="优点&amp;缺点:">优点&amp;缺点:</h2><ul>
 <li>只调用了一次SuperType构造函数,这样就避免了SubType.prototype重复创建属性.</li>
 <li>原型链可以保持不变,因此可以使用instanceof 和 isPrototypeOf()检测创建的对象</li>
 <li>寄生组合式继承是引用类型最理想的继承范式.</li>
+</ul>
+<h1 id="总结:">总结:</h1><ul>
+<li>prototype上的方法或者属性可以实现共享</li>
+<li>构造函数通过call来绑定this到子类上, 子类因为使用<code>new</code>关键字就会生成一个新的对象,因此每个对象都可以通过这种方式实现不共享的属性或者方.</li>
+<li>Object.create()方法相当于设置prototype,所以创建出来的属性和方法也是共享的</li>
 </ul>
 <h1 id="ES6中的继承实现">ES6中的继承实现</h1><p>Es6中有了extends 关键字可以实现继承,而不用在关心借用构造函数或者原型链来实现.</p>
 <figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</div><div class="line">    constructor(name, age)&#123;</div><div class="line">        public name = name;</div><div class="line">        public age  = age;</div><div class="line">        </div><div class="line">        sayName()&#123;</div><div class="line">            console.log(<span class="keyword">this</span>.name);     </div><div class="line">        &#125;</div><div class="line">        getOlder(years)&#123;</div><div class="line">            <span class="keyword">this</span>.age += years;  </div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Employee</span> <span class="keyword">extends</span> <span class="title">Person</span></span>&#123;</div><div class="line">	constructor(name,age)&#123;</div><div class="line">		<span class="keyword">super</span>(name,age); <span class="comment">//借用Person的构造函数</span></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -1362,277 +1654,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/02/22/nodejs-note-24/" itemprop="url">
-                  Building restfull API by using restify - 02
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-02-22T21:45:57+08:00" content="2016-02-22">
-              2016-02-22
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/22/nodejs-note-24/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/22/nodejs-note-24/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span>  restify = <span class="built_in">require</span>(<span class="string">'restify'</span>);</div><div class="line"><span class="keyword">var</span>  bunyan = <span class="built_in">require</span>(<span class="string">'bunyan'</span>); </div><div class="line"><span class="keyword">var</span> options = &#123;</div><div class="line">	<span class="attr">name</span>:<span class="string">"Toodoo API"</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span>  server = restify.createServer(options);</div><div class="line"></div><div class="line"></div><div class="line">server.use(<span class="function"><span class="keyword">function</span>(<span class="params">req,res,next</span>)</span>&#123;</div><div class="line"></div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'middleware 1 here!'</span> );</div><div class="line">	next();</div><div class="line">	<span class="comment">// next(new Error('something awful happened!'));</span></div><div class="line"></div><div class="line">&#125;);</div><div class="line"></div><div class="line">server.use(<span class="function"><span class="keyword">function</span>(<span class="params">req,res,next</span>)</span>&#123;</div><div class="line"></div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'middleware 2 here!'</span> );</div><div class="line">	next();</div><div class="line">&#125;);</div><div class="line"></div><div class="line">server.on(<span class="string">'after'</span>, restify.auditLogger(&#123;</div><div class="line">	<span class="attr">log</span>: bunyan.createLogger(&#123;</div><div class="line">		<span class="attr">name</span>:<span class="string">'audit'</span>,</div><div class="line">		<span class="attr">stream</span>: process.stdout</div><div class="line">	&#125;)</div><div class="line">&#125;));</div><div class="line"></div><div class="line"><span class="comment">// server.on('after', function ()&#123;</span></div><div class="line"><span class="comment">//	console.log('after', arguments);</span></div><div class="line"><span class="comment">// &#125;);</span></div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = server;</div><div class="line"></div><div class="line"><span class="built_in">require</span>(<span class="string">'./routes'</span>);</div></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span>  restify = <span class="built_in">require</span>(<span class="string">'restify'</span>);</div><div class="line"><span class="keyword">var</span>  bunyan = <span class="built_in">require</span>(<span class="string">'bunyan'</span>); </div><div class="line"><span class="keyword">var</span> options = &#123;</div><div class="line">	<span class="attr">name</span>:<span class="string">"Toodoo API"</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span>  server = restify.createServer(options);</div><div class="line"></div><div class="line"></div><div class="line">server.use(<span class="function"><span class="keyword">function</span>(<span class="params">req,res,next</span>)</span>&#123;</div><div class="line"></div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'middleware 1 here!'</span>, req.body);</div><div class="line">	next();</div><div class="line">	<span class="comment">// next(new Error('something awful happened!'));</span></div><div class="line"></div><div class="line">&#125;);</div><div class="line"></div><div class="line">server.use(restify.bodyParser(&#123;</div><div class="line">	<span class="attr">maxBodySize</span>: <span class="number">10</span>*<span class="number">1024</span></div><div class="line">&#125;));</div><div class="line"></div><div class="line">server.use(<span class="function"><span class="keyword">function</span>(<span class="params">req,res,next</span>)</span>&#123;</div><div class="line"></div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'middleware 2 here!'</span>, req.body);</div><div class="line">	next();</div><div class="line">&#125;);</div><div class="line"></div><div class="line">server.on(<span class="string">'after'</span>, restify.auditLogger(&#123;</div><div class="line">	<span class="attr">log</span>: bunyan.createLogger(&#123;</div><div class="line">		<span class="attr">name</span>:<span class="string">'audit'</span>,</div><div class="line">		<span class="attr">stream</span>: process.stdout</div><div class="line">	&#125;)</div><div class="line">&#125;));</div><div class="line"></div><div class="line"><span class="comment">// server.on('after', function ()&#123;</span></div><div class="line"><span class="comment">//	console.log('after', arguments);</span></div><div class="line"><span class="comment">// &#125;);</span></div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = server;</div><div class="line"></div><div class="line"><span class="built_in">require</span>(<span class="string">'./routes'</span>);</div><div class="line"><span class="comment">// test with data</span></div><div class="line"><span class="comment">// curl -i -X PUT localhost:8080/lists/mylist --data '&#123;"hey":"there"&#125;' -H 'content-type: application/json'</span></div></pre></td></tr></table></figure>
-<figure class="highlight xquery"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="number">192</span>:<span class="number">02</span> Lyn$ node .</div><div class="line"> API server listening on &#123;<span class="string">"address"</span>:<span class="string">"::"</span>,<span class="string">"family"</span>:<span class="string">"IPv6"</span>,<span class="string">"port"</span>:<span class="number">8080</span>&#125;</div><div class="line">middleware <span class="number">1</span> here! undefined</div><div class="line">middleware <span class="number">2</span> here! &#123; hey: <span class="string">'there'</span> &#125;</div><div class="line">body : &#123; hey: <span class="string">'there'</span> &#125;</div><div class="line">&#123;<span class="string">"name"</span>:<span class="string">"audit"</span>,<span class="string">"hostname"</span>:<span class="string">"Lyn-Cheung-MBP.local"</span>,<span class="string">"pid"</span>:<span class="number">45195</span>,<span class="string">"audit"</span>:true,<span class="string">"level"</span>:<span class="number">30</span>,<span class="string">"remoteAddress"</span>:<span class="string">"::ffff:127.0.0.1"</span>,<span class="string">"remotePort"</span>:<span class="number">55210</span>,<span class="string">"req_id"</span>:<span class="string">"6185400f-ad38-4578-bec7-2b1618a6ccf6"</span>,<span class="string">"req"</span>:&#123;<span class="string">"query"</span>:<span class="string">""</span>,<span class="string">"method"</span>:<span class="string">"PUT"</span>,<span class="string">"url"</span>:<span class="string">"/lists/mylist"</span>,<span class="string">"headers"</span>:&#123;<span class="string">"host"</span>:<span class="string">"localhost:8080"</span>,<span class="string">"user-agent"</span>:<span class="string">"curl/7.43.0"</span>,<span class="string">"accept"</span>:<span class="string">"*/*"</span>,<span class="string">"content-type"</span>:<span class="string">"application/json"</span>,<span class="string">"content-length"</span>:<span class="string">"15"</span>&#125;,<span class="string">"httpVersion"</span>:<span class="string">"1.1"</span>,<span class="string">"trailers"</span>:&#123;&#125;,<span class="string">"version"</span>:<span class="string">"*"</span>,<span class="string">"timers"</span>:&#123;<span class="string">"handler-0"</span>:<span class="number">449</span>,<span class="string">"readBody"</span>:<span class="number">2179</span>,<span class="string">"parseBody"</span>:<span class="number">242</span>,<span class="string">"handler-1"</span>:<span class="number">1494</span>,<span class="string">"createList"</span>:<span class="number">4112</span>&#125;&#125;,<span class="string">"res"</span>:&#123;<span class="string">"statusCode"</span>:<span class="number">200</span>,<span class="string">"headers"</span>:&#123;<span class="string">"content-type"</span>:<span class="string">"application/json"</span>,<span class="string">"content-length"</span>:<span class="number">15</span>&#125;,<span class="string">"trailer"</span>:false&#125;,<span class="string">"latency"</span>:<span class="number">12</span>,<span class="string">"_audit"</span>:true,<span class="string">"msg"</span>:<span class="string">"handled: 200"</span>,<span class="string">"time"</span>:<span class="string">"2016-02-22T15:00:33.154Z"</span>,<span class="string">"v"</span>:<span class="number">0</span>&#125;</div></pre></td></tr></table></figure>
-<p>create.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>.exports= <span class="function"><span class="keyword">function</span> <span class="title">createList</span>(<span class="params">req,res,next</span>)</span>&#123;</div><div class="line">	<span class="keyword">var</span> body = req.body;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'body :'</span>,body);</div><div class="line">	res.send(&#123;<span class="attr">hey</span>:<span class="string">'there'</span>&#125;);</div><div class="line">	next();</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
-<hr>
-<h2 id="validating_the_data">validating the data</h2><h3 id="Joi">Joi</h3><p>joi allows you to create <em>blueprints</em> or <em>schemas</em> for JavaScript objects (an object that stores information) to ensure <em>validation</em> of key information.</p>
-<h4 id="Example">Example</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Joi = <span class="built_in">require</span>(<span class="string">'joi'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> schema = Joi.object().keys(&#123;</div><div class="line">    <span class="attr">username</span>: Joi.string().alphanum().min(<span class="number">3</span>).max(<span class="number">30</span>).required(),</div><div class="line">    <span class="attr">password</span>: Joi.string().regex(<span class="regexp">/^[a-zA-Z0-9]&#123;3,30&#125;$/</span>),</div><div class="line">    <span class="attr">access_token</span>: [Joi.string(), Joi.number()],</div><div class="line">    <span class="attr">birthyear</span>: Joi.number().integer().min(<span class="number">1900</span>).max(<span class="number">2013</span>),</div><div class="line">    <span class="attr">email</span>: Joi.string().email()</div><div class="line">&#125;).with(<span class="string">'username'</span>, <span class="string">'birthyear'</span>).without(<span class="string">'password'</span>, <span class="string">'access_token'</span>);</div><div class="line"></div><div class="line">Joi.validate(&#123; <span class="attr">username</span>: <span class="string">'abc'</span>, <span class="attr">birthyear</span>: <span class="number">1994</span> &#125;, schema, <span class="function"><span class="keyword">function</span> (<span class="params">err, value</span>) </span>&#123; &#125;);  <span class="comment">// err === null -&gt; valid</span></div></pre></td></tr></table></figure>
-<p>The above schema defines the following constraints:</p>
-<ul>
-<li><code>username</code><ul>
-<li>a required string</li>
-<li>must contain only alphanumeric characters</li>
-<li>at least 3 characters long but no more than 30</li>
-<li>must be accompanied by <code>birthyear</code></li>
-</ul>
-</li>
-<li><code>password</code><ul>
-<li>an optional string</li>
-<li>must satisfy the custom regex</li>
-<li>cannot appear together with <code>access_token</code></li>
-</ul>
-</li>
-<li><code>access_token</code><ul>
-<li>an optional, unconstrained string or number</li>
-</ul>
-</li>
-<li><code>birthyear</code><ul>
-<li>an integer between 1900 and 2013</li>
-</ul>
-</li>
-<li><code>email</code><ul>
-<li>a valid email address string</li>
-</ul>
-</li>
-</ul>
-<h4 id="Usage">Usage</h4><p>Usage is a two steps process. First, a schema is constructed using the provided types and constraints:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> schema = &#123;</div><div class="line">    <span class="attr">a</span>: Joi.string()</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>Note that <strong>joi</strong> schema objects are immutable which means every additional rule added (e.g. <code>.min(5)</code>) will return a<br>new schema object.</p>
-<p>Then the value is validated against the schema:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Joi.validate(&#123; <span class="attr">a</span>: <span class="string">'a string'</span> &#125;, schema, <span class="function"><span class="keyword">function</span> (<span class="params">err, value</span>) </span>&#123; &#125;);</div></pre></td></tr></table></figure>
-<p>If the value is valid, <code>null</code> is returned, otherwise an <code>Error</code> object.</p>
-<p>The schema can be a plain JavaScript object where every key is assigned a <strong>joi</strong> type, or it can be a <strong>joi</strong> type directly:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> schema = Joi.string().min(<span class="number">10</span>);</div></pre></td></tr></table></figure>
-<p>If the schema is a <strong>joi</strong> type, the <code>schema.validate(value, callback)</code> can be called directly on the type. When passing a non-type schema object,<br>the module converts it internally to an object() type equivalent to:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> schema = Joi.object().keys(&#123;</div><div class="line">    <span class="attr">a</span>: Joi.string()</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>When validating a schema:</p>
-<ul>
-<li>Keys are optional by default.</li>
-<li>Strings are utf-8 encoded by default.</li>
-<li>Rules are defined in an additive fashion and evaluated in order after whitelist and blacklist checks.</li>
-</ul>
-<p>npm install joi —save</p>
-<figure class="highlight sqf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">var server = require(<span class="string">'./server'</span>);</div><div class="line">var <span class="built_in">resources</span> = require(<span class="string">'./resources'</span>);</div><div class="line">var validating =  require(<span class="string">'./middleware/validating'</span>);</div><div class="line">var schemas = require(<span class="string">'./schemas'</span>);</div><div class="line"></div><div class="line"><span class="comment">//	server.get(urlPattern, function(req, res)&#123;</span></div><div class="line"><span class="comment">//		res.send(obj);</span></div><div class="line"><span class="comment">//	&#125;);</span></div><div class="line"></div><div class="line">server.get(<span class="string">'/lists'</span>,<span class="built_in">resources</span>.lists.<span class="built_in">list</span>);</div><div class="line">server.put(<span class="string">'/lists/:list'</span>,validating(schemas.<span class="built_in">list</span>),<span class="built_in">resources</span>.lists.create);</div><div class="line">server.del(<span class="string">'/lists/:list'</span>,<span class="built_in">resources</span>.lists.del);</div><div class="line"></div><div class="line"><span class="comment">// Items</span></div><div class="line"></div><div class="line">server.get(<span class="string">'/lists/:list/items'</span>, <span class="built_in">resources</span>.<span class="built_in">items</span>.<span class="built_in">list</span>);</div><div class="line">server.post(<span class="string">'lists/:list/items'</span>,validating(schemas.item),<span class="built_in">resources</span>.<span class="built_in">items</span>.create);</div><div class="line">server.del(<span class="string">'/lists/:list/items/:item'</span>,<span class="built_in">resources</span>.<span class="built_in">items</span>.del);</div><div class="line">``` </div><div class="line">./middleware/validating.js</div></pre></td></tr></table></figure>
-<p>var Joi = require(‘joi’);</p>
-<p>module.exports =  function validating(schema){</p>
-<pre><code><span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">(req,res,next)</span></span>{
-
-    Joi.validate(req.body, schema,<span class="function"><span class="keyword">function</span><span class="params">(err, doc)</span></span>{
-        <span class="keyword">if</span> (err){
-            err.statusCode = <span class="number">400</span>;
-            <span class="built_in">next</span>(err);
-        }
-        <span class="keyword">else</span>{
-            req.body = doc;
-            <span class="built_in">next</span>();
-        }
-
-    });
-
-};
-</code></pre><p>};<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">.<span class="regexp">/schmeas/i</span>ndex.js</div></pre></td></tr></table></figure></p>
-<p>exports.list = require(‘./list’);<br>exports.item = require(‘./item’);<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">./schmeas/<span class="built_in">list</span>.js</div></pre></td></tr></table></figure></p>
-<p>var Joi = require(‘joi’);</p>
-<p>// npm doc joi</p>
-<p>module.exports = Joi.object().required().keys({<br>    name: Joi.string().required(),<br>    description: Joi.string(),<br>    priority: Joi.number().integer().default(0)<br>});<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./schemas/<span class="built_in">item</span>.js</div></pre></td></tr></table></figure></p>
-<p>var Joi = require(‘joi’);</p>
-<p>// npm doc joi</p>
-<p>module.exports = Joi.object().required().keys({<br>    label: Joi.string().required()<br>});<br>```</p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/02/21/nodejs-note-23/" itemprop="url">
-                  Building restfull API by using restify - 01
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-02-21T16:19:49+08:00" content="2016-02-21">
-              2016-02-21
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/21/nodejs-note-23/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/21/nodejs-note-23/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h2 id="Restify">Restify</h2><blockquote>
-<p>   restify is a node.js module built specifically to enable you to build correct REST web services. It intentionally borrows heavily from express as that is more or less the de facto API for writing web applications on top of node.js.</p>
-</blockquote>
-<h3 id="Why_use_restify_and_not_express?">Why use restify and not express?</h3><blockquote>
-<pre><code>Express' use case <span class="keyword">is</span> targeted <span class="keyword">at</span> browser applications <span class="keyword">and</span> <span class="keyword">contains</span> a lot <span class="keyword">of</span> functionality, such <span class="keyword">as</span> templating <span class="keyword">and</span> rendering, <span class="keyword">to</span> support <span class="keyword">that</span>. Restify <span class="keyword">does</span> <span class="keyword">not</span>.
-
-Restify exists <span class="keyword">to</span> let you build <span class="string">"strict"</span> API services <span class="keyword">that</span> are maintanable <span class="keyword">and</span> observable. Restify comes <span class="keyword">with</span> automatic DTrace support <span class="keyword">for</span> all your handlers, <span class="keyword">if</span> you're <span class="property">running</span> <span class="function_start"><span class="keyword">on</span></span> a platform <span class="keyword">that</span> supports DTrace.
-</code></pre></blockquote>
-<h2 id="creating_server">creating server</h2><p>server.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span>  restify = <span class="built_in">require</span>(<span class="string">'restify'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> options = &#123;</div><div class="line">	<span class="attr">name</span>:<span class="string">"Toodoo API"</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span>  server = restify.createServer(options);</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = server;</div></pre></td></tr></table></figure>
-<p>index.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span>  server =<span class="built_in">require</span>(<span class="string">'./server'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span>  port = <span class="built_in">Number</span>(process.env.SERVER_PORT) || <span class="number">8080</span>;</div><div class="line"></div><div class="line">server.listen(port, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">' API server listening on %j'</span>, server.address());</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
-<h2 id="Routes">Routes</h2><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">// Print  direction structure</div><div class="line">192:01 Lyn$ find . -print |<span class="string"> sed -e 's;[^/]*/;</span>|<span class="string">____;g;s;____</span>|<span class="string">; </span>|<span class="string">;g'</span></div><div class="line">.</div><div class="line">|<span class="string">____index.js</span></div><div class="line">|____node_modules</div><div class="line">|<span class="string"> </span></div><div class="line">|<span class="string">____package.json</span></div><div class="line">|____resources</div><div class="line">|<span class="string"> </span>|<span class="string">____index.js</span></div><div class="line">|<span class="string"> </span>|____items</div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____create.js</span></div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____del.js</span></div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____index.js</span></div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____list.js</span></div><div class="line">|<span class="string"> </span>|____lists</div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____create.js</span></div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____del.js</span></div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____index.js</span></div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____list.js</span></div><div class="line">|<span class="string">____routes.js</span></div><div class="line">|<span class="string">____server.js</span></div></pre></td></tr></table></figure>
-<figure class="highlight sqf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">var server = require(<span class="string">'./server'</span>);</div><div class="line">var <span class="built_in">resources</span> = require(<span class="string">'./resources'</span>)</div><div class="line"></div><div class="line"><span class="comment">//lists</span></div><div class="line"></div><div class="line"><span class="comment">//	server.get(urlPattern, function(req, res)&#123;</span></div><div class="line"><span class="comment">//		res.send(obj);</span></div><div class="line"><span class="comment">//	&#125;);</span></div><div class="line"></div><div class="line">server.get(<span class="string">'/lists'</span>,<span class="built_in">resources</span>.lists.<span class="built_in">list</span>);</div><div class="line">server.put(<span class="string">'/lists/:list'</span>,<span class="built_in">resources</span>.lists.create);</div><div class="line">server.del(<span class="string">'/lists/:list'</span>,<span class="built_in">resources</span>.lists.del);</div><div class="line"></div><div class="line"><span class="comment">// Items</span></div><div class="line"></div><div class="line">server.get(<span class="string">'/lists/:list/items'</span>, <span class="built_in">resources</span>.<span class="built_in">items</span>.<span class="built_in">list</span>);</div><div class="line">server.post(<span class="string">'lists/:list/items'</span>,<span class="built_in">resources</span>.<span class="built_in">items</span>.create);</div><div class="line">server.del(<span class="string">'/lists/:list/items/:item'</span>,<span class="built_in">resources</span>.<span class="built_in">items</span>.del);</div></pre></td></tr></table></figure>
-<p>server.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span>  restify = <span class="built_in">require</span>(<span class="string">'restify'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> options = &#123;</div><div class="line">	<span class="attr">name</span>:<span class="string">"Toodoo API"</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span>  server = restify.createServer(options);</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = server;</div><div class="line"></div><div class="line"><span class="built_in">require</span>(<span class="string">'./routes'</span>);</div></pre></td></tr></table></figure>
-<p>resources/index.js</p>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">exports.lists = <span class="built_in">require</span>(<span class="string">'./lists'</span>);</div><div class="line">exports.items = <span class="built_in">require</span>(<span class="string">'./items'</span>);</div></pre></td></tr></table></figure>
-<p>resources/lists/index.js</p>
-<figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">exports.<span class="built_in">list</span> = <span class="keyword">require</span>(<span class="string">'./list'</span>);</div><div class="line">exports.create = <span class="keyword">require</span>(<span class="string">'./create'</span>);</div><div class="line">exports.del =<span class="keyword">require</span>(<span class="string">'./del'</span>);</div></pre></td></tr></table></figure>
-<p>resources/lists/list.js<br>resources/lists/del.js<br>resources/lists/create.js</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>.exports= <span class="function"><span class="keyword">function</span> <span class="title">createItem</span><span class="params">(req,res,next)</span></span>&#123;</div><div class="line">	res.send(<span class="number">202</span>,&#123;hey:<span class="string">'there'</span>&#125;);</div><div class="line">	<span class="built_in">next</span>();</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp -R resources<span class="regexp">/lists/</span>* resources<span class="regexp">/items/</span></div></pre></td></tr></table></figure>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="number">192</span>:~ Lyn$ curl -I <span class="string">localhost:</span><span class="number">8080</span></div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">404</span> Not Found</div><div class="line">Content-<span class="string">Type:</span> application/json</div><div class="line">Content-<span class="string">Length:</span> <span class="number">56</span></div><div class="line"><span class="string">Date:</span> Sun, <span class="number">21</span> Feb <span class="number">2016</span> <span class="number">13</span>:<span class="number">39</span>:<span class="number">46</span> GMT</div><div class="line"><span class="string">Connection:</span> keep-alive</div><div class="line"><span class="symbol"></span></div><div class="line">192:~ Lyn$ curl -i <span class="string">localhost:</span><span class="number">8080</span>/lists</div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Content-<span class="string">Type:</span> application/json</div><div class="line">Content-<span class="string">Length:</span> <span class="number">15</span></div><div class="line"><span class="string">Date:</span> Sun, <span class="number">21</span> Feb <span class="number">2016</span> <span class="number">13</span>:<span class="number">40</span>:<span class="number">03</span> GMT</div><div class="line"><span class="string">Connection:</span> keep-alive</div><div class="line"></div><div class="line">&#123;<span class="string">"hey"</span>:<span class="string">"there"</span>&#125;</div><div class="line"><span class="number">192</span>:~ Lyn$</div><div class="line"><span class="symbol"> </span></div><div class="line">192:~ Lyn$ curl -X PUT -i <span class="string">localhost:</span><span class="number">8080</span><span class="regexp">/lists/</span>mylist</div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Content-<span class="string">Type:</span> application/json</div><div class="line">Content-<span class="string">Length:</span> <span class="number">15</span></div><div class="line"><span class="string">Date:</span> Sun, <span class="number">21</span> Feb <span class="number">2016</span> <span class="number">13</span>:<span class="number">41</span>:<span class="number">28</span> GMT</div><div class="line"><span class="string">Connection:</span> keep-alive</div><div class="line"></div><div class="line">&#123;<span class="string">"hey"</span>:<span class="string">"there"</span>&#125;</div><div class="line"><span class="symbol"></span></div><div class="line">192:~ Lyn$</div><div class="line"><span class="number">192</span>:~ Lyn$ curl  -i <span class="string">localhost:</span><span class="number">8080</span><span class="regexp">/lists/</span>mylist/items</div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Content-<span class="string">Type:</span> application/json</div><div class="line">Content-<span class="string">Length:</span> <span class="number">15</span></div><div class="line"><span class="string">Date:</span> Sun, <span class="number">21</span> Feb <span class="number">2016</span> <span class="number">13</span>:<span class="number">45</span>:<span class="number">50</span> GMT</div><div class="line"><span class="string">Connection:</span> keep-alive</div><div class="line"></div><div class="line">&#123;<span class="string">"hey"</span>:<span class="string">"there"</span>&#125;</div><div class="line"><span class="symbol"></span></div><div class="line"> </div><div class="line">192:~ Lyn$ curl -X DELETE  -i <span class="string">localhost:</span><span class="number">8080</span><span class="regexp">/lists/</span>mylist<span class="regexp">/items/</span>itemid</div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Content-<span class="string">Type:</span> application/json</div><div class="line">Content-<span class="string">Length:</span> <span class="number">15</span></div><div class="line"><span class="string">Date:</span> Sun, <span class="number">21</span> Feb <span class="number">2016</span> <span class="number">13</span>:<span class="number">47</span>:<span class="number">03</span> GMT</div><div class="line"><span class="string">Connection:</span> keep-alive</div><div class="line"></div><div class="line">&#123;<span class="string">"hey"</span>:<span class="string">"there"</span>&#125;<span class="number">192</span>:~ Lyn$</div><div class="line"><span class="number">192</span>:~ Lyn$</div></pre></td></tr></table></figure>
-<h2 id="Logging_requests">Logging requests</h2><h3 id="Bunyan">Bunyan</h3><blockquote>
-<p>Bunyan is a simple and fast JSON logging library for node.js services<br>It is very powerfull tool which help you to logging specific info </p>
-</blockquote>
-<figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">var <span class="built_in">log</span> = bunyan.createLogger(&#123;</div><div class="line">  name: <span class="string">'myapp'</span>,</div><div class="line">  streams: [</div><div class="line">    &#123;</div><div class="line">      level: <span class="string">'info'</span>,</div><div class="line">      stream: process.stdout            // <span class="built_in">log</span> INFO <span class="literal">and</span> above <span class="keyword">to</span> stdout</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      level: <span class="string">'error'</span>,</div><div class="line">      path: <span class="string">'/var/tmp/myapp-error.log'</span>  // <span class="built_in">log</span> ERROR <span class="literal">and</span> above <span class="keyword">to</span> a file</div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;)<span class="comment">;</span></div></pre></td></tr></table></figure>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="number">192</span>:<span class="number">01</span> Lyn$ npm install bunyan --save</div><div class="line"></div><div class="line">npm WARN <span class="keyword">package</span>.json <span class="symbol">api01@</span><span class="number">1.0</span><span class="number">.0</span> No repository field.</div><div class="line">npm WARN <span class="keyword">package</span>.json <span class="symbol">api01@</span><span class="number">1.0</span><span class="number">.0</span> No README <span class="keyword">data</span></div><div class="line"></div><div class="line">&gt; dtrace-<span class="symbol">provider@</span><span class="number">0.6</span><span class="number">.0</span> install /Users/Lyn/src/node/node-api/<span class="number">01</span>/node_modules/bunyan/node_modules/dtrace-provider</div><div class="line">&gt; node scripts/install.js</div><div class="line"></div><div class="line"><span class="symbol">bunyan@</span><span class="number">1.6</span><span class="number">.0</span> node_modules/bunyan</div><div class="line">├── safe-json-<span class="symbol">stringify@</span><span class="number">1.0</span><span class="number">.3</span></div><div class="line">├── <span class="symbol">moment@</span><span class="number">2.11</span><span class="number">.2</span></div><div class="line">├── dtrace-<span class="symbol">provider@</span><span class="number">0.6</span><span class="number">.0</span> (<span class="symbol">nan@</span><span class="number">2.2</span><span class="number">.0</span>)</div><div class="line">└── <span class="symbol">mv@</span><span class="number">2.1</span><span class="number">.1</span> (<span class="symbol">ncp@</span><span class="number">2.0</span><span class="number">.0</span>, <span class="symbol">mkdirp@</span><span class="number">0.5</span><span class="number">.1</span>, <span class="symbol">rimraf@</span><span class="number">2.4</span><span class="number">.5</span>)</div></pre></td></tr></table></figure>
-<p>server.js<br><figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">var</span>  restify = <span class="keyword">require</span>(<span class="string">'restify'</span>);</div><div class="line"><span class="built_in">var</span>  bunyan = <span class="keyword">require</span>(<span class="string">'bunyan'</span>); </div><div class="line"><span class="built_in">var</span> options = &#123;</div><div class="line">	name:<span class="string">"Toodoo API"</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="built_in">var</span>  server = restify.createServer(options);</div><div class="line"></div><div class="line"></div><div class="line">server.<span class="keyword">on</span>(<span class="string">'after'</span>, restify.auditLogger(&#123;</div><div class="line">	<span class="keyword">log</span>: bunyan.createLogger(&#123;</div><div class="line">		name:<span class="string">'audit'</span>,</div><div class="line">		stream: process.stdout</div><div class="line">	&#125;)</div><div class="line">&#125;));</div><div class="line"></div><div class="line"><span class="comment">// server.on('after', function ()&#123;</span></div><div class="line"><span class="comment">//	console.log('after', arguments);</span></div><div class="line"><span class="comment">// &#125;);</span></div><div class="line"></div><div class="line">module.exports = server;</div><div class="line"></div><div class="line"><span class="keyword">require</span>(<span class="string">'./routes'</span>);</div></pre></td></tr></table></figure></p>
-<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="number">192</span>:<span class="number">01</span> Lyn$ node index.js</div><div class="line"></div><div class="line">API server listening on &#123;<span class="string">"address"</span>:<span class="string">"::"</span>,<span class="string">"family"</span>:<span class="string">"IPv6"</span>,<span class="string">"port"</span>:<span class="number">8080</span>&#125;</div><div class="line"></div><div class="line">&#123;<span class="string">"name"</span>:<span class="string">"audit"</span>,<span class="string">"hostname"</span>:<span class="string">"Lyn-Cheung-MBP.local"</span>,<span class="string">"pid"</span>:<span class="number">44385</span>,<span class="string">"audit"</span>:true,<span class="string">"level"</span>:<span class="number">30</span>,<span class="string">"remoteAddress"</span>:<span class="string">"::ffff:127.0.0.1"</span>,<span class="string">"remotePort"</span>:<span class="number">56088</span>,<span class="string">"req_id"</span>:<span class="string">"a701a353-6b55-4aa0-8888-5d67518867fb"</span>,<span class="string">"req"</span>:&#123;<span class="string">"query"</span>:<span class="string">""</span>,<span class="string">"method"</span>:<span class="string">"<span class="keyword">DELETE</span>"</span>,<span class="string">"url"</span>:<span class="string">"/lists/mylist/items/itemid"</span>,<span class="string">"headers"</span>:&#123;<span class="string">"host"</span>:<span class="string">"localhost:8080"</span>,<span class="string">"user-agent"</span>:<span class="string">"curl/7.43.0"</span>,<span class="string">"accept"</span>:<span class="string">"*/*"</span>&#125;,<span class="string">"httpVersion"</span>:<span class="string">"1.1"</span>,<span class="string">"trailers"</span>:&#123;&#125;,<span class="string">"version"</span>:<span class="string">"*"</span>,<span class="string">"timers"</span>:&#123;<span class="string">"delItem"</span>:<span class="number">4500</span>&#125;&#125;,<span class="string">"res"</span>:&#123;<span class="string">"statusCode"</span>:<span class="number">200</span>,<span class="string">"headers"</span>:&#123;<span class="string">"content-type"</span>:<span class="string">"application/json"</span>,<span class="string">"content-length"</span>:<span class="number">15</span>&#125;,<span class="string">"trailer"</span>:false&#125;,<span class="string">"latency"</span>:<span class="number">8</span>,<span class="string">"_audit"</span>:true,<span class="string">"msg"</span>:<span class="string">"handled: 200"</span>,<span class="string">"time"</span>:<span class="string">"2016-02-21T14:21:20.022Z"</span>,<span class="string">"v"</span>:<span class="number">0</span>&#125;</div></pre></td></tr></table></figure>
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1678,7 +1699,7 @@ Restify exists <span class="keyword">to</span> let you build <span class="string
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">55</span>
+              <span class="site-state-item-count">57</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

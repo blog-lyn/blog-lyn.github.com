@@ -211,6 +211,277 @@
             
             
               
+                <a class="post-title-link" href="/2016/02/22/nodejs-note-24/" itemprop="url">
+                  Building restfull API by using restify - 02
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-02-22T21:45:57+08:00" content="2016-02-22">
+              2016-02-22
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/02/22/nodejs-note-24/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/22/nodejs-note-24/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span>  restify = <span class="built_in">require</span>(<span class="string">'restify'</span>);</div><div class="line"><span class="keyword">var</span>  bunyan = <span class="built_in">require</span>(<span class="string">'bunyan'</span>); </div><div class="line"><span class="keyword">var</span> options = &#123;</div><div class="line">	<span class="attr">name</span>:<span class="string">"Toodoo API"</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span>  server = restify.createServer(options);</div><div class="line"></div><div class="line"></div><div class="line">server.use(<span class="function"><span class="keyword">function</span>(<span class="params">req,res,next</span>)</span>&#123;</div><div class="line"></div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'middleware 1 here!'</span> );</div><div class="line">	next();</div><div class="line">	<span class="comment">// next(new Error('something awful happened!'));</span></div><div class="line"></div><div class="line">&#125;);</div><div class="line"></div><div class="line">server.use(<span class="function"><span class="keyword">function</span>(<span class="params">req,res,next</span>)</span>&#123;</div><div class="line"></div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'middleware 2 here!'</span> );</div><div class="line">	next();</div><div class="line">&#125;);</div><div class="line"></div><div class="line">server.on(<span class="string">'after'</span>, restify.auditLogger(&#123;</div><div class="line">	<span class="attr">log</span>: bunyan.createLogger(&#123;</div><div class="line">		<span class="attr">name</span>:<span class="string">'audit'</span>,</div><div class="line">		<span class="attr">stream</span>: process.stdout</div><div class="line">	&#125;)</div><div class="line">&#125;));</div><div class="line"></div><div class="line"><span class="comment">// server.on('after', function ()&#123;</span></div><div class="line"><span class="comment">//	console.log('after', arguments);</span></div><div class="line"><span class="comment">// &#125;);</span></div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = server;</div><div class="line"></div><div class="line"><span class="built_in">require</span>(<span class="string">'./routes'</span>);</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span>  restify = <span class="built_in">require</span>(<span class="string">'restify'</span>);</div><div class="line"><span class="keyword">var</span>  bunyan = <span class="built_in">require</span>(<span class="string">'bunyan'</span>); </div><div class="line"><span class="keyword">var</span> options = &#123;</div><div class="line">	<span class="attr">name</span>:<span class="string">"Toodoo API"</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span>  server = restify.createServer(options);</div><div class="line"></div><div class="line"></div><div class="line">server.use(<span class="function"><span class="keyword">function</span>(<span class="params">req,res,next</span>)</span>&#123;</div><div class="line"></div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'middleware 1 here!'</span>, req.body);</div><div class="line">	next();</div><div class="line">	<span class="comment">// next(new Error('something awful happened!'));</span></div><div class="line"></div><div class="line">&#125;);</div><div class="line"></div><div class="line">server.use(restify.bodyParser(&#123;</div><div class="line">	<span class="attr">maxBodySize</span>: <span class="number">10</span>*<span class="number">1024</span></div><div class="line">&#125;));</div><div class="line"></div><div class="line">server.use(<span class="function"><span class="keyword">function</span>(<span class="params">req,res,next</span>)</span>&#123;</div><div class="line"></div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'middleware 2 here!'</span>, req.body);</div><div class="line">	next();</div><div class="line">&#125;);</div><div class="line"></div><div class="line">server.on(<span class="string">'after'</span>, restify.auditLogger(&#123;</div><div class="line">	<span class="attr">log</span>: bunyan.createLogger(&#123;</div><div class="line">		<span class="attr">name</span>:<span class="string">'audit'</span>,</div><div class="line">		<span class="attr">stream</span>: process.stdout</div><div class="line">	&#125;)</div><div class="line">&#125;));</div><div class="line"></div><div class="line"><span class="comment">// server.on('after', function ()&#123;</span></div><div class="line"><span class="comment">//	console.log('after', arguments);</span></div><div class="line"><span class="comment">// &#125;);</span></div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = server;</div><div class="line"></div><div class="line"><span class="built_in">require</span>(<span class="string">'./routes'</span>);</div><div class="line"><span class="comment">// test with data</span></div><div class="line"><span class="comment">// curl -i -X PUT localhost:8080/lists/mylist --data '&#123;"hey":"there"&#125;' -H 'content-type: application/json'</span></div></pre></td></tr></table></figure>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="number">192</span>:<span class="number">02</span> Lyn$ node .</div><div class="line"> API server listening on &#123;<span class="string">"address"</span>:<span class="string">"::"</span>,<span class="string">"family"</span>:<span class="string">"IPv6"</span>,<span class="string">"port"</span>:<span class="number">8080</span>&#125;</div><div class="line">middleware <span class="number">1</span> here! undefined</div><div class="line">middleware <span class="number">2</span> here! &#123; hey: <span class="string">'there'</span> &#125;</div><div class="line">body : &#123; hey: <span class="string">'there'</span> &#125;</div><div class="line">&#123;<span class="string">"name"</span>:<span class="string">"audit"</span>,<span class="string">"hostname"</span>:<span class="string">"Lyn-Cheung-MBP.local"</span>,<span class="string">"pid"</span>:<span class="number">45195</span>,<span class="string">"audit"</span>:true,<span class="string">"level"</span>:<span class="number">30</span>,<span class="string">"remoteAddress"</span>:<span class="string">"::ffff:127.0.0.1"</span>,<span class="string">"remotePort"</span>:<span class="number">55210</span>,<span class="string">"req_id"</span>:<span class="string">"6185400f-ad38-4578-bec7-2b1618a6ccf6"</span>,<span class="string">"req"</span>:&#123;<span class="string">"query"</span>:<span class="string">""</span>,<span class="string">"method"</span>:<span class="string">"PUT"</span>,<span class="string">"url"</span>:<span class="string">"/lists/mylist"</span>,<span class="string">"headers"</span>:&#123;<span class="string">"host"</span>:<span class="string">"localhost:8080"</span>,<span class="string">"user-agent"</span>:<span class="string">"curl/7.43.0"</span>,<span class="string">"accept"</span>:<span class="string">"*/*"</span>,<span class="string">"content-type"</span>:<span class="string">"application/json"</span>,<span class="string">"content-length"</span>:<span class="string">"15"</span>&#125;,<span class="string">"httpVersion"</span>:<span class="string">"1.1"</span>,<span class="string">"trailers"</span>:&#123;&#125;,<span class="string">"version"</span>:<span class="string">"*"</span>,<span class="string">"timers"</span>:&#123;<span class="string">"handler-0"</span>:<span class="number">449</span>,<span class="string">"readBody"</span>:<span class="number">2179</span>,<span class="string">"parseBody"</span>:<span class="number">242</span>,<span class="string">"handler-1"</span>:<span class="number">1494</span>,<span class="string">"createList"</span>:<span class="number">4112</span>&#125;&#125;,<span class="string">"res"</span>:&#123;<span class="string">"statusCode"</span>:<span class="number">200</span>,<span class="string">"headers"</span>:&#123;<span class="string">"content-type"</span>:<span class="string">"application/json"</span>,<span class="string">"content-length"</span>:<span class="number">15</span>&#125;,<span class="string">"trailer"</span>:false&#125;,<span class="string">"latency"</span>:<span class="number">12</span>,<span class="string">"_audit"</span>:true,<span class="string">"msg"</span>:<span class="string">"handled: 200"</span>,<span class="string">"time"</span>:<span class="string">"2016-02-22T15:00:33.154Z"</span>,<span class="string">"v"</span>:<span class="number">0</span>&#125;</div></pre></td></tr></table></figure>
+<p>create.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>.exports= <span class="function"><span class="keyword">function</span> <span class="title">createList</span>(<span class="params">req,res,next</span>)</span>&#123;</div><div class="line">	<span class="keyword">var</span> body = req.body;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'body :'</span>,body);</div><div class="line">	res.send(&#123;<span class="attr">hey</span>:<span class="string">'there'</span>&#125;);</div><div class="line">	next();</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="validating_the_data">validating the data</h2><h3 id="Joi">Joi</h3><p>joi allows you to create <em>blueprints</em> or <em>schemas</em> for JavaScript objects (an object that stores information) to ensure <em>validation</em> of key information.</p>
+<h4 id="Example">Example</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Joi = <span class="built_in">require</span>(<span class="string">'joi'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> schema = Joi.object().keys(&#123;</div><div class="line">    <span class="attr">username</span>: Joi.string().alphanum().min(<span class="number">3</span>).max(<span class="number">30</span>).required(),</div><div class="line">    <span class="attr">password</span>: Joi.string().regex(<span class="regexp">/^[a-zA-Z0-9]&#123;3,30&#125;$/</span>),</div><div class="line">    <span class="attr">access_token</span>: [Joi.string(), Joi.number()],</div><div class="line">    <span class="attr">birthyear</span>: Joi.number().integer().min(<span class="number">1900</span>).max(<span class="number">2013</span>),</div><div class="line">    <span class="attr">email</span>: Joi.string().email()</div><div class="line">&#125;).with(<span class="string">'username'</span>, <span class="string">'birthyear'</span>).without(<span class="string">'password'</span>, <span class="string">'access_token'</span>);</div><div class="line"></div><div class="line">Joi.validate(&#123; <span class="attr">username</span>: <span class="string">'abc'</span>, <span class="attr">birthyear</span>: <span class="number">1994</span> &#125;, schema, <span class="function"><span class="keyword">function</span> (<span class="params">err, value</span>) </span>&#123; &#125;);  <span class="comment">// err === null -&gt; valid</span></div></pre></td></tr></table></figure>
+<p>The above schema defines the following constraints:</p>
+<ul>
+<li><code>username</code><ul>
+<li>a required string</li>
+<li>must contain only alphanumeric characters</li>
+<li>at least 3 characters long but no more than 30</li>
+<li>must be accompanied by <code>birthyear</code></li>
+</ul>
+</li>
+<li><code>password</code><ul>
+<li>an optional string</li>
+<li>must satisfy the custom regex</li>
+<li>cannot appear together with <code>access_token</code></li>
+</ul>
+</li>
+<li><code>access_token</code><ul>
+<li>an optional, unconstrained string or number</li>
+</ul>
+</li>
+<li><code>birthyear</code><ul>
+<li>an integer between 1900 and 2013</li>
+</ul>
+</li>
+<li><code>email</code><ul>
+<li>a valid email address string</li>
+</ul>
+</li>
+</ul>
+<h4 id="Usage">Usage</h4><p>Usage is a two steps process. First, a schema is constructed using the provided types and constraints:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> schema = &#123;</div><div class="line">    <span class="attr">a</span>: Joi.string()</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>Note that <strong>joi</strong> schema objects are immutable which means every additional rule added (e.g. <code>.min(5)</code>) will return a<br>new schema object.</p>
+<p>Then the value is validated against the schema:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Joi.validate(&#123; <span class="attr">a</span>: <span class="string">'a string'</span> &#125;, schema, <span class="function"><span class="keyword">function</span> (<span class="params">err, value</span>) </span>&#123; &#125;);</div></pre></td></tr></table></figure>
+<p>If the value is valid, <code>null</code> is returned, otherwise an <code>Error</code> object.</p>
+<p>The schema can be a plain JavaScript object where every key is assigned a <strong>joi</strong> type, or it can be a <strong>joi</strong> type directly:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> schema = Joi.string().min(<span class="number">10</span>);</div></pre></td></tr></table></figure>
+<p>If the schema is a <strong>joi</strong> type, the <code>schema.validate(value, callback)</code> can be called directly on the type. When passing a non-type schema object,<br>the module converts it internally to an object() type equivalent to:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> schema = Joi.object().keys(&#123;</div><div class="line">    <span class="attr">a</span>: Joi.string()</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>When validating a schema:</p>
+<ul>
+<li>Keys are optional by default.</li>
+<li>Strings are utf-8 encoded by default.</li>
+<li>Rules are defined in an additive fashion and evaluated in order after whitelist and blacklist checks.</li>
+</ul>
+<p>npm install joi —save</p>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">var server = require(<span class="string">'./server'</span>);</div><div class="line">var <span class="built_in">resources</span> = require(<span class="string">'./resources'</span>);</div><div class="line">var validating =  require(<span class="string">'./middleware/validating'</span>);</div><div class="line">var schemas = require(<span class="string">'./schemas'</span>);</div><div class="line"></div><div class="line"><span class="comment">//	server.get(urlPattern, function(req, res)&#123;</span></div><div class="line"><span class="comment">//		res.send(obj);</span></div><div class="line"><span class="comment">//	&#125;);</span></div><div class="line"></div><div class="line">server.get(<span class="string">'/lists'</span>,<span class="built_in">resources</span>.lists.<span class="built_in">list</span>);</div><div class="line">server.put(<span class="string">'/lists/:list'</span>,validating(schemas.<span class="built_in">list</span>),<span class="built_in">resources</span>.lists.create);</div><div class="line">server.del(<span class="string">'/lists/:list'</span>,<span class="built_in">resources</span>.lists.del);</div><div class="line"></div><div class="line"><span class="comment">// Items</span></div><div class="line"></div><div class="line">server.get(<span class="string">'/lists/:list/items'</span>, <span class="built_in">resources</span>.<span class="built_in">items</span>.<span class="built_in">list</span>);</div><div class="line">server.post(<span class="string">'lists/:list/items'</span>,validating(schemas.item),<span class="built_in">resources</span>.<span class="built_in">items</span>.create);</div><div class="line">server.del(<span class="string">'/lists/:list/items/:item'</span>,<span class="built_in">resources</span>.<span class="built_in">items</span>.del);</div><div class="line">``` </div><div class="line">./middleware/validating.js</div></pre></td></tr></table></figure>
+<p>var Joi = require(‘joi’);</p>
+<p>module.exports =  function validating(schema){</p>
+<pre><code><span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">(req,res,next)</span></span>{
+
+    Joi.validate(req.body, schema,<span class="function"><span class="keyword">function</span><span class="params">(err, doc)</span></span>{
+        <span class="keyword">if</span> (err){
+            err.statusCode = <span class="number">400</span>;
+            <span class="built_in">next</span>(err);
+        }
+        <span class="keyword">else</span>{
+            req.body = doc;
+            <span class="built_in">next</span>();
+        }
+
+    });
+
+};
+</code></pre><p>};<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">.<span class="regexp">/schmeas/i</span>ndex.js</div></pre></td></tr></table></figure></p>
+<p>exports.list = require(‘./list’);<br>exports.item = require(‘./item’);<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">./schmeas/<span class="built_in">list</span>.js</div></pre></td></tr></table></figure></p>
+<p>var Joi = require(‘joi’);</p>
+<p>// npm doc joi</p>
+<p>module.exports = Joi.object().required().keys({<br>    name: Joi.string().required(),<br>    description: Joi.string(),<br>    priority: Joi.number().integer().default(0)<br>});<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./schemas/<span class="built_in">item</span>.js</div></pre></td></tr></table></figure></p>
+<p>var Joi = require(‘joi’);</p>
+<p>// npm doc joi</p>
+<p>module.exports = Joi.object().required().keys({<br>    label: Joi.string().required()<br>});<br>```</p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/2016/02/21/nodejs-note-23/" itemprop="url">
+                  Building restfull API by using restify - 01
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-02-21T16:19:49+08:00" content="2016-02-21">
+              2016-02-21
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/02/21/nodejs-note-23/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/21/nodejs-note-23/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h2 id="Restify">Restify</h2><blockquote>
+<p>   restify is a node.js module built specifically to enable you to build correct REST web services. It intentionally borrows heavily from express as that is more or less the de facto API for writing web applications on top of node.js.</p>
+</blockquote>
+<h3 id="Why_use_restify_and_not_express?">Why use restify and not express?</h3><blockquote>
+<pre><code>Express' use case <span class="keyword">is</span> targeted <span class="keyword">at</span> browser applications <span class="keyword">and</span> <span class="keyword">contains</span> a lot <span class="keyword">of</span> functionality, such <span class="keyword">as</span> templating <span class="keyword">and</span> rendering, <span class="keyword">to</span> support <span class="keyword">that</span>. Restify <span class="keyword">does</span> <span class="keyword">not</span>.
+
+Restify exists <span class="keyword">to</span> let you build <span class="string">"strict"</span> API services <span class="keyword">that</span> are maintanable <span class="keyword">and</span> observable. Restify comes <span class="keyword">with</span> automatic DTrace support <span class="keyword">for</span> all your handlers, <span class="keyword">if</span> you're <span class="property">running</span> <span class="function_start"><span class="keyword">on</span></span> a platform <span class="keyword">that</span> supports DTrace.
+</code></pre></blockquote>
+<h2 id="creating_server">creating server</h2><p>server.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span>  restify = <span class="built_in">require</span>(<span class="string">'restify'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> options = &#123;</div><div class="line">	<span class="attr">name</span>:<span class="string">"Toodoo API"</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span>  server = restify.createServer(options);</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = server;</div></pre></td></tr></table></figure>
+<p>index.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span>  server =<span class="built_in">require</span>(<span class="string">'./server'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span>  port = <span class="built_in">Number</span>(process.env.SERVER_PORT) || <span class="number">8080</span>;</div><div class="line"></div><div class="line">server.listen(port, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">' API server listening on %j'</span>, server.address());</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<h2 id="Routes">Routes</h2><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">// Print  direction structure</div><div class="line">192:01 Lyn$ find . -print |<span class="string"> sed -e 's;[^/]*/;</span>|<span class="string">____;g;s;____</span>|<span class="string">; </span>|<span class="string">;g'</span></div><div class="line">.</div><div class="line">|<span class="string">____index.js</span></div><div class="line">|____node_modules</div><div class="line">|<span class="string"> </span></div><div class="line">|<span class="string">____package.json</span></div><div class="line">|____resources</div><div class="line">|<span class="string"> </span>|<span class="string">____index.js</span></div><div class="line">|<span class="string"> </span>|____items</div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____create.js</span></div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____del.js</span></div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____index.js</span></div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____list.js</span></div><div class="line">|<span class="string"> </span>|____lists</div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____create.js</span></div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____del.js</span></div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____index.js</span></div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____list.js</span></div><div class="line">|<span class="string">____routes.js</span></div><div class="line">|<span class="string">____server.js</span></div></pre></td></tr></table></figure>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">var server = require(<span class="string">'./server'</span>);</div><div class="line">var <span class="built_in">resources</span> = require(<span class="string">'./resources'</span>)</div><div class="line"></div><div class="line"><span class="comment">//lists</span></div><div class="line"></div><div class="line"><span class="comment">//	server.get(urlPattern, function(req, res)&#123;</span></div><div class="line"><span class="comment">//		res.send(obj);</span></div><div class="line"><span class="comment">//	&#125;);</span></div><div class="line"></div><div class="line">server.get(<span class="string">'/lists'</span>,<span class="built_in">resources</span>.lists.<span class="built_in">list</span>);</div><div class="line">server.put(<span class="string">'/lists/:list'</span>,<span class="built_in">resources</span>.lists.create);</div><div class="line">server.del(<span class="string">'/lists/:list'</span>,<span class="built_in">resources</span>.lists.del);</div><div class="line"></div><div class="line"><span class="comment">// Items</span></div><div class="line"></div><div class="line">server.get(<span class="string">'/lists/:list/items'</span>, <span class="built_in">resources</span>.<span class="built_in">items</span>.<span class="built_in">list</span>);</div><div class="line">server.post(<span class="string">'lists/:list/items'</span>,<span class="built_in">resources</span>.<span class="built_in">items</span>.create);</div><div class="line">server.del(<span class="string">'/lists/:list/items/:item'</span>,<span class="built_in">resources</span>.<span class="built_in">items</span>.del);</div></pre></td></tr></table></figure>
+<p>server.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span>  restify = <span class="built_in">require</span>(<span class="string">'restify'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> options = &#123;</div><div class="line">	<span class="attr">name</span>:<span class="string">"Toodoo API"</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span>  server = restify.createServer(options);</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = server;</div><div class="line"></div><div class="line"><span class="built_in">require</span>(<span class="string">'./routes'</span>);</div></pre></td></tr></table></figure>
+<p>resources/index.js</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">exports.lists = <span class="built_in">require</span>(<span class="string">'./lists'</span>);</div><div class="line">exports.items = <span class="built_in">require</span>(<span class="string">'./items'</span>);</div></pre></td></tr></table></figure>
+<p>resources/lists/index.js</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">exports.<span class="built_in">list</span> = <span class="keyword">require</span>(<span class="string">'./list'</span>);</div><div class="line">exports.create = <span class="keyword">require</span>(<span class="string">'./create'</span>);</div><div class="line">exports.del =<span class="keyword">require</span>(<span class="string">'./del'</span>);</div></pre></td></tr></table></figure>
+<p>resources/lists/list.js<br>resources/lists/del.js<br>resources/lists/create.js</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>.exports= <span class="function"><span class="keyword">function</span> <span class="title">createItem</span><span class="params">(req,res,next)</span></span>&#123;</div><div class="line">	res.send(<span class="number">202</span>,&#123;hey:<span class="string">'there'</span>&#125;);</div><div class="line">	<span class="built_in">next</span>();</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp -R resources<span class="regexp">/lists/</span>* resources<span class="regexp">/items/</span></div></pre></td></tr></table></figure>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="number">192</span>:~ Lyn$ curl -I <span class="string">localhost:</span><span class="number">8080</span></div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">404</span> Not Found</div><div class="line">Content-<span class="string">Type:</span> application/json</div><div class="line">Content-<span class="string">Length:</span> <span class="number">56</span></div><div class="line"><span class="string">Date:</span> Sun, <span class="number">21</span> Feb <span class="number">2016</span> <span class="number">13</span>:<span class="number">39</span>:<span class="number">46</span> GMT</div><div class="line"><span class="string">Connection:</span> keep-alive</div><div class="line"><span class="symbol"></span></div><div class="line">192:~ Lyn$ curl -i <span class="string">localhost:</span><span class="number">8080</span>/lists</div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Content-<span class="string">Type:</span> application/json</div><div class="line">Content-<span class="string">Length:</span> <span class="number">15</span></div><div class="line"><span class="string">Date:</span> Sun, <span class="number">21</span> Feb <span class="number">2016</span> <span class="number">13</span>:<span class="number">40</span>:<span class="number">03</span> GMT</div><div class="line"><span class="string">Connection:</span> keep-alive</div><div class="line"></div><div class="line">&#123;<span class="string">"hey"</span>:<span class="string">"there"</span>&#125;</div><div class="line"><span class="number">192</span>:~ Lyn$</div><div class="line"><span class="symbol"> </span></div><div class="line">192:~ Lyn$ curl -X PUT -i <span class="string">localhost:</span><span class="number">8080</span><span class="regexp">/lists/</span>mylist</div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Content-<span class="string">Type:</span> application/json</div><div class="line">Content-<span class="string">Length:</span> <span class="number">15</span></div><div class="line"><span class="string">Date:</span> Sun, <span class="number">21</span> Feb <span class="number">2016</span> <span class="number">13</span>:<span class="number">41</span>:<span class="number">28</span> GMT</div><div class="line"><span class="string">Connection:</span> keep-alive</div><div class="line"></div><div class="line">&#123;<span class="string">"hey"</span>:<span class="string">"there"</span>&#125;</div><div class="line"><span class="symbol"></span></div><div class="line">192:~ Lyn$</div><div class="line"><span class="number">192</span>:~ Lyn$ curl  -i <span class="string">localhost:</span><span class="number">8080</span><span class="regexp">/lists/</span>mylist/items</div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Content-<span class="string">Type:</span> application/json</div><div class="line">Content-<span class="string">Length:</span> <span class="number">15</span></div><div class="line"><span class="string">Date:</span> Sun, <span class="number">21</span> Feb <span class="number">2016</span> <span class="number">13</span>:<span class="number">45</span>:<span class="number">50</span> GMT</div><div class="line"><span class="string">Connection:</span> keep-alive</div><div class="line"></div><div class="line">&#123;<span class="string">"hey"</span>:<span class="string">"there"</span>&#125;</div><div class="line"><span class="symbol"></span></div><div class="line"> </div><div class="line">192:~ Lyn$ curl -X DELETE  -i <span class="string">localhost:</span><span class="number">8080</span><span class="regexp">/lists/</span>mylist<span class="regexp">/items/</span>itemid</div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Content-<span class="string">Type:</span> application/json</div><div class="line">Content-<span class="string">Length:</span> <span class="number">15</span></div><div class="line"><span class="string">Date:</span> Sun, <span class="number">21</span> Feb <span class="number">2016</span> <span class="number">13</span>:<span class="number">47</span>:<span class="number">03</span> GMT</div><div class="line"><span class="string">Connection:</span> keep-alive</div><div class="line"></div><div class="line">&#123;<span class="string">"hey"</span>:<span class="string">"there"</span>&#125;<span class="number">192</span>:~ Lyn$</div><div class="line"><span class="number">192</span>:~ Lyn$</div></pre></td></tr></table></figure>
+<h2 id="Logging_requests">Logging requests</h2><h3 id="Bunyan">Bunyan</h3><blockquote>
+<p>Bunyan is a simple and fast JSON logging library for node.js services<br>It is very powerfull tool which help you to logging specific info </p>
+</blockquote>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">var <span class="built_in">log</span> = bunyan.createLogger(&#123;</div><div class="line">  name: <span class="string">'myapp'</span>,</div><div class="line">  streams: [</div><div class="line">    &#123;</div><div class="line">      level: <span class="string">'info'</span>,</div><div class="line">      stream: process.stdout            // <span class="built_in">log</span> INFO <span class="literal">and</span> above <span class="keyword">to</span> stdout</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      level: <span class="string">'error'</span>,</div><div class="line">      path: <span class="string">'/var/tmp/myapp-error.log'</span>  // <span class="built_in">log</span> ERROR <span class="literal">and</span> above <span class="keyword">to</span> a file</div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;)<span class="comment">;</span></div></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="number">192</span>:<span class="number">01</span> Lyn$ npm install bunyan --save</div><div class="line"></div><div class="line">npm WARN <span class="keyword">package</span>.json <span class="symbol">api01@</span><span class="number">1.0</span><span class="number">.0</span> No repository field.</div><div class="line">npm WARN <span class="keyword">package</span>.json <span class="symbol">api01@</span><span class="number">1.0</span><span class="number">.0</span> No README <span class="keyword">data</span></div><div class="line"></div><div class="line">&gt; dtrace-<span class="symbol">provider@</span><span class="number">0.6</span><span class="number">.0</span> install /Users/Lyn/src/node/node-api/<span class="number">01</span>/node_modules/bunyan/node_modules/dtrace-provider</div><div class="line">&gt; node scripts/install.js</div><div class="line"></div><div class="line"><span class="symbol">bunyan@</span><span class="number">1.6</span><span class="number">.0</span> node_modules/bunyan</div><div class="line">├── safe-json-<span class="symbol">stringify@</span><span class="number">1.0</span><span class="number">.3</span></div><div class="line">├── <span class="symbol">moment@</span><span class="number">2.11</span><span class="number">.2</span></div><div class="line">├── dtrace-<span class="symbol">provider@</span><span class="number">0.6</span><span class="number">.0</span> (<span class="symbol">nan@</span><span class="number">2.2</span><span class="number">.0</span>)</div><div class="line">└── <span class="symbol">mv@</span><span class="number">2.1</span><span class="number">.1</span> (<span class="symbol">ncp@</span><span class="number">2.0</span><span class="number">.0</span>, <span class="symbol">mkdirp@</span><span class="number">0.5</span><span class="number">.1</span>, <span class="symbol">rimraf@</span><span class="number">2.4</span><span class="number">.5</span>)</div></pre></td></tr></table></figure>
+<p>server.js<br><figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">var</span>  restify = <span class="keyword">require</span>(<span class="string">'restify'</span>);</div><div class="line"><span class="built_in">var</span>  bunyan = <span class="keyword">require</span>(<span class="string">'bunyan'</span>); </div><div class="line"><span class="built_in">var</span> options = &#123;</div><div class="line">	name:<span class="string">"Toodoo API"</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="built_in">var</span>  server = restify.createServer(options);</div><div class="line"></div><div class="line"></div><div class="line">server.<span class="keyword">on</span>(<span class="string">'after'</span>, restify.auditLogger(&#123;</div><div class="line">	<span class="keyword">log</span>: bunyan.createLogger(&#123;</div><div class="line">		name:<span class="string">'audit'</span>,</div><div class="line">		stream: process.stdout</div><div class="line">	&#125;)</div><div class="line">&#125;));</div><div class="line"></div><div class="line"><span class="comment">// server.on('after', function ()&#123;</span></div><div class="line"><span class="comment">//	console.log('after', arguments);</span></div><div class="line"><span class="comment">// &#125;);</span></div><div class="line"></div><div class="line">module.exports = server;</div><div class="line"></div><div class="line"><span class="keyword">require</span>(<span class="string">'./routes'</span>);</div></pre></td></tr></table></figure></p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="number">192</span>:<span class="number">01</span> Lyn$ node index.js</div><div class="line"></div><div class="line">API server listening on &#123;<span class="string">"address"</span>:<span class="string">"::"</span>,<span class="string">"family"</span>:<span class="string">"IPv6"</span>,<span class="string">"port"</span>:<span class="number">8080</span>&#125;</div><div class="line"></div><div class="line">&#123;<span class="string">"name"</span>:<span class="string">"audit"</span>,<span class="string">"hostname"</span>:<span class="string">"Lyn-Cheung-MBP.local"</span>,<span class="string">"pid"</span>:<span class="number">44385</span>,<span class="string">"audit"</span>:true,<span class="string">"level"</span>:<span class="number">30</span>,<span class="string">"remoteAddress"</span>:<span class="string">"::ffff:127.0.0.1"</span>,<span class="string">"remotePort"</span>:<span class="number">56088</span>,<span class="string">"req_id"</span>:<span class="string">"a701a353-6b55-4aa0-8888-5d67518867fb"</span>,<span class="string">"req"</span>:&#123;<span class="string">"query"</span>:<span class="string">""</span>,<span class="string">"method"</span>:<span class="string">"<span class="keyword">DELETE</span>"</span>,<span class="string">"url"</span>:<span class="string">"/lists/mylist/items/itemid"</span>,<span class="string">"headers"</span>:&#123;<span class="string">"host"</span>:<span class="string">"localhost:8080"</span>,<span class="string">"user-agent"</span>:<span class="string">"curl/7.43.0"</span>,<span class="string">"accept"</span>:<span class="string">"*/*"</span>&#125;,<span class="string">"httpVersion"</span>:<span class="string">"1.1"</span>,<span class="string">"trailers"</span>:&#123;&#125;,<span class="string">"version"</span>:<span class="string">"*"</span>,<span class="string">"timers"</span>:&#123;<span class="string">"delItem"</span>:<span class="number">4500</span>&#125;&#125;,<span class="string">"res"</span>:&#123;<span class="string">"statusCode"</span>:<span class="number">200</span>,<span class="string">"headers"</span>:&#123;<span class="string">"content-type"</span>:<span class="string">"application/json"</span>,<span class="string">"content-length"</span>:<span class="number">15</span>&#125;,<span class="string">"trailer"</span>:false&#125;,<span class="string">"latency"</span>:<span class="number">8</span>,<span class="string">"_audit"</span>:true,<span class="string">"msg"</span>:<span class="string">"handled: 200"</span>,<span class="string">"time"</span>:<span class="string">"2016-02-21T14:21:20.022Z"</span>,<span class="string">"v"</span>:<span class="number">0</span>&#125;</div></pre></td></tr></table></figure>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/02/06/nodejs-note-21/" itemprop="url">
                   Asynchronous Programming - 08 async.queue
                 </a>
@@ -1100,194 +1371,6 @@ conn.pipe(upperCasing).pipe(conn);
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/01/21/nodejs-note-14/" itemprop="url">
-                  Asynchronous Programming - 01 Chaining  callback
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-01-21T00:04:26+08:00" content="2016-01-21">
-              2016-01-21
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/01/21/nodejs-note-14/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/21/nodejs-note-14/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <p> In JavaScript, any operation involving the network or the file system is always asynchronous. Once you start implementing complex logic, coordinating I/O operations can become a challenge in Node.</p>
-<h1 id="The_callback_pattern:">The callback pattern:</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span>  fs =<span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"></div><div class="line">fs.readFile(__filename,&#123;<span class="attr">encoding</span>:<span class="string">'utf8'</span>&#125;,gotFileContent);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">gotFileContent</span>(<span class="params">err, content</span>)</span>&#123;</div><div class="line">	<span class="keyword">if</span>(err)&#123;</div><div class="line">		<span class="built_in">console</span>.error(err);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">'this file content: \n\n %s'</span>,content);</div><div class="line">	&#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="CHAINING_CALLS">CHAINING CALLS</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>)</div><div class="line"></div><div class="line"><span class="keyword">var</span> dir = path.join(__dirname,<span class="string">'temp'</span>);</div><div class="line"><span class="keyword">var</span> source = __filename;</div><div class="line"><span class="keyword">var</span> target = path.join(dir, <span class="string">'target'</span>);</div><div class="line"></div><div class="line">fs.mkdir(dir, <span class="function"><span class="keyword">function</span>(<span class="params">err</span>)</span>&#123;</div><div class="line">	<span class="keyword">if</span>(err)&#123;</div><div class="line">		handleError(err);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> &#123;</div><div class="line"></div><div class="line">		fs.readFile(source,<span class="function"><span class="keyword">function</span> (<span class="params">err, content</span>)</span>&#123;</div><div class="line">			<span class="keyword">if</span>(err)&#123;</div><div class="line">				handleError(err);</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">else</span>&#123;</div><div class="line">				fs.writeFile(target, content, <span class="function"><span class="keyword">function</span>(<span class="params">err</span>)</span>&#123;</div><div class="line">				<span class="keyword">if</span>(err)&#123;</div><div class="line"></div><div class="line">					handleError(err);</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">else</span>&#123;</div><div class="line">					<span class="built_in">console</span>.log(<span class="string">'all done'</span>);</div><div class="line">				&#125;</div><div class="line"></div><div class="line">				&#125;);</div><div class="line">			&#125;</div><div class="line"></div><div class="line">		&#125;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">handleError</span>(<span class="params">err</span>)</span>&#123;</div><div class="line">	<span class="built_in">console</span>.error(err);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="ESCAPING_Callback_HEll">ESCAPING Callback HEll</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>)</div><div class="line"></div><div class="line"><span class="keyword">var</span> dir = path.join(__dirname,<span class="string">'temp'</span>);</div><div class="line"><span class="keyword">var</span> source = __filename;</div><div class="line"><span class="keyword">var</span> target = path.join(dir, <span class="string">'target'</span>);</div><div class="line"></div><div class="line"></div><div class="line">fs.mkdir(dir, mkdirped);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">mkdirped</span>(<span class="params">err</span>) </span>&#123;</div><div class="line">	<span class="keyword">if</span> (err)&#123;</div><div class="line">		handleError(err);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">else</span> &#123;</div><div class="line"></div><div class="line">		fs.readFile(source, haveFile)</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">haveFile</span>(<span class="params">err, content</span>)</span>&#123;</div><div class="line">	<span class="keyword">if</span> (err)&#123;</div><div class="line">		handleError(err);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span>&#123;</div><div class="line"></div><div class="line">		fs.writeFile(target, content, wroteFile);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">wroteFile</span>(<span class="params">err</span>) </span>&#123;</div><div class="line">	<span class="keyword">if</span> (err)&#123;</div><div class="line">		handleError(err);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> &#123;</div><div class="line"></div><div class="line">		<span class="built_in">console</span>.log(<span class="string">'all done'</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">handleError</span>(<span class="params">err</span>)</span>&#123;</div><div class="line">	<span class="built_in">console</span>.error(err);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="Generalizing_Error_Handling">Generalizing Error Handling</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>)</div><div class="line"></div><div class="line"><span class="keyword">var</span> dir = path.join(__dirname,<span class="string">'temp'</span>);</div><div class="line"><span class="keyword">var</span> source = __filename;</div><div class="line"><span class="keyword">var</span> target = path.join(dir, <span class="string">'target'</span>);</div><div class="line"></div><div class="line"></div><div class="line">fs.mkdir(dir, handlingError(mkdirped));</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">mkdirped</span>(<span class="params"></span>) </span>&#123;</div><div class="line"> </div><div class="line">		<span class="keyword">var</span> readresult = fs.readFile(source, handlingError(haveFile));</div><div class="line">	 </div><div class="line">	 	<span class="built_in">console</span>.log(<span class="string">'readresult is:'</span> + readresult);</div><div class="line">	  	<span class="built_in">console</span>.log(<span class="string">'haveFile is:'</span>+haveFile);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">haveFile</span>(<span class="params">content</span>)</span>&#123;</div><div class="line"> 		</div><div class="line">		fs.writeFile(target, content, handlingError(wroteFile));</div><div class="line">	 </div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">wroteFile</span>(<span class="params"></span>) </span>&#123;	 </div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'all done'</span>);</div><div class="line">	</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">handlingError</span>(<span class="params">cb</span>)</span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">err, result</span>)</span>&#123;</div><div class="line">	<span class="keyword">if</span>(err)&#123;</div><div class="line">		<span class="built_in">console</span>.log(err );</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">'params:'</span>+result);</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span>&#123;</div><div class="line">		cb(result);</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">'callback function is :'</span>+ cb);</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">'params is:'</span>+result);</div><div class="line">		</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;&#125;</div></pre></td></tr></table></figure>
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/01/16/nodejs-note-13/" itemprop="url">
-                  How to learn Node.js -- Protect your website from CSRF
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-01-16T00:25:04+08:00" content="2016-01-16">
-              2016-01-16
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/01/16/nodejs-note-13/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/16/nodejs-note-13/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="CSRF_DEMO">CSRF DEMO</h1><blockquote>
-<p>跨站请求伪造（Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF，<br>是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。[1] 跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF<br>利用的是网站对用户网页浏览器的信任。</p>
-</blockquote>
-<h2 id="CSRF_Examples">CSRF Examples</h2><p>假如一家银行用以执行转账操作的URL地址如下：<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">http:</span>/<span class="regexp">/www.examplebank.com/withdraw</span>?account=AccoutName&amp;amount=<span class="number">1000</span>&amp;<span class="keyword">for</span>=PayeeName</div></pre></td></tr></table></figure></p>
-<p>那么，一个恶意攻击者可以在网站上放置如下代码： </p>
-<figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="params">&lt;img src="http://www.examplebank.com/withdraw?account=Alice<span class="variable">&amp;amount</span>=<span class="number">1000</span><span class="variable">&amp;for</span>=Badman"&gt;</span></div></pre></td></tr></table></figure>
-<p>如果有账户名为Alice的用户访问了恶意站点，而她之前刚访问过银行不久，登录信息尚未过期，那么她就会损失1000资金。</p>
-<p>这种恶意的网址可以有很多种形式，藏身于网页中的许多地方。此外，攻击者也不需要控制放置恶意网址的网站。例如他可以将这种地址藏在论坛，博客等任何用户生成内容的网站中。这意味着如果服务器端没有合适的防御措施的话，用户即使访问熟悉的可信网站也有受攻击的危险。</p>
-<p>透过例子能够看出，攻击者并不能通过CSRF攻击来直接获取用户的账户控制权，也不能直接窃取用户的任何信息。他们能做到的，是欺骗用户浏览器，让其以用户的名义执行操作。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span> <span class="attr">class</span>=<span class="string">"no-js"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>This is a safe and legitimate forum.<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span></div><div class="line">      This paragraph contains an image that you can't see.</div><div class="line">      <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"http://website:3000/portal/billing/dangerous_action?amount=5000&amp;receiver=lyn"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">"POST"</span> <span class="attr">action</span>=<span class="string">"http://website:3000/portal/billing/dangerous_action"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"amount"</span> <span class="attr">value</span>=<span class="string">"5000"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"receiver"</span> <span class="attr">value</span>=<span class="string">"lyn"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">"submit"</span>&gt;</span>Click here to save baby dolphins<span class="tag">&lt;/<span class="name">button</span>&gt;</span></div><div class="line">      Note: Each time you click this, a baby dolphin gets its wings.</div><div class="line">    <span class="tag">&lt;/<span class="name">form</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>如果使用express 中 定义的route 是get的话 图片链接就可以成功攻击。<br>但即使让表单提交全部用POST的方式提交，还是可以通过伪装表格的方式来提交</p>
-<h1 id="CSURF">CSURF</h1><p>我们可以使用CSURF，来轻松的避免这种攻击，</p>
-<p>它的原理就是为每一个敏感的表单添加校验token，来保证提交的真实性。<br>由于CSRF的本质在于攻击者欺骗用户去访问自己设置的地址，所以如果要求在访问敏感数据请求时，要求用户浏览器提供不保存在cookie中，并且攻击者无法伪造的数据作为校验，那么攻击者就无法再执行CSRF攻击。这种数据通常是表单中的一个数据项。服务器将其生成并附加在表单中，其内容是一个伪乱数。当客户端通过表单提交请求时，这个伪乱数也一并提交上去以供校验。正常的访问时，客户端浏览器能够正确得到并传回这个伪乱数，而通过CSRF传来的欺骗性攻击中，攻击者无从事先得知这个伪乱数的值，服务器端就会因为校验token的值为空或者错误，拒绝这个可疑请求。</p>
-<h2 id="Simple_express_example">Simple express example</h2><p>The following is an example of some server-side code that generates a form that requires a CSRF token to post back.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> cookieParser = <span class="keyword">require</span>(<span class="string">'cookie-parser'</span>)</div><div class="line"><span class="keyword">var</span> csrf = <span class="keyword">require</span>(<span class="string">'csurf'</span>)</div><div class="line"><span class="keyword">var</span> bodyParser = <span class="keyword">require</span>(<span class="string">'body-parser'</span>)</div><div class="line"><span class="keyword">var</span> express = <span class="keyword">require</span>(<span class="string">'express'</span>)</div><div class="line"></div><div class="line"><span class="comment">// setup route middlewares</span></div><div class="line"><span class="keyword">var</span> csrfProtection = csrf(&#123; cookie: <span class="keyword">true</span> &#125;)</div><div class="line"><span class="keyword">var</span> parseForm = bodyParser.urlencoded(&#123; extended: <span class="keyword">false</span> &#125;)</div><div class="line"></div><div class="line"><span class="comment">// create express app</span></div><div class="line"><span class="keyword">var</span> app = express()</div><div class="line"></div><div class="line"><span class="comment">// parse cookies</span></div><div class="line"><span class="comment">// we need this because "cookie" is true in csrfProtection</span></div><div class="line">app.<span class="keyword">use</span>(cookieParser())</div><div class="line"></div><div class="line">app.get(<span class="string">'/form'</span>, csrfProtection, <span class="function"><span class="keyword">function</span><span class="params">(req, res)</span> </span>&#123;</div><div class="line">  <span class="comment">// pass the csrfToken to the view</span></div><div class="line">  res.render(<span class="string">'send'</span>, &#123; csrfToken: req.csrfToken() &#125;)</div><div class="line">&#125;)</div><div class="line"></div><div class="line">app.post(<span class="string">'/process'</span>, parseForm, csrfProtection, <span class="function"><span class="keyword">function</span><span class="params">(req, res)</span> </span>&#123;</div><div class="line">  res.send(<span class="string">'data is being processed'</span>)</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
-<p>Inside the view (depending on your template language; handlebars-style is demonstrated here), set the csrfToken value as the value of a hidden input field named _csrf:</p>
-<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;form action=<span class="string">"/process"</span> method=<span class="string">"<span class="keyword">POST</span>"</span>&gt;</div><div class="line">  &lt;input type=<span class="string">"hidden"</span> name=<span class="string">"_csrf"</span> value=<span class="string">"&#123;&#123;csrfToken&#125;&#125;"</span>&gt;</div><div class="line"></div><div class="line">  Favorite color: &lt;input type=<span class="string">"text"</span> name=<span class="string">"favoriteColor"</span>&gt;</div><div class="line">  &lt;button type=<span class="string">"submit"</span>&gt;Submit&lt;/button&gt;</div><div class="line">&lt;/form&gt;</div></pre></td></tr></table></figure>
-<h1 id="Use_middleware">Use middleware</h1><p>我们这里可以自己定义两个middleware 来减少我们的代码量</p>
-<h2 id="invalidCsrfToken">invalidCsrfToken</h2><p>这个middleware可以帮助我们自定义所有的不安全的访问进行特定的跳转或者提示。</p>
-<figure class="highlight hsp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">function invalidCsrfToken(<span class="keyword">err</span>, req, res, <span class="keyword">next</span>)&#123;</div><div class="line">	 <span class="keyword">if</span> (err.code !== <span class="string">'EBADCSRFTOKEN'</span>) <span class="keyword">return</span> <span class="keyword">next</span>(<span class="keyword">err</span>)</div><div class="line"></div><div class="line">  <span class="comment">// handle CSRF token errors here</span></div><div class="line">  	res.status(<span class="number">403</span>)</div><div class="line">		res.send(<span class="string">'session has expired or form tampered with'</span>)</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">module.exports = invalidCsrfToken</div></pre></td></tr></table></figure>
-<h2 id="attachCsrfToken">attachCsrfToken</h2><p>我们可以通过定义这个middleware来实现避免在每一个Route中都要传递 req.csrfToken() 这个值给templates</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">attachCsrfToken</span><span class="params">(req, res, next)</span></span>&#123;</div><div class="line">	res.locals.csrfTokenFunction = req.csrfToken()</div><div class="line">	<span class="built_in">next</span>()</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = attachCsrfToken</div></pre></td></tr></table></figure>
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1333,7 +1416,7 @@ conn.pipe(upperCasing).pipe(conn);
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">55</span>
+              <span class="site-state-item-count">57</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
