@@ -71,7 +71,7 @@ redux-sage的异步调用部分,都是很标准的依赖注入(dependencies inje
 
 redux-sage的异步调用部分,都是很标准的依赖注入(dependencies injection)的写法
 因为有依赖注入的写法,我们可以很方便的在单元测试中使用一些fake函数来模拟异">
-<meta property="og:updated_time" content="2017-02-27T16:27:05.000Z">
+<meta property="og:updated_time" content="2017-02-27T16:28:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redux-saga的简单入门">
 <meta name="twitter:description" content="Redux-saga在之前的blog中,我们在react应用中把油副作用的部分都放在了action函数中,把异步调用包装成一个thunk 函数.也能满足我们实际的需求,那为什么还需要redux-saga呢?
@@ -304,7 +304,8 @@ redux-sage的异步调用部分,都是很标准的依赖注入(dependencies inje
 <p> //The watcher: watch actions and coordinate worker tasks<br> function* watchPostRequests() {<br>  while (true) {<br>     const url = ‘/api/posts’;<br>     const action = yield take(‘FETCH_POSTS’);<br>      console.log(‘catch action from dispatch’, action);<br>      yield fork(fetchPost, url);<br>    }<br> }</p>
 <figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">## workersaga</div><div class="line"></div><div class="line">使用`call`阻塞式的执行异步调用.直到返回结果后使用`put`来dispatch action.</div></pre></td></tr></table></figure>
 <p>import axios from ‘axios’;</p>
-<p>// The worker: perform the requested task<br>function* fetchPost(action) {<br>  try {<br>    console.log(‘catch action from dispatch’, action);<br>    yield put({ type: ‘FETCH_POSTS_PENDING’ });<br>    const res = yield call(axios.get, ‘/api/posts’);<br>    yield put({<br>      type: ‘FETCH_POSTS_FULFILLED’,<br>      payload: res.data.data,<br>    });<br>  } catch (e) {<br>    yield put({<br>      type: ‘FETCH_POSTS_REJECTED’,<br>      payload: e.message,<br>    });<br>  }<br>}<br>```</p>
+<p>// The worker: perform the requested task<br>function* fetchPost(action) {<br>  try {<br>    console.log(‘catch action from dispatch’, action);<br>    yield put({ type: ‘FETCH_POSTS_PENDING’ });<br>    const res = yield call(axios.get, ‘/api/posts’);<br>    yield put({<br>      type: ‘FETCH_POSTS_FULFILLED’,<br>      payload: res.data.data,<br>    });<br>  } catch (e) {<br>    yield put({<br>      type: ‘FETCH_POSTS_REJECTED’,<br>      payload: e.message,<br>    });<br>  }<br>}</p>
+<p>```</p>
 <h1 id="参考:">参考:</h1><ul>
 <li><a href="http://leonshi.com/redux-saga-in-chinese/docs/advanced/ComposingSagas.html" target="_blank" rel="external">http://leonshi.com/redux-saga-in-chinese/docs/advanced/ComposingSagas.html</a></li>
 <li><a href="https://github.com/superRaytin/redux-saga-in-chinese" target="_blank" rel="external">https://github.com/superRaytin/redux-saga-in-chinese</a></li>
