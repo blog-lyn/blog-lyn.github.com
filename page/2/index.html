@@ -211,6 +211,140 @@
             
             
               
+                <a class="post-title-link" href="/2016/09/26/redux-notes-01/" itemprop="url">
+                  Redux 快速入门 -- 01
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-09-26T21:25:17+08:00" content="2016-09-26">
+              2016-09-26
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/26/redux-notes-01/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/26/redux-notes-01/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="配置开发环境">配置开发环境</h1><p>对于新手来说,React和Redux都免不了需要配置各种环境.<br>还好ali的开源项目 <a href="https://ant-tool.github.io/quick-start.html" target="_blank" rel="external">Ant-Tool</a>为大家送上了福利,大大降低了入门的难度.</p>
+<h2 id="首先需要确认你的npm版本">首先需要确认你的npm版本</h2><blockquote>
+<p>由于atool 依赖了 babel 6，而 babel 6 在npm2 下会有严重的性能问题, 所以npm版本需要&gt;3)</p>
+</blockquote>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//检查确认npm版本</span></div><div class="line">npm -v</div><div class="line">3.10.8</div><div class="line"><span class="comment">// 安装手脚架工具</span></div><div class="line">npm i antd-init -<span class="keyword">g</span></div><div class="line"><span class="comment">// 检查版本确认安装成功</span></div><div class="line">antd-init -v</div><div class="line">1.1.2</div><div class="line"><span class="comment">// 在当前目录下创建文件夹并进入这个文件夹</span></div><div class="line"><span class="keyword">mkdir</span> blog &amp;&amp; <span class="keyword">cd</span> blog</div><div class="line"><span class="comment">//运行手脚架工具 任选其一搭建一个sample</span></div><div class="line">antd-init</div><div class="line"><span class="comment">// 启动应用</span></div><div class="line">npm start</div><div class="line"><span class="comment">// 在浏览器中打开</span></div><div class="line"><span class="keyword">open</span> http:<span class="comment">//localhost:8989</span></div></pre></td></tr></table></figure>
+<p>配置package.json中的 entry属性:<br>(这个属性和webpack中配置的entry是同一个东西)</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="string">"entry"</span>: &#123;</div><div class="line">    <span class="string">"index"</span>: <span class="string">"./src/index.js"</span></div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<h2 id="遇到的问题:">遇到的问题:</h2><ul>
+<li>在升级npm的过程中升级失败</li>
+</ul>
+<h3 id="原因:">原因:</h3><p>PATH目录下npm文件夹的权限问题</p>
+<h3 id="解决办法:">解决办法:</h3><ul>
+<li>重新安装node,并根据NPM官方的方法选择其中一种来 修改npm的三个目录的权限问题(lib/node_modules, bin,share)    </li>
+<li>只要是不和别人共用同一台电脑,那就可以用下面的方法把npm的文件夹owner修改成自己来解决:</li>
+</ul>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">/<span class="regexp">/ 获取npm PATH</span></div><div class="line">npm config get prefix</div><div class="line">/usr<span class="regexp">/local</span></div><div class="line">/<span class="regexp">/ 改变文件夹的owner</span></div><div class="line">sudo chown -R $(whoami) $(npm config get prefix)/&#123;<span class="class"><span class="keyword">lib</span>/<span class="title">node_modules</span>,<span class="title">bin</span>,<span class="title">share</span>&#125;</span></div><div class="line">/<span class="regexp">/ 设置 npm 源为淘宝镜像</span></div><div class="line">npm config set registry https:/<span class="regexp">/registry.npm.taobao.org</span></div><div class="line">/<span class="regexp">/ 更新npm到最新版本</span></div><div class="line">npm install npm -g</div><div class="line">/<span class="regexp">/ 检查更新后的版本</span></div><div class="line">npm -v</div><div class="line">3.10.8</div></pre></td></tr></table></figure>
+<h2 id="配置Sublime_Text_3代码检查工具">配置Sublime Text 3代码检查工具</h2><p>打开package control install package(cmd+shift+p),安装下面两个插件:</p>
+<ul>
+<li>Sublimelinter</li>
+<li>Sublimelinter-contrib-eslint</li>
+</ul>
+<p>可能需要修改Sublimelinter 配置，Preferences-&gt;Package Settings-&gt;SublimeLinter-&gt;Settings-User,</p>
+<ul>
+<li>debug: true 开启 debug 模式 </li>
+<li>paths: 为 ESLint 路径，window 平台下 path：<code>%APPDATA%\\Roaming\\npm</code>，如果该路径已经在系统环境变量中，则可省略，具体可根据实际情况进行相应调整.<figure class="highlight clojure"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"> &#123;</div><div class="line">    <span class="string">"user"</span>: &#123;</div><div class="line">        <span class="string">"debug"</span>: <span class="literal">true</span>,</div><div class="line">        ...</div><div class="line">        <span class="string">"linters"</span>: &#123;</div><div class="line">            <span class="string">"eslint"</span>: &#123;</div><div class="line">                ...</div><div class="line">                <span class="string">"excludes"</span>: [<span class="string">"*.html"</span>]</div><div class="line">            &#125;</div><div class="line">        &#125;,</div><div class="line">        ...</div><div class="line">        <span class="string">"paths"</span>: &#123;</div><div class="line">            ....</div><div class="line">            <span class="string">"osx"</span>: [</div><div class="line">                <span class="string">"/usr/local/node/v0.12.7/bin"</span></div><div class="line">            ],</div><div class="line">            <span class="string">"windows"</span>: [</div><div class="line">             <span class="string">"C:\\Users\\用户名\\AppData\\Roaming\\npm"</span></div><div class="line">            ]</div><div class="line">        &#125; </div><div class="line">        ...</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="eslint全局配置文件">eslint全局配置文件</h3><p>如果想要全局使用一个eslint规则去检查代码.<br>那么需要创建.eslintrc.* 文件放在用户目录下,但是推荐的做法还是在每个项目目录下单独配置.<br>配置方法如下:</p>
+<ul>
+<li>osx:  <code>/Users/用户名</code></li>
+<li>win:  <code>C:\Users\用户名</code></li>
+</ul>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="string">"parser"</span>: <span class="string">"babel-eslint"</span>,</div><div class="line">  <span class="string">"extends"</span>: <span class="string">"eslint-config-airbnb"</span>,</div><div class="line">  <span class="string">"rules"</span>: &#123;</div><div class="line">    //<span class="string">"spaced-comment"</span>: [<span class="number">0</span>],</div><div class="line">    <span class="string">"no-unused-vars"</span>: [<span class="number">0</span>],</div><div class="line">    <span class="string">"no-empty"</span>: [<span class="number">0</span>],</div><div class="line">    <span class="string">"react/wrap-multilines"</span>: [<span class="number">0</span>],</div><div class="line">    <span class="string">"react/no-multi-comp"</span>: [<span class="number">0</span>],</div><div class="line">    <span class="string">"no-constant-condition"</span>: [<span class="number">0</span>],</div><div class="line">    <span class="string">"react/jsx-no-bind"</span>: [<span class="number">0</span>],</div><div class="line">    <span class="string">"react/prop-types"</span>: [<span class="number">0</span>],</div><div class="line">    <span class="string">"arrow-body-style"</span>: [<span class="number">0</span>],</div><div class="line">    <span class="string">"react/prefer-stateless-function"</span>: [<span class="number">0</span>],</div><div class="line">    <span class="string">"semi"</span>: [<span class="number">0</span>]</div><div class="line">  &#125;,</div><div class="line">  <span class="string">"ecmaFeatures"</span>: &#123;</div><div class="line">    <span class="string">"experimentalObjectRestSpread"</span>: <span class="literal">true</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>还需要全局安装这些package<code>npm install eslint-config-airbnb eslint babel-eslint  -g</code></li>
+</ul>
+<h2 id="配置格式化工具">配置格式化工具</h2><p>A-tool使用eslint来检查代码风格(基于airbnb推荐的编码风格)<br>可以选择以下两种方式来配置sublime的格式化功能:</p>
+<h3 id="使用sublime的build功能来格式化:">使用sublime的build功能来格式化:</h3><ol>
+<li>Tools-&gt;Build System-&gt;New Build System…，</li>
+<li>在新建的脚本文件中 添加以下代码，保持为eslint.sublime-build到默认位置。</li>
+<li>然后运行cmd+b(mac) 或 ctrl+b(win) 即可。</li>
+</ol>
+<p>mac：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">   &#123;</div><div class="line">    <span class="attr">"cmd"</span>: [<span class="string">"eslint --fix $file"</span>],</div><div class="line">    <span class="attr">"shell"</span>: <span class="literal">true</span>,</div><div class="line">    <span class="attr">"path"</span>: <span class="string">"/usr/local/bin"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>window：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">&#123;</div><div class="line">    <span class="attr">"cmd"</span>: [<span class="string">"eslint"</span>, <span class="string">"--fix"</span>, <span class="string">"$file"</span>],</div><div class="line">    <span class="attr">"shell"</span>: <span class="literal">true</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>Tips</strong>：</p>
+<ul>
+<li>Mac下的”path”可以通过 <code>which node</code>来查看系统中node的路径</li>
+</ul>
+<h3 id="jsformart">jsformart</h3><p>打开preference&gt;package settings&gt;jsformat&gt;settings user<br>把如下代码粘进去保存即可.</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Documentation: https://github.com/beautify-web/js-beautify</span></div><div class="line"><span class="comment">// Example URL: https://github.com/victorporof/Sublime-HTMLPrettify/blob/master/.jsbeautifyrc</span></div><div class="line"><span class="comment">// Based on Airbnb's JavaScript Style Guide, URL: https://github.com/airbnb/javascript</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Collapse curly brackets</span></div><div class="line">    <span class="string">"brace_style"</span>: <span class="string">"collapse"</span>,</div><div class="line"></div><div class="line">    <span class="comment">// Break chained method calls across subsequent lines</span></div><div class="line">    <span class="string">"break_chained_methods"</span>: <span class="literal">true</span>,</div><div class="line"></div><div class="line">    <span class="comment">// End output with newline</span></div><div class="line">    <span class="string">"end_with_newline"</span>: <span class="literal">true</span>,</div><div class="line"></div><div class="line">    <span class="comment">// Evaluate code</span></div><div class="line">    <span class="string">"eval_code"</span>: <span class="literal">false</span>,</div><div class="line"></div><div class="line">    <span class="comment">// Indentation character</span></div><div class="line">    <span class="string">"indent_char"</span>: <span class="string">" "</span>,</div><div class="line"></div><div class="line">    <span class="comment">// Initial indentation level</span></div><div class="line">    <span class="string">"indent_level"</span>: <span class="number">0</span>,</div><div class="line"></div><div class="line">    <span class="comment">// Indentation character size</span></div><div class="line">    <span class="string">"indent_size"</span>: <span class="number">2</span>,</div><div class="line"></div><div class="line">    <span class="comment">// Indent with tabs, overrides 'indent_size' and 'indent_char'</span></div><div class="line">    <span class="string">"indent_with_tabs"</span>: <span class="literal">false</span>,</div><div class="line"></div><div class="line">    <span class="comment">// Enable jslint-stricter mode</span></div><div class="line">    <span class="string">"jslint_happy"</span>: <span class="literal">false</span>,</div><div class="line"></div><div class="line">    <span class="comment">// Preserve array indentation</span></div><div class="line">    <span class="string">"keep_array_indentation"</span>: <span class="literal">false</span>,</div><div class="line"></div><div class="line">    <span class="comment">// Preserve function indentation</span></div><div class="line">    <span class="string">"keep_function_indentation"</span>: <span class="literal">false</span>,</div><div class="line"></div><div class="line">    <span class="comment">// Number of line-breaks to be preserved in one chunk</span></div><div class="line">    <span class="string">"max_preserve_newlines"</span>: <span class="number">10</span>,</div><div class="line"></div><div class="line">    <span class="comment">// Preserve newlines</span></div><div class="line">    <span class="string">"preserve_newlines"</span>: <span class="literal">true</span>,</div><div class="line"></div><div class="line">    <span class="comment">// Add a space before an anonymous function's parentheses, i.e. function ()</span></div><div class="line">    <span class="string">"space_after_anon_function"</span>: <span class="literal">true</span>,</div><div class="line"></div><div class="line">    <span class="comment">// Add a space before the conditional statement i.e. 'if (true)'</span></div><div class="line">    <span class="string">"space_before_conditional"</span>: <span class="literal">true</span>,</div><div class="line"></div><div class="line">    <span class="comment">// Add padding spaces within empty parentheses i.e. 'f( )'</span></div><div class="line">    <span class="string">"space_in_empty_paren"</span>: <span class="literal">false</span>,</div><div class="line"></div><div class="line">    <span class="comment">// Add padding spaces within parentheses i.e. 'f( a, b )'</span></div><div class="line">    <span class="string">"space_in_paren"</span>: <span class="literal">false</span>,</div><div class="line"></div><div class="line">    <span class="comment">// Decode printable characters encoded in xNN notation</span></div><div class="line">    <span class="string">"unescape_strings"</span>: <span class="literal">false</span>,</div><div class="line"></div><div class="line">    <span class="comment">// Wrap lines at next opportunity after N characters</span></div><div class="line">    <span class="string">"wrap_line_length"</span>: <span class="number">0</span></div><div class="line">&#125;</div><div class="line"><span class="comment">// <span class="doctag">Note:</span> Remove the comments when adding to the project</span></div></pre></td></tr></table></figure>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/07/03/gen8-exsi-ubuntu-apc-autoshutdown/" itemprop="url">
                   ESXI中实现UPS断电自动关闭GEN8的功能
                 </a>
@@ -1441,128 +1575,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/05/11/react-js-01/" itemprop="url">
-                  react.js-Notes-01
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-05-11T22:08:32+08:00" content="2016-05-11">
-              2016-05-11
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/11/react-js-01/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/11/react-js-01/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="config_before_development">config before development</h1><h2 id="npm">npm</h2><p>use command to initialize your package.json file </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm init <span class="_">-f</span></div></pre></td></tr></table></figure>
-<p>my npm package.json</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"name"</span>: <span class="string">"Test"</span>,</div><div class="line">  <span class="attr">"version"</span>: <span class="string">"1.0.0"</span>,</div><div class="line">  <span class="attr">"description"</span>: <span class="string">""</span>,</div><div class="line">  <span class="attr">"main"</span>: <span class="string">"index.js"</span>,</div><div class="line">  <span class="attr">"scripts"</span>: &#123;</div><div class="line">    <span class="attr">"dev"</span>: <span class="string">"webpack-dev-server --content-base src  --inline --hot"</span>,</div><div class="line">    <span class="attr">"lint"</span>: <span class="string">"eslint js"</span></div><div class="line">  &#125;,</div><div class="line">  <span class="attr">"author"</span>: <span class="string">""</span>,</div><div class="line">  <span class="attr">"license"</span>: <span class="string">"ISC"</span>,</div><div class="line">  <span class="attr">"dependencies"</span>: &#123;</div><div class="line">    <span class="attr">"babel-plugin-add-module-exports"</span>: <span class="string">"^0.1.2"</span>,</div><div class="line">    <span class="attr">"babel-plugin-react-html-attrs"</span>: <span class="string">"^2.0.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-class-properties"</span>: <span class="string">"^6.3.13"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-decorators-legacy"</span>: <span class="string">"^1.3.4"</span>,</div><div class="line">    <span class="attr">"react"</span>: <span class="string">"^15.0.1"</span>,</div><div class="line">    <span class="attr">"react-dom"</span>: <span class="string">"^15.0.1"</span>,</div><div class="line">    <span class="attr">"webpack"</span>: <span class="string">"^1.13.0"</span></div><div class="line">  &#125;,</div><div class="line">  <span class="attr">"devDependencies"</span>: &#123;</div><div class="line">    <span class="attr">"babel-core"</span>: <span class="string">"^6.7.7"</span>,</div><div class="line">    <span class="attr">"babel-eslint"</span>: <span class="string">"^6.0.4"</span>,</div><div class="line">    <span class="attr">"babel-loader"</span>: <span class="string">"^6.2.4"</span>,</div><div class="line">    <span class="attr">"babel-preset-es2015"</span>: <span class="string">"^6.6.0"</span>,</div><div class="line">    <span class="attr">"babel-preset-react"</span>: <span class="string">"^6.5.0"</span>,</div><div class="line">    <span class="attr">"babel-preset-stage-0"</span>: <span class="string">"^6.5.0"</span>,</div><div class="line">    <span class="attr">"eslint"</span>: <span class="string">"^2.9.0"</span>,</div><div class="line">    <span class="attr">"eslint-plugin-react"</span>: <span class="string">"^5.0.1"</span>,</div><div class="line">    <span class="attr">"webpack-dev-server"</span>: <span class="string">"^1.14.1"</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>after you edit your package.json file, you can run npm install to install all the dependencies automatically</p>
-<h2 id="webpack">webpack</h2><p>after all the packages is  installled.</p>
-<p>we can config webpack by create webpack.config.js file under your project path.</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> debug   = process.env.NODE_ENV !==<span class="string">"production"</span>;</div><div class="line"><span class="keyword">var</span> webpack =<span class="built_in">require</span>(<span class="string">'webpack'</span>);</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports=&#123;</div><div class="line">	context: __dirname+<span class="string">"/src"</span>,</div><div class="line">	devtool: debug ? <span class="string">"inline-sourcemap"</span> : <span class="literal">null</span>,</div><div class="line">	entry:<span class="string">"./js/scripts.js"</span>,</div><div class="line">	output:&#123;</div><div class="line">		path: __dirname +<span class="string">"/src"</span>,</div><div class="line">		filename:<span class="string">"scripts.min.js"</span></div><div class="line">	&#125;,</div><div class="line">	devServer:&#123;</div><div class="line">		inline:<span class="literal">true</span>,</div><div class="line">		port:<span class="number">1336</span></div><div class="line">	&#125;,</div><div class="line">	<span class="keyword">module</span>:&#123;</div><div class="line">		loaders:[</div><div class="line">		&#123;</div><div class="line">			test:<span class="regexp">/\.js$/</span>,</div><div class="line">			exclude:<span class="regexp">/node_modules|bower_components/</span>,</div><div class="line">			loader:<span class="string">'babel-loader'</span>,</div><div class="line">			query:&#123;</div><div class="line">				presets:[<span class="string">'es2015'</span>,<span class="string">'react'</span>,<span class="string">'stage-0'</span>],</div><div class="line">				plugins:[<span class="string">'react-html-attrs'</span>,<span class="string">'transform-class-properties'</span>, <span class="string">'transform-decorators-legacy'</span>]</div><div class="line">			&#125;</div><div class="line">		 &#125;,</div><div class="line">	    ]</div><div class="line">	&#125;,</div><div class="line">	plugins: debug ? []:[</div><div class="line">		<span class="keyword">new</span> webpack.optimize.DedupePlugin(),</div><div class="line">		<span class="keyword">new</span> webpack.optimize.OccurenceOrderPlugin(),</div><div class="line">		<span class="keyword">new</span> webpack.optimize.UglifyJsPlugin(&#123; mangle:<span class="literal">false</span>, sourcemap:<span class="literal">false</span>&#125;),</div><div class="line">	],</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<h2 id="eslint">eslint</h2><p>as jshint doesnot support react.js very well,<br>I replace jshint with eslint.<br>you can also install eslint sublime plugin to help you check your code in Sublime.</p>
-<p>install eslint locally in your project folder (you must have package.json file there):</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm <span class="keyword">install</span> eslint</div></pre></td></tr></table></figure>
-<p>Init eslint config if you don’t have any. Run in your code folder:</p>
-<!--if eslint is installed locally-->
-<figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./node_modules/.bin/eslint <span class="comment">--init</span></div></pre></td></tr></table></figure>
-<p>To install via Package Control, do the following:</p>
-<ol>
-<li><p>Within Sublime Text, bring up the Command Palette and type install. Among the commands you should see Package Control: Install Package. If that command is not highlighted, use the keyboard or mouse to select it. There will be a pause of a few seconds while Package Control fetches the list of available plugins.</p>
-</li>
-<li><p>When the plugin list appears, type eslint. Among the entries you should see SublimeLinter-contrib-eslint. If that entry is not highlighted, use the keyboard or mouse to select it.</p>
-</li>
-</ol>
-<p>my .eslintrc config file:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">&#123;</div><div class="line">    <span class="attr">"env"</span>: &#123;</div><div class="line">        <span class="attr">"browser"</span>: <span class="literal">true</span>,</div><div class="line">        <span class="attr">"node"</span>: <span class="literal">true</span>,</div><div class="line">        <span class="attr">"es6"</span>: <span class="literal">true</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">"extends"</span>: <span class="string">"eslint:recommended"</span>,</div><div class="line">    <span class="attr">"parser"</span>: <span class="string">"babel-eslint"</span>,</div><div class="line">    <span class="attr">"ecmaFeatures"</span>: &#123;</div><div class="line">       <span class="attr">"jsx"</span>: <span class="literal">true</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">"rules"</span>: &#123;</div><div class="line">        <span class="attr">"semi"</span>: [<span class="number">2</span>, <span class="string">"always"</span>]</div><div class="line">    &#125;</div><div class="line">    <span class="string">"plugins"</span>: [</div><div class="line">        <span class="string">"react"</span></div><div class="line">    ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="your_first_react-js_component">your first react.js component</h1><h2 id="Folder_Structure">Folder Structure</h2><p> Lyn-Cheung-MBP:01 Lyn$ find . -print | sed -e ‘s;[^/]*/;|<strong><strong>;g;s;</strong></strong>|; `|;g’</p>
-<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">|<span class="string">____package.json</span></div><div class="line">|____src</div><div class="line">|<span class="string"> </span>|<span class="string">____index.html</span></div><div class="line">|<span class="string"> </span>|____js</div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|____components</div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____Footer.js</span></div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|____Header</div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____Title.js</span></div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____Header.js</span></div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____Layout.js</span></div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____scripts.js</span></div><div class="line">|<span class="string"> </span>|<span class="string"> </span>|<span class="string">____scripts.min.js</span></div><div class="line">|<span class="string"> </span>|<span class="string">____scripts.min.js</span></div><div class="line">|<span class="string">____webpack.config.js</span></div></pre></td></tr></table></figure>
-<h2 id="Code_files">Code files</h2><p>index.html is very simple:</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">title</span>&gt;</span>Some page <span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">	 </div><div class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span> <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">script</span>  <span class="attr">src</span>=<span class="string">"./scripts.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>scripts.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</div><div class="line"><span class="keyword">import</span> ReactDOM <span class="keyword">from</span> <span class="string">"react-dom"</span>;</div><div class="line"></div><div class="line"><span class="keyword">import</span> Layout <span class="keyword">from</span> <span class="string">"./components/Layout"</span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">const</span> app =<span class="built_in">document</span>.getElementById(<span class="string">'app'</span>);</div><div class="line"></div><div class="line">ReactDOM.render(<span class="xml"><span class="tag">&lt;<span class="name">Layout</span>/&gt;</span></span>, app);</div></pre></td></tr></table></figure>
-<p>Layout.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</div><div class="line"><span class="keyword">import</span> Header <span class="keyword">from</span> <span class="string">"./Header"</span>;</div><div class="line"><span class="keyword">import</span> Footer <span class="keyword">from</span> <span class="string">"./Footer"</span>;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Layout</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span></span>&#123;</div><div class="line"> 	 <span class="keyword">constructor</span>()&#123;</div><div class="line"> 	 	<span class="keyword">super</span>();</div><div class="line"> 	 	<span class="keyword">this</span>.state=&#123;</div><div class="line"> 	 		<span class="attr">title</span>:<span class="string">"Welcome"</span>,</div><div class="line"> 	 	&#125;</div><div class="line"> 	 &#125;</div><div class="line"> 	 changeTitle(title)&#123;</div><div class="line"> 	 	<span class="keyword">this</span>.setState(&#123;title&#125;);</div><div class="line"> 	 &#125;</div><div class="line">	</div><div class="line">	render()&#123;</div><div class="line">		<span class="keyword">return</span> (</div><div class="line">			<span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></div><div class="line">				<span class="tag">&lt;<span class="name">Header</span> <span class="attr">changeTitle</span>=<span class="string">&#123;this.changeTitle.bind(this)&#125;</span> <span class="attr">title</span>=<span class="string">&#123;this.state.title&#125;</span> /&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">Footer</span> /&gt;</span></div><div class="line">			<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">			);</div><div class="line">	</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>Header.js</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</div><div class="line"><span class="keyword">import</span> <span class="type">Title</span> from <span class="string">"./Header/Title"</span>;</div><div class="line"></div><div class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Header</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span></span>&#123;</div><div class="line">	 handleChange(e)&#123;</div><div class="line">	 	const title =e.target.value;</div><div class="line">	 	<span class="keyword">this</span>.props.changeTitle(title);</div><div class="line">	 &#125;</div><div class="line">	</div><div class="line">	render()&#123;</div><div class="line">		<span class="keyword">return</span> (</div><div class="line">			&lt;div&gt;</div><div class="line">				&lt;<span class="type">Title</span>  title=&#123;<span class="keyword">this</span>.props.title&#125; /&gt;</div><div class="line">				&lt;input value=&#123;<span class="keyword">this</span>.props.title&#125;  onChange=&#123;<span class="keyword">this</span>.handleChange.bind(<span class="keyword">this</span>)&#125;  /&gt;</div><div class="line">			&lt;/div&gt;</div><div class="line">		);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>Title.js</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</div><div class="line"></div><div class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Title</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span></span>&#123;</div><div class="line">	 </div><div class="line">	</div><div class="line">	render()&#123;</div><div class="line">		<span class="keyword">return</span> (</div><div class="line">			&lt;h1&gt; &#123;<span class="keyword">this</span>.props.title&#125;&lt;/h1&gt;</div><div class="line">			);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>Footer.js</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</div><div class="line"></div><div class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Footer</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span></span>&#123;</div><div class="line">	render()&#123;</div><div class="line">		<span class="keyword">return</span> (</div><div class="line">			&lt;footer&gt; <span class="type">This</span> is <span class="type">Footer</span> &lt;/footer&gt;</div><div class="line">			);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="Run_your_react-js_on_your_local_sever">Run your react.js on your local sever</h2><p>simply use these commands:</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">webpack</div><div class="line"></div><div class="line">npm <span class="keyword">run</span><span class="bash"> dev</span></div></pre></td></tr></table></figure>
-<p>then you can visit your first react.js project on your browser by:<br><a href="http://127.0.0.1:1336/" target="_blank" rel="external">http://127.0.0.1:1336/</a> </p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1608,7 +1620,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">57</span>
+              <span class="site-state-item-count">58</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

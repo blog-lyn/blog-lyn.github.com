@@ -1,0 +1,724 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+
+  <meta name="description" content="Lyn's Blog about Node.js  Express.js Angular.js HTML5 Mongodb Programing Notes" />
+
+
+
+
+  <meta name="keywords" content="Lyn's blog" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="什么是依赖注入呢？先看看维基百科的解释:
+
+控制反转（Inversion of Control，缩写为IoC），是面向对象编程中的一种设计原则，可以用来减低计算机代码之间的耦合度。其中最常见的方式叫做依赖注入（Dependency Injection，简称DI），还有一种方式叫“依赖查找”（Dependency Lookup）。通过控制反转，对象在被创建的时候，由一个调控系统内所有对象的外界实体，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从依赖注入（Dependency Injection）到AMD模式 CMD模式">
+<meta property="og:url" content="http://lyn.s76.org/2017/03/02/Dependency-Injection-AMD-CMD/index.html">
+<meta property="og:site_name" content="Lyn's Blog">
+<meta property="og:description" content="什么是依赖注入呢？先看看维基百科的解释:
+
+控制反转（Inversion of Control，缩写为IoC），是面向对象编程中的一种设计原则，可以用来减低计算机代码之间的耦合度。其中最常见的方式叫做依赖注入（Dependency Injection，简称DI），还有一种方式叫“依赖查找”（Dependency Lookup）。通过控制反转，对象在被创建的时候，由一个调控系统内所有对象的外界实体，">
+<meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/17-3-25/91725590-file_1490414828813_16764.jpg">
+<meta property="og:updated_time" content="2017-03-25T04:14:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从依赖注入（Dependency Injection）到AMD模式 CMD模式">
+<meta name="twitter:description" content="什么是依赖注入呢？先看看维基百科的解释:
+
+控制反转（Inversion of Control，缩写为IoC），是面向对象编程中的一种设计原则，可以用来减低计算机代码之间的耦合度。其中最常见的方式叫做依赖注入（Dependency Injection，简称DI），还有一种方式叫“依赖查找”（Dependency Lookup）。通过控制反转，对象在被创建的时候，由一个调控系统内所有对象的外界实体，">
+<meta name="twitter:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/17-3-25/91725590-file_1490414828813_16764.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> 从依赖注入（Dependency Injection）到AMD模式 CMD模式 | Lyn's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-36568696-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lyn's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Node.js Angular.js Express.js HTML5 Mongodb Programing Notes</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                从依赖注入（Dependency Injection）到AMD模式 CMD模式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2017-03-02T21:34:13+08:00" content="2017-03-02">
+              2017-03-02
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/03/02/Dependency-Injection-AMD-CMD/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/02/Dependency-Injection-AMD-CMD/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="什么是依赖注入呢？">什么是依赖注入呢？</h1><p>先看看维基百科的解释:</p>
+<blockquote>
+<p>控制反转（Inversion of Control，缩写为IoC），是面向对象编程中的一种设计原则，可以用来减低计算机代码之间的耦合度。其中最常见的方式叫做依赖注入（Dependency Injection，简称DI），还有一种方式叫“依赖查找”（Dependency Lookup）。通过控制反转，对象在被创建的时候，由一个调控系统内所有对象的外界实体，将其所依赖的对象的引用传递给它。也可以说，依赖被注入到对象中。</p>
+</blockquote>
+<p>也就是说依赖注入是为了降低代码之间的耦合度,但这样做的好处又是什么呢?<br>可以马上想到的一个好处就是提高代码的testablity.</p>
+<p>我们通过下面的例子来理解</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getPostTitleById</span>(<span class="params">id</span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> fetch(<span class="string">`https://jsonplaceholder.typicode.com/posts/<span class="subst">$&#123;id&#125;</span>`</span>)</div><div class="line">        .then(<span class="function"><span class="params">response</span> =&gt;</span> response.json())</div><div class="line">        .then(<span class="function"><span class="params">data</span> =&gt;</span> data.title)</div><div class="line">&#125;</div><div class="line"></div><div class="line">getPostTitleById(<span class="number">6</span>)</div><div class="line">.then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">`Title is <span class="subst">$&#123;data&#125;</span>`</span>);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>当我们在浏览器里运行这段代码的时候,可以正常的执行.<br>但如果我们把这段代码放到node下面执行的时候,你就会发现报错了:</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">return</span> fetch(`<span class="javascript">https:<span class="comment">//jsonplaceholder.typicode.com/posts/$&#123; id &#125;</span></span>`)</div><div class="line">         ^</div><div class="line">ReferenceError: fetch <span class="keyword">is</span> <span class="keyword">not</span> defined</div></pre></td></tr></table></figure>
+<p>这是因为我们的<code>getPostTitleById</code>这个函数的内部实际上依赖的是浏览器的window.fetch这个api.<br>有没有什么办法可以让我们的代码在node下也运行起来呢?</p>
+<p>肯定会想到一个简单的办法:</p>
+<ul>
+<li>引入一个npm包,作为函数的外部变量.</li>
+</ul>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">const fetch = require('<span class="keyword">node</span><span class="title">-fetch</span>');</div></pre></td></tr></table></figure>
+<p>但是:</p>
+<ul>
+<li>如果我们想单独测试这个函数呢?</li>
+<li>如果我们不知道这个函数内部依赖的<code>api</code>的名字呢?或者内部依赖的名字改变了呢?代码一样失效了.</li>
+</ul>
+<p>如何进一步的优化的呢?</p>
+<h1 id="实现依赖注入?">实现依赖注入?</h1><p>众所周知在JavaScript中函数是一等公民,也就是函数实际上也是和String,Number,Array这样的变量可以作为函数的参数.最常用的的例子就是我们可以把函数最后一个参数写成回调函数.</p>
+<ul>
+<li>所以我们可以把我们依赖的函数作为参数传入函数内部作为一个函数局部作用域的局部变量使用.</li>
+</ul>
+<p>只需要简单的改造下我们的代码:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"> <span class="keyword">const</span> fetch = <span class="built_in">require</span>(<span class="string">'node-fetch'</span>);</div><div class="line"></div><div class="line"><span class="comment">// 将我们函数内部的依赖作为第一个参数传入到函数内部.</span></div><div class="line"> <span class="function"><span class="keyword">function</span> <span class="title">getPostTitleById</span>(<span class="params">fetch, id</span>) </span>&#123;</div><div class="line">   <span class="keyword">return</span> fetch(<span class="string">`https://jsonplaceholder.typicode.com/posts/<span class="subst">$&#123;id&#125;</span>`</span>)</div><div class="line">        .then(<span class="function"><span class="params">response</span> =&gt;</span> response.json())</div><div class="line">        .then(<span class="function"><span class="params">data</span> =&gt;</span> data.title)</div><div class="line"> &#125;</div><div class="line"> </div><div class="line"><span class="comment">// 下面两种调用方式可以把我们想要的api传入进去,</span></div><div class="line"><span class="comment">// node 下 使用npm包</span></div><div class="line"> getPostTitleById(fetch, <span class="number">6</span>)</div><div class="line">  .then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">`Title is <span class="subst">$&#123;data&#125;</span>`</span>);</div><div class="line">  &#125;)</div><div class="line"></div><div class="line"><span class="comment">// 浏览器下使用 window.fetch</span></div><div class="line"> getPostTitleById(<span class="built_in">window</span>.fetch, <span class="number">6</span>)</div><div class="line">  .then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">`Title is <span class="subst">$&#123;data&#125;</span>`</span>);</div><div class="line">  &#125;)</div></pre></td></tr></table></figure>
+<ul>
+<li>依赖注入的概念就是这么简单的实现了.</li>
+</ul>
+<h1 id="为什么要这样?">为什么要这样?</h1><ul>
+<li>通过这样做,很明显降低能代码之间的耦合度.</li>
+<li>在自动化测试中,如果有依赖注入那么我们可以通过各种模拟来使得测试会变得更加简单和有效.</li>
+</ul>
+<p>我们来实现一下上面的例子的测试用例,来说明这样做的好处~</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">describe(<span class="string">'getPostTitleById'</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">  it(<span class="string">'should call the right url'</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">  <span class="regexp">//</span>实现一个自定义的fetch函数,用于测试api的接口url正确</div><div class="line">    const fakeFetch = <span class="function"><span class="params">(url)</span> =&gt;</span> &#123;</div><div class="line">      assert(</div><div class="line">         url.indexOf(<span class="string">'https://jsonplaceholder.typicode.com/posts'</span>) !== <span class="number">-1</span></div><div class="line">       )</div><div class="line">      <span class="keyword">return</span> <span class="keyword">new</span> Promise(<span class="function"><span class="params">(resolve)</span> =&gt;</span> &#123;</div><div class="line"></div><div class="line">      &#125;)</div><div class="line">    &#125;</div><div class="line">    getPostTitleById(fakeFetch, <span class="number">6</span>);</div><div class="line">  &#125;)</div><div class="line">&#125;)</div><div class="line"></div><div class="line">describe(<span class="string">'getPostTitleById'</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">  it(<span class="string">'should parse the json response into object'</span>, <span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">  <span class="regexp">//</span>实现一个fetch来返回一个promise对象,promise对象中包含一个json方法,json方法会resolve 一个对象.</div><div class="line">    const fakeFetch = <span class="function"><span class="params">(url)</span> =&gt;</span> &#123;</div><div class="line">      <span class="keyword">return</span> Promise.resolve(&#123;</div><div class="line">        json: <span class="function"><span class="params">()</span> =&gt;</span> Promise.resolve(&#123;</div><div class="line">          userId: <span class="number">1</span>,</div><div class="line">          id: <span class="number">6</span>,</div><div class="line">          title: <span class="string">'dolorem eum magni eos aperiam quia'</span>,</div><div class="line">          body: <span class="string">'ut aspernatur corporis harum nihil quis provident sequi\nmollitia nobis aliquid molestiae\nperspiciatis et ea nemo ab reprehenderit accusantium quas\nvoluptate dolores velit et doloremque molestiae'</span>,</div><div class="line">        &#125;),</div><div class="line">      &#125;)</div><div class="line">    &#125;</div><div class="line">    getPostTitleById(fakeFetch, <span class="number">6</span>);</div><div class="line">  &#125;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>通过上面的代码不难看出:</p>
+<ul>
+<li>这样的测试用例更加独立灵活且可以实现方便的定制.</li>
+</ul>
+<p>这时候我们可能会想到管理依赖的两种常见模块化规范:AMD和CMD了.</p>
+<h1 id="AMD规范">AMD规范</h1><p>require.js是 AMD规范的代表.</p>
+<p>有没有好奇他们具体是怎么实现依赖管理的呢?</p>
+<p>require.js 核心的两个函数<code>require</code>和<code>define</code></p>
+<p>其中<code>require</code>是 入口函数(main函数)以及设置依赖模块的路径(理解为src)等.</p>
+<ol>
+<li>加载require.js文件读取main.js.</li>
+<li>解析main.js里的绝对引用路径和相对引用路径.</li>
+<li>从入口文件开始解析依赖.</li>
+<li>把需要加载的依赖的路径创建Script标签.设置onload事件把依赖的factory赋值给依赖缓存对象.</li>
+<li>当所有依赖onload事件都完成时,将依赖通过形参传递到factory的作用域里.</li>
+<li>如果依赖的factory还有别的依赖则会递归查找依赖</li>
+</ol>
+<h1 id="CMD规范">CMD规范</h1><p>相比于AMD而言 CMD的代表Sea.js 的理念是类似lazyload 这样的懒加载理念,也就是就近加载,<br>那他是怎么实现的呢?</p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/17-3-25/91725590-file_1490414828813_16764.jpg" alt=""></p>
+<ol>
+<li>通过 use 方法来加载入口模块，并接收一个回调函数， 当模块加载完成， 会调用回调函数，并传入对应的模块作为参数。</li>
+<li>从缓存或创建并加载 来获取到模块后，等待模块（包括模块依赖的模块）加载完成会调用回调函数。</li>
+<li>在图片虚线部分中，加载factory及分析出模块的依赖，按依赖关系递归执行 document.createElement(‘script’) 。</li>
+<li>Sea.js中不能声明依赖的识别Id,而是使用路径作为依赖的Id.</li>
+</ol>
+<h1 id="requireJs和_seaJs的区别">requireJs和 seaJs的区别</h1><p>SeaJS按需执行依赖避免浪费，但是require时才解析的行为对性能有影响。<br>SeaJS是异步加载模块的没错, 但执行模块的顺序也是严格按照模块在代码中出现(require)的顺序。</p>
+<p>RequireJS更遵从js异步编程方式，提前执行依赖，输出顺序取决于哪个 js 先加载完（不过 RequireJS 从 2.0 开始，也改成可以延迟执行）。如果一定要让 模块B 在 模块A 之后执行，需要在 define 模块时申明依赖，或者通过 require.config 配置依赖。</p>
+<p>如果两个模块之间突然模块A依赖模块B：SeaJS的懒执行可能有问题，而RequireJS不需要修改当前模块。</p>
+<p>当模块A依赖模块B，模块B出错了：如果是SeaJS，模块A执行了某操作，可能需要回滚。RequireJS因为尽早执行依赖可以尽早发现错误，不需要回滚。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/19/generator-yield/" rel="next" title="Generators  入门">
+                <i class="fa fa-chevron-left"></i> Generators  入门
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/03/02/Dependency-Injection-AMD-CMD/"
+           data-title="从依赖注入（Dependency Injection）到AMD模式 CMD模式" data-url="http://lyn.s76.org/2017/03/02/Dependency-Injection-AMD-CMD/">
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/author.png" alt="Lyn's Blog" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Lyn's Blog</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Lyn's Blog about Node.js  Express.js Angular.js HTML5 Mongodb Programing Notes</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">58</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是依赖注入呢？"><span class="nav-number">1.</span> <span class="nav-text">什么是依赖注入呢？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现依赖注入?"><span class="nav-number">2.</span> <span class="nav-text">实现依赖注入?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么要这样?"><span class="nav-number">3.</span> <span class="nav-text">为什么要这样?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AMD规范"><span class="nav-number">4.</span> <span class="nav-text">AMD规范</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CMD规范"><span class="nav-number">5.</span> <span class="nav-text">CMD规范</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#requireJs和_seaJs的区别"><span class="nav-number">6.</span> <span class="nav-text">requireJs和 seaJs的区别</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2011 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lyn's Blog</span>
+</div>
+
+<div class="powered-by">
+  <a class="theme-link" href="http://hexo.io">Powered by Hexo
+  </a>
+</div>
+
+<div class="theme-info">
+  
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"blog-lyn"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+
+    
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
