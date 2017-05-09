@@ -211,6 +211,201 @@
             
             
               
+                <a class="post-title-link" href="/2015/11/10/nodejs-note-08-1/" itemprop="url">
+                  How to learn Node.js - express with template engine
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-11-10T23:17:04+08:00" content="2015-11-10">
+              2015-11-10
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="epxress_template:_Jade_vs_Hbs">epxress template: Jade vs Hbs</h1><p>Jade is  something more like python, but I like Hbs as the syntax is easy to  transit from raw html file to template.hbs file</p>
+<h1 id="views">views</h1><p>As we choose handlerbars as our template engine, we need use a npm helper express-handlerbars</p>
+<p>So, we need to update our  package.json first</p>
+<p>we can check the helper version by </p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Lyn-Cheung-MBP:<span class="keyword">node</span><span class="title">-06</span> Lyn$ npm  show express-handlebars  <span class="keyword">version</span></div><div class="line"></div><div class="line"><span class="number">2.0</span>.<span class="number">1</span></div></pre></td></tr></table></figure>
+<p>package.json </p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"name"</span>: <span class="string">"node-slash"</span>,</div><div class="line">  <span class="attr">"version"</span>: <span class="string">"1.0.0"</span>,</div><div class="line">  <span class="attr">"description"</span>: <span class="string">"first express app"</span>,</div><div class="line">  <span class="attr">"main"</span>: <span class="string">"index.js"</span>,</div><div class="line">  <span class="attr">"scripts"</span>: &#123;</div><div class="line">    <span class="attr">"test"</span>: <span class="string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span></div><div class="line">  &#125;,</div><div class="line">  <span class="attr">"author"</span>: <span class="string">"lyn"</span>,</div><div class="line">  <span class="attr">"license"</span>: <span class="string">"MIT"</span>,</div><div class="line">  <span class="attr">"dependencies"</span>: &#123;</div><div class="line">    <span class="attr">"method-override"</span>: <span class="string">"2.3.5"</span>,</div><div class="line">    <span class="attr">"express"</span>: <span class="string">"^4.13.3"</span>,</div><div class="line">    <span class="attr">"body-parser"</span>:<span class="string">"1.14.1"</span>,</div><div class="line">    <span class="attr">"cookie-session"</span>:<span class="string">"2.0.0-alpha.1"</span>,</div><div class="line">    <span class="attr">"cookie-parser"</span>:<span class="string">"1.4.0"</span>,</div><div class="line">    <span class="attr">"express-handlebars"</span>:<span class="string">"2.0.1"</span></div><div class="line"></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>then we need to create views direction </p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/15-11-10/87116763.jpg" alt=""></p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">mkdir</span> views </div><div class="line">cd  views</div><div class="line"><span class="built_in">mkdir</span> layout</div><div class="line"><span class="built_in">mkdir</span> <span class="built_in">home</span></div><div class="line"><span class="built_in">mkdir</span> adventures</div><div class="line"><span class="built_in">mkdir</span> loot</div></pre></td></tr></table></figure>
+<p>import  template engine in application.js  by add:</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">var</span> exphbs  	   = <span class="keyword">require</span>(<span class="string">'express-handlebars'</span>); </div><div class="line"><span class="built_in">var</span> hbs = exphbs.create(&#123;</div><div class="line">  extname:<span class="string">'hbs'</span>,</div><div class="line">    defaultLayout: <span class="string">'main'</span>,</div><div class="line">    layoutsDir:<span class="string">'app/views/layouts/'</span>,</div><div class="line">    partialsDir:<span class="string">'app/views/partials/'</span></div><div class="line">&#125;);</div><div class="line">App.app.<span class="built_in">set</span>(<span class="string">'views'</span>, App.appPath(<span class="string">"app/views"</span>));</div><div class="line">App.app.engine(<span class="string">'hbs'</span>, hbs.engine);</div><div class="line">App.app.<span class="built_in">set</span>(<span class="string">'view engine'</span>, <span class="string">'hbs'</span>);</div></pre></td></tr></table></figure>
+<p>then we need create our layout,</p>
+ 
+
+ {{{body}}} is placeholder of each content
+ 
+<figure class="highlight django"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="xml"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span></div><div class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span> <span class="tag">&lt;<span class="name">title</span>&gt;</span>Node Slash<span class="tag">&lt;/<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">head</span>&gt;</span> </div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="template-variable">&#123;&#123;&#123;body&#125;&#125;</span><span class="xml">&#125;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>then we need to update our homeRoutes.js</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">exports.home = <span class="function"><span class="keyword">function</span> <span class="title">home</span> <span class="params">(req, res)</span></span>&#123;</div><div class="line">	res.render(<span class="string">'home/home'</span>)</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>/views/home/home.hbs</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;h1&gt; Browser Game&lt;/h1&gt;</div><div class="line"></div><div class="line">&lt;<span class="selector-tag">form</span> action=<span class="string">"/login"</span> method=<span class="string">"POST"</span>&gt;&lt;<span class="selector-tag">label</span> <span class="keyword">for</span>=<span class="string">"username"</span>&gt;Username&lt;/label&gt;</div><div class="line">&lt;<span class="selector-tag">input</span> id=<span class="string">"username"</span> type=<span class="string">"text"</span> name=<span class="string">"username"</span>&gt;</div><div class="line">&lt;<span class="selector-tag">button</span> type=<span class="string">"submit"</span>&gt;Start ye adventures!&lt;/button&gt;</div><div class="line">&lt;/form&gt;</div><div class="line"></div><div class="line">&lt;<span class="selector-tag">img</span> src=<span class="string">"/images/logo.jpg"</span>&gt;</div><div class="line">&lt;<span class="selector-tag">a</span> href=<span class="string">'/adventures'</span>&gt; Go to adventures &lt;/a&gt;</div></pre></td></tr></table></figure>
+<p>That’s it  </p>
+<p>if you want to qoute value in the template,</p>
+<p>for example: showloot function </p>
+<p>edit the lootRoutes.js</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">exports<span class="selector-class">.show</span> = function showLoot(req, res)&#123;</div><div class="line">	<span class="selector-tag">var</span> id   = req<span class="selector-class">.params</span><span class="selector-class">.id</span></div><div class="line">	<span class="selector-tag">var</span> data =&#123;id: id&#125;</div><div class="line">	res.render(<span class="string">'loot/show'</span>,data)</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+  show.hbs template use {{id}} to display the value.
+<figure class="highlight django"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="xml"></span></div><div class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span> Ogre-slaying knife<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span> it has 9 orges,  it was <span class="template-variable">&#123;&#123;id&#125;&#125;</span><span class="xml"><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></div></pre></td></tr></table></figure>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/2015/10/07/nodejs-note-07/" itemprop="url">
+                  How to learn Node.js - wirte app code in production mode
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-10-07T17:02:22+08:00" content="2015-10-07">
+              2015-10-07
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>write a bacic and pratical server function in a production way.</p>
+<p>application.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> env         = process.env.NODE_ENV || <span class="string">'development'</span></div><div class="line"><span class="keyword">var</span> packageJson = <span class="built_in">require</span>(<span class="string">'../package.json'</span>)</div><div class="line"><span class="keyword">var</span> path        = <span class="built_in">require</span>(<span class="string">'path'</span>)</div><div class="line"><span class="keyword">var</span> express     = <span class="built_in">require</span>(<span class="string">'express'</span>)</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(<span class="string">'loading App in '</span> + env + <span class="string">'node.'</span>)</div><div class="line"></div><div class="line"></div><div class="line">global.App = &#123;</div><div class="line"></div><div class="line">	<span class="attr">app</span>: express()</div><div class="line">,   <span class="attr">port</span>: process.env.PORT || <span class="number">3000</span></div><div class="line">,   <span class="attr">version</span>: packageJson.version</div><div class="line">,   <span class="attr">root</span>: path.join(__dirname, <span class="string">'..'</span>)</div><div class="line">,   <span class="attr">appPath</span>: <span class="function"><span class="keyword">function</span>(<span class="params">path</span>)</span>&#123;</div><div class="line">	  <span class="keyword">return</span> <span class="keyword">this</span>.root + <span class="string">'/'</span> + path</div><div class="line">	&#125;</div><div class="line"></div><div class="line">,   <span class="attr">require</span>: <span class="function"><span class="keyword">function</span>(<span class="params">path</span>)</span>&#123;</div><div class="line">	  <span class="keyword">return</span> <span class="built_in">require</span>(<span class="keyword">this</span>.app_path(path))	</div><div class="line">	&#125;</div><div class="line"></div><div class="line">,   <span class="attr">env</span>: env</div><div class="line"></div><div class="line">,  <span class="attr">start</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line"></div><div class="line">		<span class="keyword">if</span>(!<span class="keyword">this</span>.started)&#123;</div><div class="line"></div><div class="line">			<span class="keyword">this</span>.started = <span class="literal">true</span></div><div class="line">			<span class="keyword">this</span>.app.listen(<span class="keyword">this</span>.port)</div><div class="line">			<span class="built_in">console</span>.log( <span class="string">"running App version"</span> + App.version + <span class="string">" on port:"</span> + App.port + <span class="string">" in "</span>  + App.env + <span class="string">" mode"</span> )</div><div class="line">		</div><div class="line">			&#125;</div><div class="line">	  	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>index.js</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="title">require</span><span class="params">(<span class="string">'./config/application'</span>)</span></span></div><div class="line">App.start()</div></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Lyn-Cheung-MBP:<span class="keyword">node</span><span class="title">-06</span> Lyn$ <span class="keyword">node</span> <span class="title">index</span>.js</div><div class="line">loading App <span class="keyword">in</span> developmentnode.</div><div class="line">running App version1.<span class="number">0.0</span> on port:<span class="number">3000</span> <span class="keyword">in</span> development mode</div></pre></td></tr></table></figure>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/15-11-9/73981430.jpg" alt=""></p>
+<p>We can put our code in structrue displayed above.</p>
+<p>application.js</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">var</span> env         = process.env.NODE_ENV || <span class="string">'development'</span></div><div class="line"><span class="keyword">var</span> packageJson = <span class="keyword">require</span>(<span class="string">'../package.json'</span>)</div><div class="line"><span class="keyword">var</span> path        = <span class="keyword">require</span>(<span class="string">'path'</span>)</div><div class="line"><span class="keyword">var</span> express     = <span class="keyword">require</span>(<span class="string">'express'</span>)</div><div class="line"><span class="keyword">var</span> bodyParser     = <span class="keyword">require</span>(<span class="string">'body-parser'</span>)</div><div class="line"><span class="keyword">var</span> methodOverride = <span class="keyword">require</span>(<span class="string">'method-override'</span>)</div><div class="line"><span class="keyword">var</span> cookieParser   = <span class="keyword">require</span>(<span class="string">'cookie-parser'</span>)</div><div class="line"><span class="keyword">var</span> cookieSession  = <span class="keyword">require</span>(<span class="string">'cookie-session'</span>) </div><div class="line"></div><div class="line"></div><div class="line">console.log(<span class="string">'loading App in '</span> + env + <span class="string">'node.'</span>)</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">global</span>.App = &#123;</div><div class="line"></div><div class="line">	app: express()</div><div class="line">,   port: process.env.PORT || <span class="number">3000</span></div><div class="line">,   version: packageJson.version</div><div class="line">,   root: path.join(__dirname, <span class="string">'..'</span>)</div><div class="line">,   appPath: <span class="function"><span class="keyword">function</span><span class="params">(path)</span></span>&#123;</div><div class="line">	  <span class="keyword">return</span> this.root + <span class="string">'/'</span> + path</div><div class="line">	&#125;</div><div class="line"></div><div class="line">,   <span class="keyword">require</span>: <span class="function"><span class="keyword">function</span><span class="params">(path)</span></span>&#123;</div><div class="line">	  <span class="keyword">return</span> <span class="keyword">require</span>(this.appPath(path))	</div><div class="line">	&#125;</div><div class="line"></div><div class="line">,   env: env</div><div class="line"></div><div class="line">,  start: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line"></div><div class="line">		<span class="keyword">if</span>(!this.started)&#123;</div><div class="line"></div><div class="line">			this.started = <span class="keyword">true</span></div><div class="line">			this.app.listen(this.port)</div><div class="line">			console.log( <span class="string">"running App version"</span> + App.version + <span class="string">" on port:"</span> + App.port + <span class="string">" in "</span>  + App.env + <span class="string">" mode"</span> )</div><div class="line">		</div><div class="line">			&#125;</div><div class="line">	  	&#125;</div><div class="line"></div><div class="line">,	routes: <span class="function"><span class="keyword">function</span><span class="params">(path)</span></span>&#123;</div><div class="line">		<span class="keyword">return</span> this.<span class="keyword">require</span>(<span class="string">"app/routes/"</span> + path)</div><div class="line">	&#125;	</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//middlewares</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> indexRouter =  App.<span class="keyword">require</span>(<span class="string">"./config/routes.js"</span>)</div><div class="line">App.app.<span class="keyword">use</span>(bodyParser.urlencoded(&#123;     <span class="comment">// to support URL-encoded bodies</span></div><div class="line">	  extended: <span class="keyword">false</span></div><div class="line">	&#125;)); </div><div class="line">App.app.<span class="keyword">use</span>(methodOverride(<span class="string">'_method'</span>));</div><div class="line">App.app.<span class="keyword">use</span>(cookieParser())</div><div class="line">App.app.<span class="keyword">use</span>(cookieSession(&#123;secret: <span class="string">"it's a secret to  everybody"</span>, key:<span class="string">"session"</span>&#125;))</div><div class="line">App.app.<span class="keyword">use</span>(<span class="string">'/images'</span>, express.<span class="keyword">static</span>( App.appPath(<span class="string">'images'</span>)));</div><div class="line"></div><div class="line">App.app.<span class="keyword">use</span>(<span class="string">'/'</span>,indexRouter)</div></pre></td></tr></table></figure>
+<p>route.js</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line"><span class="stylus"><span class="selector-tag">var</span> express       =  require(<span class="string">"express"</span>)</span></div><div class="line"><span class="selector-tag">var</span> indexRouter   =  express.Router()</div><div class="line"></div><div class="line"> </div><div class="line"><span class="selector-tag">var</span> homeRoutes    =  App.routes(<span class="string">'homeRoutes'</span>)	</div><div class="line">indexRouter.get(<span class="string">'/'</span>, homeRoutes.home)</div><div class="line"></div><div class="line"></div><div class="line"><span class="selector-tag">var</span> adventuresRoutes = App.routes(<span class="string">'adventruesRoutes'</span>)</div><div class="line"></div><div class="line">indexRouter.route(<span class="string">'/adventures'</span>)</div><div class="line">	.get(adventuresRoutes.index)</div><div class="line">	.post(adventuresRoutes.create)</div><div class="line">	.put(adventuresRoutes.update)</div><div class="line"></div><div class="line"></div><div class="line"><span class="selector-tag">var</span> lootRoutes = App.routes(<span class="string">'lootRoutes'</span>)</div><div class="line">indexRouter.get(<span class="string">'/loot/:id'</span>, lootRoutes.show)</div><div class="line"></div><div class="line"> </div><div class="line">module<span class="selector-class">.exports</span> = indexRouter</div></pre></td></tr></table></figure>
+<p>lootRoutes.js</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">exports.show = function showLoot(req, res)&#123;</div><div class="line">	var id = req.params.id</div><div class="line">	res.setHeader("Content-Type", 'text/html')</div><div class="line">	res.send("<span class="tag">&lt;<span class="name">html</span>&gt;</span> <span class="tag">&lt;<span class="name">head</span>&gt;</span> <span class="tag">&lt;<span class="name">title</span>&gt;</span>adventures <span class="tag">&lt;/<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">head</span>&gt;</span> <span class="tag">&lt;<span class="name">body</span>&gt;</span> <span class="tag">&lt;<span class="name">h1</span>&gt;</span> Ogre-slaying knife<span class="tag">&lt;/<span class="name">h1</span>&gt;</span><span class="tag">&lt;<span class="name">p</span>&gt;</span> it has 9 orges,  it was" + id + " <span class="tag">&lt;/<span class="name">p</span>&gt;</span> <span class="tag">&lt;/<span class="name">body</span>&gt;</span><span class="tag">&lt;/<span class="name">html</span>&gt;</span>")</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>adventuresRoutes.js</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">exports.index =function adventuresIndex(req, res)&#123;</div><div class="line">	res.setHeader("Content-Type",'text/html');</div><div class="line">	res.send("<span class="tag">&lt;<span class="name">html</span>&gt;</span><span class="tag">&lt;<span class="name">head</span>&gt;</span> <span class="tag">&lt;<span class="name">title</span>&gt;</span>adventures <span class="tag">&lt;/<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">head</span>&gt;</span> <span class="tag">&lt;<span class="name">body</span>&gt;</span><span class="tag">&lt;<span class="name">h1</span>&gt;</span> Are you brave " + req.session.username + " ?<span class="tag">&lt;/<span class="name">h1</span>&gt;</span><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">'/adventures'</span> <span class="attr">method</span>=<span class="string">'POST'</span>&gt;</span> <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">'submit'</span>&gt;</span> Yes! i am !<span class="tag">&lt;/<span class="name">button</span>&gt;</span><span class="tag">&lt;/<span class="name">form</span>&gt;</span><span class="tag">&lt;/<span class="name">body</span>&gt;</span><span class="tag">&lt;/<span class="name">html</span>&gt;</span>")</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">exports.create = function createAdventure(req, res)&#123;</div><div class="line">	console.log(req.body);</div><div class="line">	res.setHeader("Content-Type",'text/html');</div><div class="line">	res.send("<span class="tag">&lt;<span class="name">html</span>&gt;</span><span class="tag">&lt;<span class="name">head</span>&gt;</span> <span class="tag">&lt;<span class="name">title</span>&gt;</span>adventures<span class="tag">&lt;/<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">head</span>&gt;</span> <span class="tag">&lt;<span class="name">body</span>&gt;</span><span class="tag">&lt;<span class="name">h1</span>&gt;</span> So  you are brave!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">'/adventures/?_method=PUT'</span> <span class="attr">method</span>=<span class="string">'POST'</span>&gt;</span>  <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">'submit'</span>&gt;</span> Cheat <span class="tag">&lt;/<span class="name">button</span>&gt;</span><span class="tag">&lt;/<span class="name">form</span>&gt;</span><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">'/adventures'</span> <span class="attr">method</span>=<span class="string">'POST'</span>&gt;</span>  <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">'submit'</span>&gt;</span> again !<span class="tag">&lt;/<span class="name">button</span>&gt;</span><span class="tag">&lt;<span class="name">p</span>&gt;</span>you have found some <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'/loot/1'</span>&gt;</span>loot <span class="tag">&lt;/<span class="name">a</span>&gt;</span> here<span class="tag">&lt;/<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">form</span>&gt;</span><span class="tag">&lt;/<span class="name">body</span>&gt;</span><span class="tag">&lt;/<span class="name">html</span>&gt;</span>" );</div><div class="line">&#125;</div><div class="line"></div><div class="line">exports.update = function updateAdventure(req, res)&#123;</div><div class="line">	res.setHeader("Content-Type",'text/html');</div><div class="line">	res.send("<span class="tag">&lt;<span class="name">html</span>&gt;</span><span class="tag">&lt;<span class="name">head</span>&gt;</span> <span class="tag">&lt;<span class="name">title</span>&gt;</span>adventures <span class="tag">&lt;/<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">head</span>&gt;</span> <span class="tag">&lt;<span class="name">body</span>&gt;</span> <span class="tag">&lt;<span class="name">H1</span>&gt;</span>Method override help you to change method from post to put ! <span class="tag">&lt;/<span class="name">H1</span>&gt;</span><span class="tag">&lt;<span class="name">p</span>&gt;</span>It's a secret to everybody <span class="tag">&lt;/<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">body</span>&gt;</span><span class="tag">&lt;/<span class="name">html</span>&gt;</span>");</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>homeRoutes.js</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">exports.home = function home (req, res)&#123;</div><div class="line">	//console.log("Hi! I was called at: ", req.originalUrl)</div><div class="line">	res.setHeader("Conetent-Type", 'text/html');</div><div class="line">	res.send("<span class="tag">&lt;<span class="name">html</span>&gt;</span><span class="tag">&lt;<span class="name">head</span>&gt;</span> <span class="tag">&lt;<span class="name">title</span>&gt;</span>Node Slash<span class="tag">&lt;/<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">head</span>&gt;</span> <span class="tag">&lt;<span class="name">body</span>&gt;</span><span class="tag">&lt;<span class="name">h1</span>&gt;</span> Browser Game<span class="tag">&lt;/<span class="name">h1</span>&gt;</span><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">\</span>"/<span class="attr">login</span>\" <span class="attr">method</span>=<span class="string">\</span>"<span class="attr">POST</span>\"&gt;</span><span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">\</span>"<span class="attr">username</span>\"&gt;</span>Username<span class="tag">&lt;/<span class="name">label</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">\</span>"<span class="attr">username</span>\" <span class="attr">type</span>=<span class="string">\</span>"<span class="attr">text</span>\" <span class="attr">name</span>=<span class="string">\</span>"<span class="attr">username</span>\"&gt;</span><span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">\</span>"<span class="attr">submit</span>\"&gt;</span>Start ye adventures!<span class="tag">&lt;/<span class="name">button</span>&gt;</span><span class="tag">&lt;/<span class="name">form</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">\</span>"/<span class="attr">images</span>/<span class="attr">logo.jpg</span>\"&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'/adventures'</span>&gt;</span> Go to adventures <span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">body</span>&gt;</span><span class="tag">&lt;/<span class="name">html</span>&gt;</span>");</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2015/09/21/nodejs-note-06/" itemprop="url">
                   How to learn Node.js -- organize your code by using require and exports
                 </a>
@@ -230,13 +425,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/09/21/nodejs-note-06/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/21/nodejs-note-06/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -394,13 +582,6 @@
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/09/05/nodejs-note-05/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/05/nodejs-note-05/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -480,13 +661,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/08/30/nodejs-note-04/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/08/30/nodejs-note-04/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -595,13 +769,6 @@
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/08/25/nodejs-note-03/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/08/25/nodejs-note-03/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -689,13 +856,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/07/05/nodejs-note-02/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/05/nodejs-note-02/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -807,13 +967,6 @@
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/06/28/hellowordnodejs/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/06/28/hellowordnodejs/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -899,13 +1052,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/03/26/vagrant_gfw_errors/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/03/26/vagrant_gfw_errors/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -1001,13 +1147,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2014/12/26/hello-world/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2014/12/26/hello-world/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -1105,7 +1244,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">58</span>
+              <span class="site-state-item-count">60</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1119,7 +1258,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
@@ -1190,28 +1329,11 @@
 
   
     
+    
 
   
-    
-  
-
-  <script type="text/javascript">
-    var duoshuoQuery = {short_name:"blog-lyn"};
-    (function() {
-      var ds = document.createElement('script');
-      ds.type = 'text/javascript';ds.async = true;
-      ds.id = 'duoshuo-script';
-      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-      ds.charset = 'UTF-8';
-      (document.getElementsByTagName('head')[0]
-      || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-  </script>
-    
-     
 
 
-    
   
 
   

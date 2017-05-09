@@ -211,6 +211,266 @@
             
             
               
+                <a class="post-title-link" href="/2016/09/29/redux-notes-03/" itemprop="url">
+                  redux-notes-03 常用的middleware
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-09-29T21:36:47+08:00" content="2016-09-29">
+              2016-09-29
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="Show_me_ur_code">Show me ur code</h1><p> 先看代码,再分别解释各个知识点.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123;</div><div class="line">  applyMiddleware,</div><div class="line">  createStore,</div><div class="line">  compose,</div><div class="line">  combineReducers,</div><div class="line">&#125; <span class="keyword">from</span> <span class="string">'redux'</span>;</div><div class="line"></div><div class="line"><span class="keyword">import</span> thunk <span class="keyword">from</span> <span class="string">'redux-thunk'</span>;</div><div class="line"><span class="keyword">import</span> createLogger <span class="keyword">from</span> <span class="string">'redux-logger'</span>;</div><div class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span>;</div><div class="line"><span class="keyword">import</span> promise <span class="keyword">from</span> <span class="string">'redux-promise-middleware'</span>;</div><div class="line"></div><div class="line"><span class="comment">// 自定义middleware</span></div><div class="line"><span class="comment">// const logger = (store)=&gt;(next)=&gt; (action)=&gt;&#123;</span></div><div class="line"><span class="comment">// 	console.log('action fired', action);</span></div><div class="line"><span class="comment">// 	next(action);</span></div><div class="line"><span class="comment">// &#125;</span></div><div class="line"></div><div class="line"><span class="comment">//定义postreducer</span></div><div class="line"><span class="keyword">const</span> postReducer = (state = &#123;</div><div class="line">  <span class="attr">fetching</span>: <span class="literal">false</span>,</div><div class="line">  <span class="attr">fetched</span>: <span class="literal">false</span>,</div><div class="line">  <span class="attr">posts</span>: [],</div><div class="line">  <span class="attr">error</span>: <span class="literal">null</span>,</div><div class="line">&#125;, action) =&gt; &#123;</div><div class="line">  <span class="keyword">switch</span> (action.type) &#123;</div><div class="line">    <span class="keyword">case</span> <span class="string">'FETCH_POSTS_PENDING'</span>:</div><div class="line">      &#123;</div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">          ...state,</div><div class="line">          <span class="attr">fetching</span>: <span class="literal">true</span>,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    <span class="keyword">case</span> <span class="string">'FETCH_POSTS_REJECTED'</span>:</div><div class="line">      &#123;</div><div class="line">        <span class="keyword">return</span> &#123; ...state,</div><div class="line">          <span class="attr">fetching</span>: <span class="literal">false</span>,</div><div class="line">          <span class="attr">error</span>: action.payload,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    <span class="keyword">case</span> <span class="string">'FETCH_POSTS_FULFILLED'</span>:</div><div class="line">      &#123;</div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">          ...state,</div><div class="line">          <span class="attr">fetching</span>: <span class="literal">false</span>,</div><div class="line">          <span class="attr">fetched</span>: <span class="literal">true</span>,</div><div class="line">          <span class="attr">posts</span>: action.payload,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    <span class="keyword">default</span>:</div><div class="line">      <span class="keyword">return</span> &#123;</div><div class="line">        ...state,</div><div class="line">      &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//定义userReducer</span></div><div class="line"><span class="keyword">const</span> userReducer = (state = &#123;</div><div class="line">  <span class="attr">fetching</span>: <span class="literal">false</span>,</div><div class="line">  <span class="attr">fetched</span>: <span class="literal">false</span>,</div><div class="line">  <span class="attr">users</span>: &#123;</div><div class="line">    <span class="attr">id</span>: <span class="literal">null</span>,</div><div class="line">    <span class="attr">name</span>: <span class="literal">null</span>,</div><div class="line">    <span class="attr">age</span>: <span class="literal">null</span>,</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">error</span>: <span class="literal">null</span>,</div><div class="line">&#125;, action) =&gt; &#123;</div><div class="line">  <span class="keyword">switch</span> (action.type) &#123;</div><div class="line">    <span class="keyword">case</span> <span class="string">'FETCH_USERS_PENDING'</span>:</div><div class="line">      &#123;</div><div class="line">        <span class="comment">//state.name =action.payload;</span></div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">          ...state,</div><div class="line">          <span class="attr">fetching</span>: <span class="literal">true</span>,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    <span class="keyword">case</span> <span class="string">'FETCH_USERS_REJECTED'</span>:</div><div class="line"></div><div class="line">      &#123;</div><div class="line">        <span class="comment">//state.name =action.payload;</span></div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">          ...state,</div><div class="line">          <span class="attr">fetching</span>: <span class="literal">false</span>,</div><div class="line">          <span class="attr">error</span>: action.payload,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    <span class="keyword">case</span> <span class="string">'FETCH_USERS_FULFILLED'</span>:</div><div class="line">      &#123;</div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">          ...state,</div><div class="line">          <span class="attr">fetching</span>: <span class="literal">false</span>,</div><div class="line">          <span class="attr">fetched</span>: <span class="literal">true</span>,</div><div class="line">          <span class="attr">users</span>: action.payload.data.data,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    <span class="keyword">default</span>:</div><div class="line">      <span class="keyword">return</span> &#123;</div><div class="line">        ...state,</div><div class="line">      &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//使用redux的combineReducers组合两个reducer为一个供createStore使用的reducer</span></div><div class="line"><span class="keyword">const</span> app = combineReducers(&#123;</div><div class="line">  <span class="attr">user</span>: userReducer,</div><div class="line">  <span class="attr">tweets</span>: postReducer,</div><div class="line">&#125;)</div><div class="line"></div><div class="line"> </div><div class="line"><span class="comment">// 定义middleware,将promise(),thunk,和createLogger()加入到middleware中</span></div><div class="line"><span class="keyword">const</span> middleware = applyMiddleware(promise(), thunk, createLogger());</div><div class="line"></div><div class="line"><span class="comment">//使用compose方法将定义好的middleware和devToolsExtension组合成createStore的middleware参数.</span></div><div class="line"><span class="keyword">const</span> store = createStore(app, compose(</div><div class="line">  middleware,</div><div class="line">  <span class="built_in">window</span>.devToolsExtension ? <span class="built_in">window</span>.devToolsExtension() : <span class="function"><span class="params">f</span> =&gt;</span> f</div><div class="line">));</div><div class="line"></div><div class="line"></div><div class="line">store.subscribe(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'store changed'</span>, store.getState());</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="comment">// 使用axios发起异步请求,axios封装了xhr,redux-promise-middleware会自动为异步调用dispatch三种状态(pending ,fulfilled,rejected).</span></div><div class="line">store.dispatch(&#123;</div><div class="line">  <span class="attr">type</span>: <span class="string">'FETCH_USERS'</span>,</div><div class="line">  <span class="attr">payload</span>: axios.get(<span class="string">'/api/users'</span>),</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="comment">// 如果没有使用redux-promise-middleware,一般使用下面的promise链式调用的方法发起异步请求</span></div><div class="line">store.dispatch(<span class="function">(<span class="params">dispatch</span>) =&gt;</span> &#123;</div><div class="line">  dispatch(&#123;</div><div class="line">    <span class="attr">type</span>: <span class="string">'FETCH_POSTS_PENDING'</span>,</div><div class="line">  &#125;);</div><div class="line">  axios.get(<span class="string">'/api/posts'</span>)</div><div class="line">    .then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</div><div class="line">      dispatch(&#123;</div><div class="line">        <span class="attr">type</span>: <span class="string">'FETCH_POSTS_FULFILLED'</span>,</div><div class="line">        <span class="attr">payload</span>: res.data.data,</div><div class="line">      &#125;)</div><div class="line">    &#125;)</div><div class="line">    .catch(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</div><div class="line">      dispatch(&#123;</div><div class="line">        <span class="attr">type</span>: <span class="string">'FETCH_POSTS_REJECTED'</span>,</div><div class="line">        <span class="attr">payload</span>: err,</div><div class="line">      &#125;);</div><div class="line">    &#125;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h1 id="redux中的middleware">redux中的middleware</h1><p>middleware的概念和express的middleware是一样的,在dispatch一个action以后,action会先经过所有的middleware的加工处理或者修改,再到达reducers.<br>下面是一个简单的logger middleware.它所实现的功能就是console输出所有经过这个middleware的action.</p>
+<figure class="highlight moonscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">const logger = <span class="function"><span class="params">(store)</span>=&gt;</span><span class="function"><span class="params">(<span class="built_in">next</span>)</span>=&gt;</span> (action)=&gt;&#123;</div><div class="line">	console.log(<span class="string">'action fired'</span>, action);</div><div class="line">  	<span class="built_in">next</span>(action);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>下面是上面的实例中引入的middleware:</p>
+<h2 id="redux-thunk">redux-thunk</h2><p>为什么需要thunk,thunk做了什么?</p>
+<p>在默认情况下:</p>
+<ol>
+<li>createStore() 所创建的 Redux store 没有使用 middleware，所以只支持 同步数据流。</li>
+<li>在redux中,触发的action实际上都是一个简单的对象,而不接受action是一个function/promise.</li>
+</ol>
+<p>当我们引入redux-thunk这个middleware以后,我们就可以dispatch function了.在function中我们可以写异步调用的逻辑,并且再根据不同的状态再diapatch出新的action.</p>
+<blockquote>
+<p>像 redux-thunk 或 redux-promise 这样支持异步的<code>middleware</code>都包装了<code>store</code>的<code>dispatch()</code> 方法，以此来让你<code>dispatch</code>一些除了 action 以外的其他内容(eg：函数或者<code>Promise</code>)。   </p>
+<p>你所使用的任何 middleware 都可以以自己的方式解析你<code>dispatch</code>的任何内容，并继续传递<code>actions</code>给下一个 middleware. 比如，支持 <code>Promise</code> 的 <code>middleware</code> 能够拦截<code>Promise</code>，然后为每个<code>Promise</code> dispatch 特定的<code>action</code>(eg: pending / fulfilled / rejeted)。</p>
+</blockquote>
+<p>当 middleware 链中的最后一个<code>middleware</code>开始 <code>dispatch action</code> 时，这个<code>action</code>必须是一个普通对象,所以<code>redux-thunk</code>的作用也可以理解为把包含function或者promise的action运行并<code>dispatch</code>成redux可以处理的普通对象.</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//dispatch的对象</span></div><div class="line"><span class="selector-tag">store</span><span class="selector-class">.dispatch</span>(&#123;</div><div class="line">  <span class="attribute">type</span>: <span class="string">'CHANGE_NAME'</span>,</div><div class="line">  <span class="attribute">payload</span>: <span class="string">'LYN'</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// dispatch了一个异步调用的箭头函数(thunk middleware 让我们可以dispatch我们定义的函数) </span></div><div class="line"><span class="selector-tag">store</span><span class="selector-class">.dispatch</span>((dispatch) =&gt; &#123;</div><div class="line">  <span class="selector-tag">dispatch</span>(&#123;</div><div class="line">    <span class="attribute">type</span>: <span class="string">'FETCH_POSTS_PENDING'</span>,</div><div class="line">  &#125;);</div><div class="line">  <span class="selector-tag">axios</span><span class="selector-class">.get</span>(<span class="string">'/api/posts'</span>)</div><div class="line">    <span class="selector-class">.then</span>((res) =&gt; &#123;</div><div class="line">      <span class="selector-tag">dispatch</span>(&#123;</div><div class="line">        <span class="attribute">type</span>: <span class="string">'FETCH_POSTS_FULFILLED'</span>,</div><div class="line">        <span class="attribute">payload</span>: res.data.data,</div><div class="line">      &#125;)</div><div class="line">    &#125;)</div><div class="line">    <span class="selector-class">.catch</span>((err) =&gt; &#123;</div><div class="line">      <span class="selector-tag">dispatch</span>(&#123;</div><div class="line">        <span class="attribute">type</span>: <span class="string">'FETCH_POSTS_REJECTED'</span>,</div><div class="line">        <span class="attribute">payload</span>: err,</div><div class="line">      &#125;);</div><div class="line">    &#125;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<ul>
+<li>运行的过程:</li>
+</ul>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//在进入redux-thunk之前的action</span></div><div class="line"><span class="selector-tag">action</span> <span class="selector-tag">fired</span> :</div><div class="line">(dispatch) &#123;</div><div class="line">	  <span class="selector-tag">dispatch</span>(&#123;</div><div class="line">	    <span class="attribute">type</span>: <span class="string">'FETCH_POSTS_PENDING'</span></div><div class="line">	  &#125;);</div><div class="line">	  <span class="selector-tag">_axios2</span><span class="selector-class">.default</span><span class="selector-class">.get</span>(<span class="string">'/api/posts'</span>)<span class="selector-class">.then</span>(function (res) &#123;</div><div class="line">	    <span class="selector-tag">dispatch</span>(&#123;</div><div class="line">	      <span class="attribute">type</span>: <span class="string">'FETCH_POSTS_FULFILLED'</span>,</div><div class="line">	   	   ...</div><div class="line"><span class="comment">//经过redux-thunk加工后:从上面的function转化为redux可以处理的普通对象</span></div><div class="line">action <span class="attribute">fired</span>:</div><div class="line"> Object &#123;<span class="attribute">type</span>: <span class="string">"FETCH_POSTS_PENDING"</span>&#125;<span class="attribute">type</span>: <span class="string">"FETCH_POSTS_PENDING"</span><span class="attribute">__proto__</span>: Object</div></pre></td></tr></table></figure>
+<h2 id="axios_和_redux-promise-middleware">axios 和 redux-promise-middleware</h2><p> axios 是一个语法类似于jQuery的ajax方法(封装的http-xhr)</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"> <span class="regexp">//</span> 如果没有使用redux-promise-middleware,一般使用下面的promise链式调用的方法发起异步请求</div><div class="line">store.dispatch(<span class="function"><span class="params">(dispatch)</span> =&gt;</span> &#123;</div><div class="line">  dispatch(&#123;</div><div class="line">    type: <span class="string">'FETCH_POSTS_PENDING'</span>,</div><div class="line">  &#125;);</div><div class="line">  axios.get(<span class="string">'/api/posts'</span>)</div><div class="line">    .<span class="keyword">then</span>(<span class="function"><span class="params">(res)</span> =&gt;</span> &#123;</div><div class="line">      dispatch(&#123;</div><div class="line">        type: <span class="string">'FETCH_POSTS_FULFILLED'</span>,</div><div class="line">        payload: res.data.data,</div><div class="line">      &#125;)</div><div class="line">    &#125;)</div><div class="line">    .<span class="keyword">catch</span>(<span class="function"><span class="params">(err)</span> =&gt;</span> &#123;</div><div class="line">      dispatch(&#123;</div><div class="line">        type: <span class="string">'FETCH_POSTS_REJECTED'</span>,</div><div class="line">        payload: err,</div><div class="line">      &#125;);</div><div class="line">    &#125;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>如果有大量的ajax异步请求,那么大量dispatch的action都会是一样的pending,fulfilled或rejected,<br>为了让我们的代码更加简洁,我们可以引入<code>redux-promise-middleware</code>,当action为promise时,他会根据promise的状态自动的dispatch响应的action(pending,fulfilled或rejected)</p>
+<p>所以代码就可以简化如下:</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//引入redux-promise-middleware</span></div><div class="line"><span class="keyword">import</span> promise from <span class="string">'redux-promise-middleware'</span>;</div><div class="line"></div><div class="line"><span class="comment">// 定义middleware,将promise(),thunk加入到middleware中</span></div><div class="line"><span class="keyword">const</span> middleware = applyMiddleware(promise(), thunk);</div><div class="line"></div><div class="line"><span class="keyword">const</span> store = createStore(app,middleware);</div><div class="line"></div><div class="line">store.dispatch(&#123;</div><div class="line">  type: <span class="string">'FETCH_USERS'</span>,</div><div class="line">  payload: axios.<span class="built_in">get</span>(<span class="string">'/api/users'</span>),</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h2 id="createLogger">createLogger</h2><p>一个很便捷的 middleware，用来打印 action 日志<br>需要注意的是,需要放在apply middleware的最后一个参数.</p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-10-1/21740672.jpg" alt=""></p>
+<h1 id="devToolsExtension">devToolsExtension</h1><p>一个非常爽的redux调试工具.</p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-10-1/97705137.jpg" alt=""></p>
+<p>三种使用方法:</p>
+<ul>
+<li>from <a href="https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd" target="_blank" rel="external">Chrome Web Store</a></li>
+<li>or build it with npm i &amp;&amp; npm run build:extension and load the extension’s folder ./build/extension</li>
+<li>or run it in dev mode with npm i &amp;&amp; npm start and load the extension’s folder ./dev.</li>
+</ul>
+<p>我是用的第一种方法:</p>
+<ol>
+<li>直接安装chrome插件.就会在chrome dev tool上看到redux的选项卡.</li>
+<li>用compose方法将定义好的middleware和devToolsExtension组合成createStore的middleware参数.</li>
+</ol>
+<p>代码如下:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 定义middleware,将promise(),thunk,和createLogger()加入到middleware中</span></div><div class="line"><span class="keyword">const</span> middleware = applyMiddleware(promise(), thunk, createLogger());</div><div class="line"></div><div class="line"><span class="comment">//使用compose方法将定义好的middleware和devToolsExtension组合成createStore的middleware参数.</span></div><div class="line"><span class="keyword">const</span> store = createStore(app, compose(</div><div class="line">  middleware,</div><div class="line">  <span class="built_in">window</span>.devToolsExtension ? <span class="built_in">window</span>.devToolsExtension() : <span class="function"><span class="params">f</span> =&gt;</span> f</div><div class="line">));</div></pre></td></tr></table></figure>
+<p>github 文档:<a href="https://github.com/zalmoxisus/redux-devtools-extension" target="_blank" rel="external">https://github.com/zalmoxisus/redux-devtools-extension</a></p>
+<h1 id="dora-proxy">dora-proxy</h1><p>这个是ali出的一个mock data的利器,封装了常用的几种mock data的库,可以实现api转发,data mock等功能.<br><a href="https://github.com/dora-js/dora-plugin-proxy#规则定义" target="_blank" rel="external">https://github.com/dora-js/dora-plugin-proxy#规则定义</a></p>
+<figure class="highlight qml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Learn more on how to config.</span></div><div class="line"><span class="comment">// - </span></div><div class="line"><span class="built_in">module</span>.exports = &#123;</div><div class="line">  <span class="string">'/api/todos'</span>: <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</div><div class="line">    setTimeout(() =&gt; &#123;</div><div class="line">      res.json(&#123;</div><div class="line">        <span class="attribute">success</span>: <span class="literal">true</span>,</div><div class="line">        <span class="attribute">data</span>: [&#123;</div><div class="line">          <span class="attribute">id:</span><span class="string"> 1,</span></div><div class="line">          text: <span class="string">'Learn antd'</span>,</div><div class="line">          <span class="attribute">isComplete</span>: <span class="literal">true</span>,</div><div class="line">        &#125;, &#123;</div><div class="line">          <span class="attribute">id:</span><span class="string"> 2,</span></div><div class="line">          text: <span class="string">'Learn ant-tool'</span>,</div><div class="line">        &#125;, &#123;</div><div class="line">          <span class="attribute">id:</span><span class="string"> 3,</span></div><div class="line">          text: <span class="string">'Learn dora'</span>,</div><div class="line">        &#125;, ],</div><div class="line">      &#125;);</div><div class="line">    &#125;, <span class="number">500</span>);</div><div class="line">  &#125;,</div><div class="line">  <span class="string">'/api/users'</span>: <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</div><div class="line">    res.json(&#123;</div><div class="line">      <span class="attribute">success</span>: <span class="literal">true</span>,</div><div class="line">      <span class="attribute">data</span>: [&#123;</div><div class="line">        <span class="attribute">name</span>: <span class="string">'lyn'</span>,</div><div class="line">        <span class="attribute">age</span>: <span class="number">28</span>,</div><div class="line">      &#125;, &#123;</div><div class="line">        <span class="attribute">name</span>: <span class="string">'Lee'</span>,</div><div class="line">        <span class="attribute">age</span>: <span class="number">26</span>,</div><div class="line">      &#125;],</div><div class="line">    &#125;);</div><div class="line">  &#125;,</div><div class="line">  <span class="string">'/api/posts'</span>: <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</div><div class="line">    res.json(&#123;</div><div class="line">      <span class="attribute">success</span>: <span class="literal">true</span>,</div><div class="line">      <span class="attribute">data</span>: [&#123;</div><div class="line">      	 <span class="attribute">id:</span><span class="string">1,</span></div><div class="line">        text: <span class="string">'helloworld1'</span>,</div><div class="line">      &#125;, &#123;</div><div class="line">        <span class="attribute">id:</span><span class="string">2,</span></div><div class="line">        text: <span class="string">'helloworld2'</span>,</div><div class="line">      &#125;],</div><div class="line">    &#125;);</div><div class="line">  &#125;,</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h1 id="ES6相关知识点:">ES6相关知识点:</h1><h2 id="reducer中的-">reducer中的<code>...</code></h2><blockquote>
+<p>The … operator (or spread operator) is already supported for arrays in ES6. There is also an ES7 proposal for Object Rest and Spread Properties.</p>
+</blockquote>
+<p>Spread Operator,即 3 个点 …，配合解构有如下几种不同的使用方法:<br>简单的说就是在处理state时,产生一个新的对象或者数组.而不是修改原有的state.</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//可用于组装数组:</span></div><div class="line"><span class="keyword">const</span> todos = [<span class="string">'Learn dva'</span>];</div><div class="line">[...todos, <span class="string">'Learn antd'</span>]; </div><div class="line"><span class="comment">// ['Learn dva', 'Learn antd']</span></div><div class="line"></div><div class="line"><span class="comment">//也可用于获取数组的部分项。</span></div><div class="line"><span class="keyword">const</span> arr = [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>];</div><div class="line"><span class="keyword">const</span> [first, ...rest] = arr;</div><div class="line">rest;  <span class="comment">// rest 等于 ['b', 'c']</span></div><div class="line"></div><div class="line"><span class="comment">//还可收集函数参数为数组。</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">directions</span><span class="params">(first, <span class="rest_arg">...rest</span>)</span> </span>&#123;</div><div class="line">  console.log(rest);</div><div class="line">&#125;</div><div class="line">directions(<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>);  </div><div class="line"><span class="comment">//输出 ['b', 'c'];</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">//对于 Object 而言，用于组合成新的 Object 。(ES2017 stage-2 proposal)</span></div><div class="line"><span class="keyword">const</span> foo = &#123;</div><div class="line">  a: <span class="number">1</span>,</div><div class="line">  b: <span class="number">2</span>,</div><div class="line">&#125;;</div><div class="line"><span class="keyword">const</span> bar = &#123;</div><div class="line">  b: <span class="number">3</span>,</div><div class="line">  c: <span class="number">2</span>,</div><div class="line">&#125;;</div><div class="line"><span class="keyword">const</span> d = <span class="number">4</span>;</div><div class="line"></div><div class="line"><span class="keyword">const</span> ret = &#123; ...foo, ...bar, d &#125;;  </div><div class="line"><span class="comment">// &#123; a:1, b:3, c:2, d:4 &#125;</span></div></pre></td></tr></table></figure>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/2016/09/27/redux-note-02/" itemprop="url">
+                  Redux 快速入门 -- 02
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-09-27T21:25:15+08:00" content="2016-09-27">
+              2016-09-27
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="从Redux开始学习React:">从Redux开始学习React:</h1><p>React的这套机制,之所以那么有特色(也可以说不那么容易被理解),就是因为他所的FLUX单向数据流的概念.</p>
+<p>大家都知道React 只是一层简单的view层,那React中的数据交互,ajax应该放到哪里去实现呢?</p>
+<p>目前为止,Dan Abramov在flux的理论基础上改进出的Redux公认地是发挥React组件化威力的最佳搭档.<br>Redux 除了和 React 一起用外，还支持其它界面库。</p>
+<p>既然react不是必须的,那么不如先把redux单向数据流的概念搞清楚,再来看React,相信会更清晰易懂.</p>
+<h1 id="一个简单的Redux实例:">一个简单的Redux实例:</h1><p>在之前配置好的开发目录中的src文件夹下:</p>
+<ul>
+<li>新建一个index.js文件:</li>
+</ul>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">import &#123;</div><div class="line">  createStore,</div><div class="line">&#125; <span class="keyword">from</span> 'redux';</div><div class="line"></div><div class="line">// 创建一个函数,根据函数的action参数决定如何修改传进来的<span class="keyword">state</span>参数</div><div class="line">const reducer = function (<span class="keyword">state</span>, action) &#123;</div><div class="line">  if (action.type === 'INC') &#123;</div><div class="line">    return <span class="keyword">state</span> + action.payload;</div><div class="line">  &#125;</div><div class="line">  return <span class="keyword">state</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 使用redux的createStore来创建一个store,<span class="number">0</span>是<span class="keyword">state</span>初始化的值.</div><div class="line">const store = createStore(reducer, <span class="number">0</span>);</div><div class="line"></div><div class="line">// 给store绑定一个监听函数,当store dispatch事件时,箭头函数就会去获取store当前的<span class="keyword">state</span>状态.</div><div class="line">store.subscribe(() =&gt; &#123;</div><div class="line">  console.<span class="keyword">log</span>('store changed', store.getState());</div><div class="line">&#125;)</div><div class="line"></div><div class="line">//使用store的dispatch方法 dispatch action对象.</div><div class="line">store.dispatch(&#123;</div><div class="line">  type: 'INC',</div><div class="line">  payload: <span class="number">1</span>,</div><div class="line">&#125;);</div><div class="line">store.dispatch(&#123;</div><div class="line">  type: 'INC',</div><div class="line">  payload: <span class="number">100</span>,</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<ul>
+<li>修改package.json文件中的entry,指定为我们新建的index.js.</li>
+<li>npm的start命令中<code>index=/src/entries/index.html</code> 需要修改成<code>src/index.html</code></li>
+</ul>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="string">"entry"</span>: &#123;</div><div class="line">   <span class="string">"index"</span>: <span class="string">"./src/index.js"</span></div><div class="line"> &#125;,</div><div class="line">    <span class="string">"start"</span>: <span class="string">"dora -p 8001 --plugins \"</span>webpack,hmr,proxy,livereload?enableJs=<span class="literal">false</span>&amp;injectHost=<span class="number">127.0</span>.<span class="number">0</span>.<span class="number">1</span>,browser-history?index=/src/entries/index.html\<span class="string">""</span>,</div></pre></td></tr></table></figure>
+<ul>
+<li>然后在terminal中cd到项目文件夹的路径下 运行<code>npm start</code>命令.(<a href="http://lyn.s76.org/2016/09/26/redux-notes-01/">参考上一篇文章</a>)</li>
+<li>在浏览器中访问 <code>http://localhost:8989</code></li>
+</ul>
+<h1 id="Redux?">Redux?</h1><blockquote>
+<p>Redux is a predictable state container for JavaScript apps.</p>
+</blockquote>
+<p>redux是 JavaScript App 中一个用于可预测state的容器(管理器),为什么是可预测的呢?带着这个问题去找答案.<br>从上面的简单的实例来看,Redux其实很简单, 主要由三个部分组成: Action、Reducer、及 Store.</p>
+<h2 id="Redux的三大原则:">Redux的三大原则:</h2><ul>
+<li>单一数据源</li>
+<li>State 是只读的</li>
+<li>使用纯函数(reducer)来执行修改</li>
+</ul>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-9-28/87905454.jpg" alt=""></p>
+<p>下面我们分别展开解释这几个概念:</p>
+<h2 id="单一数据源">单一数据源</h2><ul>
+<li>Redux中所有的 state 都以一个对象树的形式储存在一个单一的 store 中。</li>
+</ul>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-9-27/4367012.jpg" alt=""></p>
+<p>展开其中的post对象,结构如下:</p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-9-27/2099696.jpg" alt=""></p>
+<h2 id="关于Store:">关于Store:</h2><p>store对象有以下几个方法:</p>
+<ul>
+<li>store.getState() 可以获取当前的state对象.</li>
+<li>store.dispatch(action) 分发action,会立即传到 reducer 来执行。这是触发 state 变化的惟一途径。</li>
+<li>store.subscribe(listener) 每当 dispatch action 的时候就会执行listener函数.</li>
+<li>store.replaceReducer(nextReducer) store可以替换处理action的reducers函数.</li>
+</ul>
+<h2 id="State_是只读的">State 是只读的</h2><ul>
+<li>惟一改变 state 的办法是触发 action，action是一个描述发生什么的对象。</li>
+<li>action对象中必须要有type属性(type的值都是大写的),其他属性都可以自定义.</li>
+</ul>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">store</span><span class="selector-class">.dispatch</span>(fetchUser())</div><div class="line"><span class="comment">//这里是action文件中的一个action</span></div><div class="line"><span class="selector-tag">function</span> <span class="selector-tag">fetchUser</span>() &#123;</div><div class="line">  <span class="selector-tag">return</span> &#123;</div><div class="line">    <span class="attribute">type</span>: <span class="string">'FETCH_USER_FULFILLED'</span>,</div><div class="line">    <span class="attribute">payload</span>: &#123;</div><div class="line">      <span class="attribute">name</span>: <span class="string">'lyn'</span>,</div><div class="line">      <span class="attribute">age</span>: <span class="number">35</span>,</div><div class="line">    &#125;,</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-9-27/82500906.jpg" alt=""></p>
+<h2 id="使用纯函数来执行修改">使用纯函数来执行修改</h2><ul>
+<li>reducers 根据触发的 action 来决定如何改变 state 树.</li>
+</ul>
+<p>Reducers 必须是纯函数，它接收先前的 state 和 action，并返回新的 state。在一个大的应用中,你可以把它拆成多个小的 reducers，分别独立地操作 state tree 的不同部分.</p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-9-27/90881615.jpg" alt=""></p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">export <span class="keyword">default</span> function reducer(<span class="keyword">state</span> = &#123;</div><div class="line">  fetching: false,</div><div class="line">  fetched: false,</div><div class="line">  posts: [],</div><div class="line">  error: null,</div><div class="line">&#125;, action) &#123;</div><div class="line">  switch (action.type) &#123;</div><div class="line">    case 'FETCH_POSTS_PENDING':</div><div class="line">      &#123;</div><div class="line">        return &#123;</div><div class="line">          ...<span class="keyword">state</span>,</div><div class="line">          fetching: true,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    case 'FETCH_POSTS_REJECTED':</div><div class="line">      &#123;</div><div class="line">        return &#123; ...<span class="keyword">state</span>,</div><div class="line">          fetching: false,</div><div class="line">          error: action.payload,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    case 'FETCH_POSTS_FULFILLED':</div><div class="line">      &#123;</div><div class="line">        return &#123;</div><div class="line">          ...<span class="keyword">state</span>,</div><div class="line">          fetching: false,</div><div class="line">          fetched: true,</div><div class="line">          posts: action.payload,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    <span class="keyword">default</span>:</div><div class="line">      return &#123;</div><div class="line">        ...<span class="keyword">state</span>,</div><div class="line">      &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="关于纯函数">关于纯函数</h3><p>简单的说纯函数就是函数式编程的实现.</p>
+<p>函数式编程强调没有”副作用”，意味着相同的输入，永远会得到相同的输出，而且没有任何可观察的副作用；简单理解就是每个函数职责纯粹，所有行为就是返回新的值，没有其他行为(最常见的副作用就是异步操作)，只有采用了纯函数编程,才能保证触发action时reducer总是能返回一个确定的state,由这也就是为什么redux作者说:redux是一个可以预测的state容器.</p>
+<p>可以参考下面的一个例子:</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 不纯的</span></div><div class="line"><span class="keyword">var</span> minimum = <span class="number">21</span>;</div><div class="line"><span class="keyword">var</span> checkAge = <span class="function"><span class="keyword">function</span><span class="params">(age)</span> </span>&#123;</div><div class="line">  <span class="keyword">return</span> age &gt;= minimum;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// 纯的 不依赖除了参数以外的变量</span></div><div class="line"><span class="keyword">var</span> checkAge = <span class="function"><span class="keyword">function</span><span class="params">(age)</span> </span>&#123;</div><div class="line">  <span class="keyword">var</span> minimum = <span class="number">21</span>;</div><div class="line">  <span class="keyword">return</span> age &gt;= minimum;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>关于纯函数,更多的可以参考这里,这里就不展开了:<br><a href="http://www.ruanyifeng.com/blog/2012/04/functional_programming.html" target="_blank" rel="external">函数式编程初探</a> ,<br><a href="https://llh911001.gitbooks.io/mostly-adequate-guide-chinese/content/ch2.html" target="_blank" rel="external">函数式编程指南</a></p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/09/26/redux-notes-01/" itemprop="url">
                   Redux 快速入门 -- 01
                 </a>
@@ -230,13 +490,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/26/redux-notes-01/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/26/redux-notes-01/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -364,13 +617,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/03/gen8-exsi-ubuntu-apc-autoshutdown/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/03/gen8-exsi-ubuntu-apc-autoshutdown/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -509,13 +755,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/02/ubuntu-settings/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/02/ubuntu-settings/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -680,13 +919,6 @@
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/28/3des-of-javascript/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/28/3des-of-javascript/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -818,13 +1050,6 @@
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/26/linux-network-cmd/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/26/linux-network-cmd/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -921,13 +1146,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/09/ios8-cors-prefilght/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/09/ios8-cors-prefilght/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -1051,13 +1269,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/30/installEsxiOnGen8/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/30/installEsxiOnGen8/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -1226,13 +1437,6 @@
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/26/addNativeJavaSciptsInterface/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/26/addNativeJavaSciptsInterface/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -1324,257 +1528,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/05/19/JRE-setup-doc/" itemprop="url">
-                  Setup Java Eclipse Tomcat & FreeMarker on Mac
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-05-19T09:07:51+08:00" content="2016-05-19">
-              2016-05-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/19/JRE-setup-doc/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/19/JRE-setup-doc/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h2 id="Install_Homebrew">Install <a href="http://brew.sh/" target="_blank" rel="external">Homebrew</a></h2><ul>
-<li>Open Terminal.</li>
-<li>If you don’t already have Homebrew installed:<ul>
-<li>Run command to install Homebrew.<ul>
-<li><code>ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Make sure that it is up to date.<ul>
-<li><code>brew update</code></li>
-</ul>
-</li>
-<li>Check that there would not be any potential problems in your system.<ul>
-<li><code>brew doctor</code></li>
-</ul>
-</li>
-<li>Upgrade Homebrew packages.<ul>
-<li><code>brew upgrade</code></li>
-</ul>
-</li>
-</ul>
-<h2 id="Install_JAVA_SDK">Install JAVA SDK</h2><p>Check if Java installed</p>
-<p><code>java -version</code></p>
-<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Lyn-Cheung-MBP: Lyn$ <span class="keyword">java </span>-version</div><div class="line"><span class="keyword">java </span>version <span class="string">"1.7.0_79"</span></div><div class="line"><span class="keyword">Java(TM) </span>SE Runtime Environment (<span class="keyword">build </span><span class="number">1</span>.<span class="number">7</span>.<span class="number">0</span>_79-<span class="keyword">b15)</span></div><div class="line"><span class="keyword">Java </span>HotSpot(TM) <span class="number">64</span>-<span class="keyword">Bit </span>Server VM (<span class="keyword">build </span><span class="number">24</span>.<span class="number">79</span>-<span class="keyword">b02, </span>mixed mode)</div></pre></td></tr></table></figure>
-<p>Java SE Development Kit 8 Downloads</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http:<span class="regexp">//</span>www.oracle.com<span class="regexp">/technetwork/</span>java<span class="regexp">/javase/</span>downloads<span class="regexp">/jdk8-downloads-2133151.html</span></div></pre></td></tr></table></figure>
-<p>edit  <code>~/.bash_profile</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">cat ~/.bash_profile</div><div class="line"><span class="built_in">export</span> PATH=<span class="variable">$&#123;PATH&#125;</span>:/Development/android-sdk/tools</div><div class="line"><span class="built_in">export</span> JAVA_HOME=$(/usr/libexec/java_home)</div><div class="line"><span class="built_in">export</span> PATH=<span class="variable">$&#123;JAVA_HOME&#125;</span>/bin:<span class="variable">$PATH</span></div><div class="line"><span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/bin:<span class="variable">$PATH</span></div><div class="line"><span class="built_in">export</span> path=/usr/<span class="built_in">local</span>/bin:<span class="variable">$path</span></div></pre></td></tr></table></figure>
-<p>reload bash_profile</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="built_in">source</span> ~/.bash_profile</div></pre></td></tr></table></figure>
-<h2 id="Eclipse">Eclipse</h2><ul>
-<li>Download and install latest version of <em>Eclipse IDE for Java EE developers</em> from <a href="http://www.eclipse.org/downloads/" target="_blank" rel="external">Eclipse Downloads</a></li>
-</ul>
-<h3 id="Set_Eclipse_to_use_the_previously_installed_version_of_Java">Set Eclipse to use the previously installed version of Java</h3><ul>
-<li>If you have multiple versions of Java installed, set the Eclipse to use the version installed earlier in these instructions.</li>
-<li><em>Window &gt;&gt; Preferences &gt;&gt; Java &gt;&gt; Installed JREs</em> Add the path to the Java version you installed (e.g. <em>/usr/lib/jvm/java-7-oracle (java-7-oracle)</em> )</li>
-</ul>
-<h2 id="Installing_Tomcat_8">Installing Tomcat 8</h2><ul>
-<li><p><code>brew install tomcat</code>: <a href="http://blog.bolshchikov.net/post/50277857673/installing-tomcat-on-macos-with-homebrew" target="_blank" rel="external">Installing Tomcat on MacOS with homebrew</a></p>
-<ul>
-<li><code>sudo ln -s /usr/local/Cellar/tomcat/8.0.14/libexec /Library/Tomcat</code></li>
-<li><code>sudo chown -R /Library/Tomcat</code></li>
-<li><code>sudo chmod +x /Library/Tomcat/bin/*.sh</code></li>
-</ul>
-</li>
-<li><p>In Eclipse:</p>
-<ul>
-<li><em>Eclipse &gt;&gt; Preferences</em></li>
-<li><em>Server &gt;&gt; Runtime Environment</em></li>
-<li>Click <em>“Add…”</em></li>
-<li>Under <em>“Apache”</em> select <em>“Tomcat v8.0”</em></li>
-<li>Click <em>“Next”</em></li>
-<li>Click <em>“Browse…”</em></li>
-<li>Select the folder where you installed Tomcat (e.g.<em>/usr/local/Cellar/tomcat/8.0.33/libexec</em>)</li>
-<li>Click <em>“Finish”</em></li>
-</ul>
-</li>
-</ul>
-<h2 id="MySQL">MySQL</h2><ul>
-<li>Install MySQL<ul>
-<li><code>brew install mysql</code></li>
-</ul>
-</li>
-<li>To have launchd start mysql at login:<ul>
-<li><code>ln -sfv /usr/local/opt/mysql/*.plist ~/Library/LaunchAgents</code></li>
-</ul>
-</li>
-<li>Then to load mysql now:<ul>
-<li><code>launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist</code></li>
-</ul>
-</li>
-<li>Or, if you don’t want/need launchctl, you can just run:<ul>
-<li><code>mysql.server start</code></li>
-</ul>
-</li>
-</ul>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/05/12/react-js-02-router/" itemprop="url">
-                  react.js-Notes-02 react-router
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-05-12T20:34:25+08:00" content="2016-05-12">
-              2016-05-12
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/12/react-js-02-router/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/12/react-js-02-router/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="install_react_router_to_your_project">install react router to your project</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm <span class="keyword">install</span> react-router <span class="comment">--save</span></div></pre></td></tr></table></figure>
-<h1 id="clean_index-html">clean index.html</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/flatly/bootstrap.min.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">integrity</span>=<span class="string">"sha384-XYCjB+hFAjSbgf9yKUgbysEjaVLOXhCgATTEBpCqT1R3jvG5LGRAK5ZIyRbH5vpX"</span> <span class="attr">crossorigin</span>=<span class="string">"anonymous"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Some page <span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span><span class="css"> <span class="selector-class">.md-scroll-mask</span> &#123; <span class="attribute">position</span>: initial;&#125;</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span> </div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"./scripts.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
-<h1 id="-/js/scripts-js">./js/scripts.js</h1><p>import Router Route and IndexRoute</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</div><div class="line"><span class="keyword">import</span> ReactDOM <span class="keyword">from</span> <span class="string">"react-dom"</span>;</div><div class="line"><span class="keyword">import</span> &#123; Router, Route, IndexRoute, hashHistory &#125; <span class="keyword">from</span> <span class="string">"react-router"</span>;</div><div class="line"></div><div class="line"><span class="keyword">import</span> Archives  <span class="keyword">from</span> <span class="string">"./pages/Archives"</span>;</div><div class="line"><span class="keyword">import</span> Featured <span class="keyword">from</span> <span class="string">"./pages/Featured"</span>;</div><div class="line"><span class="keyword">import</span> Layout <span class="keyword">from</span> <span class="string">"./pages/Layout"</span>;</div><div class="line"><span class="keyword">import</span> Settings <span class="keyword">from</span> <span class="string">"./pages/Settings"</span>;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">const</span> app = <span class="built_in">document</span>.getElementById(<span class="string">'app'</span>);</div><div class="line"></div><div class="line">ReactDOM.render(</div><div class="line">	<span class="xml"><span class="tag">&lt;<span class="name">Router</span>  <span class="attr">history</span>=<span class="string">&#123;hashHistory&#125;</span> &gt;</span></span></div><div class="line">		<span class="tag">&lt;<span class="name">Route</span> <span class="attr">path</span>=<span class="string">"/"</span> <span class="attr">component</span>=<span class="string">&#123;Layout&#125;</span>&gt;</span></div><div class="line">			<span class="tag">&lt;<span class="name">IndexRoute</span> <span class="attr">component</span>=<span class="string">&#123;Featured&#125;</span>&gt;</span><span class="tag">&lt;/<span class="name">IndexRoute</span>&gt;</span></div><div class="line">			<span class="tag">&lt;<span class="name">Route</span> <span class="attr">path</span>=<span class="string">"archives(/:article)"</span>  <span class="attr">name</span>=<span class="string">"archives"</span> <span class="attr">component</span>=<span class="string">&#123;Archives&#125;</span>&gt;</span><span class="tag">&lt;/<span class="name">Route</span>&gt;</span></div><div class="line">			<span class="tag">&lt;<span class="name">Route</span> <span class="attr">path</span>=<span class="string">"settings"</span>  <span class="attr">name</span>=<span class="string">"settings"</span><span class="attr">component</span>=<span class="string">&#123;Settings&#125;</span>&gt;</span><span class="tag">&lt;/<span class="name">Route</span>&gt;</span></div><div class="line">		<span class="tag">&lt;/<span class="name">Route</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">Router</span>&gt;</span>,</div><div class="line"> app);</div></pre></td></tr></table></figure>
-<h1 id="-/js/pages/">./js/pages/</h1><h2 id="-/js/pages/Layout-js">./js/pages/Layout.js</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">import</span> Nav <span class="keyword">from</span> <span class="string">"../components/layout/Nav"</span>;</div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Layout</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span></span>&#123;</div><div class="line"></div><div class="line"></div><div class="line">render() &#123;</div><div class="line">		<span class="keyword">const</span>&#123; location &#125; =<span class="keyword">this</span>.props;</div><div class="line">		<span class="keyword">const</span> containerStyle = &#123; </div><div class="line">			<span class="attr">marginTop</span>:  <span class="string">"60px"</span></div><div class="line">		&#125;;</div><div class="line">	</div><div class="line">		<span class="keyword">return</span> (</div><div class="line">			<span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></div><div class="line">				<span class="tag">&lt;<span class="name">Nav</span> <span class="attr">location</span> =<span class="string">&#123;location&#125;</span> /&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span> <span class="attr">style</span>=<span class="string">&#123;containerStyle&#125;</span>&gt;</span></div><div class="line">					<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"row"</span>&gt;</span></div><div class="line">		          			<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"col-lg-12"</span>&gt;</span></div><div class="line">								<span class="tag">&lt;<span class="name">h1</span>&gt;</span> Hello World <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></div><div class="line">								&#123;this.props.children&#125;</div><div class="line">						<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">					<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">				<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">			<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">			</div><div class="line">		);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="-/js/pages/Archives-js">./js/pages/Archives.js</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</div><div class="line"><span class="keyword">import</span> &#123; Link &#125; <span class="keyword">from</span> <span class="string">"react-router"</span>;</div><div class="line"></div><div class="line"><span class="keyword">import</span> Article <span class="keyword">from</span> <span class="string">"../components/Article"</span>;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Archives</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span></span>&#123;</div><div class="line"></div><div class="line">	render() &#123;</div><div class="line">		<span class="keyword">const</span> &#123; query &#125; = <span class="keyword">this</span>.props.location;</div><div class="line">		<span class="keyword">const</span> &#123; article &#125; = <span class="keyword">this</span>.props.params;</div><div class="line">		<span class="keyword">const</span> &#123; date, filter &#125;  = query;</div><div class="line">		<span class="comment">//console.log(this.props);</span></div><div class="line">		<span class="keyword">const</span> Articles = [</div><div class="line">			<span class="string">"Some Article"</span>,</div><div class="line">			<span class="string">"Some Other Article"</span>,</div><div class="line">			<span class="string">"Yet  Another Article "</span>,</div><div class="line">			<span class="string">"Still More"</span>,</div><div class="line">			<span class="string">"Fake Article"</span>,</div><div class="line">			<span class="string">"Partial Another  "</span>,</div><div class="line">			<span class="string">"Still More"</span>,</div><div class="line">		].map(<span class="function">(<span class="params">title, i</span>) =&gt;</span>  &lt;Article key=&#123;i&#125;  title=&#123;title&#125; /&gt; );</div><div class="line"></div><div class="line">		<span class="keyword">return</span> (</div><div class="line">			<span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></div><div class="line">				<span class="tag">&lt;<span class="name">h1</span>&gt;</span> Archives <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">p</span>&gt;</span>hello  this  is  archives<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">h4</span>&gt;</span>date: &#123;date&#125;, filter: &#123;filter&#125; <span class="tag">&lt;/<span class="name">h4</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"row"</span>&gt;</span>&#123;Articles&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">			<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">			);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="-/js/pages/Featured-js">./js/pages/Featured.js</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</div><div class="line"></div><div class="line"><span class="keyword">import</span> Article <span class="keyword">from</span> <span class="string">"../components/Article"</span>;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Featured</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span></span>&#123;</div><div class="line">	render() &#123;</div><div class="line">		<span class="keyword">const</span> Articles = [</div><div class="line">			<span class="string">"Some Article"</span>,</div><div class="line">			<span class="string">"Some Other Article"</span>,</div><div class="line">			<span class="string">"Yet  Another Article "</span>,</div><div class="line">			<span class="string">"Still More"</span>,</div><div class="line">		].map(<span class="function">(<span class="params">title, i</span>) =&gt;</span>  &lt;Article key=&#123;i&#125;  title=&#123;title&#125; /&gt; );</div><div class="line"></div><div class="line">		<span class="keyword">return</span> (</div><div class="line">			<span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></div><div class="line">				<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"row"</span>&gt;</span>&#123;Articles&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">			<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">			);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="-/js/page/Settings-js">./js/page/Settings.js</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</div><div class="line"><span class="keyword">import</span> &#123; Link &#125; <span class="keyword">from</span> <span class="string">"react-router"</span>;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Settings</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span></span>&#123;</div><div class="line">	render() &#123;</div><div class="line">		<span class="keyword">return</span> (</div><div class="line">			<span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></div><div class="line">				<span class="tag">&lt;<span class="name">h1</span>&gt;</span> Settings <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></div><div class="line">				<span class="tag">&lt;<span class="name">p</span>&gt;</span>hello  this  is  Settings<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">			<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">			);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="-/js/components/layout/">./js/components/layout/</h1><h2 id="-/js/components/layout/Nav-js">./js/components/layout/Nav.js</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</div><div class="line"><span class="keyword">import</span> &#123; IndexLink, Link &#125; <span class="keyword">from</span> <span class="string">"react-router"</span>;</div><div class="line"> </div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">Nav</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span></span>&#123;</div><div class="line">	<span class="keyword">constructor</span>()&#123;</div><div class="line">		<span class="keyword">super</span>()</div><div class="line">		<span class="keyword">this</span>.state=&#123;</div><div class="line">			<span class="attr">collapsed</span> : <span class="literal">true</span>,</div><div class="line">		&#125;;</div><div class="line">	&#125;</div><div class="line">	toggleCollapse()&#123;</div><div class="line">		<span class="keyword">const</span> collapsed = !<span class="keyword">this</span>.state.collapsed;</div><div class="line">		<span class="keyword">this</span>.setState(&#123;collapsed&#125;);</div><div class="line">	&#125;</div><div class="line">	render() &#123;</div><div class="line">		<span class="keyword">const</span> &#123; location &#125; = <span class="keyword">this</span>.props;</div><div class="line">		<span class="keyword">const</span> &#123; collapsed &#125; = <span class="keyword">this</span>.state;</div><div class="line">		<span class="keyword">const</span> featuredClass = location.pathname ===<span class="string">"/"</span> ? <span class="string">"active"</span>:<span class="string">""</span>;</div><div class="line">		<span class="keyword">const</span> archivesClass = location.pathname.match(<span class="regexp">/^\/archives/</span>) ? <span class="string">"active"</span>:<span class="string">""</span>;</div><div class="line">		<span class="keyword">const</span> settingsClass =  location.pathname.match(<span class="regexp">/^\/settings/</span>) ? <span class="string">"active"</span>:<span class="string">""</span>;</div><div class="line">		<span class="keyword">const</span> navClass = collapsed ? <span class="string">"collapse"</span> : <span class="string">""</span>;</div><div class="line">		 </div><div class="line">		<span class="keyword">return</span> (</div><div class="line">			   <span class="xml"><span class="tag">&lt;<span class="name">nav</span> <span class="attr">class</span>=<span class="string">"navbar navbar-default navbar-fixed-top"</span> <span class="attr">role</span>=<span class="string">"navgation"</span>&gt;</span></span></div><div class="line">			      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></div><div class="line">				        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"navbar-header"</span>&gt;</span>        </div><div class="line">				          <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">"navbar-toggle"</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">onClick</span>=<span class="string">&#123;this.toggleCollapse.bind(this)&#125;</span>&gt;</span></div><div class="line">					            <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"icon-bar"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></div><div class="line">					            <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"icon-bar"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></div><div class="line">					            <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"icon-bar"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></div><div class="line">				          <span class="tag">&lt;/<span class="name">button</span>&gt;</span></div><div class="line">				        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"></div><div class="line">			        	<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&#123;</span>"<span class="attr">navbar-collapse</span> "+ <span class="attr">navClass</span>&#125; <span class="attr">id</span>=<span class="string">"navbar-main"</span>&gt;</span></div><div class="line">				          <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"nav navbar-nav"</span>&gt;</span></div><div class="line"></div><div class="line">					            <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"&#123;featuredClass&#125;"</span>&gt;</span></div><div class="line">					            <span class="tag">&lt;<span class="name">IndexLink</span> <span class="attr">to</span>=<span class="string">"/"</span>  <span class="attr">onClick</span>=<span class="string">&#123;this.toggleCollapse.bind(this)&#125;</span>&gt;</span> Featured <span class="tag">&lt;/<span class="name">IndexLink</span>&gt;</span></div><div class="line">					            <span class="tag">&lt;/<span class="name">li</span>&gt;</span>   </div><div class="line">					            <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"&#123;archivesClass&#125;"</span>&gt;</span></div><div class="line">					            <span class="tag">&lt;<span class="name">Link</span> <span class="attr">to</span>=<span class="string">"archives"</span>  <span class="attr">onClick</span>=<span class="string">&#123;this.toggleCollapse.bind(this)&#125;</span>&gt;</span> Archives <span class="tag">&lt;/<span class="name">Link</span>&gt;</span></div><div class="line">					            <span class="tag">&lt;/<span class="name">li</span>&gt;</span>   </div><div class="line">					            <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"&#123;settingsClass&#125;"</span>&gt;</span></div><div class="line">					            <span class="tag">&lt;<span class="name">Link</span> <span class="attr">to</span>=<span class="string">"settings"</span>  <span class="attr">onClick</span>=<span class="string">&#123;this.toggleCollapse.bind(this)&#125;</span>&gt;</span> Settings <span class="tag">&lt;/<span class="name">Link</span>&gt;</span></div><div class="line">					            <span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">	 </div><div class="line">				          <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></div><div class="line">			        	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"></div><div class="line">			      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">			    <span class="tag">&lt;/<span class="name">nav</span>&gt;</span></div><div class="line">			</div><div class="line">			);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="-/js/components">./js/components</h1><h2 id="-/js/components/Article-js">./js/components/Article.js</h2><figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="type">React</span> from <span class="string">"react"</span>;</div><div class="line"></div><div class="line">export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span></span>&#123;</div><div class="line">	render()&#123;</div><div class="line"></div><div class="line">		const  &#123; title &#125;= <span class="keyword">this</span>.props;</div><div class="line"></div><div class="line">	<span class="keyword">return</span>(</div><div class="line">		&lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"col-md-4"</span>&gt;</div><div class="line">				&lt;h2&gt;&#123;title&#125;&lt;/h2&gt;</div><div class="line">				&lt;p&gt; <span class="type">Lorem</span> ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</div><div class="line">					tempor incididunt ut labore et dolore magna aliqua. <span class="type">Ut</span> enim ad minim veniam,</div><div class="line">					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</div><div class="line">					consequat. &lt;/p&gt;</div><div class="line">				&lt;a <span class="class"><span class="keyword">class</span></span>=<span class="string">"btn btn-default"</span> href=<span class="string">"#"</span>&gt; <span class="type">More</span> <span class="type">Info</span> &lt;/a&gt;</div><div class="line">		&lt;/div&gt;</div><div class="line">		);</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1620,7 +1573,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">58</span>
+              <span class="site-state-item-count">60</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1634,7 +1587,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
@@ -1705,28 +1658,11 @@
 
   
     
+    
 
   
-    
-  
-
-  <script type="text/javascript">
-    var duoshuoQuery = {short_name:"blog-lyn"};
-    (function() {
-      var ds = document.createElement('script');
-      ds.type = 'text/javascript';ds.async = true;
-      ds.id = 'duoshuo-script';
-      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-      ds.charset = 'UTF-8';
-      (document.getElementsByTagName('head')[0]
-      || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-  </script>
-    
-     
 
 
-    
   
 
   

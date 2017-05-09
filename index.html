@@ -211,6 +211,314 @@
             
             
               
+                <a class="post-title-link" href="/2017/05/09/rule-learning/" itemprop="url">
+                  规则学习学习笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2017-05-09T23:03:41+08:00" content="2017-05-09">
+              2017-05-09
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="规则学习">规则学习</h1><h2 id="应用场景">应用场景</h2><blockquote>
+<p>沃尔玛曾今对数据仓库中一年多的原始交易数据进行了详细的分析，发现与尿布一起被购买最多的商品竟然是啤酒。借助数据仓库和关联规则，发现了这个隐藏在背后的事实：美国的妇女经常会嘱咐丈夫下班后为孩子买尿布，而30%~40%的丈夫在买完尿布之后又要顺便购买自己爱喝的啤酒。根据这个发现，沃尔玛调整了货架的位置，把尿布和啤酒放在一起销售，大大增加了销量。</p>
+</blockquote>
+<h3 id="推荐场景">推荐场景</h3><p> <img src="http://7xnuw0.com1.z0.glb.clouddn.com/17-5-7/85818585-file_1494088146071_6fb5.png" alt=""></p>
+<h2 id="Apriori算法">Apriori算法</h2><p>关联规则学习算法</p>
+<h3 id="Apriori性质：">Apriori性质：</h3><ul>
+<li>任一频繁项集(frequent item set)的所有非空子集也必须是频繁的，反之，如果某个候选的非空子集不是频繁的，那么该候选肯定不是频繁的，从而可以将其删除。</li>
+</ul>
+<h3 id="评估的指标">评估的指标</h3><ul>
+<li>支持度/覆盖率(support/coverage)</li>
+<li>置信度/准确度(confidence/accuracy)</li>
+<li>提升度 (lift)</li>
+</ul>
+<h3 id="支持度/覆盖率(support/coverage)">支持度/覆盖率(support/coverage)</h3><h4 id="Concept:">Concept:</h4><ul>
+<li>支持度：P(A ∩ B)，A和B同时出现的概率. (沃尔玛购物篮的例子里尿布和啤酒同时购买的概率)</li>
+</ul>
+<h4 id="Example:">Example:</h4><ul>
+<li>某天共有100个顾客到负一楼吃拉面，其中有10个顾客同时点了炒拉面和荷包蛋，那么上述规则的支持度就是10％。</li>
+</ul>
+<h3 id="置信度/准确度(confidence/accuracy)">置信度/准确度(confidence/accuracy)</h3><h4 id="Concept:-1">Concept:</h4><ul>
+<li>置信度confidence=P(B|A)=P(AB)/P(A),指的是发生事件A的基础上又发生事件B的概率。</li>
+</ul>
+<h4 id="Example:-1">Example:</h4><ul>
+<li>炒拉面 =&gt; 荷包蛋 (support=10%, confidence=60%)，</li>
+<li>表示:当天所有顾客中的中有10%的顾客同时点了炒拉面和荷包蛋，并且点了炒拉面的顾客中有60%也点了荷包蛋.</li>
+</ul>
+<h3 id="查找频繁集(frequent_item_set)">查找频繁集(frequent item set)</h3><p>过程为:</p>
+<ol>
+<li>扫描所有子元素 </li>
+<li>计算support</li>
+<li>比较support</li>
+<li>产生频繁项集(穷尽组合)</li>
+<li>连接(加入候选)、剪枝(从后选中删除)，产生候选项集.  </li>
+</ol>
+<p>重复步骤（1）~（5）直到候选集为空.</p>
+<h4 id="Example:-2">Example:</h4><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/17-5-7/49910433-file_1494089240390_5e2e.png" alt=""></p>
+<ol>
+<li>连接：C3 &lt;= L2  [<code>{A,C},{B,C},{B,E},{C,E}</code>] =&gt;[<code>{A,B,C},{A,C,E},{B,C,E}</code>]</li>
+<li>使用Apriori性质剪枝：频繁项集的所有子集必须是频繁的，对候选项C3，我们可以删除其子集为非频繁的选项：<ul>
+<li>{A,B,C}的2项子集是{A,B},{A,C},{B,C}，其中{A,B}不是L2的元素，所以删除这个选项；</li>
+<li>{A,C,E}的2项子集是{A,C},{A,E},{C,E}，其中{A,E} 不是L2的元素，所以删除这个选项；</li>
+<li>{B,C,E}的2项子集是{B,C},{B,E},{C,E}，它的所有2－项子集都是L2的元素，因此保留这个选项。</li>
+</ul>
+</li>
+<li>这样，剪枝后得到C3=[<code>{B,C,E}</code>]</li>
+</ol>
+<h3 id="缺点：">缺点：</h3><ul>
+<li>在每一步产生侯选项目集时循环产生的组合过多，没有排除不应该参与组合的元素;</li>
+<li>每次计算项集的支持度时，都对数据库D中的全部记录进行了一遍扫描比较，如果是一个大型的数据库的话，这种扫描比较会大大增加计算机系统的I/O开销。而这种代价是随着数据库的记录的增加呈现出几何级数的增加。</li>
+<li>因此人们开始寻求更好性能的算法:FP-growth算法 </li>
+</ul>
+<h1 id="规则学习的概念Concept">规则学习的概念Concept</h1><p>规则学习(rule learning) 是从训练数据中学习出一组由原子命题组成的IF-THEN的规则,属于非监督学习的一种,常用被归属为分类的一种.</p>
+<p>Examples:</p>
+<ul>
+<li>购买尿片 -&gt; 购买啤酒</li>
+<li>(Blood Type = Warm) ∧ (Lay Eggs = Yes) → Birds</li>
+</ul>
+<h2 id="规则学习的规则分为两种:">规则学习的规则分为两种:</h2><h3 id="命题规则（propositional_rule）">命题规则（propositional rule）</h3><ul>
+<li>由”原子命题”(propositional atom)和逻辑连接词 与、或、非和蕴含构成的简单陈述句。</li>
+<li>Examples: <ul>
+<li>Rule1: (胎生 = no) ∧ (会飞 = yes) → 鸟类</li>
+<li>Rule2: (胎生 = no) ∧ (在水里生活 = yes) → 鱼类</li>
+</ul>
+</li>
+</ul>
+<h3 id="一阶规则(first-order_rule)">一阶规则(first-order rule)</h3><ul>
+<li>不像命题规则只处理简单的陈述命题，一阶逻辑还额外包含了断言和量化。</li>
+<li>一阶规则能表达复杂的关系，也被称为关系型规则(relational rule)。</li>
+<li><p>Example:</p>
+<ul>
+<li><img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/5cd315e97e458fa08ff143c5c287efbf12e9f765" alt=""></li>
+</ul>
+</li>
+</ul>
+<h2 id="生成规则的方法也分为两种:">生成规则的方法也分为两种:</h2><ul>
+<li>直接生成法(Direct Method) : 直接从训练集中归纳出规则</li>
+<li>间接生产法(Indirect Method) : 从决策树转换而来</li>
+</ul>
+<h1 id="直接法(Direct_Method)">直接法(Direct Method)</h1><h2 id="序列覆盖_(Sequencial_Covering)">序列覆盖 (Sequencial Covering)</h2><p>即逐条归纳：在训练集上每学习到一条规则，就将该规则覆盖的训练样例去除，然后以剩下的样例组成训练集重复上述过程，由于每次只处理一部分数据，因此也被称为分治(separate-and-conquer)的策略。</p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/17-5-7/33027406-file_1494098757940_15bae.png" alt=""></p>
+<p>Start with an empty rule: if ? Then b</p>
+<ul>
+<li><p>先给 “b” 找一个可能的规则:</p>
+<ul>
+<li>If x ≤ 1.2 then class = b</li>
+</ul>
+</li>
+<li><p>在原有的基础上再增加一条规则直到接近完美:  </p>
+<ul>
+<li>If x &gt; 1.2 and y ≤ 2.6 then class = b</li>
+</ul>
+</li>
+</ul>
+<h3 id="规则产生的策略：">规则产生的策略：</h3><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/17-5-7/63691173-file_1494130268720_3591.png" alt=""></p>
+<ul>
+<li>自顶向下（top-down）：从比较一般的规则开始，逐渐添加新文字以缩小规则覆盖范围，直到满足预定的条件为止。亦称“生成－测试”（generate-then-test）法，是规则逐渐“特化”（specialization）的过程。(类似决策树)</li>
+<li>自底向上（bottom-top）：从比较特殊的规则开始，逐渐删除文字以扩大规则覆盖范围，直到满足条件为止，亦称数据驱动(data-driven)方法，是规则逐渐泛化(generalazation)的过程。</li>
+</ul>
+<h4 id="区别：">区别：</h4><ul>
+<li>第一种策略更容易产生泛化性能更好的规则，第二种策略更适合于训练样本较少的情况。</li>
+<li>第一种策略对噪声的鲁棒性比后者强。</li>
+<li>命题规则学习中通常使用第一种策略.</li>
+<li>第二种策略在一阶规则学习这类假设空间非常复杂的任务上使用<br>较多。</li>
+</ul>
+<h2 id="剪枝优化:">剪枝优化:</h2><ul>
+<li>原因: 序列覆盖是一个贪心搜索的过程,需要机制来缓解过拟合的风险.</li>
+<li>决策树一样分为: <code>预剪枝</code> 和 <code>后剪枝</code>.</li>
+</ul>
+<p>几种优化常用算法:</p>
+<ul>
+<li>PRISM算法,第一个提出序列覆盖的算法,基于准确率和覆盖率进行判断.</li>
+<li>CN2算法 (第一个考虑过拟合的算法,预剪枝,基于AQ算法并结合ID3算法处理噪音数据,用熵对结果进行判断,熵越小则质量越高)</li>
+<li>FOIL算法 (基于CN2算法的改进,基于FOIL Gain 进行质量判断,适用于一阶规则学习)<ul>
+<li>Gain(R0, R1) = p1 [ log (p1/(p1+n1)) – log (p0/(p0 + n0)) <img src="http://7xnuw0.com1.z0.glb.clouddn.com/17-5-7/46972476-file_1494168211119_789a.png" alt=""></li>
+</ul>
+</li>
+<li>REP算法 (Reduce Error Pruning) O(m^4),后剪枝,用准确率作为剪枝指标,先生存Rule集合,再剪枝.</li>
+<li>IREP算法（Incremental REP） O(mlog^2m),后剪枝,相比REP高效,每生成一个规则就进行剪枝验证.</li>
+<li>REIPPER算法 (基于IREP* 代替IREP的准确率, 防止局部最优,泛化性能好,学习速度比决策树更快)</li>
+</ul>
+<h3 id="REP算法(Reduce_Error_Pruning)">REP算法(Reduce Error Pruning)</h3><ol>
+<li>将样例集划分为训练集和验证集，</li>
+<li>从训练集上学得规则集R后进行多轮剪枝，在每一轮穷举所有可能的剪枝操作，</li>
+<li>然后用验证集对剪枝产生的所有候选规则集进行(accuracy= f+/n)比较，保留最好的规则集进行下一轮剪枝.(也可以理解为如果错误增加了,就剪掉,否则保留)</li>
+<li>复杂度为O(m^4)。</li>
+</ol>
+<p>其中: f+ = # of positive instances covered by rule </p>
+<h3 id="IREP算法(Incremental_Reduce_Error_Pruning)">IREP算法(Incremental Reduce Error Pruning)</h3><ol>
+<li>在生成每条规则之前，先将当前样例集划分为训练集和验证集，</li>
+<li>在训练集上生成一条规则r，</li>
+<li>立即在验证集上对其进行REP剪枝，得到规则r’；</li>
+<li>将r’覆盖的样例去除，</li>
+<li>在更新后的样例集上重复上述过程。</li>
+</ol>
+<h4 id="区别:">区别:</h4><ul>
+<li>REP是针对规则集进行剪枝，</li>
+<li>IREP 仅对单条规则进行剪枝，因此后者更高效。</li>
+</ul>
+<h3 id="REIPPER算法(Repeated_Incremental_Pruning_to_Produce_Error_Reduction)">REIPPER算法(Repeated Incremental Pruning to Produce Error Reduction)</h3><p>WEKA(Weka是由新西兰怀卡托大学用Java开发的数据挖掘常用软件)中JRIP实现了REIPPER</p>
+<p>使用IREP* 代替IREP的准确率(accuracy= f+/n)来作为评判标准:</p>
+<ul>
+<li>Gain(R0, R1) = p1 [ log (p1/(p1+n1)) – log (p0/(p0 + n0)) ] </li>
+</ul>
+<pre><code>-<span class="ruby">  <span class="symbol">p0:</span> <span class="comment"># of positive instances covered by R0</span>
+</span>-<span class="ruby">  <span class="symbol">n0:</span> <span class="comment"># of negative instances covered by R0</span>
+</span>-<span class="ruby">  <span class="symbol">p1:</span> <span class="comment"># of positive instances covered by R1</span>
+</span>-<span class="ruby">  <span class="symbol">n1:</span> <span class="comment"># of negative instances covered by R1 </span></span>
+</code></pre><p>将剪枝机制和其他一些后处理手段结合起来,防止局部最优,对规则集进行优化。</p>
+<h1 id="间接方法(Indirect_Method)">间接方法(Indirect Method)</h1><ul>
+<li>从决策树生成:</li>
+</ul>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/17-5-7/32070981-file_1494099432991_f7c7.png" alt=""></p>
+<h1 id="与决策树的比较">与决策树的比较</h1><ul>
+<li>规则学习每次只考虑当前的分类,而不考虑对其他规则的分类造成什么影响.(只考虑自己不管别的)</li>
+<li>决策树则需要使用<code>ID3决策树算法</code>,<code>C4.5决策树算法</code>,<code>CART决策树算法</code> 来保证把样本空间划分为不重叠的等价类,每个分类的的纯度更高.(顾全大局)</li>
+<li>然而因为规则学习不顾大局,更简单,所以复杂度更低.</li>
+</ul>
+<h1 id="总结:">总结:</h1><p>在富含结构信息和领域知识的任务中,逻辑表达的重要性凸现出来,所以发展的趋势是概率统计和规则学习相结合(如:关系贝叶斯网(retional Bayesian Network),在逻辑归纳程序设计中引入概率模型的”概率归纳逻辑程序设计”(probabilistic ILP)).</p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/2017/04/02/rxjs/" itemprop="url">
+                  rxjs
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2017-04-02T15:44:47+08:00" content="2017-04-02">
+              2017-04-02
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2017/03/02/Dependency-Injection-AMD-CMD/" itemprop="url">
                   从依赖注入（Dependency Injection）到AMD模式 CMD模式
                 </a>
@@ -230,13 +538,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2017/03/02/Dependency-Injection-AMD-CMD/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/02/Dependency-Injection-AMD-CMD/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -378,13 +679,6 @@
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2017/02/19/generator-yield/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/19/generator-yield/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -480,13 +774,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2017/02/14/redux-saga-js/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/14/redux-saga-js/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -614,13 +901,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/12/25/kcp/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/25/kcp/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -775,13 +1055,6 @@
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/12/22/v2ray-config/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/22/v2ray-config/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -873,6 +1146,131 @@
             
             
               
+                <a class="post-title-link" href="/2016/10/15/functional_programming/" itemprop="url">
+                  函数式编程笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-10-15T14:48:55+08:00" content="2016-10-15">
+              2016-10-15
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="函数式编程?">函数式编程?</h1><blockquote>
+<p>函数式编程是和传统命令式编程区分的一种编程思想，“在函数式编程语言中，函数是第一类的对象，也就是说，函数 不依赖于任何其他的对象而可以独立存在，而在面向对象的语言中，函数 ( 方法 ) 是依附于对象的，属于对象的一部分。这一点决定了函数在函数式语言中的一些特别的性质，比如作为传出 / 传入参数，作为一个普通的变量等。[1]”</p>
+<p>函数式编程思想的源头可以追溯到 20 世纪 30 年代，数学家阿隆左 . 丘奇在进行一项关于问题的可计算性的研究，也就是后来的 lambda 演算。lambda 演算的本质为 一切皆函数，函数可以作为另外一个函数的输出或者 / 和输入，一系列的函数使用最终会形成一个表达式链，这个表达式链可以最终求得一个值，而这个过程，即为计算的本质。</p>
+<p>然而，这种思想在当时的硬件基础上很难实现，历史最终选择了同丘奇的 lambda 理论平行的另一种数学理论：图灵机作为计算理论，而采取另一位科学家冯 . 诺依曼的计算机结构，并最终被实现为硬件。由于第一台计算机即为冯 . 诺依曼的程序存储结构，因此运行在此平台的程序也继承了这种基因，程序设计语言如 C/Pascal 等都在一定程度上依赖于此体系。</p>
+<p>到了 20 世纪 50 年代，一位 MIT 的教授 John McCarthy 在冯 . 诺依曼体系的机器上成功的实现了 lambda 理论，取名为 LISP(LISt Processor), 至此函数式编程语言便开始活跃于计算机科学领域。</p>
+</blockquote>
+<h2 id="函数式编程的好处">函数式编程的好处</h2><h3 id="更少的Bug">更少的Bug</h3><p>函数式编程由于使用了高阶函数(Higher Order Function)通常来说比传统的命令式编程的代码,代码会少很多,每行代码也更容易被理解.这样出现bug的可能性会明显降低,代码的质量会明显更高一些.</p>
+<h3 id="更少的coding时间">更少的coding时间</h3><p>相比于传统的命令式编程,函数式编程因为代码更少,而且函数式编程的可以复用更多的函数和代码,所以编程需要的时间会更少一些.</p>
+<h1 id="环境配置">环境配置</h1><h2 id="package-json">package.json</h2><p>先配置一个package.json文件. 然后运行 <code>npm install</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"name"</span>: <span class="string">"test"</span>,</div><div class="line">  <span class="attr">"version"</span>: <span class="string">"1.0.0"</span>,</div><div class="line">  <span class="attr">"description"</span>: <span class="string">"es6"</span>,</div><div class="line">  <span class="attr">"main"</span>: <span class="string">"main.js"</span>,</div><div class="line">  <span class="attr">"scripts"</span>: &#123;</div><div class="line">    <span class="attr">"start"</span>: <span class="string">"babel-node main.js"</span>,</div><div class="line">    <span class="attr">"build"</span>: <span class="string">"babel src --out-dir lib"</span></div><div class="line">  &#125;,</div><div class="line">  <span class="attr">"author"</span>: <span class="string">""</span>,</div><div class="line">  <span class="attr">"license"</span>: <span class="string">"ISC"</span>,</div><div class="line">  <span class="attr">"devDependencies"</span>: &#123;</div><div class="line">    <span class="attr">"babel-cli"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-core"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-es2015-destructuring"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-es2015-modules-commonjs"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-es2015-parameters"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-es2015-spread"</span>: <span class="string">"^6.8.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-strict-mode"</span>: <span class="string">"^6.18.0"</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="配置Babel">配置Babel</h2><p>在项目目录下新建 .babelrc:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"plugins"</span>: [</div><div class="line">    <span class="string">"transform-strict-mode"</span>,</div><div class="line">    <span class="string">"transform-es2015-modules-commonjs"</span>,</div><div class="line">    <span class="string">"transform-es2015-spread"</span>,</div><div class="line">    <span class="string">"transform-es2015-destructuring"</span>,</div><div class="line">    <span class="string">"transform-es2015-parameters"</span></div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<!--# why Fucntional programming
+
+ 1. lessCode = lessBug
+-->
+<h1 id="常用的函数:_filter,_map,_reduce:">常用的函数: filter, map, reduce:</h1><figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">var animals = [</div><div class="line">  &#123;name: <span class="string">'a'</span> , specie<span class="variable">s:</span> <span class="string">'dog'</span>, weigh<span class="variable">t:</span> <span class="number">11</span>&#125;,</div><div class="line">  &#123;name: <span class="string">'b'</span>, specie<span class="variable">s:</span> <span class="string">'cat'</span>, weigh<span class="variable">t:</span> <span class="number">10</span>&#125;,</div><div class="line">  &#123;name: <span class="string">'c'</span>, specie<span class="variable">s:</span> <span class="string">'fish'</span>, weigh<span class="variable">t:</span> <span class="number">1</span>&#125;,</div><div class="line">  &#123;name: <span class="string">'d'</span>, specie<span class="variable">s:</span> <span class="string">'cat'</span>, weigh<span class="variable">t:</span> <span class="number">8</span>&#125;,</div><div class="line">  &#123;name: <span class="string">'e'</span>, specie<span class="variable">s:</span> <span class="string">'rabbit'</span>, weigh<span class="variable">t:</span> <span class="number">3</span>&#125;</div><div class="line">]</div><div class="line">// 找到所有种类为猫的动物</div><div class="line">animals.<span class="built_in">filter</span>((animal) =&gt; animal.species === <span class="string">'cat'</span>)</div><div class="line">// [ &#123; name: <span class="string">'b'</span>, specie<span class="variable">s:</span> <span class="string">'cat'</span> &#125;, &#123; name: <span class="string">'d'</span>, specie<span class="variable">s:</span> <span class="string">'cat'</span> &#125; ]</div><div class="line"></div><div class="line">// 返回所有动物的名字</div><div class="line">animals.<span class="keyword">map</span>((animal) =&gt; animal.name)</div><div class="line">// [ <span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>, <span class="string">'e'</span> ]</div><div class="line"></div><div class="line">// 动物总重</div><div class="line">animals.reduce((<span class="keyword">pre</span>, animal) =&gt; <span class="keyword">pre</span> + animal.weight, <span class="number">0</span>)</div><div class="line">//<span class="number">33</span></div></pre></td></tr></table></figure>
+<p>怎么样? 如果用循环来写肯定不可能一行代码就搞定吧.</p>
+<h1 id="一个简单的例子:">一个简单的例子:</h1><h2 id="Task:读取data文件中的数据转化为对象:">Task:读取data文件中的数据转化为对象:</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mark johnson  waffle  iron  <span class="number">80</span>  <span class="number">2</span></div><div class="line">mark johnson  blender  <span class="number">200</span>  <span class="number">1</span></div><div class="line">mark johnson  knife  <span class="number">10</span>  <span class="number">4</span></div><div class="line">nikita Smith  waffle  iron  <span class="number">80</span>  <span class="number">1</span></div><div class="line">nikita Smith  knife <span class="number">10</span>  <span class="number">2</span></div><div class="line">nikita Smith  pot <span class="number">20</span>  <span class="number">3</span></div></pre></td></tr></table></figure>
+<ul>
+<li>把上面的data文件数据(每行不同属性之间由Tab制表符分割(或者两个空格)),转换成下面的对象格式:</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"mark johnson"</span>: [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"waffle"</span>, <span class="attr">"price"</span>: <span class="string">"iron"</span>,<span class="attr">"quantity"</span>: <span class="string">"80"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"blender"</span>,<span class="attr">"price"</span>: <span class="string">"200"</span>, <span class="attr">"quantity"</span>: <span class="string">"1"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"knife"</span>,<span class="attr">"price"</span>: <span class="string">"10"</span>,<span class="attr">"quantity"</span>: <span class="string">"4"</span></div><div class="line">    &#125;</div><div class="line">  ],</div><div class="line">  <span class="attr">"nikita Smith"</span>: [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"waffle"</span>,<span class="attr">"price"</span>: <span class="string">"iron"</span>,<span class="attr">"quantity"</span>: <span class="string">"80"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"knife"</span>, <span class="attr">"price"</span>: <span class="string">"10"</span>, <span class="attr">"quantity"</span>: <span class="string">"2"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"pot"</span>, <span class="attr">"price"</span>: <span class="string">"20"</span>,<span class="attr">"quantity"</span>: <span class="string">"3"</span></div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="1-首先,利用fs-readFileSync读取出文件中的内容">1.首先,利用<code>fs.readFileSync</code>读取出文件中的内容</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">'use strict'</span> </div><div class="line"><span class="keyword">import</span> fs <span class="keyword">from</span> <span class="string">'fs'</span>;</div><div class="line"><span class="keyword">var</span> output = fs.readFileSync(<span class="string">'data'</span>, <span class="string">'utf-8'</span>)</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'output: \n'</span>,output);</div></pre></td></tr></table></figure>
+<ul>
+<li>使用 <code>npm start</code> 运行main.js文件:</li>
+</ul>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">npm <span class="literal">start</span></div><div class="line"></div><div class="line">&gt; test@<span class="number">1.0</span>.<span class="number">0</span> <span class="literal">start</span> /src/<span class="keyword">node</span><span class="title">/fnProgramming</span></div><div class="line">&gt; babel-<span class="keyword">node</span> <span class="title">main</span>.js</div><div class="line"></div><div class="line">output:</div><div class="line">mark johnson  waffle iron <span class="number">80</span> <span class="number">2</span></div><div class="line">mark johnson  blender <span class="number">200</span> <span class="number">1</span></div><div class="line">mark johnson  knife <span class="number">10</span> <span class="number">4</span></div><div class="line">nikita Smith waffle  iron <span class="number">80</span> <span class="number">1</span></div><div class="line">nikita Smith knife  <span class="number">10</span> <span class="number">2</span></div><div class="line">nikita Smith pot <span class="number">20</span> <span class="number">3</span></div></pre></td></tr></table></figure>
+<h3 id="2-_根据换行符\n_进行分割字符串为数组-">2. 根据换行符<code>\n</code> 进行分割字符串为数组.</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">'use strict'</span> </div><div class="line"><span class="keyword">import</span> fs <span class="keyword">from</span> <span class="string">'fs'</span>;</div><div class="line"><span class="keyword">var</span> output = fs.readFileSync(<span class="string">'data'</span>, <span class="string">'utf-8'</span>)</div><div class="line">				  .split(<span class="string">'\n'</span>)</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'output: \n'</span>,output);</div></pre></td></tr></table></figure>
+<ul>
+<li>结果中数组最后一项为空是因为文件是以空行结尾的.可以使用trim()方法过滤掉掉头尾的空格</li>
+</ul>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="string">output:</span></div><div class="line"> [ <span class="string">'mark johnson  waffle iron 80 2'</span>,</div><div class="line">  <span class="string">'mark johnson  blender 200 1'</span>,</div><div class="line">  <span class="string">'mark johnson  knife 10 4'</span>,</div><div class="line">  <span class="string">'nikita Smith waffle  iron 80 1'</span>,</div><div class="line">  <span class="string">'nikita Smith knife  10 2'</span>,</div><div class="line">  <span class="string">'nikita Smith pot 20 3  '</span>,</div><div class="line">  <span class="string">''</span> ]</div></pre></td></tr></table></figure>
+<h3 id="3-_根据制表符对每行数据进行分割:">3.  根据制表符对每行数据进行分割:</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">'use strict'</span> </div><div class="line"></div><div class="line"><span class="keyword">import</span> fs <span class="keyword">from</span> <span class="string">'fs'</span>;</div><div class="line"></div><div class="line"><span class="keyword">var</span>  output = fs.readFileSync(<span class="string">'data'</span>, <span class="string">'utf-8'</span>)</div><div class="line">        .trim()</div><div class="line">        .split(<span class="string">'\n'</span>)</div><div class="line">        .map(<span class="function"><span class="params">line</span>=&gt;</span>line.split(<span class="string">'\t'</span>)) <span class="comment">//如果你的编辑器把tab制表符转换成两个空格 这里就应该使用2个空格作为分割点      </span></div><div class="line"><span class="built_in">console</span>.log(<span class="string">'output: \n'</span>,output);</div></pre></td></tr></table></figure>
+<ul>
+<li>输出结果:</li>
+</ul>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">output:</div><div class="line"> [ [ <span class="string">'mark johnson'</span>, <span class="string">'waffle'</span>, <span class="string">'iron'</span>, <span class="string">'80'</span>, <span class="string">'2'</span> ],</div><div class="line">  [ <span class="string">'mark johnson'</span>, <span class="string">'blender'</span>, <span class="string">'200'</span>, <span class="string">'1'</span> ],</div><div class="line">  [ <span class="string">'mark johnson'</span>, <span class="string">'knife'</span>, <span class="string">'10'</span>, <span class="string">'4'</span> ],</div><div class="line">  [ <span class="string">'nikita Smith'</span>, <span class="string">'waffle'</span>, <span class="string">'iron'</span>, <span class="string">'80'</span>, <span class="string">'1'</span> ],</div><div class="line">  [ <span class="string">'nikita Smith'</span>, <span class="string">'knife 10'</span>, <span class="string">'2'</span> ],</div><div class="line">  [ <span class="string">'nikita Smith'</span>, <span class="string">'pot 20'</span>, <span class="string">'3'</span> ] ]</div></pre></td></tr></table></figure>
+<h3 id="4-_使用reduce函数解析出每行的属性-">4. 使用reduce函数解析出每行的属性.</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">'use strict'</span> </div><div class="line"><span class="keyword">import</span> fs <span class="keyword">from</span> <span class="string">'fs'</span>;</div><div class="line"></div><div class="line"><span class="keyword">var</span>  output = fs.readFileSync(<span class="string">'data'</span>, <span class="string">'utf-8'</span>)</div><div class="line">        .trim()</div><div class="line">        .split(<span class="string">'\n'</span>)</div><div class="line">        .map(<span class="function"><span class="params">line</span>=&gt;</span>line.split(<span class="string">'  '</span>))      </div><div class="line">        .reduce(<span class="function">(<span class="params">customers,line</span>)=&gt;</span>&#123;</div><div class="line">           customers[line[<span class="number">0</span>]]=customers[line[<span class="number">0</span>]]||[] <span class="comment">//当customers为空时,用[]赋值.</span></div><div class="line">           customers[line[<span class="number">0</span>]].push(&#123;</div><div class="line">             <span class="attr">name</span>:line[<span class="number">1</span>],</div><div class="line">             <span class="attr">price</span>:line[<span class="number">2</span>],</div><div class="line">             <span class="attr">quantity</span>:line[<span class="number">3</span>],</div><div class="line">           &#125;)</div><div class="line">           <span class="keyword">return</span> customers</div><div class="line">        &#125;,&#123;&#125;) <span class="comment">//这里传入&#123;&#125;空对象作为 reduce的第一个参数也就是customers</span></div><div class="line">        </div><div class="line"><span class="built_in">console</span>.log(<span class="string">'output: \n'</span>,<span class="built_in">JSON</span>.stringify(output,<span class="literal">null</span>,<span class="number">2</span>));</div></pre></td></tr></table></figure>
+<ul>
+<li>结果:</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"> &#123;</div><div class="line">  <span class="attr">"mark johnson"</span>: [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"waffle"</span>,</div><div class="line">      <span class="attr">"price"</span>: <span class="string">"iron"</span>,</div><div class="line">      <span class="attr">"quantity"</span>: <span class="string">"80"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"blender"</span>,</div><div class="line">      <span class="attr">"price"</span>: <span class="string">"200"</span>,</div><div class="line">      <span class="attr">"quantity"</span>: <span class="string">"1"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"knife"</span>,</div><div class="line">      <span class="attr">"price"</span>: <span class="string">"10"</span>,</div><div class="line">      <span class="attr">"quantity"</span>: <span class="string">"4"</span></div><div class="line">    &#125;</div><div class="line">  ],</div><div class="line">  <span class="attr">"nikita Smith"</span>: [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"waffle"</span>,</div><div class="line">      <span class="attr">"price"</span>: <span class="string">"iron"</span>,</div><div class="line">      <span class="attr">"quantity"</span>: <span class="string">"80"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"knife"</span>,</div><div class="line">      <span class="attr">"price"</span>: <span class="string">"10"</span>,</div><div class="line">      <span class="attr">"quantity"</span>: <span class="string">"2"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"pot"</span>,</div><div class="line">      <span class="attr">"price"</span>: <span class="string">"20"</span>,</div><div class="line">      <span class="attr">"quantity"</span>: <span class="string">"3"</span></div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="常用高阶函数举例">常用高阶函数举例</h2><p> 让我们看一些更深入更有意思的例子吧.比如这道比较经典的算法题: </p>
+<h3 id="给定一个字符串”abcdaabc”统计每个字符的出现次数-">给定一个字符串”abcdaabc”统计每个字符的出现次数.</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 一般做法是这样的</span></div><div class="line"><span class="keyword">var</span> str=<span class="string">"abcdaabc"</span></div><div class="line"><span class="keyword">var</span> <span class="keyword">count</span> = &#123;&#125;;</div><div class="line"><span class="keyword">var</span> i;</div><div class="line"></div><div class="line"><span class="keyword">for</span>(i=0;i&lt;str.length;i++)&#123;</div><div class="line">    <span class="keyword">var</span> chr = str.charAt(i);</div><div class="line">    <span class="keyword">if</span>( <span class="keyword">typeof</span> <span class="keyword">count</span>[chr] === <span class="string">"undefined"</span>)&#123;</div><div class="line">        <span class="keyword">count</span>[chr] = 1;</div><div class="line">    &#125;<span class="keyword">else</span>&#123;</div><div class="line">        <span class="keyword">count</span>[chr]++;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>利用函数式编程思想的方法是这样的:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"> </div><div class="line">var <span class="keyword">res</span> = str.<span class="keyword">split</span>(<span class="string">''</span>)</div><div class="line">             .reduce((<span class="keyword">pre</span>, cur) =&gt; (<span class="keyword">pre</span>[cur]++ || (<span class="keyword">pre</span>[cur] = <span class="number">1</span>), <span class="keyword">pre</span>), &#123;&#125;)</div></pre></td></tr></table></figure>
+<p>由上面的例子可见, 高阶函数的特性让我们在处理这类问题时比普通的方法要方便的多. 在更实际的应用场景中函数式编程的便利性更能充分的体现, 其中一个经典的例子:</p>
+<h3 id="统计文本中出现频率最高的十个单词:">统计文本中出现频率最高的十个单词:</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"><span class="keyword">var</span> content = fs.readFileSync(<span class="string">'words.txt'</span>).toString();</div><div class="line"><span class="keyword">var</span> words = content.split(<span class="regexp">/[\s.,\/:\n]+/</span>);</div><div class="line"></div><div class="line"><span class="comment">// 把单词全部变为小写并利用上一个例子的方法统计单词出现的次数</span></div><div class="line"><span class="keyword">var</span> tally = words.map(<span class="function">(<span class="params">word</span>) =&gt;</span> word.toLowerCase())</div><div class="line">                 .reduce(<span class="function">(<span class="params">pre, cur</span>) =&gt;</span> (pre[cur]++ || (pre[cur]=<span class="number">1</span>), pre), &#123;&#125;)</div><div class="line"><span class="comment">//把object的key变成数组并进行排序</span></div><div class="line"><span class="keyword">var</span> top10 = <span class="built_in">Object</span>.keys(tally)</div><div class="line">                  .map(<span class="function">(<span class="params">key</span>) =&gt;</span> &#123;</div><div class="line">                    <span class="keyword">return</span> &#123;<span class="attr">word</span>: key, <span class="attr">count</span>: tally[key]&#125;</div><div class="line">                  &#125;)</div><div class="line">                  .sort(<span class="function">(<span class="params">a, b</span>) =&gt;</span> b.count - a.count)</div><div class="line">                  .slice(<span class="number">0</span>, <span class="number">10</span>)</div><div class="line"><span class="built_in">console</span>.log(top10)</div></pre></td></tr></table></figure>
+<p>上面这个例子充分体现了函数式编程思想的魅力,代码精简并且可读性高!</p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/10/15/docker-notes-01/" itemprop="url">
                   docker 笔记记录
                 </a>
@@ -892,13 +1290,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/10/15/docker-notes-01/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/15/docker-notes-01/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -1007,138 +1398,6 @@
             
             
               
-                <a class="post-title-link" href="/2016/10/15/functional_programming/" itemprop="url">
-                  函数式编程笔记
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-10-15T14:48:55+08:00" content="2016-10-15">
-              2016-10-15
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/10/15/functional_programming/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/15/functional_programming/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="函数式编程?">函数式编程?</h1><blockquote>
-<p>函数式编程是和传统命令式编程区分的一种编程思想，“在函数式编程语言中，函数是第一类的对象，也就是说，函数 不依赖于任何其他的对象而可以独立存在，而在面向对象的语言中，函数 ( 方法 ) 是依附于对象的，属于对象的一部分。这一点决定了函数在函数式语言中的一些特别的性质，比如作为传出 / 传入参数，作为一个普通的变量等。[1]”</p>
-<p>函数式编程思想的源头可以追溯到 20 世纪 30 年代，数学家阿隆左 . 丘奇在进行一项关于问题的可计算性的研究，也就是后来的 lambda 演算。lambda 演算的本质为 一切皆函数，函数可以作为另外一个函数的输出或者 / 和输入，一系列的函数使用最终会形成一个表达式链，这个表达式链可以最终求得一个值，而这个过程，即为计算的本质。</p>
-<p>然而，这种思想在当时的硬件基础上很难实现，历史最终选择了同丘奇的 lambda 理论平行的另一种数学理论：图灵机作为计算理论，而采取另一位科学家冯 . 诺依曼的计算机结构，并最终被实现为硬件。由于第一台计算机即为冯 . 诺依曼的程序存储结构，因此运行在此平台的程序也继承了这种基因，程序设计语言如 C/Pascal 等都在一定程度上依赖于此体系。</p>
-<p>到了 20 世纪 50 年代，一位 MIT 的教授 John McCarthy 在冯 . 诺依曼体系的机器上成功的实现了 lambda 理论，取名为 LISP(LISt Processor), 至此函数式编程语言便开始活跃于计算机科学领域。</p>
-</blockquote>
-<h2 id="函数式编程的好处">函数式编程的好处</h2><h3 id="更少的Bug">更少的Bug</h3><p>函数式编程由于使用了高阶函数(Higher Order Function)通常来说比传统的命令式编程的代码,代码会少很多,每行代码也更容易被理解.这样出现bug的可能性会明显降低,代码的质量会明显更高一些.</p>
-<h3 id="更少的coding时间">更少的coding时间</h3><p>相比于传统的命令式编程,函数式编程因为代码更少,而且函数式编程的可以复用更多的函数和代码,所以编程需要的时间会更少一些.</p>
-<h1 id="环境配置">环境配置</h1><h2 id="package-json">package.json</h2><p>先配置一个package.json文件. 然后运行 <code>npm install</code></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"name"</span>: <span class="string">"test"</span>,</div><div class="line">  <span class="attr">"version"</span>: <span class="string">"1.0.0"</span>,</div><div class="line">  <span class="attr">"description"</span>: <span class="string">"es6"</span>,</div><div class="line">  <span class="attr">"main"</span>: <span class="string">"main.js"</span>,</div><div class="line">  <span class="attr">"scripts"</span>: &#123;</div><div class="line">    <span class="attr">"start"</span>: <span class="string">"babel-node main.js"</span>,</div><div class="line">    <span class="attr">"build"</span>: <span class="string">"babel src --out-dir lib"</span></div><div class="line">  &#125;,</div><div class="line">  <span class="attr">"author"</span>: <span class="string">""</span>,</div><div class="line">  <span class="attr">"license"</span>: <span class="string">"ISC"</span>,</div><div class="line">  <span class="attr">"devDependencies"</span>: &#123;</div><div class="line">    <span class="attr">"babel-cli"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-core"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-es2015-destructuring"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-es2015-modules-commonjs"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-es2015-parameters"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-es2015-spread"</span>: <span class="string">"^6.8.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-strict-mode"</span>: <span class="string">"^6.18.0"</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="配置Babel">配置Babel</h2><p>在项目目录下新建 .babelrc:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"plugins"</span>: [</div><div class="line">    <span class="string">"transform-strict-mode"</span>,</div><div class="line">    <span class="string">"transform-es2015-modules-commonjs"</span>,</div><div class="line">    <span class="string">"transform-es2015-spread"</span>,</div><div class="line">    <span class="string">"transform-es2015-destructuring"</span>,</div><div class="line">    <span class="string">"transform-es2015-parameters"</span></div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<!--# why Fucntional programming
-
- 1. lessCode = lessBug
--->
-<h1 id="常用的函数:_filter,_map,_reduce:">常用的函数: filter, map, reduce:</h1><figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">var animals = [</div><div class="line">  &#123;name: <span class="string">'a'</span> , specie<span class="variable">s:</span> <span class="string">'dog'</span>, weigh<span class="variable">t:</span> <span class="number">11</span>&#125;,</div><div class="line">  &#123;name: <span class="string">'b'</span>, specie<span class="variable">s:</span> <span class="string">'cat'</span>, weigh<span class="variable">t:</span> <span class="number">10</span>&#125;,</div><div class="line">  &#123;name: <span class="string">'c'</span>, specie<span class="variable">s:</span> <span class="string">'fish'</span>, weigh<span class="variable">t:</span> <span class="number">1</span>&#125;,</div><div class="line">  &#123;name: <span class="string">'d'</span>, specie<span class="variable">s:</span> <span class="string">'cat'</span>, weigh<span class="variable">t:</span> <span class="number">8</span>&#125;,</div><div class="line">  &#123;name: <span class="string">'e'</span>, specie<span class="variable">s:</span> <span class="string">'rabbit'</span>, weigh<span class="variable">t:</span> <span class="number">3</span>&#125;</div><div class="line">]</div><div class="line">// 找到所有种类为猫的动物</div><div class="line">animals.<span class="built_in">filter</span>((animal) =&gt; animal.species === <span class="string">'cat'</span>)</div><div class="line">// [ &#123; name: <span class="string">'b'</span>, specie<span class="variable">s:</span> <span class="string">'cat'</span> &#125;, &#123; name: <span class="string">'d'</span>, specie<span class="variable">s:</span> <span class="string">'cat'</span> &#125; ]</div><div class="line"></div><div class="line">// 返回所有动物的名字</div><div class="line">animals.<span class="keyword">map</span>((animal) =&gt; animal.name)</div><div class="line">// [ <span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>, <span class="string">'e'</span> ]</div><div class="line"></div><div class="line">// 动物总重</div><div class="line">animals.reduce((<span class="keyword">pre</span>, animal) =&gt; <span class="keyword">pre</span> + animal.weight, <span class="number">0</span>)</div><div class="line">//<span class="number">33</span></div></pre></td></tr></table></figure>
-<p>怎么样? 如果用循环来写肯定不可能一行代码就搞定吧.</p>
-<h1 id="一个简单的例子:">一个简单的例子:</h1><h2 id="Task:读取data文件中的数据转化为对象:">Task:读取data文件中的数据转化为对象:</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mark johnson  waffle  iron  <span class="number">80</span>  <span class="number">2</span></div><div class="line">mark johnson  blender  <span class="number">200</span>  <span class="number">1</span></div><div class="line">mark johnson  knife  <span class="number">10</span>  <span class="number">4</span></div><div class="line">nikita Smith  waffle  iron  <span class="number">80</span>  <span class="number">1</span></div><div class="line">nikita Smith  knife <span class="number">10</span>  <span class="number">2</span></div><div class="line">nikita Smith  pot <span class="number">20</span>  <span class="number">3</span></div></pre></td></tr></table></figure>
-<ul>
-<li>把上面的data文件数据(每行不同属性之间由Tab制表符分割(或者两个空格)),转换成下面的对象格式:</li>
-</ul>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"mark johnson"</span>: [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"waffle"</span>, <span class="attr">"price"</span>: <span class="string">"iron"</span>,<span class="attr">"quantity"</span>: <span class="string">"80"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"blender"</span>,<span class="attr">"price"</span>: <span class="string">"200"</span>, <span class="attr">"quantity"</span>: <span class="string">"1"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"knife"</span>,<span class="attr">"price"</span>: <span class="string">"10"</span>,<span class="attr">"quantity"</span>: <span class="string">"4"</span></div><div class="line">    &#125;</div><div class="line">  ],</div><div class="line">  <span class="attr">"nikita Smith"</span>: [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"waffle"</span>,<span class="attr">"price"</span>: <span class="string">"iron"</span>,<span class="attr">"quantity"</span>: <span class="string">"80"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"knife"</span>, <span class="attr">"price"</span>: <span class="string">"10"</span>, <span class="attr">"quantity"</span>: <span class="string">"2"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"pot"</span>, <span class="attr">"price"</span>: <span class="string">"20"</span>,<span class="attr">"quantity"</span>: <span class="string">"3"</span></div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="1-首先,利用fs-readFileSync读取出文件中的内容">1.首先,利用<code>fs.readFileSync</code>读取出文件中的内容</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">'use strict'</span> </div><div class="line"><span class="keyword">import</span> fs <span class="keyword">from</span> <span class="string">'fs'</span>;</div><div class="line"><span class="keyword">var</span> output = fs.readFileSync(<span class="string">'data'</span>, <span class="string">'utf-8'</span>)</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'output: \n'</span>,output);</div></pre></td></tr></table></figure>
-<ul>
-<li>使用 <code>npm start</code> 运行main.js文件:</li>
-</ul>
-<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">npm <span class="literal">start</span></div><div class="line"></div><div class="line">&gt; test@<span class="number">1.0</span>.<span class="number">0</span> <span class="literal">start</span> /src/<span class="keyword">node</span><span class="title">/fnProgramming</span></div><div class="line">&gt; babel-<span class="keyword">node</span> <span class="title">main</span>.js</div><div class="line"></div><div class="line">output:</div><div class="line">mark johnson  waffle iron <span class="number">80</span> <span class="number">2</span></div><div class="line">mark johnson  blender <span class="number">200</span> <span class="number">1</span></div><div class="line">mark johnson  knife <span class="number">10</span> <span class="number">4</span></div><div class="line">nikita Smith waffle  iron <span class="number">80</span> <span class="number">1</span></div><div class="line">nikita Smith knife  <span class="number">10</span> <span class="number">2</span></div><div class="line">nikita Smith pot <span class="number">20</span> <span class="number">3</span></div></pre></td></tr></table></figure>
-<h3 id="2-_根据换行符\n_进行分割字符串为数组-">2. 根据换行符<code>\n</code> 进行分割字符串为数组.</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">'use strict'</span> </div><div class="line"><span class="keyword">import</span> fs <span class="keyword">from</span> <span class="string">'fs'</span>;</div><div class="line"><span class="keyword">var</span> output = fs.readFileSync(<span class="string">'data'</span>, <span class="string">'utf-8'</span>)</div><div class="line">				  .split(<span class="string">'\n'</span>)</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'output: \n'</span>,output);</div></pre></td></tr></table></figure>
-<ul>
-<li>结果中数组最后一项为空是因为文件是以空行结尾的.可以使用trim()方法过滤掉掉头尾的空格</li>
-</ul>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="string">output:</span></div><div class="line"> [ <span class="string">'mark johnson  waffle iron 80 2'</span>,</div><div class="line">  <span class="string">'mark johnson  blender 200 1'</span>,</div><div class="line">  <span class="string">'mark johnson  knife 10 4'</span>,</div><div class="line">  <span class="string">'nikita Smith waffle  iron 80 1'</span>,</div><div class="line">  <span class="string">'nikita Smith knife  10 2'</span>,</div><div class="line">  <span class="string">'nikita Smith pot 20 3  '</span>,</div><div class="line">  <span class="string">''</span> ]</div></pre></td></tr></table></figure>
-<h3 id="3-_根据制表符对每行数据进行分割:">3.  根据制表符对每行数据进行分割:</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">'use strict'</span> </div><div class="line"></div><div class="line"><span class="keyword">import</span> fs <span class="keyword">from</span> <span class="string">'fs'</span>;</div><div class="line"></div><div class="line"><span class="keyword">var</span>  output = fs.readFileSync(<span class="string">'data'</span>, <span class="string">'utf-8'</span>)</div><div class="line">        .trim()</div><div class="line">        .split(<span class="string">'\n'</span>)</div><div class="line">        .map(<span class="function"><span class="params">line</span>=&gt;</span>line.split(<span class="string">'\t'</span>)) <span class="comment">//如果你的编辑器把tab制表符转换成两个空格 这里就应该使用2个空格作为分割点      </span></div><div class="line"><span class="built_in">console</span>.log(<span class="string">'output: \n'</span>,output);</div></pre></td></tr></table></figure>
-<ul>
-<li>输出结果:</li>
-</ul>
-<figure class="highlight prolog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">output:</div><div class="line"> [ [ <span class="string">'mark johnson'</span>, <span class="string">'waffle'</span>, <span class="string">'iron'</span>, <span class="string">'80'</span>, <span class="string">'2'</span> ],</div><div class="line">  [ <span class="string">'mark johnson'</span>, <span class="string">'blender'</span>, <span class="string">'200'</span>, <span class="string">'1'</span> ],</div><div class="line">  [ <span class="string">'mark johnson'</span>, <span class="string">'knife'</span>, <span class="string">'10'</span>, <span class="string">'4'</span> ],</div><div class="line">  [ <span class="string">'nikita Smith'</span>, <span class="string">'waffle'</span>, <span class="string">'iron'</span>, <span class="string">'80'</span>, <span class="string">'1'</span> ],</div><div class="line">  [ <span class="string">'nikita Smith'</span>, <span class="string">'knife 10'</span>, <span class="string">'2'</span> ],</div><div class="line">  [ <span class="string">'nikita Smith'</span>, <span class="string">'pot 20'</span>, <span class="string">'3'</span> ] ]</div></pre></td></tr></table></figure>
-<h3 id="4-_使用reduce函数解析出每行的属性-">4. 使用reduce函数解析出每行的属性.</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">'use strict'</span> </div><div class="line"><span class="keyword">import</span> fs <span class="keyword">from</span> <span class="string">'fs'</span>;</div><div class="line"></div><div class="line"><span class="keyword">var</span>  output = fs.readFileSync(<span class="string">'data'</span>, <span class="string">'utf-8'</span>)</div><div class="line">        .trim()</div><div class="line">        .split(<span class="string">'\n'</span>)</div><div class="line">        .map(<span class="function"><span class="params">line</span>=&gt;</span>line.split(<span class="string">'  '</span>))      </div><div class="line">        .reduce(<span class="function">(<span class="params">customers,line</span>)=&gt;</span>&#123;</div><div class="line">           customers[line[<span class="number">0</span>]]=customers[line[<span class="number">0</span>]]||[] <span class="comment">//当customers为空时,用[]赋值.</span></div><div class="line">           customers[line[<span class="number">0</span>]].push(&#123;</div><div class="line">             <span class="attr">name</span>:line[<span class="number">1</span>],</div><div class="line">             <span class="attr">price</span>:line[<span class="number">2</span>],</div><div class="line">             <span class="attr">quantity</span>:line[<span class="number">3</span>],</div><div class="line">           &#125;)</div><div class="line">           <span class="keyword">return</span> customers</div><div class="line">        &#125;,&#123;&#125;) <span class="comment">//这里传入&#123;&#125;空对象作为 reduce的第一个参数也就是customers</span></div><div class="line">        </div><div class="line"><span class="built_in">console</span>.log(<span class="string">'output: \n'</span>,<span class="built_in">JSON</span>.stringify(output,<span class="literal">null</span>,<span class="number">2</span>));</div></pre></td></tr></table></figure>
-<ul>
-<li>结果:</li>
-</ul>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"> &#123;</div><div class="line">  <span class="attr">"mark johnson"</span>: [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"waffle"</span>,</div><div class="line">      <span class="attr">"price"</span>: <span class="string">"iron"</span>,</div><div class="line">      <span class="attr">"quantity"</span>: <span class="string">"80"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"blender"</span>,</div><div class="line">      <span class="attr">"price"</span>: <span class="string">"200"</span>,</div><div class="line">      <span class="attr">"quantity"</span>: <span class="string">"1"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"knife"</span>,</div><div class="line">      <span class="attr">"price"</span>: <span class="string">"10"</span>,</div><div class="line">      <span class="attr">"quantity"</span>: <span class="string">"4"</span></div><div class="line">    &#125;</div><div class="line">  ],</div><div class="line">  <span class="attr">"nikita Smith"</span>: [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"waffle"</span>,</div><div class="line">      <span class="attr">"price"</span>: <span class="string">"iron"</span>,</div><div class="line">      <span class="attr">"quantity"</span>: <span class="string">"80"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"knife"</span>,</div><div class="line">      <span class="attr">"price"</span>: <span class="string">"10"</span>,</div><div class="line">      <span class="attr">"quantity"</span>: <span class="string">"2"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"pot"</span>,</div><div class="line">      <span class="attr">"price"</span>: <span class="string">"20"</span>,</div><div class="line">      <span class="attr">"quantity"</span>: <span class="string">"3"</span></div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="常用高阶函数举例">常用高阶函数举例</h2><p> 让我们看一些更深入更有意思的例子吧.比如这道比较经典的算法题: </p>
-<h3 id="给定一个字符串”abcdaabc”统计每个字符的出现次数-">给定一个字符串”abcdaabc”统计每个字符的出现次数.</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 一般做法是这样的</span></div><div class="line"><span class="keyword">var</span> str=<span class="string">"abcdaabc"</span></div><div class="line"><span class="keyword">var</span> <span class="keyword">count</span> = &#123;&#125;;</div><div class="line"><span class="keyword">var</span> i;</div><div class="line"></div><div class="line"><span class="keyword">for</span>(i=0;i&lt;str.length;i++)&#123;</div><div class="line">    <span class="keyword">var</span> chr = str.charAt(i);</div><div class="line">    <span class="keyword">if</span>( <span class="keyword">typeof</span> <span class="keyword">count</span>[chr] === <span class="string">"undefined"</span>)&#123;</div><div class="line">        <span class="keyword">count</span>[chr] = 1;</div><div class="line">    &#125;<span class="keyword">else</span>&#123;</div><div class="line">        <span class="keyword">count</span>[chr]++;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>利用函数式编程思想的方法是这样的:</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"> </div><div class="line">var <span class="keyword">res</span> = str.<span class="keyword">split</span>(<span class="string">''</span>)</div><div class="line">             .reduce((<span class="keyword">pre</span>, cur) =&gt; (<span class="keyword">pre</span>[cur]++ || (<span class="keyword">pre</span>[cur] = <span class="number">1</span>), <span class="keyword">pre</span>), &#123;&#125;)</div></pre></td></tr></table></figure>
-<p>由上面的例子可见, 高阶函数的特性让我们在处理这类问题时比普通的方法要方便的多. 在更实际的应用场景中函数式编程的便利性更能充分的体现, 其中一个经典的例子:</p>
-<h3 id="统计文本中出现频率最高的十个单词:">统计文本中出现频率最高的十个单词:</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"><span class="keyword">var</span> content = fs.readFileSync(<span class="string">'words.txt'</span>).toString();</div><div class="line"><span class="keyword">var</span> words = content.split(<span class="regexp">/[\s.,\/:\n]+/</span>);</div><div class="line"></div><div class="line"><span class="comment">// 把单词全部变为小写并利用上一个例子的方法统计单词出现的次数</span></div><div class="line"><span class="keyword">var</span> tally = words.map(<span class="function">(<span class="params">word</span>) =&gt;</span> word.toLowerCase())</div><div class="line">                 .reduce(<span class="function">(<span class="params">pre, cur</span>) =&gt;</span> (pre[cur]++ || (pre[cur]=<span class="number">1</span>), pre), &#123;&#125;)</div><div class="line"><span class="comment">//把object的key变成数组并进行排序</span></div><div class="line"><span class="keyword">var</span> top10 = <span class="built_in">Object</span>.keys(tally)</div><div class="line">                  .map(<span class="function">(<span class="params">key</span>) =&gt;</span> &#123;</div><div class="line">                    <span class="keyword">return</span> &#123;<span class="attr">word</span>: key, <span class="attr">count</span>: tally[key]&#125;</div><div class="line">                  &#125;)</div><div class="line">                  .sort(<span class="function">(<span class="params">a, b</span>) =&gt;</span> b.count - a.count)</div><div class="line">                  .slice(<span class="number">0</span>, <span class="number">10</span>)</div><div class="line"><span class="built_in">console</span>.log(top10)</div></pre></td></tr></table></figure>
-<p>上面这个例子充分体现了函数式编程思想的魅力,代码精简并且可读性高!</p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 <a class="post-title-link" href="/2016/10/02/redux-notes-04/" itemprop="url">
                   redux-note-04 - project structure
                 </a>
@@ -1158,13 +1417,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/10/02/redux-notes-04/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/02/redux-notes-04/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -1245,280 +1497,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/09/29/redux-notes-03/" itemprop="url">
-                  redux-notes-03 常用的middleware
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-09-29T21:36:47+08:00" content="2016-09-29">
-              2016-09-29
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/29/redux-notes-03/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/29/redux-notes-03/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="Show_me_ur_code">Show me ur code</h1><p> 先看代码,再分别解释各个知识点.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123;</div><div class="line">  applyMiddleware,</div><div class="line">  createStore,</div><div class="line">  compose,</div><div class="line">  combineReducers,</div><div class="line">&#125; <span class="keyword">from</span> <span class="string">'redux'</span>;</div><div class="line"></div><div class="line"><span class="keyword">import</span> thunk <span class="keyword">from</span> <span class="string">'redux-thunk'</span>;</div><div class="line"><span class="keyword">import</span> createLogger <span class="keyword">from</span> <span class="string">'redux-logger'</span>;</div><div class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span>;</div><div class="line"><span class="keyword">import</span> promise <span class="keyword">from</span> <span class="string">'redux-promise-middleware'</span>;</div><div class="line"></div><div class="line"><span class="comment">// 自定义middleware</span></div><div class="line"><span class="comment">// const logger = (store)=&gt;(next)=&gt; (action)=&gt;&#123;</span></div><div class="line"><span class="comment">// 	console.log('action fired', action);</span></div><div class="line"><span class="comment">// 	next(action);</span></div><div class="line"><span class="comment">// &#125;</span></div><div class="line"></div><div class="line"><span class="comment">//定义postreducer</span></div><div class="line"><span class="keyword">const</span> postReducer = (state = &#123;</div><div class="line">  <span class="attr">fetching</span>: <span class="literal">false</span>,</div><div class="line">  <span class="attr">fetched</span>: <span class="literal">false</span>,</div><div class="line">  <span class="attr">posts</span>: [],</div><div class="line">  <span class="attr">error</span>: <span class="literal">null</span>,</div><div class="line">&#125;, action) =&gt; &#123;</div><div class="line">  <span class="keyword">switch</span> (action.type) &#123;</div><div class="line">    <span class="keyword">case</span> <span class="string">'FETCH_POSTS_PENDING'</span>:</div><div class="line">      &#123;</div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">          ...state,</div><div class="line">          <span class="attr">fetching</span>: <span class="literal">true</span>,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    <span class="keyword">case</span> <span class="string">'FETCH_POSTS_REJECTED'</span>:</div><div class="line">      &#123;</div><div class="line">        <span class="keyword">return</span> &#123; ...state,</div><div class="line">          <span class="attr">fetching</span>: <span class="literal">false</span>,</div><div class="line">          <span class="attr">error</span>: action.payload,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    <span class="keyword">case</span> <span class="string">'FETCH_POSTS_FULFILLED'</span>:</div><div class="line">      &#123;</div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">          ...state,</div><div class="line">          <span class="attr">fetching</span>: <span class="literal">false</span>,</div><div class="line">          <span class="attr">fetched</span>: <span class="literal">true</span>,</div><div class="line">          <span class="attr">posts</span>: action.payload,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    <span class="keyword">default</span>:</div><div class="line">      <span class="keyword">return</span> &#123;</div><div class="line">        ...state,</div><div class="line">      &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//定义userReducer</span></div><div class="line"><span class="keyword">const</span> userReducer = (state = &#123;</div><div class="line">  <span class="attr">fetching</span>: <span class="literal">false</span>,</div><div class="line">  <span class="attr">fetched</span>: <span class="literal">false</span>,</div><div class="line">  <span class="attr">users</span>: &#123;</div><div class="line">    <span class="attr">id</span>: <span class="literal">null</span>,</div><div class="line">    <span class="attr">name</span>: <span class="literal">null</span>,</div><div class="line">    <span class="attr">age</span>: <span class="literal">null</span>,</div><div class="line">  &#125;,</div><div class="line">  <span class="attr">error</span>: <span class="literal">null</span>,</div><div class="line">&#125;, action) =&gt; &#123;</div><div class="line">  <span class="keyword">switch</span> (action.type) &#123;</div><div class="line">    <span class="keyword">case</span> <span class="string">'FETCH_USERS_PENDING'</span>:</div><div class="line">      &#123;</div><div class="line">        <span class="comment">//state.name =action.payload;</span></div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">          ...state,</div><div class="line">          <span class="attr">fetching</span>: <span class="literal">true</span>,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    <span class="keyword">case</span> <span class="string">'FETCH_USERS_REJECTED'</span>:</div><div class="line"></div><div class="line">      &#123;</div><div class="line">        <span class="comment">//state.name =action.payload;</span></div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">          ...state,</div><div class="line">          <span class="attr">fetching</span>: <span class="literal">false</span>,</div><div class="line">          <span class="attr">error</span>: action.payload,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    <span class="keyword">case</span> <span class="string">'FETCH_USERS_FULFILLED'</span>:</div><div class="line">      &#123;</div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">          ...state,</div><div class="line">          <span class="attr">fetching</span>: <span class="literal">false</span>,</div><div class="line">          <span class="attr">fetched</span>: <span class="literal">true</span>,</div><div class="line">          <span class="attr">users</span>: action.payload.data.data,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    <span class="keyword">default</span>:</div><div class="line">      <span class="keyword">return</span> &#123;</div><div class="line">        ...state,</div><div class="line">      &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//使用redux的combineReducers组合两个reducer为一个供createStore使用的reducer</span></div><div class="line"><span class="keyword">const</span> app = combineReducers(&#123;</div><div class="line">  <span class="attr">user</span>: userReducer,</div><div class="line">  <span class="attr">tweets</span>: postReducer,</div><div class="line">&#125;)</div><div class="line"></div><div class="line"> </div><div class="line"><span class="comment">// 定义middleware,将promise(),thunk,和createLogger()加入到middleware中</span></div><div class="line"><span class="keyword">const</span> middleware = applyMiddleware(promise(), thunk, createLogger());</div><div class="line"></div><div class="line"><span class="comment">//使用compose方法将定义好的middleware和devToolsExtension组合成createStore的middleware参数.</span></div><div class="line"><span class="keyword">const</span> store = createStore(app, compose(</div><div class="line">  middleware,</div><div class="line">  <span class="built_in">window</span>.devToolsExtension ? <span class="built_in">window</span>.devToolsExtension() : <span class="function"><span class="params">f</span> =&gt;</span> f</div><div class="line">));</div><div class="line"></div><div class="line"></div><div class="line">store.subscribe(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'store changed'</span>, store.getState());</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="comment">// 使用axios发起异步请求,axios封装了xhr,redux-promise-middleware会自动为异步调用dispatch三种状态(pending ,fulfilled,rejected).</span></div><div class="line">store.dispatch(&#123;</div><div class="line">  <span class="attr">type</span>: <span class="string">'FETCH_USERS'</span>,</div><div class="line">  <span class="attr">payload</span>: axios.get(<span class="string">'/api/users'</span>),</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="comment">// 如果没有使用redux-promise-middleware,一般使用下面的promise链式调用的方法发起异步请求</span></div><div class="line">store.dispatch(<span class="function">(<span class="params">dispatch</span>) =&gt;</span> &#123;</div><div class="line">  dispatch(&#123;</div><div class="line">    <span class="attr">type</span>: <span class="string">'FETCH_POSTS_PENDING'</span>,</div><div class="line">  &#125;);</div><div class="line">  axios.get(<span class="string">'/api/posts'</span>)</div><div class="line">    .then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</div><div class="line">      dispatch(&#123;</div><div class="line">        <span class="attr">type</span>: <span class="string">'FETCH_POSTS_FULFILLED'</span>,</div><div class="line">        <span class="attr">payload</span>: res.data.data,</div><div class="line">      &#125;)</div><div class="line">    &#125;)</div><div class="line">    .catch(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</div><div class="line">      dispatch(&#123;</div><div class="line">        <span class="attr">type</span>: <span class="string">'FETCH_POSTS_REJECTED'</span>,</div><div class="line">        <span class="attr">payload</span>: err,</div><div class="line">      &#125;);</div><div class="line">    &#125;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-<h1 id="redux中的middleware">redux中的middleware</h1><p>middleware的概念和express的middleware是一样的,在dispatch一个action以后,action会先经过所有的middleware的加工处理或者修改,再到达reducers.<br>下面是一个简单的logger middleware.它所实现的功能就是console输出所有经过这个middleware的action.</p>
-<figure class="highlight moonscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">const logger = <span class="function"><span class="params">(store)</span>=&gt;</span><span class="function"><span class="params">(<span class="built_in">next</span>)</span>=&gt;</span> (action)=&gt;&#123;</div><div class="line">	console.log(<span class="string">'action fired'</span>, action);</div><div class="line">  	<span class="built_in">next</span>(action);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>下面是上面的实例中引入的middleware:</p>
-<h2 id="redux-thunk">redux-thunk</h2><p>为什么需要thunk,thunk做了什么?</p>
-<p>在默认情况下:</p>
-<ol>
-<li>createStore() 所创建的 Redux store 没有使用 middleware，所以只支持 同步数据流。</li>
-<li>在redux中,触发的action实际上都是一个简单的对象,而不接受action是一个function/promise.</li>
-</ol>
-<p>当我们引入redux-thunk这个middleware以后,我们就可以dispatch function了.在function中我们可以写异步调用的逻辑,并且再根据不同的状态再diapatch出新的action.</p>
-<blockquote>
-<p>像 redux-thunk 或 redux-promise 这样支持异步的<code>middleware</code>都包装了<code>store</code>的<code>dispatch()</code> 方法，以此来让你<code>dispatch</code>一些除了 action 以外的其他内容(eg：函数或者<code>Promise</code>)。   </p>
-<p>你所使用的任何 middleware 都可以以自己的方式解析你<code>dispatch</code>的任何内容，并继续传递<code>actions</code>给下一个 middleware. 比如，支持 <code>Promise</code> 的 <code>middleware</code> 能够拦截<code>Promise</code>，然后为每个<code>Promise</code> dispatch 特定的<code>action</code>(eg: pending / fulfilled / rejeted)。</p>
-</blockquote>
-<p>当 middleware 链中的最后一个<code>middleware</code>开始 <code>dispatch action</code> 时，这个<code>action</code>必须是一个普通对象,所以<code>redux-thunk</code>的作用也可以理解为把包含function或者promise的action运行并<code>dispatch</code>成redux可以处理的普通对象.</p>
-<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//dispatch的对象</span></div><div class="line"><span class="selector-tag">store</span><span class="selector-class">.dispatch</span>(&#123;</div><div class="line">  <span class="attribute">type</span>: <span class="string">'CHANGE_NAME'</span>,</div><div class="line">  <span class="attribute">payload</span>: <span class="string">'LYN'</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// dispatch了一个异步调用的箭头函数(thunk middleware 让我们可以dispatch我们定义的函数) </span></div><div class="line"><span class="selector-tag">store</span><span class="selector-class">.dispatch</span>((dispatch) =&gt; &#123;</div><div class="line">  <span class="selector-tag">dispatch</span>(&#123;</div><div class="line">    <span class="attribute">type</span>: <span class="string">'FETCH_POSTS_PENDING'</span>,</div><div class="line">  &#125;);</div><div class="line">  <span class="selector-tag">axios</span><span class="selector-class">.get</span>(<span class="string">'/api/posts'</span>)</div><div class="line">    <span class="selector-class">.then</span>((res) =&gt; &#123;</div><div class="line">      <span class="selector-tag">dispatch</span>(&#123;</div><div class="line">        <span class="attribute">type</span>: <span class="string">'FETCH_POSTS_FULFILLED'</span>,</div><div class="line">        <span class="attribute">payload</span>: res.data.data,</div><div class="line">      &#125;)</div><div class="line">    &#125;)</div><div class="line">    <span class="selector-class">.catch</span>((err) =&gt; &#123;</div><div class="line">      <span class="selector-tag">dispatch</span>(&#123;</div><div class="line">        <span class="attribute">type</span>: <span class="string">'FETCH_POSTS_REJECTED'</span>,</div><div class="line">        <span class="attribute">payload</span>: err,</div><div class="line">      &#125;);</div><div class="line">    &#125;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-<ul>
-<li>运行的过程:</li>
-</ul>
-<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//在进入redux-thunk之前的action</span></div><div class="line"><span class="selector-tag">action</span> <span class="selector-tag">fired</span> :</div><div class="line">(dispatch) &#123;</div><div class="line">	  <span class="selector-tag">dispatch</span>(&#123;</div><div class="line">	    <span class="attribute">type</span>: <span class="string">'FETCH_POSTS_PENDING'</span></div><div class="line">	  &#125;);</div><div class="line">	  <span class="selector-tag">_axios2</span><span class="selector-class">.default</span><span class="selector-class">.get</span>(<span class="string">'/api/posts'</span>)<span class="selector-class">.then</span>(function (res) &#123;</div><div class="line">	    <span class="selector-tag">dispatch</span>(&#123;</div><div class="line">	      <span class="attribute">type</span>: <span class="string">'FETCH_POSTS_FULFILLED'</span>,</div><div class="line">	   	   ...</div><div class="line"><span class="comment">//经过redux-thunk加工后:从上面的function转化为redux可以处理的普通对象</span></div><div class="line">action <span class="attribute">fired</span>:</div><div class="line"> Object &#123;<span class="attribute">type</span>: <span class="string">"FETCH_POSTS_PENDING"</span>&#125;<span class="attribute">type</span>: <span class="string">"FETCH_POSTS_PENDING"</span><span class="attribute">__proto__</span>: Object</div></pre></td></tr></table></figure>
-<h2 id="axios_和_redux-promise-middleware">axios 和 redux-promise-middleware</h2><p> axios 是一个语法类似于jQuery的ajax方法(封装的http-xhr)</p>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"> <span class="regexp">//</span> 如果没有使用redux-promise-middleware,一般使用下面的promise链式调用的方法发起异步请求</div><div class="line">store.dispatch(<span class="function"><span class="params">(dispatch)</span> =&gt;</span> &#123;</div><div class="line">  dispatch(&#123;</div><div class="line">    type: <span class="string">'FETCH_POSTS_PENDING'</span>,</div><div class="line">  &#125;);</div><div class="line">  axios.get(<span class="string">'/api/posts'</span>)</div><div class="line">    .<span class="keyword">then</span>(<span class="function"><span class="params">(res)</span> =&gt;</span> &#123;</div><div class="line">      dispatch(&#123;</div><div class="line">        type: <span class="string">'FETCH_POSTS_FULFILLED'</span>,</div><div class="line">        payload: res.data.data,</div><div class="line">      &#125;)</div><div class="line">    &#125;)</div><div class="line">    .<span class="keyword">catch</span>(<span class="function"><span class="params">(err)</span> =&gt;</span> &#123;</div><div class="line">      dispatch(&#123;</div><div class="line">        type: <span class="string">'FETCH_POSTS_REJECTED'</span>,</div><div class="line">        payload: err,</div><div class="line">      &#125;);</div><div class="line">    &#125;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-<p>如果有大量的ajax异步请求,那么大量dispatch的action都会是一样的pending,fulfilled或rejected,<br>为了让我们的代码更加简洁,我们可以引入<code>redux-promise-middleware</code>,当action为promise时,他会根据promise的状态自动的dispatch响应的action(pending,fulfilled或rejected)</p>
-<p>所以代码就可以简化如下:</p>
-<figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//引入redux-promise-middleware</span></div><div class="line"><span class="keyword">import</span> promise from <span class="string">'redux-promise-middleware'</span>;</div><div class="line"></div><div class="line"><span class="comment">// 定义middleware,将promise(),thunk加入到middleware中</span></div><div class="line"><span class="keyword">const</span> middleware = applyMiddleware(promise(), thunk);</div><div class="line"></div><div class="line"><span class="keyword">const</span> store = createStore(app,middleware);</div><div class="line"></div><div class="line">store.dispatch(&#123;</div><div class="line">  type: <span class="string">'FETCH_USERS'</span>,</div><div class="line">  payload: axios.<span class="built_in">get</span>(<span class="string">'/api/users'</span>),</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-<h2 id="createLogger">createLogger</h2><p>一个很便捷的 middleware，用来打印 action 日志<br>需要注意的是,需要放在apply middleware的最后一个参数.</p>
-<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-10-1/21740672.jpg" alt=""></p>
-<h1 id="devToolsExtension">devToolsExtension</h1><p>一个非常爽的redux调试工具.</p>
-<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-10-1/97705137.jpg" alt=""></p>
-<p>三种使用方法:</p>
-<ul>
-<li>from <a href="https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd" target="_blank" rel="external">Chrome Web Store</a></li>
-<li>or build it with npm i &amp;&amp; npm run build:extension and load the extension’s folder ./build/extension</li>
-<li>or run it in dev mode with npm i &amp;&amp; npm start and load the extension’s folder ./dev.</li>
-</ul>
-<p>我是用的第一种方法:</p>
-<ol>
-<li>直接安装chrome插件.就会在chrome dev tool上看到redux的选项卡.</li>
-<li>用compose方法将定义好的middleware和devToolsExtension组合成createStore的middleware参数.</li>
-</ol>
-<p>代码如下:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 定义middleware,将promise(),thunk,和createLogger()加入到middleware中</span></div><div class="line"><span class="keyword">const</span> middleware = applyMiddleware(promise(), thunk, createLogger());</div><div class="line"></div><div class="line"><span class="comment">//使用compose方法将定义好的middleware和devToolsExtension组合成createStore的middleware参数.</span></div><div class="line"><span class="keyword">const</span> store = createStore(app, compose(</div><div class="line">  middleware,</div><div class="line">  <span class="built_in">window</span>.devToolsExtension ? <span class="built_in">window</span>.devToolsExtension() : <span class="function"><span class="params">f</span> =&gt;</span> f</div><div class="line">));</div></pre></td></tr></table></figure>
-<p>github 文档:<a href="https://github.com/zalmoxisus/redux-devtools-extension" target="_blank" rel="external">https://github.com/zalmoxisus/redux-devtools-extension</a></p>
-<h1 id="dora-proxy">dora-proxy</h1><p>这个是ali出的一个mock data的利器,封装了常用的几种mock data的库,可以实现api转发,data mock等功能.<br><a href="https://github.com/dora-js/dora-plugin-proxy#规则定义" target="_blank" rel="external">https://github.com/dora-js/dora-plugin-proxy#规则定义</a></p>
-<figure class="highlight qml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Learn more on how to config.</span></div><div class="line"><span class="comment">// - </span></div><div class="line"><span class="built_in">module</span>.exports = &#123;</div><div class="line">  <span class="string">'/api/todos'</span>: <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</div><div class="line">    setTimeout(() =&gt; &#123;</div><div class="line">      res.json(&#123;</div><div class="line">        <span class="attribute">success</span>: <span class="literal">true</span>,</div><div class="line">        <span class="attribute">data</span>: [&#123;</div><div class="line">          <span class="attribute">id:</span><span class="string"> 1,</span></div><div class="line">          text: <span class="string">'Learn antd'</span>,</div><div class="line">          <span class="attribute">isComplete</span>: <span class="literal">true</span>,</div><div class="line">        &#125;, &#123;</div><div class="line">          <span class="attribute">id:</span><span class="string"> 2,</span></div><div class="line">          text: <span class="string">'Learn ant-tool'</span>,</div><div class="line">        &#125;, &#123;</div><div class="line">          <span class="attribute">id:</span><span class="string"> 3,</span></div><div class="line">          text: <span class="string">'Learn dora'</span>,</div><div class="line">        &#125;, ],</div><div class="line">      &#125;);</div><div class="line">    &#125;, <span class="number">500</span>);</div><div class="line">  &#125;,</div><div class="line">  <span class="string">'/api/users'</span>: <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</div><div class="line">    res.json(&#123;</div><div class="line">      <span class="attribute">success</span>: <span class="literal">true</span>,</div><div class="line">      <span class="attribute">data</span>: [&#123;</div><div class="line">        <span class="attribute">name</span>: <span class="string">'lyn'</span>,</div><div class="line">        <span class="attribute">age</span>: <span class="number">28</span>,</div><div class="line">      &#125;, &#123;</div><div class="line">        <span class="attribute">name</span>: <span class="string">'Lee'</span>,</div><div class="line">        <span class="attribute">age</span>: <span class="number">26</span>,</div><div class="line">      &#125;],</div><div class="line">    &#125;);</div><div class="line">  &#125;,</div><div class="line">  <span class="string">'/api/posts'</span>: <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</div><div class="line">    res.json(&#123;</div><div class="line">      <span class="attribute">success</span>: <span class="literal">true</span>,</div><div class="line">      <span class="attribute">data</span>: [&#123;</div><div class="line">      	 <span class="attribute">id:</span><span class="string">1,</span></div><div class="line">        text: <span class="string">'helloworld1'</span>,</div><div class="line">      &#125;, &#123;</div><div class="line">        <span class="attribute">id:</span><span class="string">2,</span></div><div class="line">        text: <span class="string">'helloworld2'</span>,</div><div class="line">      &#125;],</div><div class="line">    &#125;);</div><div class="line">  &#125;,</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<h1 id="ES6相关知识点:">ES6相关知识点:</h1><h2 id="reducer中的-">reducer中的<code>...</code></h2><blockquote>
-<p>The … operator (or spread operator) is already supported for arrays in ES6. There is also an ES7 proposal for Object Rest and Spread Properties.</p>
-</blockquote>
-<p>Spread Operator,即 3 个点 …，配合解构有如下几种不同的使用方法:<br>简单的说就是在处理state时,产生一个新的对象或者数组.而不是修改原有的state.</p>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//可用于组装数组:</span></div><div class="line"><span class="keyword">const</span> todos = [<span class="string">'Learn dva'</span>];</div><div class="line">[...todos, <span class="string">'Learn antd'</span>]; </div><div class="line"><span class="comment">// ['Learn dva', 'Learn antd']</span></div><div class="line"></div><div class="line"><span class="comment">//也可用于获取数组的部分项。</span></div><div class="line"><span class="keyword">const</span> arr = [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>];</div><div class="line"><span class="keyword">const</span> [first, ...rest] = arr;</div><div class="line">rest;  <span class="comment">// rest 等于 ['b', 'c']</span></div><div class="line"></div><div class="line"><span class="comment">//还可收集函数参数为数组。</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">directions</span><span class="params">(first, <span class="rest_arg">...rest</span>)</span> </span>&#123;</div><div class="line">  console.log(rest);</div><div class="line">&#125;</div><div class="line">directions(<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>);  </div><div class="line"><span class="comment">//输出 ['b', 'c'];</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">//对于 Object 而言，用于组合成新的 Object 。(ES2017 stage-2 proposal)</span></div><div class="line"><span class="keyword">const</span> foo = &#123;</div><div class="line">  a: <span class="number">1</span>,</div><div class="line">  b: <span class="number">2</span>,</div><div class="line">&#125;;</div><div class="line"><span class="keyword">const</span> bar = &#123;</div><div class="line">  b: <span class="number">3</span>,</div><div class="line">  c: <span class="number">2</span>,</div><div class="line">&#125;;</div><div class="line"><span class="keyword">const</span> d = <span class="number">4</span>;</div><div class="line"></div><div class="line"><span class="keyword">const</span> ret = &#123; ...foo, ...bar, d &#125;;  </div><div class="line"><span class="comment">// &#123; a:1, b:3, c:2, d:4 &#125;</span></div></pre></td></tr></table></figure>
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/09/27/redux-note-02/" itemprop="url">
-                  Redux 快速入门 -- 02
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-09-27T21:25:15+08:00" content="2016-09-27">
-              2016-09-27
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/27/redux-note-02/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/27/redux-note-02/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="从Redux开始学习React:">从Redux开始学习React:</h1><p>React的这套机制,之所以那么有特色(也可以说不那么容易被理解),就是因为他所的FLUX单向数据流的概念.</p>
-<p>大家都知道React 只是一层简单的view层,那React中的数据交互,ajax应该放到哪里去实现呢?</p>
-<p>目前为止,Dan Abramov在flux的理论基础上改进出的Redux公认地是发挥React组件化威力的最佳搭档.<br>Redux 除了和 React 一起用外，还支持其它界面库。</p>
-<p>既然react不是必须的,那么不如先把redux单向数据流的概念搞清楚,再来看React,相信会更清晰易懂.</p>
-<h1 id="一个简单的Redux实例:">一个简单的Redux实例:</h1><p>在之前配置好的开发目录中的src文件夹下:</p>
-<ul>
-<li>新建一个index.js文件:</li>
-</ul>
-<figure class="highlight pf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">import &#123;</div><div class="line">  createStore,</div><div class="line">&#125; <span class="keyword">from</span> 'redux';</div><div class="line"></div><div class="line">// 创建一个函数,根据函数的action参数决定如何修改传进来的<span class="keyword">state</span>参数</div><div class="line">const reducer = function (<span class="keyword">state</span>, action) &#123;</div><div class="line">  if (action.type === 'INC') &#123;</div><div class="line">    return <span class="keyword">state</span> + action.payload;</div><div class="line">  &#125;</div><div class="line">  return <span class="keyword">state</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 使用redux的createStore来创建一个store,<span class="number">0</span>是<span class="keyword">state</span>初始化的值.</div><div class="line">const store = createStore(reducer, <span class="number">0</span>);</div><div class="line"></div><div class="line">// 给store绑定一个监听函数,当store dispatch事件时,箭头函数就会去获取store当前的<span class="keyword">state</span>状态.</div><div class="line">store.subscribe(() =&gt; &#123;</div><div class="line">  console.<span class="keyword">log</span>('store changed', store.getState());</div><div class="line">&#125;)</div><div class="line"></div><div class="line">//使用store的dispatch方法 dispatch action对象.</div><div class="line">store.dispatch(&#123;</div><div class="line">  type: 'INC',</div><div class="line">  payload: <span class="number">1</span>,</div><div class="line">&#125;);</div><div class="line">store.dispatch(&#123;</div><div class="line">  type: 'INC',</div><div class="line">  payload: <span class="number">100</span>,</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<ul>
-<li>修改package.json文件中的entry,指定为我们新建的index.js.</li>
-<li>npm的start命令中<code>index=/src/entries/index.html</code> 需要修改成<code>src/index.html</code></li>
-</ul>
-<figure class="highlight xquery"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="string">"entry"</span>: &#123;</div><div class="line">   <span class="string">"index"</span>: <span class="string">"./src/index.js"</span></div><div class="line"> &#125;,</div><div class="line">    <span class="string">"start"</span>: <span class="string">"dora -p 8001 --plugins \"</span>webpack,hmr,proxy,livereload?enableJs=<span class="literal">false</span>&amp;injectHost=<span class="number">127.0</span>.<span class="number">0</span>.<span class="number">1</span>,browser-history?index=/src/entries/index.html\<span class="string">""</span>,</div></pre></td></tr></table></figure>
-<ul>
-<li>然后在terminal中cd到项目文件夹的路径下 运行<code>npm start</code>命令.(<a href="http://lyn.s76.org/2016/09/26/redux-notes-01/">参考上一篇文章</a>)</li>
-<li>在浏览器中访问 <code>http://localhost:8989</code></li>
-</ul>
-<h1 id="Redux?">Redux?</h1><blockquote>
-<p>Redux is a predictable state container for JavaScript apps.</p>
-</blockquote>
-<p>redux是 JavaScript App 中一个用于可预测state的容器(管理器),为什么是可预测的呢?带着这个问题去找答案.<br>从上面的简单的实例来看,Redux其实很简单, 主要由三个部分组成: Action、Reducer、及 Store.</p>
-<h2 id="Redux的三大原则:">Redux的三大原则:</h2><ul>
-<li>单一数据源</li>
-<li>State 是只读的</li>
-<li>使用纯函数(reducer)来执行修改</li>
-</ul>
-<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-9-28/87905454.jpg" alt=""></p>
-<p>下面我们分别展开解释这几个概念:</p>
-<h2 id="单一数据源">单一数据源</h2><ul>
-<li>Redux中所有的 state 都以一个对象树的形式储存在一个单一的 store 中。</li>
-</ul>
-<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-9-27/4367012.jpg" alt=""></p>
-<p>展开其中的post对象,结构如下:</p>
-<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-9-27/2099696.jpg" alt=""></p>
-<h2 id="关于Store:">关于Store:</h2><p>store对象有以下几个方法:</p>
-<ul>
-<li>store.getState() 可以获取当前的state对象.</li>
-<li>store.dispatch(action) 分发action,会立即传到 reducer 来执行。这是触发 state 变化的惟一途径。</li>
-<li>store.subscribe(listener) 每当 dispatch action 的时候就会执行listener函数.</li>
-<li>store.replaceReducer(nextReducer) store可以替换处理action的reducers函数.</li>
-</ul>
-<h2 id="State_是只读的">State 是只读的</h2><ul>
-<li>惟一改变 state 的办法是触发 action，action是一个描述发生什么的对象。</li>
-<li>action对象中必须要有type属性(type的值都是大写的),其他属性都可以自定义.</li>
-</ul>
-<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">store</span><span class="selector-class">.dispatch</span>(fetchUser())</div><div class="line"><span class="comment">//这里是action文件中的一个action</span></div><div class="line"><span class="selector-tag">function</span> <span class="selector-tag">fetchUser</span>() &#123;</div><div class="line">  <span class="selector-tag">return</span> &#123;</div><div class="line">    <span class="attribute">type</span>: <span class="string">'FETCH_USER_FULFILLED'</span>,</div><div class="line">    <span class="attribute">payload</span>: &#123;</div><div class="line">      <span class="attribute">name</span>: <span class="string">'lyn'</span>,</div><div class="line">      <span class="attribute">age</span>: <span class="number">35</span>,</div><div class="line">    &#125;,</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-9-27/82500906.jpg" alt=""></p>
-<h2 id="使用纯函数来执行修改">使用纯函数来执行修改</h2><ul>
-<li>reducers 根据触发的 action 来决定如何改变 state 树.</li>
-</ul>
-<p>Reducers 必须是纯函数，它接收先前的 state 和 action，并返回新的 state。在一个大的应用中,你可以把它拆成多个小的 reducers，分别独立地操作 state tree 的不同部分.</p>
-<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-9-27/90881615.jpg" alt=""></p>
-<figure class="highlight pf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">export <span class="keyword">default</span> function reducer(<span class="keyword">state</span> = &#123;</div><div class="line">  fetching: false,</div><div class="line">  fetched: false,</div><div class="line">  posts: [],</div><div class="line">  error: null,</div><div class="line">&#125;, action) &#123;</div><div class="line">  switch (action.type) &#123;</div><div class="line">    case 'FETCH_POSTS_PENDING':</div><div class="line">      &#123;</div><div class="line">        return &#123;</div><div class="line">          ...<span class="keyword">state</span>,</div><div class="line">          fetching: true,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    case 'FETCH_POSTS_REJECTED':</div><div class="line">      &#123;</div><div class="line">        return &#123; ...<span class="keyword">state</span>,</div><div class="line">          fetching: false,</div><div class="line">          error: action.payload,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    case 'FETCH_POSTS_FULFILLED':</div><div class="line">      &#123;</div><div class="line">        return &#123;</div><div class="line">          ...<span class="keyword">state</span>,</div><div class="line">          fetching: false,</div><div class="line">          fetched: true,</div><div class="line">          posts: action.payload,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    <span class="keyword">default</span>:</div><div class="line">      return &#123;</div><div class="line">        ...<span class="keyword">state</span>,</div><div class="line">      &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="关于纯函数">关于纯函数</h3><p>简单的说纯函数就是函数式编程的实现.</p>
-<p>函数式编程强调没有”副作用”，意味着相同的输入，永远会得到相同的输出，而且没有任何可观察的副作用；简单理解就是每个函数职责纯粹，所有行为就是返回新的值，没有其他行为(最常见的副作用就是异步操作)，只有采用了纯函数编程,才能保证触发action时reducer总是能返回一个确定的state,由这也就是为什么redux作者说:redux是一个可以预测的state容器.</p>
-<p>可以参考下面的一个例子:</p>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 不纯的</span></div><div class="line"><span class="keyword">var</span> minimum = <span class="number">21</span>;</div><div class="line"><span class="keyword">var</span> checkAge = <span class="function"><span class="keyword">function</span><span class="params">(age)</span> </span>&#123;</div><div class="line">  <span class="keyword">return</span> age &gt;= minimum;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// 纯的 不依赖除了参数以外的变量</span></div><div class="line"><span class="keyword">var</span> checkAge = <span class="function"><span class="keyword">function</span><span class="params">(age)</span> </span>&#123;</div><div class="line">  <span class="keyword">var</span> minimum = <span class="number">21</span>;</div><div class="line">  <span class="keyword">return</span> age &gt;= minimum;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>关于纯函数,更多的可以参考这里,这里就不展开了:<br><a href="http://www.ruanyifeng.com/blog/2012/04/functional_programming.html" target="_blank" rel="external">函数式编程初探</a> ,<br><a href="https://llh911001.gitbooks.io/mostly-adequate-guide-chinese/content/ch2.html" target="_blank" rel="external">函数式编程指南</a></p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1564,7 +1542,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">58</span>
+              <span class="site-state-item-count">60</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1578,7 +1556,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
@@ -1649,28 +1627,11 @@
 
   
     
+    
 
   
-    
-  
-
-  <script type="text/javascript">
-    var duoshuoQuery = {short_name:"blog-lyn"};
-    (function() {
-      var ds = document.createElement('script');
-      ds.type = 'text/javascript';ds.async = true;
-      ds.id = 'duoshuo-script';
-      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-      ds.charset = 'UTF-8';
-      (document.getElementsByTagName('head')[0]
-      || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-  </script>
-    
-     
 
 
-    
   
 
   

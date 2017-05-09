@@ -211,6 +211,259 @@
             
             
               
+                <a class="post-title-link" href="/2016/03/01/javaScript-Object-Oriented-Prototype/" itemprop="url">
+                  JS中使用prototype来实现面向对象编程
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-03-01T23:02:37+08:00" content="2016-03-01">
+              2016-03-01
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <blockquote>
+<p> ECMAScript 支持面向对象编程,但在ES6之前不使用类或者接口.对象在代码执行的过程中创建和增加更多的方法.在没有类的情况下可以采用下面几种模式来创建对象:</p>
+</blockquote>
+<h1 id="工厂模式">工厂模式</h1><ul>
+<li>使用了简单的函数来创建对象,并且为对象增加属性和方法,然后返回对象.(抽象创建具体对象的过程)</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">createPerson</span>(<span class="params">name,age,job</span>)</span>&#123;</div><div class="line"> 	<span class="keyword">var</span> o  = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line"> 	o.name = name;</div><div class="line"> 	o.age  = age;</div><div class="line"> 	o.job  = job;</div><div class="line"> 	o.sayName =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line"> 		alert(<span class="keyword">this</span>.name);</div><div class="line"> 	&#125;;</div><div class="line"> 	</div><div class="line"> 	<span class="keyword">return</span> o;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span>  person1 = createPerson(<span class="string">"lyn"</span>,<span class="number">27</span>,<span class="string">"Web developer"</span>);</div><div class="line"><span class="keyword">var</span>  person2 = createPerson(<span class="string">"cheung"</span>,<span class="number">20</span>,<span class="string">"student"</span>);</div></pre></td></tr></table></figure>
+<h2 id="优缺点:">优缺点:</h2><ul>
+<li>优点:不创建多个相似的对象,减少重复的代码</li>
+<li>缺点:不能解决对象识别的问题(即对象没有特定的构造函数,不能通过instanceof来<br>识别 他是否是某个对象的实例).</li>
+</ul>
+<h1 id="构造函数模式">构造函数模式</h1><p>可以自定义构造函数的模式:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age, job</span>)</span>&#123;</div><div class="line">    <span class="keyword">this</span>.name=name;</div><div class="line">    <span class="keyword">this</span>.age=age;</div><div class="line">    <span class="keyword">this</span>.job=job;</div><div class="line">    <span class="keyword">this</span>.sayName =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        alert(<span class="keyword">this</span>.name);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> Person(<span class="string">"lyn"</span>,<span class="number">27</span>,<span class="string">"Web developer"</span>);</div><div class="line"><span class="keyword">var</span> person2 = <span class="keyword">new</span> Person(<span class="string">"cheung"</span>,<span class="number">20</span>,<span class="string">"student"</span>);</div><div class="line"></div><div class="line">alert(person1.constructor == Person); <span class="comment">//true</span></div><div class="line">alert(person2.constructor == Person); <span class="comment">//true</span></div><div class="line"></div><div class="line"><span class="comment">//检测实例类型</span></div><div class="line">alert(person1 <span class="keyword">instanceof</span> <span class="built_in">Object</span>); <span class="comment">//true</span></div><div class="line">alert(person1 <span class="keyword">instanceof</span> Person); <span class="comment">//true</span></div><div class="line">alert(person2 <span class="keyword">instanceof</span> <span class="built_in">Object</span>);<span class="comment">//true</span></div><div class="line">alert(person2 <span class="keyword">instanceof</span> Person); <span class="comment">//true</span></div><div class="line"></div><div class="line"><span class="comment">//缺点:</span></div><div class="line">alert(person1.sayName == person2.sayName) <span class="comment">//false</span></div><div class="line"></div><div class="line"><span class="comment">//解决一个方法多次实例化的办法:将函数定义转移到构造函数外</span></div><div class="line"><span class="comment">//这种方法的缺点是:最终会导致创建了很多全局函数,</span></div><div class="line"><span class="comment">//但是却只能被构造函数生成的对象使用</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age, job</span>)</span>&#123;</div><div class="line">	<span class="keyword">this</span>.name=name;</div><div class="line">	<span class="keyword">this</span>.age=age;</div><div class="line">	<span class="keyword">this</span>.job=job;</div><div class="line">	<span class="keyword">this</span>.sayname=sayname;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">sayName</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	alert(<span class="keyword">this</span>.name);</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> Person(<span class="string">'Lyn'</span>,<span class="number">27</span>,<span class="string">'webdeveloper'</span>);</div><div class="line"><span class="keyword">var</span> person2 = <span class="keyword">new</span> Person(<span class="string">'Greg'</span>,<span class="number">20</span>,<span class="string">"student"</span>);</div><div class="line"></div><div class="line">alert(person1.sayName == person2.sayName) <span class="comment">//true</span></div></pre></td></tr></table></figure>
+<p>执行过程:</p>
+<ol>
+<li>创建一个新对象</li>
+<li>将构造函数的作用域赋给新对象.(this指向新对象)</li>
+<li>执行构造函数中的代码(添加属性(值和方法));</li>
+<li>返回新建的对象. </li>
+</ol>
+<h2 id="优点和缺点:">优点和缺点:</h2><ul>
+<li><p>优点:相比于工厂模式,可以用instanceof或者constuctor识别对象的类型.</p>
+</li>
+<li><p>缺点:完成相同任务的方法,创建了多次实例,不能代码共用.</p>
+</li>
+</ul>
+<h1 id="原型模式">原型模式</h1><h2 id="理解原型对象">理解原型对象</h2><p>在对象的prototype中查找属性与方法就是一次搜索,所以对对象的值得修改能够立即从实例上反应出来.<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-15/41954395.jpg" alt=""></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Person.prototype.name=<span class="string">"lyn"</span>;</div><div class="line">Person.prototype.age=<span class="string">"27"</span>;</div><div class="line">Person.prototype.jbo=<span class="string">"web developer"</span>;</div><div class="line">Person.prototype.sayName= <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	alert(<span class="keyword">this</span>.name);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> person1= <span class="keyword">new</span> Person();</div><div class="line">person1.sayName(); <span class="comment">//"lyn"</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> person2 =<span class="keyword">new</span> Person();</div><div class="line">person2.sayName(); <span class="comment">//"lyn"</span></div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(person1.sayName == person2.sayName);  <span class="comment">//true </span></div><div class="line"></div><div class="line"><span class="comment">//isPrototypeOf</span></div><div class="line">alert(Person.prototype.isPrototypeOf(person1));  <span class="comment">//true</span></div><div class="line">alert(Person.prototype.isPrototypeOf(person2));  <span class="comment">//true</span></div><div class="line"></div><div class="line"><span class="comment">//ES5 feature Object.getPrototypeOf()</span></div><div class="line">alert(<span class="built_in">Object</span>.getPrototypeOf(person1) ==Person.prototype); <span class="comment">//true</span></div><div class="line">alert(<span class="built_in">Object</span>.getPrototypeOf(person1).name ) <span class="comment">//lyn</span></div></pre></td></tr></table></figure>
+<h2 id="优点&amp;缺点:">优点&amp;缺点:</h2><ul>
+<li>优点:所有方法属性都可以共享,提高了代码重用率</li>
+<li>缺点:所有属性被所有实例共享,一个实例修改所有,所有实例获得的属性都会改变,需要结合构造函数来解决这个问题.</li>
+</ul>
+<h2 id="hasOwnProperty_&amp;&amp;_in_方法">hasOwnProperty &amp;&amp; in 方法</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Person.prototype.name=<span class="string">"lyn"</span>;</div><div class="line">Person.prototype.age=<span class="string">"27"</span>;</div><div class="line">Person.prototype.jbo=<span class="string">"web developer"</span>;</div><div class="line">Person.prototype.sayName= <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	alert(<span class="keyword">this</span>.name);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> person1= <span class="keyword">new</span> Person();</div><div class="line"><span class="keyword">var</span> person2 =<span class="keyword">new</span> Person();</div><div class="line"> </div><div class="line"></div><div class="line"><span class="comment">// hasOwnProperty &amp;&amp; in </span></div><div class="line"><span class="built_in">console</span>.log(person1.hasOwnProperty(<span class="string">"name"</span>)) <span class="comment">//false 因为name不是实例中定义的</span></div><div class="line"><span class="built_in">console</span>.log(<span class="string">"name"</span><span class="keyword">in</span> person1)  <span class="comment">//true</span></div><div class="line"></div><div class="line">person1.name = <span class="string">"cheung"</span>;   <span class="comment">//name 来自于实例   </span></div><div class="line"><span class="built_in">console</span>.log(person1.name); <span class="comment">//cheung 实例中的值屏蔽了原型中的值</span></div><div class="line"><span class="built_in">console</span>.log(person1.hasOwnProperty(<span class="string">"name"</span>)); <span class="comment">//true 因为现在的值是在实例中定义的</span></div><div class="line"><span class="built_in">console</span>.log(<span class="string">"name"</span> <span class="keyword">in</span> person1) <span class="comment">//true</span></div><div class="line"></div><div class="line"><span class="keyword">delete</span> person1.name; <span class="comment">//删除后,这个值来自原型 = lyn</span></div><div class="line"><span class="built_in">console</span>.log(person1.hasOwnProperty(<span class="string">"name"</span>));   <span class="comment">//false 因为现在的值来自于原型</span></div><div class="line"><span class="built_in">console</span>.log(<span class="string">"name"</span> <span class="keyword">in</span> person1) <span class="comment">//true</span></div><div class="line"></div><div class="line"><span class="comment">//使用hasProtoProperty 函数来判断属性是否来自于原型</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasProtoProperty</span>(<span class="params">object, prop</span>)</span>&#123;</div><div class="line">  <span class="keyword">return</span> !object.hasOwnProperty(prop) &amp;&amp; (prop <span class="keyword">in</span> object)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="获取对象的所有可枚举或不可枚举属性">获取对象的所有可枚举或不可枚举属性</h2><ul>
+<li>使用Object.keys获取所有可枚举的的属性</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> keys = <span class="built_in">Object</span>.keys(Person.prototype);</div><div class="line"><span class="built_in">console</span>.log(keys); <span class="comment">//name, age, job, say, Name</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> Person();</div><div class="line">p1.name =<span class="string">"Lee"</span>;</div><div class="line">p1.age =<span class="string">"23"</span>;</div><div class="line"><span class="keyword">var</span> p1Keys=<span class="built_in">Object</span>.keys(p1);</div><div class="line"><span class="built_in">console</span>.log(p1Keys);<span class="comment">//name,age</span></div></pre></td></tr></table></figure>
+<ul>
+<li>使用Object.getOwnPropertyNames()获取所有实例的属性(包括不可枚举的)</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> keys = <span class="built_in">Object</span>.getOwnPropertyNames(Person.prototype);</div><div class="line"><span class="built_in">console</span>.log(keys);<span class="comment">// constructor,name,age,job,sayName</span></div></pre></td></tr></table></figure>
+<p>更简单的原型语法(需要制定constructor):</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;</div><div class="line">&#125;</div><div class="line">person.prototype=&#123;</div><div class="line">	<span class="attr">constructor</span>: Person, <span class="comment">//如果不指定的话会默认指向Object的构造函数</span></div><div class="line">	name:<span class="string">"lyn"</span>,</div><div class="line">	<span class="attr">age</span>:<span class="string">"27"</span>,</div><div class="line">	<span class="attr">job</span>:<span class="string">"web developer"</span>,</div><div class="line">	<span class="attr">sayName</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="组合使用构造函数模式与原型模式">组合使用构造函数模式与原型模式</h2><ul>
+<li>使用最广泛的一种模式,默认应该使用的模式,</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//每个实例不想共享的属性:使用构造函数模式</span></div><div class="line">function Person(name,age,job)&#123;</div><div class="line">	<span class="keyword">this</span>.name = name;</div><div class="line">	<span class="keyword">this</span>.age = age;</div><div class="line">	<span class="keyword">this</span>.job = job;</div><div class="line">	<span class="keyword">this</span>.friends =[<span class="string">"Tom"</span>,<span class="string">"Oliver"</span>];</div><div class="line">&#125;</div><div class="line"><span class="comment">//每个实例共享的属性和方法:使用原型模式</span></div><div class="line">Person.prototype =&#123;</div><div class="line">	<span class="keyword">constructor</span>: Person,</div><div class="line">	sayName:(<span class="keyword">this</span>.name)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="动态原型模式">动态原型模式</h2><ul>
+<li>判断方法是否存在来决定是否需要创建构造函数的原型方法.</li>
+</ul>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//每个实例不想共享的属性:使用构造函数模式</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span><span class="params">(name,age,job)</span></span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">this</span>.name = name;</div><div class="line">	<span class="keyword">this</span>.age = age;</div><div class="line">	<span class="keyword">this</span>.job = job;</div><div class="line">	<span class="keyword">this</span>.friends =[<span class="string">"Tom"</span>,<span class="string">"Oliver"</span>];</div><div class="line">	</div><div class="line">	<span class="comment">//下面的方法只会被初始化一次.</span></div><div class="line">	<span class="comment">//还可以使用instanceof来做判断</span></div><div class="line">	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="keyword">this</span>.sayName !=<span class="string">"function"</span>)</div><div class="line">	&#123;</div><div class="line">		Person.prototype.sayname=<span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">			alert(<span class="keyword">this</span>.name);</div><div class="line">		&#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<h1 id="一种更简单的实现:">一种更简单的实现:</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> person = &#123;</div><div class="line"><span class="attr">species</span>:<span class="string">"human"</span>,</div><div class="line"><span class="attr">create</span>: <span class="function"><span class="keyword">function</span>(<span class="params">values</span>)</span>&#123;</div><div class="line">	<span class="keyword">var</span> instance = <span class="built_in">Object</span>.create(<span class="keyword">this</span>);</div><div class="line">	<span class="built_in">Object</span>.keys(values).forEach(<span class="function"><span class="keyword">function</span>(<span class="params">key</span>)</span>&#123;</div><div class="line">		instance[key]= values[key];</div><div class="line">	&#125;)</div><div class="line">	<span class="keyword">return</span> instance;</div><div class="line">&#125;,</div><div class="line"><span class="attr">saySpecies</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="keyword">this</span>.species);</div><div class="line">&#125;,</div><div class="line"><span class="attr">sayName</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'my name is :'</span>+ <span class="keyword">this</span>.name);</div><div class="line">&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> webDeveloper = person.create(&#123;</div><div class="line">	<span class="attr">species</span>:<span class="string">"webDeveloper"</span>,</div><div class="line">	<span class="attr">coding</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="keyword">this</span>.name+ <span class="string">' is coding with '</span>+<span class="keyword">this</span>.skill);</div><div class="line">	&#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="keyword">var</span> lyn= webDeveloper.create(&#123;<span class="attr">name</span>:<span class="string">"lyn"</span>,<span class="attr">skill</span>:<span class="string">"javaScript"</span>&#125;)</div><div class="line"></div><div class="line">lyn.coding() <span class="comment">// 输出 lyn is coding with javaScript</span></div></pre></td></tr></table></figure>
+<p>结构如下:</p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-8-20/71629308.jpg" alt=""></p>
+<h1 id="ES6中的实现">ES6中的实现</h1><p>ES6中 定义面向对象的类,只需要以class开头 然后是类型名,不再需要使用function关键字,只需方法名和圆括号.在constructor方法中定义的是这个类的构造函数.所有的属性和方法都会被添加到原型上.sayName和getOlder方法都是定义在Person.prototype上的.</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</div><div class="line">	<span class="keyword">constructor</span>(name, age)&#123;</div><div class="line">		<span class="keyword">public</span> name = name;</div><div class="line">		<span class="keyword">public</span> age  = age;</div><div class="line">		</div><div class="line">		sayName()&#123;</div><div class="line">			console.log(<span class="keyword">this</span>.name);		</div><div class="line">		&#125;</div><div class="line">		getOlder(years)&#123;</div><div class="line">			<span class="keyword">this</span>.age += years;	</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                <a class="post-title-link" href="/2016/02/27/trans-note-02/" itemprop="url">
+                  七个对我最好的职业建议－Nicholas C. Zakas（自译）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-02-27T13:23:29+08:00" content="2016-02-27">
+              2016-02-27
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="关于原作者">关于原作者</h1><p>Nicholas C. Zakas（尼古拉斯·泽卡斯），世界Web技术专家，现为雅虎公司界面呈现架构师，负责My Yahoo！和雅虎首页等大访问量站点的设计。尼古拉斯拥有丰富的Web开发和界面设计经验，曾经参与许多大公司的Web解决方案开发。他还是High Performance JavaScript一书的作者，并与他人合作撰写了Professional Ajax和Even Faster Web Sites。尼古拉斯拥有梅里马克学院计算机科学学士学位和埃迪柯特学院的MBA学位。他的Twitter别名是@slicknet。</p>
+<p>The best career advice I’ve received － Posted at October 15, 2013 by Nicholas C. Zakas<br>Tags: Advice Career Mentoring</p>
+<p>我最近有一段和我的同事有一段有趣的讨论.我们列举我们过去的工作，以及我们奇葩的性格可能对我们产生了负面的影响. 而事实是，我刚从学校毕业的时候很混蛋（有些人会说我现在依然很混蛋）。我曾经是傲慢而犀利喜欢讽刺的一个人，总的来说就是很无礼。我觉得我知道我是什么样的人而且还为此很是得意。<br>I recently had an interesting discussion with a colleague. We were recounting our job histories and how our, shall we say colorful personalities, could have negatively impacted us long term. The truth is, I was kind of an asshole coming out of college (some would argue I’m still kind of an asshole, but that’s beside the point). I was arrogant and bitingly sarcastic, a generally irreverent character. I thought I knew it all and was quite proud of myself for it.</p>
+<p>我有一个告诉更有经验的工程师他们做事的方法不对的爱好，尽管大部分的时候都是对的，我并没有一个性格让我以很高效的方式去做到它。在一次特别令人愉快的对话中，一个高级工程师跟我说；“如果你在不闭嘴，我就把你揍出翔来”。我一笑而过，因为我知道他不敢这样，但是一年之后我才知道这不是一个玩笑，他是真的想揍死我！<br>I had a habit of telling more experienced engineers that they were doing things wrong, and despite being right most of the time, I didn’t have the personality to make it effective. During one particularly engaging conversation, one of the senior engineers stopped and said, in these exact words, “I’m going to f<em>*</em>en beat the shit out of you if you don’t shut up.” I laughed it off because I knew he wouldn’t dare, and only years later did I realize the relevance of that statement: it was actually what he wanted to do.</p>
+<p>自从那以后<br>Since that time I’ve grown up a lot, learned to watch what I say, and treat people with respect regardless of defining characteristics. The sarcasm stays in check while in a professional environment; I let it out to play when I’m with good friends. This self-control, along with a lot of other invaluable lessons, came to me not of my own accord, but through the careful guidance of the mentors I’ve had along the way. If not for them, who knows if my interpersonal relationships would have short-circuited my career.</p>
+<p>The truth is that I have been incredibly blessed in my career because of the people I’ve come into contact with. My managers along the way molded a really rough-around-the-edges character into someone I’m proud to be. More than that, because of their influence, I’m not just a good programmer – I’m a good teammate and a good person. So impactful were these people on my life that I frequently recount their advice to the colleagues that I now mentor.</p>
+<p>I also find their advice to be universally applicable, so I’d like to share the things I was told that helped me along the way. Of course, some of these are paraphrased since my memory for exact phrases isn’t all that great, but I believe I’ve captured the important parts correctly.</p>
+<p>Don’t be a short-order cook</p>
+<p>My very first job lasted 8 months because the company shut down. As I was talking with my manager about what I would do next, he gave me this advice:</p>
+<p>Nicholas, you’re worth more than your code. Whatever your next gig is, make sure that you’re not a short-order cook. Don’t accept a job where you’re told exactly what to build and how to build it. You need to work somewhere that appreciates your insights into the product as well as your ability to build it.</p>
+<p>This is something I’ve kept in mind throughout my career. Simply being an implementer isn’t good enough – you need to be involved in the process that leads up to implementation. Good engineers don’t just follow orders, they give feedback to and work with product owners to make the product better. Fortunately, I’ve chosen my jobs wisely and never ended up in a situation where people didn’t respect or value my insights.</p>
+<p>Self-promote</p>
+<p>My second manager at Yahoo pulled me aside one day to give me some advice. He had been watching my work and felt like I was hiding a bit:</p>
+<p>You do great work. I mean really great work. I like how your code looks and that it rarely breaks. The problem is that others don’t see it. In order for you to get credit for the work you’re doing, you have to let people know. You need to do a bit of self-promotion to get noticed.</p>
+<p>It took me a little while to digest what he was saying, but I finally figured it out. If you do good work, but no one knows that you did good work, then it doesn’t really help you. Your manager can back you up but can’t make your case for you. People within the organization need to understand your value, and the best way to do that is to tell people what you did.</p>
+<p>This is advice I give to many of my colleagues now. Self-promoting doesn’t mean, “look at me, I’m awesome.” It means letting people know when you’ve hit major milestones, or when you’ve learned something new. It means showing people the work that you’re proud of. It means celebrating your accomplishments and the accomplishments of others. It means being visible within the organization. The engineer who sits quietly in a corner and just codes away is always a bit mysterious – don’t be like that. A quick email to say, “hey, I finished the new email layout. Let me know what you think” goes a long way.</p>
+<p>It’s about people</p>
+<p>I was very title-driven earlier in my career. I always wanted to know what I had to do to be promoted. During my first one-on-one with my new manager on the Yahoo homepage, I asked what it would take for me to get promoted. His words still ring in my ears:</p>
+<p>At a certain point, you stop being judged on your technical knowledge and start being judged on the way you interact with people.</p>
+<p>I’m not sure I’ve ever received a better insight into the software engineering profession since that time. He was exactly right. At that point, no one was questioning my technical ability. I was known as a guy who wrote good, high-quality code that rarely had bugs. What I lacked was leadership skill.</p>
+<p>Since that time, I’ve seen countless engineers get stuck at one level in their career. Smart people, good code, but the inability to work effectively with others keeps them where they are. Anytime someone feels stuck in their software engineering career, I recount this advice and it has always been right on the money.</p>
+<p>None of this matters</p>
+<p>I went through a period at Yahoo where I was frustrated. Maybe frustrated isn’t the right word, more like angry. I had angry outbursts and was arguing with people constantly. Things were going wrong and I didn’t like that. During one particularly rough day, I asked one of my mentors how he managed to stay calm when so many things were going wrong. His response:</p>
+<p>It’s easy. You see, none of this matters. So some crappy code got checked in, so the site went down. So what? Work can’t be your whole life. These aren’t real problems, they’re work problems. What really matters is what happens outside of work. I go home and my wife is waiting for me. That’s pretty nice.</p>
+<p>I had moved to California from Massachusetts and had a hard time making friends. Work was my life, it was what kept me sane, so when it wasn’t going that meant my life wasn’t going well. This conversation made me realize I had to have something else going on in my life, something I could go back to and forget about the troubles I had at work.</p>
+<p>He was right, once I shifted my mindset and recategorized the annoying things at work as “work things,” I was able to think more clearly. I was able to calm down at work and have much more pleasant interactions with people.</p>
+<p>Authority, your way</p>
+<p>When I was first promoted to principal engineer at Yahoo, I sat down with my director to better understand what the role entailed. I knew I had to be more of a leader, but I was having trouble being authoritative. I asked for help. Here’s what he said:</p>
+<p>I can’t tell you how to be authoritative, that’s something you need to figure out on your own. Different people have different styles. What you need to do is find a style that you can live with, that makes you comfortable. I can’t tell you what that is, but you do need to find it for this position.</p>
+<p>I spent a lot of time that year observing people of authority and how they interacted with others. I took note as to how they walked, how they talked, how they dealt with problem situations. I tried different styles before I finally came across one that worked for me. My style is uniquely me and anyone learning to be in a position of authority has to go through the same growing pains. My advantage was that my mentor clued me about the process up front.</p>
+<p>Moving from “how?” to “what?”</p>
+<p>During a conversation with my manager at Yahoo, I asked what the expectations were with my new position. He answered:</p>
+<p>To this point in your career, you’ve answered the question, “how?” As in, we tell you what needs to be done and you figure out how to do it. At this point, though, you need to answer the question, “what?” I’m expecting you to come and tell me what needs to be done.</p>
+<p>This is the part where I see a lot of engineers get tripped up, and I would have as well if not for this piece of advice. Switching from “how?” to “what?” is very hard and takes time to develop. It also takes a bit of maturity to be left to your own desires as to what you focus on. After all, if you can spend your time on anything you want, you are also solely responsible for what you produce.</p>
+<p>At Box, we call this “running open loop,” meaning that you do your job with minimal oversight and yet still are making a significant positive impact on the engineering organization and the company as a whole. This is the step where many engineers fail to make the leap, and I still give this advice to anyone who is trying to get to the next level.</p>
+<p>Act like you’re in charge</p>
+<p>I had just sat through a meeting where I had nothing to say. During my one-on-one with my director, I mentioned that I was just in a meeting where I had no idea why I was there and had nothing to contribute. He said:</p>
+<p>Don’t ever do that again. If you’re in a meeting, it’s because you are there to participate. If you’re not sure why you’re there, stop and ask. If you’re not needed, leave. You’re in a leadership position, act like it. Don’t go quietly into a room. Just act like you’re in charge and people will believe it.</p>
+<p>In that piece of advice, my mentor had reminded me of a lesson I learned while acting in high school: no one knows when you’re acting. If you’re nervous but act like you’re not, then people won’t know that you’re nervous. The same with leadership. The old phrase fake it til you make it comes to mind. From that point on, I never sat quietly in a meeting. I made sure I only went to meetings that needed me to participate and then I would participate.</p>
+<p>Let them win</p>
+<p>I went through a particular period where there were a lot of arguments on the team. I prided myself on ending those arguments with authority. I had a “my ruling is final” mentality, and my manager noticed that and gave me this piece of advice:</p>
+<p>I see a lot of arguing going on, and I see you pushing through to win a lot. I know that most of the time you are right, but every once in a while let them win. Pick the things that really matter to you and push for those but let the other things go. There’s no need to win every argument.</p>
+<p>This was one piece of advice I resisted initially. I was right nearly all of the time, why would I ever let someone else win? However, as I had grown to trust his instincts, I gave it a shot. The result: there were less arguments. People didn’t feel like they had to get one over on me, and in turn, I became better at identifying things I really didn’t care that much about. I stuck to my guns on important issues and let the others ones get resolved by the other party. The intensity of all conversations dropped considerably.</p>
+<p>Conclusion</p>
+<p>Looking back at the brash guy I was when I graduated college, my career could have ended up very different. I was seen as a malcontent, a smart but hard-to-deal-with guy who people dealt with because they had to. If it weren’t for the mentors I had along the way, as well as some humbling failures early in my career, my interpersonal skills (or lack thereof) could have very well done me in. These days, I regularly seek out those who are more experienced than me and ask for advice. I may no longer make big, glaring mistakes, but I also don’t want to wait for one to happen to seek out the experienced insights of someone I trust.</p>
+<p>The nearly five years I was at Yahoo were some of the most transformative in my career. I got to work on interesting problems at a large scale, but moreso I was blessed with a series of wonderful managers and other mentors within my organization. I credit those conversations with turning me into a person that I’m proud of today, both at work and outside in “real life.”</p>
+<p>If I can leave you with one overriding piece of career advice, it would be this: identify someone at your work that is smarter than you in some way (technically, organizationally, etc.) and attach yourself to them. See if you can regularly have lunch or coffee and pick their brain for the vast amount of knowledge it has. Your career, and maybe even your life, could end up drastically better by doing so.</p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/02/23/trans-note-01/" itemprop="url">
                   采访1Password背后的开发故事（自译）
                 </a>
@@ -230,13 +483,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/23/trans-note-01/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/23/trans-note-01/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -343,13 +589,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/22/nodejs-note-24/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/22/nodejs-note-24/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -504,13 +743,6 @@
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/21/nodejs-note-23/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/21/nodejs-note-23/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -614,13 +846,6 @@ Restify exists <span class="keyword">to</span> let you build <span class="string
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/06/nodejs-note-21/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/06/nodejs-note-21/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -745,13 +970,6 @@ You have <span class="built_in">to</span> <span class="built_in">add</span> pare
           
 
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/06/nodejs-note-22/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/06/nodejs-note-22/" itemprop="commentsCount"></span>
-                </a>
-              </span>
             
           
 
@@ -904,13 +1122,6 @@ conn.pipe(upperCasing).pipe(conn);
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/05/nodejs-note-20/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/05/nodejs-note-20/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -1041,13 +1252,6 @@ conn.pipe(upperCasing).pipe(conn);
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/04/nodejs-note-19/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/04/nodejs-note-19/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -1134,13 +1338,6 @@ conn.pipe(upperCasing).pipe(conn);
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/02/03/nodejs-note-18/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/02/03/nodejs-note-18/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -1211,188 +1408,6 @@ conn.pipe(upperCasing).pipe(conn);
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/01/26/nodejs-note-17/" itemprop="url">
-                  Asynchronous Programming -04 Coordinating series Calls
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-01-26T02:38:42+08:00" content="2016-01-26">
-              2016-01-26
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/01/26/nodejs-note-17/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/26/nodejs-note-17/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> eachAsyncSeries = <span class="built_in">require</span>(<span class="string">'./eachAsyncSeries'</span>);</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">var</span> messages =[<span class="string">'message1'</span>,<span class="string">'message2'</span>,<span class="string">'message3'</span>];</div><div class="line"></div><div class="line">eachAsyncSeries(messages,send,done);</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">done</span>(<span class="params">err</span>)</span>&#123;</div><div class="line">	<span class="keyword">if</span>(err)&#123;</div><div class="line">		<span class="built_in">console</span>.error(err);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">'all messages sent'</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">send</span>(<span class="params">message, cb</span>)</span>&#123;</div><div class="line">	<span class="keyword">var</span> err= <span class="built_in">Math</span>.random()&gt;<span class="number">0.8</span> ? <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'whaaa'</span>) : <span class="literal">null</span>;</div><div class="line">	setTimeout(cb, randomTimeout(), err);</div><div class="line">	</div><div class="line">	<span class="keyword">if</span>(!err)&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">' handling: %s'</span>,   message);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomTimeout</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">1e3</span> );</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>.exports =eachAsyncSeries;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">eachAsyncSeries</span>(<span class="params">collection, iterate, cb</span>)</span>&#123;</div><div class="line">	<span class="keyword">var</span> pending = collection.slice();</div><div class="line"></div><div class="line">	next();</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">next</span>(<span class="params"></span>)</span>&#123;</div><div class="line">		<span class="keyword">if</span>(! pending.length)&#123;</div><div class="line">			cb();</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span>&#123;</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">'pending messages:'</span>, pending);</div><div class="line">			iterate(pending.shift(),iterated);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">iterated</span>(<span class="params">err</span>)</span>&#123;</div><div class="line">		<span class="keyword">if</span>(err)&#123;</div><div class="line">			cb(err);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span>&#123;</div><div class="line">			next();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="running_results:">running results:</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">Lyn-Cheung-<span class="string">MBP:</span><span class="number">04</span> Lyn$ node main.js</div><div class="line">pending <span class="string">messages:</span> [ <span class="string">'message1'</span>, <span class="string">'message2'</span>, <span class="string">'message3'</span> ]</div><div class="line"><span class="string">handling:</span> message1</div><div class="line">pending <span class="string">messages:</span> [ <span class="string">'message2'</span>, <span class="string">'message3'</span> ]</div><div class="line">[<span class="string">Error:</span> whaaa]</div><div class="line"></div><div class="line">Lyn-Cheung-<span class="string">MBP:</span><span class="number">04</span> Lyn$ node main.js</div><div class="line">pending <span class="string">messages:</span> [ <span class="string">'message1'</span>, <span class="string">'message2'</span>, <span class="string">'message3'</span> ]</div><div class="line"><span class="string">handling:</span> message1</div><div class="line">pending <span class="string">messages:</span> [ <span class="string">'message2'</span>, <span class="string">'message3'</span> ]</div><div class="line"><span class="string">handling:</span> message2</div><div class="line">pending <span class="string">messages:</span> [ <span class="string">'message3'</span> ]</div><div class="line"><span class="string">handling:</span> message3</div><div class="line">all messages sent</div><div class="line"></div><div class="line">Lyn-Cheung-<span class="string">MBP:</span><span class="number">04</span> Lyn$ node main.js</div><div class="line">pending <span class="string">messages:</span> [ <span class="string">'message1'</span>, <span class="string">'message2'</span>, <span class="string">'message3'</span> ]</div><div class="line">[<span class="string">Error:</span> whaaa]</div></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> mapAsyncSeries = <span class="built_in">require</span>(<span class="string">'./mapAsyncSeries'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> messages = [<span class="string">'message1'</span>,<span class="string">'message2'</span>,<span class="string">'message3'</span>];</div><div class="line"><span class="keyword">var</span> index= <span class="number">0</span>;</div><div class="line"></div><div class="line">mapAsyncSeries(messages,send,done);</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">done</span>(<span class="params">err, results</span>)</span>&#123;</div><div class="line">	<span class="keyword">if</span>(err)&#123;</div><div class="line">		<span class="built_in">console</span>.error(err);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">'all messages sent, results'</span>, results);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">send</span>(<span class="params">message, cb</span>)</span>&#123;</div><div class="line">	<span class="keyword">var</span> err= <span class="built_in">Math</span>.random()&gt;<span class="number">0.8</span> ? <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'whaaa'</span>) : <span class="literal">null</span>;</div><div class="line">	<span class="keyword">var</span> value = ++index;</div><div class="line"></div><div class="line">	setTimeout(cb, randomTimeout(), err, value);</div><div class="line"></div><div class="line">	<span class="keyword">if</span>(!err)&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">' handling: %s'</span>,  message);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomTimeout</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">1e3</span> );</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>.exports = mapAsyncSeries;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">mapAsyncSeries</span>(<span class="params">collection, map, cb</span>)</span>&#123;</div><div class="line">	<span class="keyword">var</span> pending = collection.slice();</div><div class="line">	<span class="keyword">var</span> results = [];</div><div class="line"></div><div class="line">	next();</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">next</span>(<span class="params"></span>)</span>&#123;</div><div class="line">		<span class="keyword">if</span>(! pending.length)&#123;</div><div class="line">			cb(<span class="literal">null</span>, results);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span>&#123;</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">'pending messages:'</span>,pending);</div><div class="line">			map(pending.shift(),mapped);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">mapped</span>(<span class="params">err, result</span>)</span>&#123;</div><div class="line"></div><div class="line">		results.push(result);</div><div class="line"></div><div class="line">		<span class="keyword">if</span>(err)&#123;</div><div class="line">			cb(err);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span>&#123;</div><div class="line">			next();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="running_results:-1">running results:</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">Lyn-Cheung-<span class="string">MBP:</span><span class="number">04</span> Lyn$ node main01.js</div><div class="line">pending <span class="string">messages:</span> [ <span class="string">'message1'</span>, <span class="string">'message2'</span>, <span class="string">'message3'</span> ]</div><div class="line"><span class="string">handling:</span> message1</div><div class="line">pending <span class="string">messages:</span> [ <span class="string">'message2'</span>, <span class="string">'message3'</span> ]</div><div class="line"><span class="string">handling:</span> message2</div><div class="line">pending <span class="string">messages:</span> [ <span class="string">'message3'</span> ]</div><div class="line"><span class="string">handling:</span> message3</div><div class="line">all messages sent, results [ <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> ]</div><div class="line"></div><div class="line">Lyn-Cheung-<span class="string">MBP:</span><span class="number">04</span> Lyn$ node main01.js</div><div class="line">pending <span class="string">messages:</span> [ <span class="string">'message1'</span>, <span class="string">'message2'</span>, <span class="string">'message3'</span> ]</div><div class="line">[<span class="string">Error:</span> whaaa]</div></pre></td></tr></table></figure>
-<figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">module.exports = mapAsyncLimit;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">mapAsyncLimit</span><span class="params">(limit, collection, map, cb)</span></span>&#123;</div><div class="line">	<span class="keyword">var</span> pos = <span class="number">0</span>;</div><div class="line">	<span class="keyword">var</span> pending = <span class="number">0</span>; </div><div class="line">	<span class="keyword">var</span> results = [];</div><div class="line">	<span class="keyword">var</span> calledback = <span class="literal">false</span>;</div><div class="line"></div><div class="line">	next();</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">next</span><span class="params">()</span></span>&#123;</div><div class="line">		<span class="keyword">if</span>(pos &gt;= collection.length)&#123;</div><div class="line">			<span class="keyword">if</span>(!pending)&#123;</div><div class="line">				<span class="keyword">callback</span>(<span class="literal">null</span>, results);</div><div class="line">			&#125;</div><div class="line"></div><div class="line">		&#125; <span class="keyword">else</span>&#123;</div><div class="line">			pending++;</div><div class="line">			map(collection[pos],mapping(pos));</div><div class="line">			pos++</div><div class="line">			next();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">mapping</span><span class="params">(pos)</span></span>&#123;</div><div class="line">		</div><div class="line">		<span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="title">mapped</span><span class="params">(err, result)</span></span>&#123;</div><div class="line"></div><div class="line">		pending --;</div><div class="line">		console.log(<span class="string">'handling:'</span>,collection[pos]);</div><div class="line">		results[pos]=result;</div><div class="line">		<span class="keyword">if</span>(err)&#123;</div><div class="line">			<span class="keyword">callback</span>(err);</div><div class="line">		&#125; <span class="keyword">else</span>&#123;</div><div class="line">			next();</div><div class="line">		&#125;</div><div class="line"></div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">callback</span><span class="params">(err, results)</span></span>&#123;</div><div class="line">		<span class="keyword">if</span>(! calledback)&#123;</div><div class="line"></div><div class="line">			calledback = <span class="literal">true</span>;</div><div class="line">			cb(err, results);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> mapAsyncLimit = <span class="built_in">require</span>(<span class="string">'./mapAsyncLimit'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> messages = [</div><div class="line">	<span class="string">'message1'</span>,<span class="string">'message2'</span>,<span class="string">'message3'</span>,</div><div class="line">	<span class="string">'message4'</span>,<span class="string">'message5'</span>,<span class="string">'message6'</span></div><div class="line">	];</div><div class="line"></div><div class="line"><span class="keyword">var</span> index= <span class="number">0</span>;</div><div class="line"></div><div class="line">mapAsyncLimit(<span class="number">1</span>,messages,send,done);</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">done</span>(<span class="params">err, results</span>)</span>&#123;</div><div class="line">	<span class="keyword">if</span>(err)&#123;</div><div class="line">		<span class="built_in">console</span>.error(err);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">'all messages sent, results'</span>, results);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">send</span>(<span class="params">message, cb</span>)</span>&#123;</div><div class="line">	<span class="keyword">var</span> err= <span class="built_in">Math</span>.random()&gt;<span class="number">0.9</span> ? <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'whaaa'</span>) : <span class="literal">null</span>;</div><div class="line">	<span class="keyword">var</span> value = ++index;</div><div class="line"></div><div class="line">	setTimeout(cb, randomTimeout(), err, value);</div><div class="line"></div><div class="line">	<span class="keyword">if</span>(!err)&#123;</div><div class="line">		<span class="comment">//console.log('handling: %s',  message);</span></div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomTimeout</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">1e3</span> );</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="runnning_result:">runnning result:</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">Lyn-Cheung-<span class="string">MBP:</span><span class="number">04</span> Lyn$ node main02.js</div><div class="line"><span class="string">handling:</span> message5</div><div class="line"><span class="string">handling:</span> message3</div><div class="line"><span class="string">handling:</span> message4</div><div class="line"><span class="string">handling:</span> message2</div><div class="line"><span class="string">handling:</span> message1</div><div class="line"><span class="string">handling:</span> message6</div><div class="line">all messages sent, results [ <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span> ]</div><div class="line"></div><div class="line">Lyn-Cheung-<span class="string">MBP:</span><span class="number">04</span> Lyn$ node main02.js</div><div class="line"><span class="string">handling:</span> message3</div><div class="line"><span class="string">handling:</span> message2</div><div class="line"><span class="string">handling:</span> message1</div><div class="line"><span class="string">handling:</span> message5</div><div class="line"><span class="string">handling:</span> message6</div><div class="line"><span class="string">handling:</span> message4</div><div class="line">[<span class="string">Error:</span> whaaa]</div></pre></td></tr></table></figure>
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/01/24/nodejs-note-16/" itemprop="url">
-                  Asynchronous Programming -03 Mapping result
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-01-24T13:01:26+08:00" content="2016-01-24">
-              2016-01-24
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/01/24/nodejs-note-16/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/24/nodejs-note-16/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <p>Main.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> eachAsync = <span class="built_in">require</span>(<span class="string">'./each_async'</span>);</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">var</span> messages =[<span class="string">'message1'</span>,<span class="string">'message2'</span>,<span class="string">'message3'</span>];</div><div class="line"></div><div class="line">eachAsync(messages,send,done);</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">done</span>(<span class="params">err</span>)</span>&#123;</div><div class="line">	<span class="keyword">if</span>(err)&#123;</div><div class="line">		<span class="built_in">console</span>.error(err);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">'all messages sent'</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// random error will occour</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">send</span>(<span class="params">message, cb</span>)</span>&#123;</div><div class="line">	<span class="keyword">var</span> err= <span class="built_in">Math</span>.random()&gt;<span class="number">0.8</span> ? <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'whaaa'</span>) : <span class="literal">null</span>;</div><div class="line">	setTimeout(cb, randomTimeout(), err);</div><div class="line">	<span class="keyword">if</span>(!err)&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">' elem is %s'</span>,   message);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomTimeout</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">1e3</span> );</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>eachAsync.js</p>
-<figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">module.exports = eachAsync;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">eachAsync</span><span class="params">(collection, iterate,  cb)</span></span>&#123;</div><div class="line"></div><div class="line">		<span class="keyword">var</span> pending = collection.length;</div><div class="line">		<span class="keyword">var</span> calledback = <span class="literal">false</span>;</div><div class="line"></div><div class="line">		collection.forEach(<span class="function"><span class="keyword">function</span><span class="params">(elem)</span></span>&#123;</div><div class="line">		iterate(elem, terminated);</div><div class="line">	&#125;);</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">terminated</span><span class="params">(err)</span></span>&#123;</div><div class="line"></div><div class="line">		pending --;</div><div class="line"></div><div class="line">		<span class="keyword">if</span>(err)&#123;</div><div class="line">			<span class="keyword">callback</span>(err);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(! pending)&#123;</div><div class="line">			<span class="keyword">callback</span>();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">callback</span><span class="params">(err)</span></span>&#123;</div><div class="line">		<span class="keyword">if</span>(! calledback)&#123;</div><div class="line">			calledback = <span class="literal">true</span>;</div><div class="line">			cb(err);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>Running results:</p>
-<figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Lyn-Cheung-MBP:<span class="number">03</span> Lyn$ node main.js</div><div class="line"> <span class="built_in">elem</span> <span class="built_in">is</span> message1</div><div class="line"> <span class="built_in">elem</span> <span class="built_in">is</span> message2</div><div class="line"> <span class="built_in">elem</span> <span class="built_in">is</span> message3</div><div class="line">all messages sent</div><div class="line">Lyn-Cheung-MBP:<span class="number">03</span> Lyn$ node main.js</div><div class="line"> <span class="built_in">elem</span> <span class="built_in">is</span> message2</div><div class="line"> <span class="built_in">elem</span> <span class="built_in">is</span> message3</div><div class="line">[Error: whaaa]</div></pre></td></tr></table></figure>
-<p>Main01.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> mapAsync = <span class="built_in">require</span>(<span class="string">'./map_async'</span>);</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">var</span> messages =[<span class="string">'message1'</span>,<span class="string">'message2'</span>,<span class="string">'message3'</span>];</div><div class="line"></div><div class="line"><span class="keyword">var</span> index = <span class="number">0</span> ;</div><div class="line">mapAsync(messages,send,done);</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">done</span>(<span class="params">err, results</span>)</span>&#123;</div><div class="line">	<span class="keyword">if</span>(err)&#123;</div><div class="line">		<span class="built_in">console</span>.error(err);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">'all messages sent,result:'</span>, results);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// random error will occour</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">send</span>(<span class="params">message, cb</span>)</span>&#123;</div><div class="line">	<span class="keyword">var</span> err = <span class="built_in">Math</span>.random()&gt;<span class="number">0.8</span> ? <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'whaaa'</span>) : <span class="literal">null</span>;</div><div class="line">	<span class="keyword">var</span> result = ++index;</div><div class="line">	setTimeout(cb, randomTimeout(), err, result);</div><div class="line">	<span class="keyword">if</span>(!err)&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'index is %s, elem is %s'</span>, index, message);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomTimeout</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">1e3</span> );</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>mapAsync.js</p>
-<figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">module.exports = mapAsync;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">mapAsync</span><span class="params">(collection, map,  cb)</span></span>&#123;</div><div class="line"></div><div class="line">		<span class="keyword">var</span> results = [];</div><div class="line">		<span class="keyword">var</span> pending = collection.length;</div><div class="line">		<span class="keyword">var</span> calledback = <span class="literal">false</span>;</div><div class="line"></div><div class="line">		collection.forEach(<span class="function"><span class="keyword">function</span><span class="params">(elem, index)</span></span>&#123;</div><div class="line">		map(elem, terminating(index));</div><div class="line">		&#125;);</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">terminating</span><span class="params">(index)</span></span>&#123;</div><div class="line"></div><div class="line">		<span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="title">terminated</span><span class="params">(err, result)</span></span>&#123;</div><div class="line"></div><div class="line">		pending --;</div><div class="line"></div><div class="line">		<span class="keyword">if</span>(err)&#123;</div><div class="line">			<span class="keyword">callback</span>(err);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span>&#123;</div><div class="line">			results[index] = result;</div><div class="line">			</div><div class="line">			<span class="keyword">if</span>(! pending)&#123;</div><div class="line">			<span class="keyword">callback</span>(<span class="literal">null</span>, results);</div><div class="line">				&#125;</div><div class="line">			&#125; </div><div class="line">		&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">callback</span><span class="params">(err, results)</span></span>&#123;</div><div class="line">		<span class="keyword">if</span>(! calledback)&#123;</div><div class="line">			calledback = <span class="literal">true</span>;</div><div class="line">			cb(err, results);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>Running results:</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Lyn-Cheung-MBP:<span class="number">03</span> Lyn$ node main01.js</div><div class="line"><span class="built_in">index</span> <span class="keyword">is</span> <span class="number">1</span>, elem <span class="keyword">is</span> message1</div><div class="line"><span class="built_in">index</span> <span class="keyword">is</span> <span class="number">2</span>, elem <span class="keyword">is</span> message2</div><div class="line"><span class="built_in">index</span> <span class="keyword">is</span> <span class="number">3</span>, elem <span class="keyword">is</span> message3</div><div class="line"><span class="keyword">all</span> <span class="keyword">messages</span> sent,resul<span class="variable">t:</span> [ <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> ]</div><div class="line">Lyn-Cheung-MBP:<span class="number">03</span> Lyn$ node main01.js</div><div class="line"><span class="built_in">index</span> <span class="keyword">is</span> <span class="number">1</span>, elem <span class="keyword">is</span> message1</div><div class="line"><span class="built_in">index</span> <span class="keyword">is</span> <span class="number">2</span>, elem <span class="keyword">is</span> message2</div><div class="line"><span class="built_in">index</span> <span class="keyword">is</span> <span class="number">3</span>, elem <span class="keyword">is</span> message3</div><div class="line">[Error: whaaa]</div></pre></td></tr></table></figure>
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1438,7 +1453,7 @@ conn.pipe(upperCasing).pipe(conn);
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">58</span>
+              <span class="site-state-item-count">60</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1452,7 +1467,7 @@ conn.pipe(upperCasing).pipe(conn);
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
@@ -1523,28 +1538,11 @@ conn.pipe(upperCasing).pipe(conn);
 
   
     
+    
 
   
-    
-  
-
-  <script type="text/javascript">
-    var duoshuoQuery = {short_name:"blog-lyn"};
-    (function() {
-      var ds = document.createElement('script');
-      ds.type = 'text/javascript';ds.async = true;
-      ds.id = 'duoshuo-script';
-      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-      ds.charset = 'UTF-8';
-      (document.getElementsByTagName('head')[0]
-      || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-  </script>
-    
-     
 
 
-    
   
 
   
