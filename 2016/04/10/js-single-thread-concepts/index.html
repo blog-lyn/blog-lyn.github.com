@@ -59,18 +59,13 @@
 
 
 
-<meta name="description" content="javascript 是单线程运行的么?JavaScript引擎是单线程运行的,浏览器无论在什么时候都只且只有一个线程在运行JavaScript程序。 
-
-为什么JavaScript不能有多个线程呢？这样能提高效率啊！
-JavaScript的单线程，与它的用途有关。作为浏览器脚本语言，JavaScript的主要用途是与用户互动，以及操作DOM。这决定了它只能是单线程，否则会带来很复杂的同步问题。比">
+<meta name="description" content="javascript 是单线程运行的么?JavaScript引擎是单线程运行的,浏览器无论在什么时候都只且只有一个线程在运行JavaScript程序。   为什么JavaScript不能有多个线程呢？这样能提高效率啊！ JavaScript的单线程，与它的用途有关。作为浏览器脚本语言，JavaScript的主要用途是与用户互动，以及操作DOM。这决定了它只能是单线程，否则会带来很复杂的同步问题。比">
+<meta name="keywords" content="taskqueue, eventLoop, callstack">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JavaScript的单线程运行机制笔记">
 <meta property="og:url" content="http://lyn.s76.org/2016/04/10/js-single-thread-concepts/index.html">
-<meta property="og:site_name" content="Lyn's Blog">
-<meta property="og:description" content="javascript 是单线程运行的么?JavaScript引擎是单线程运行的,浏览器无论在什么时候都只且只有一个线程在运行JavaScript程序。 
-
-为什么JavaScript不能有多个线程呢？这样能提高效率啊！
-JavaScript的单线程，与它的用途有关。作为浏览器脚本语言，JavaScript的主要用途是与用户互动，以及操作DOM。这决定了它只能是单线程，否则会带来很复杂的同步问题。比">
+<meta property="og:site_name" content="Lyn&#39;s Blog">
+<meta property="og:description" content="javascript 是单线程运行的么?JavaScript引擎是单线程运行的,浏览器无论在什么时候都只且只有一个线程在运行JavaScript程序。   为什么JavaScript不能有多个线程呢？这样能提高效率啊！ JavaScript的单线程，与它的用途有关。作为浏览器脚本语言，JavaScript的主要用途是与用户互动，以及操作DOM。这决定了它只能是单线程，否则会带来很复杂的同步问题。比">
 <meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-10/32375570.jpg">
 <meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-11/59788839.jpg">
 <meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-10/97771921.jpg">
@@ -78,10 +73,7 @@ JavaScript的单线程，与它的用途有关。作为浏览器脚本语言，J
 <meta property="og:updated_time" content="2016-04-17T14:48:28.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript的单线程运行机制笔记">
-<meta name="twitter:description" content="javascript 是单线程运行的么?JavaScript引擎是单线程运行的,浏览器无论在什么时候都只且只有一个线程在运行JavaScript程序。 
-
-为什么JavaScript不能有多个线程呢？这样能提高效率啊！
-JavaScript的单线程，与它的用途有关。作为浏览器脚本语言，JavaScript的主要用途是与用户互动，以及操作DOM。这决定了它只能是单线程，否则会带来很复杂的同步问题。比">
+<meta name="twitter:description" content="javascript 是单线程运行的么?JavaScript引擎是单线程运行的,浏览器无论在什么时候都只且只有一个线程在运行JavaScript程序。   为什么JavaScript不能有多个线程呢？这样能提高效率啊！ JavaScript的单线程，与它的用途有关。作为浏览器脚本语言，JavaScript的主要用途是与用户互动，以及操作DOM。这决定了它只能是单线程，否则会带来很复杂的同步问题。比">
 <meta name="twitter:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/16-4-10/32375570.jpg">
 
 

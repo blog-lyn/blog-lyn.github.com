@@ -59,40 +59,17 @@
 
 
 
-<meta name="description" content="tcpdump因为需要远程抓取一台设备的network记录. 所以需要想办法:
-
-把mbp做个wifi共享热点,让被抓包的设备连接到热点上来.
-再把有线网卡的mac地址伪装成被抓包的设备,方便我们接入被抓包设备的网段.
-
-这样做以后:
-
-mbp就成了远程的设备的网关,所有流量就会经过mbp的有线网卡.
-而且由于远程设备的代码中都是http协议的而不是https的.所以所有的流量都可以说是透明的.">
+<meta name="description" content="tcpdump因为需要远程抓取一台设备的network记录. 所以需要想办法:  把mbp做个wifi共享热点,让被抓包的设备连接到热点上来. 再把有线网卡的mac地址伪装成被抓包的设备,方便我们接入被抓包设备的网段.  这样做以后:  mbp就成了远程的设备的网关,所有流量就会经过mbp的有线网卡. 而且由于远程设备的代码中都是http协议的而不是https的.所以所有的流量都可以说是透明的.">
+<meta name="keywords" content="dig, tcpdump">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux网络抓包命令以及dns查询命令">
 <meta property="og:url" content="http://lyn.s76.org/2016/06/26/linux-network-cmd/index.html">
-<meta property="og:site_name" content="Lyn's Blog">
-<meta property="og:description" content="tcpdump因为需要远程抓取一台设备的network记录. 所以需要想办法:
-
-把mbp做个wifi共享热点,让被抓包的设备连接到热点上来.
-再把有线网卡的mac地址伪装成被抓包的设备,方便我们接入被抓包设备的网段.
-
-这样做以后:
-
-mbp就成了远程的设备的网关,所有流量就会经过mbp的有线网卡.
-而且由于远程设备的代码中都是http协议的而不是https的.所以所有的流量都可以说是透明的.">
+<meta property="og:site_name" content="Lyn&#39;s Blog">
+<meta property="og:description" content="tcpdump因为需要远程抓取一台设备的network记录. 所以需要想办法:  把mbp做个wifi共享热点,让被抓包的设备连接到热点上来. 再把有线网卡的mac地址伪装成被抓包的设备,方便我们接入被抓包设备的网段.  这样做以后:  mbp就成了远程的设备的网关,所有流量就会经过mbp的有线网卡. 而且由于远程设备的代码中都是http协议的而不是https的.所以所有的流量都可以说是透明的.">
 <meta property="og:updated_time" content="2016-06-26T16:36:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux网络抓包命令以及dns查询命令">
-<meta name="twitter:description" content="tcpdump因为需要远程抓取一台设备的network记录. 所以需要想办法:
-
-把mbp做个wifi共享热点,让被抓包的设备连接到热点上来.
-再把有线网卡的mac地址伪装成被抓包的设备,方便我们接入被抓包设备的网段.
-
-这样做以后:
-
-mbp就成了远程的设备的网关,所有流量就会经过mbp的有线网卡.
-而且由于远程设备的代码中都是http协议的而不是https的.所以所有的流量都可以说是透明的.">
+<meta name="twitter:description" content="tcpdump因为需要远程抓取一台设备的network记录. 所以需要想办法:  把mbp做个wifi共享热点,让被抓包的设备连接到热点上来. 再把有线网卡的mac地址伪装成被抓包的设备,方便我们接入被抓包设备的网段.  这样做以后:  mbp就成了远程的设备的网关,所有流量就会经过mbp的有线网卡. 而且由于远程设备的代码中都是http协议的而不是https的.所以所有的流量都可以说是透明的.">
 
 
 
