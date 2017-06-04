@@ -211,6 +211,133 @@
             
             
               
+                <a class="post-title-link" href="/2016/05/26/addNativeJavaSciptsInterface/" itemprop="url">
+                  JS与Native交互接口定义 Native JavaScipts Interface
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-05-26T23:05:54+08:00" content="2016-05-26">
+              2016-05-26
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="技术需求:">技术需求:</h1><ul>
+<li>Native代码调用webview里面的js脚本,获取返回值</li>
+<li>webview中的js脚本调用本地的Native代码,获取返回值</li>
+<li>Native 调用js并传递参数,获取返回值</li>
+<li>Js调用 Native并传递参数,获取返回值</li>
+</ul>
+<h1 id="相关文档:">相关文档:</h1><h2 id="Android_:">Android :</h2><p><code>addJavascriptInterface(java.lang.Object, java.lang.String)</code></p>
+<h3 id="官方文档:">官方文档:</h3><ul>
+<li><code>https://developer.android.com/guide/webapps/webview.html#UsingJavaScript</code></li>
+<li><code>https://developer.android.com/reference/android/webkit/WebView.html#addJavascriptInterface(java.lang.Object, java.lang.String)</code></li>
+</ul>
+<h3 id="Android_参考文档:">Android 参考文档:</h3><ul>
+<li><code>https://github.com/pedant/safe-java-js-webview-bridge</code></li>
+<li><code>http://droidyue.com/blog/2014/09/20/interaction-between-java-and-javascript-in-android/index.html</code></li>
+<li><code>http://rensanning.iteye.com/blog/2043049</code></li>
+</ul>
+<h2 id="iOS:">iOS:</h2><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">NSString *returnvalue = [<span class="string">webViewstringByEvaluatingJavaScriptFromString:</span>@<span class="string">"your javascript code string here"</span>];</div></pre></td></tr></table></figure>
+<h3 id="官方文档:-1">官方文档:</h3><ul>
+<li><a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIWebView_Class/" target="_blank" rel="external">https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIWebView_Class/</a></li>
+</ul>
+<h3 id="iOS_实现参考:">iOS 实现参考:</h3><ul>
+<li><a href="https://developer.apple.com/videos/play/wwdc2013/615/" target="_blank" rel="external">https://developer.apple.com/videos/play/wwdc2013/615/</a></li>
+<li><a href="https://github.com/marcuswestin/WebViewJavascriptBridge" target="_blank" rel="external">https://github.com/marcuswestin/WebViewJavascriptBridge</a></li>
+<li><a href="http://dukeland.hk/2013/01/28/adding-JavaScript-interface-to-uiwebview-like-android/" target="_blank" rel="external">http://dukeland.hk/2013/01/28/adding-JavaScript-interface-to-uiwebview-like-android/</a></li>
+</ul>
+<h1 id="技术实现示例:">技术实现示例:</h1><p>这里以Android 为例: iOS可以使用github上的Bridge库(<code>https://github.com/marcuswestin/WebViewJavascriptBridge</code>),实现类似Android的调用方法.</p>
+<h2 id="新建一个_WebView">新建一个 WebView</h2><p>代码参考如下:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span><span class="meta">?&gt;</span></span> </div><div class="line"><span class="tag">&lt;<span class="name">WebView</span>  <span class="attr">xmlns:android</span>=<span class="string">http://schemas.android.com/apk/res/android</span></span></div><div class="line"><span class="attr">android:id</span>=<span class="string">"@+id/webview"</span>     </div><div class="line"><span class="attr">android:layout_width</span>=<span class="string">"fill_parent"</span>     </div><div class="line"><span class="attr">android:layout_height</span>=<span class="string">"fill_parent"</span></div><div class="line"> /&gt;</div></pre></td></tr></table></figure>
+<p>使用 loadUrl()方法在WebView中加载web页面, 参考如下:</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">WebView myWebView = (WebView) findViewById(R.id.webview)<span class="comment">; </span></div><div class="line"></div><div class="line">myWebView.loadUrl(<span class="string">"http://www.example.com"</span>)<span class="comment">;</span></div></pre></td></tr></table></figure>
+<p>记得设置外网权限:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">manifest</span> <span class="attr">...</span> &gt;</span>     </div><div class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.INTERNET"</span> /&gt;</span>     </div><div class="line">... </div><div class="line"><span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>所有的设置如上就应该可以使用了</p>
+<h2 id="在_WebView_中启用JavaScript">在 WebView 中启用JavaScript</h2><p>JavaScript默认情况下是disable的需要通过设置<code>WebSettings</code>到<code>WebView</code>.<br>可以通过<code>getSettings()</code>获取到WebSettings然后设置<code>setJavaScriptEnabled()</code>.<br>示例如下:</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">WebView myWebView = (<span class="name">WebView</span>) findViewById(<span class="name">R</span>.id.webview)<span class="comment">; WebSettings webSettings = myWebView.getSettings(); webSettings.setJavaScriptEnabled(true);</span></div></pre></td></tr></table></figure>
+<h2 id="实现_JavaScript_代码_和_Android_代码的接口">实现 JavaScript 代码 和 Android 代码的接口</h2><p>调用<code>webview</code>的<code>addJavascriptInterface()</code>, 传入两个参数:第一个是Java中定义的class对象,第二个是javaScript中的接口对象名.</p>
+<h3 id="第一步_在Android中声明被js调用的class">第一步 在Android中声明被js调用的class</h3><p>参考以下代码:</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class WebAppInterface &#123;</div><div class="line"><span class="built_in">Context</span> mContext<span class="comment">;      </span></div><div class="line"><span class="comment">/** Instantiate the interface and set the context*/</span>     </div><div class="line">	WebAppInterface(<span class="built_in">Context</span> c) &#123; </div><div class="line">        		mContext = c<span class="comment">;     </span></div><div class="line">	&#125;      </div><div class="line"><span class="comment">/** Show a toast from the web page */</span>     </div><div class="line">	@<span class="keyword">JavascriptInterface </span>    </div><div class="line">	public void <span class="keyword">showToast(String </span>toast) &#123; </div><div class="line">          Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).<span class="keyword">show(); </span>    </div><div class="line"> 	&#125; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>代码说明:<code>WebAppInterface</code>这个接口绑定的对象在被js调用时传入<code>Toast</code>参数,调用这个 <code>showToast()</code>方法</p>
+<p><strong>注意</strong>: </p>
+<pre><code>如果你的 <span class="attr_selector">[targetSdkVersiong]</span> 高于<span class="tag">17</span> (<span class="attribute">https</span>:<span class="comment">//developer.android.com/guide/topics/manifest/uses-sdk-element.html#target), 你必须增加 @JavascriptInterface 注释 到所有你想要Js可以调用的public方法中,如果没有注释那么js在 Android 4.2 或更高的版本中不能调用到安卓的方法.</span>
+</code></pre><h3 id="第二步,在webview中定义接口">第二步,在webview中定义接口</h3><p>addJavascriptInterface()定义接口为:<code>hostApp</code>, 把这个对象和webview中的JavaScript进行绑定.</p>
+<p>参考代码:</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">WebView webView = (<span class="name">WebView</span>) findViewById(<span class="name">R</span>.id.webview)<span class="comment">; webView.addJavascriptInterface(new WebAppInterface(this), "hostApp");</span></div></pre></td></tr></table></figure>
+<p>代码说明:<br>为在webview中运行的JavaScript定义好了一个接口:<code>hostApp</code>这样js就可以调用<code>WebAppInterface</code>这个Java的方法. </p>
+<h3 id="第三步,js中调用webview中定义的接口:">第三步,js中调用webview中定义的接口:</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">value</span>=<span class="string">"Say hello"</span> <span class="attr">onClick</span>=<span class="string">"showAndroidToast('Hello Android!')"</span> /&gt;</span>  </div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="actionscript"></span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">showAndroidToast</span><span class="params">(toast)</span> </span>&#123;</div><div class="line">         hostApp.showToast(toast);     </div><div class="line">&#125; </div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>JavaScript中不需要做任何声明,直接可以使用webview中提供的<code>hostApp</code>接口.<br>当你点击input按钮时<code>showAndroidToast()</code>function会自动使用<code>hostApp</code>接口 去调用<code>WebAppInterface.showToast()</code>方法.</p>
+<h2 id="Java调用JavaScript_:">Java调用JavaScript :</h2><ul>
+<li>直接把要运行的js代码作为参数调用<code>loadUrl</code>方法.就可以实现调用,但注意要声明传入的参数是JavaScript.</li>
+</ul>
+<h3 id="代码实现:">代码实现:</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="built_in">String</span> call = <span class="string">"javascript:helloWorld(1,2)"</span>;</div><div class="line">WebView.loadUrl(<span class="string">"http://www.hs.com"</span>);  </div><div class="line"></div><div class="line"><span class="comment">//先加载页面后就可以load JavaScript代码.</span></div><div class="line"></div><div class="line">WebView.loadUrl(call);    </div><div class="line">  </div><div class="line"><span class="xml"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="actionscript"></span></span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">helloWorld</span><span class="params">(num1, num2)</span> </span>&#123;</div><div class="line">	   sum =num1+num2;</div><div class="line">       alert(<span class="string">"helloWord!"</span>+sum); </div><div class="line">	<span class="comment">//这里也可以在java中定义一个方法接受js返回的参数.</span></div><div class="line">	<span class="comment">//参考上面的js调用java的代码    </span></div><div class="line">&#125; </div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/05/19/JRE-setup-doc/" itemprop="url">
                   Setup Java Eclipse Tomcat & FreeMarker on Mac
                 </a>
@@ -1443,145 +1570,11 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/03/05/javaScript-Object-Oriented-Prototype-link/" itemprop="url">
-                  JavaScript使用原型链实现继承以及Es6中的实现
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-03-05T22:49:33+08:00" content="2016-03-05">
-              2016-03-05
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="JavaScript使用原型链实现继承">JavaScript使用原型链实现继承</h1><ul>
-<li>ECMAScript 支持面向对象编程,但在ES6之前不使用类或者接口.</li>
-</ul>
-<h1 id="原型链">原型链</h1><ul>
-<li><p>JavaScript主要是通过原型链(prototype chain)来实现的继承,原型链的实现是通过创建”超类”的一个实例并且把这个实例赋值给”子类”构造函数的prototype指针.这样子类型就可以访问超类里的所有方法和属性.</p>
-</li>
-<li><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-15/87102920.jpg" alt=""></p>
-</li>
-</ul>
-<h1 id="原型式继承">原型式继承</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//超类的构造函数</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="keyword">this</span>.property = <span class="literal">true</span>;</div><div class="line">&#125;</div><div class="line"><span class="comment">//给超类定义共享的原型方法</span></div><div class="line">SuperType.prototype.getSuperValue = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.subproperty = <span class="literal">false</span>;</div><div class="line">&#125;</div><div class="line"><span class="comment">//子类的构造函数</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="keyword">this</span>.subproperty = <span class="literal">false</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//这里实现继承</span></div><div class="line">SubType.prototype = <span class="keyword">new</span> SuperType();</div><div class="line"></div><div class="line">SubType.prototype.getSubValue = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.subproperty;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> SubType();</div><div class="line"><span class="built_in">console</span>.log(instance.getSuperValue()); <span class="comment">//true</span></div><div class="line"></div><div class="line"><span class="comment">//确定原型和实例的关系</span></div><div class="line"><span class="built_in">console</span>.log(instance <span class="keyword">instanceof</span> <span class="built_in">Object</span>)       <span class="comment">//true</span></div><div class="line"><span class="built_in">console</span>.log(instance <span class="keyword">instanceof</span> SuperType)    <span class="comment">//true</span></div><div class="line"><span class="built_in">console</span>.log(instance <span class="keyword">instanceof</span> SubType)      <span class="comment">//true		</span></div><div class="line"><span class="comment">//正确的增加定义子类的方法</span></div><div class="line">SubType.prototype.getSubVaule = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.subproperty;</div><div class="line">&#125;</div><div class="line"><span class="comment">//正确的重写超类的方法</span></div><div class="line">SubType.prototype.getSuperValue =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div><div class="line"><span class="comment">//错误的定义方法会导致继承失效.</span></div><div class="line">SubType.prototype = &#123;</div><div class="line">	<span class="attr">someMethod</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">		<span class="comment">// method do something</span></div><div class="line">	&#125;	</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> anotherInstance = <span class="keyword">new</span> SubType();</div><div class="line"><span class="built_in">console</span>.log(getSuperValue()); <span class="comment">// error 因为上面的代码将子类的prototype从指向超累的一个实例替换成了一个对象字面量.</span></div></pre></td></tr></table></figure>
-<h2 id="优点&amp;缺点">优点&amp;缺点</h2><ul>
-<li>所有的子类实例都共享超累的属性,如果修改了超类的属性那么新建的实例都会受到影响</li>
-<li>创建子类型实例的时候,不能在不影响所有对象实例的前提下向超类型的构造函数传递参数.</li>
-</ul>
-<h2 id="ES5中的的原型式继承">ES5中的的原型式继承</h2><p> 如果只需要一个对象与另一个对象保持类似,而且在不同的对象之间共享相同的引用类型的的值的情况下可以使用这种Object.create方法.相当于把传入的对象(第一个参数)进行一次浅复制.这个特性会在后面的寄生组合式继承中用到.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> person=&#123;</div><div class="line">	<span class="attr">name</span>:<span class="string">"lyn"</span>,</div><div class="line">	<span class="attr">numbers</span>:[<span class="string">"1"</span>,<span class="string">"2"</span>,<span class="string">"3"</span>]</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> anotherPerson = <span class="built_in">Object</span>.create(person);</div><div class="line">anotherPerson.name= <span class="string">"Cheung"</span>; <span class="comment">//覆盖原型对象中的值</span></div><div class="line">anotherPerson.numbers.push(<span class="string">"5"</span>); <span class="comment">//修改共享的原型对象的属性</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> otherPerson = <span class="built_in">Object</span>.create(person,&#123;</div><div class="line">		<span class="attr">name</span>:&#123;</div><div class="line">			<span class="attr">value</span>:<span class="string">"Lee"</span></div><div class="line">		&#125;</div><div class="line">&#125;); <span class="comment">//第二个参数会覆盖原型对象上的同名属性</span></div><div class="line">otherPerson.numbers.push(<span class="string">"6"</span>);</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(person.numbers)<span class="comment">// "1,2,3,5,6"</span></div></pre></td></tr></table></figure>
-<h1 id="借用构造函数继承">借用构造函数继承</h1><p>为了实现向超类的构造函数传递参数,可以使用借用构造函数继承</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">SuperType(name)&#123;</div><div class="line">   <span class="keyword">this</span>.name = name;</div><div class="line">   <span class="keyword">this</span>.colors=[<span class="string">'red'</span>,<span class="string">'green'</span>,<span class="string">'yellow'</span>];</div><div class="line">&#125;</div><div class="line">SubType()&#123;</div><div class="line">	<span class="comment">//实现继承</span></div><div class="line">	SuperType.call(<span class="keyword">this</span>,<span class="string">"lyn"</span>);<span class="comment">//在构造函数中给属性或方法赋值</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> instance1 = <span class="keyword">new</span> SubType();</div><div class="line">instance1.colors.push(<span class="string">"black"</span>);</div><div class="line"><span class="built_in">console</span>.log(instance1.colors);<span class="comment">//"red,green,yellow,black"</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> instance2 = <span class="keyword">new</span> SubType();</div><div class="line"><span class="built_in">console</span>.log(instance2.colors);<span class="comment">//"red,blue,green"</span></div></pre></td></tr></table></figure>
-<h2 id="优点&amp;缺点-1">优点&amp;缺点</h2><ul>
-<li>因为只借用了构造函数,所以构造函数模式的弊端(参考前一篇blog):所有方法和属性都在构造函数中定义,相同的功能的函数都是不同的实例,因此函数复用就无从谈起了.</li>
-<li>在超类的原型中定义的方法对于子类型来说也是不可见的.</li>
-</ul>
-<h1 id="组合式继承(combination_inheritance)">组合式继承(combination inheritance)</h1><p>组合继承:将原型链模式和借用构造函数模式相结合,发挥二者长处的一种模式.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params">name</span>)</span>&#123;</div><div class="line">	<span class="keyword">this</span>.name =name;</div><div class="line">	<span class="keyword">this</span>.colors=[<span class="string">"red"</span>,<span class="string">"blue"</span>,<span class="string">"green"</span>];</div><div class="line">&#125;</div><div class="line">SuperType.prototype.sayName =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</div><div class="line">&#125;;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params">name,age</span>)</span>&#123;</div><div class="line">	<span class="comment">//继承方法,传递参数</span></div><div class="line">	SuperType.call(<span class="keyword">this</span>,name);</div><div class="line">	<span class="keyword">this</span>.age = age;</div><div class="line">&#125;</div><div class="line">SubType.prototype = <span class="keyword">new</span> SuperType();</div><div class="line">SubType.prototype.constructor= SubType;</div><div class="line">SubType.prototype.sayAge =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="keyword">this</span>.age);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> instance1 = <span class="keyword">new</span> SubType(<span class="string">"lyn"</span>,<span class="number">27</span>);</div><div class="line">instance1.colors.push(<span class="string">"black"</span>);</div><div class="line"><span class="built_in">console</span>.log(instance1.colors); <span class="comment">//"red, blue, green, black"</span></div><div class="line">instance1.sayName();   <span class="comment">//lyn</span></div><div class="line">instance1.sayAge();	<span class="comment">//27	</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> instance2 = <span class="keyword">new</span> SubType(<span class="string">"Cheung"</span>,<span class="number">23</span>);</div><div class="line"><span class="built_in">console</span>.log(instance2.colors); <span class="comment">// "red,blue,green"</span></div><div class="line">instance2.sayName();    <span class="comment">// "Cheung"</span></div><div class="line">instance2.sayAge();  	<span class="comment">//  23</span></div></pre></td></tr></table></figure>
-<p>实现步骤:</p>
-<ol>
-<li>SuperType在自己的构造函数中定义了2个属性: name,colors</li>
-<li>SuperType的原型中定义了自己的方法sayName.</li>
-<li>SubType的构造函数在调用SuperType的构造函数的时候传入了name参数</li>
-<li>SubType的原型中也定义了自己的方法sayAge</li>
-</ol>
-<p>这样两个不同的实例就可以拥有不同的属性但是共享/复用同样的方法了.</p>
-<h2 id="优点&amp;缺点-2">优点&amp;缺点</h2><h3 id="优点:">优点:</h3><ul>
-<li>避免了原型链和借用构造函数的缺点,融合了他们的优点</li>
-<li>instanceof 和 isPrototypeOf() 也能识别组合式继承实现的对象.</li>
-</ul>
-<h3 id="缺点:">缺点:</h3><ul>
-<li>调用了两次SuperType的构造函数:(第一次是在把SuperType的实例赋值给SubType的原型时 ,第二次 是在SubType的构造函数中又call了一次).这个可以使用寄生组合继承来解决</li>
-</ul>
-<h1 id="寄生组合式继承">寄生组合式继承</h1><p>通过借用构造函数来继承属性,通过使用Object.create方法对SuperType的prototype进行浅复制实现对超类的继承,然后再将结果指定给子类型的原型.寄生组合式继承的基本模式如下:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">inheritPrototype</span>(<span class="params">subType,superType</span>)</span>&#123;</div><div class="line">	<span class="keyword">var</span> prototypeTemp =<span class="built_in">Object</span>.create(superType.prototype); <span class="comment">//创建超类型原型的副本</span></div><div class="line">	prototypeTemp.constructor = subType;  <span class="comment">//为创建的副本指定构造函数</span></div><div class="line">	subType.prototype = prototypeTemp;   <span class="comment">//将创建的副本赋值给子类的原型</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>Object.create方法可以简单理解为是使用Object.setPrototypeOf()方法设置原型.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">objectCreate</span>(<span class="params">proto</span>)</span>&#123;</div><div class="line">	<span class="keyword">const</span> obj=&#123;&#125;</div><div class="line">	<span class="built_in">Object</span>.setPrototypeOf(Obj,proto)</div><div class="line">	<span class="keyword">return</span> obj</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>有了这个函数我们就可以替换掉组合式继承中为子类原型赋值的语句了.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params">name</span>)</span>&#123;</div><div class="line">	<span class="keyword">this</span>.name =name;</div><div class="line">	<span class="keyword">this</span>.colors=[<span class="string">"red"</span>,<span class="string">"blue"</span>,<span class="string">"green"</span>];</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>.<span class="title">prototype</span>.<span class="title">sayName</span> =<span class="title">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</div><div class="line">&#125;;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params">name,age</span>)</span>&#123;</div><div class="line">	<span class="comment">//继承方法,传递参数</span></div><div class="line">	SuperType.call(<span class="keyword">this</span>,name);</div><div class="line">	<span class="keyword">this</span>.age = age;</div><div class="line">&#125;</div><div class="line"></div><div class="line">inheritPrototype(SubType,SuperType); <span class="comment">//为子类原型赋值</span></div><div class="line"></div><div class="line">SubType.prototype.sayAge = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="keyword">this</span>.age);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="优点&amp;缺点:">优点&amp;缺点:</h2><ul>
-<li>只调用了一次SuperType构造函数,这样就避免了SubType.prototype重复创建属性.</li>
-<li>原型链可以保持不变,因此可以使用instanceof 和 isPrototypeOf()检测创建的对象</li>
-<li>寄生组合式继承是引用类型最理想的继承范式.</li>
-</ul>
-<h1 id="总结:">总结:</h1><ul>
-<li>prototype上的方法或者属性可以实现共享</li>
-<li>构造函数通过call来绑定this到子类上, 子类因为使用<code>new</code>关键字就会生成一个新的对象,因此每个对象都可以通过这种方式实现不共享的属性或者方.</li>
-<li>Object.create()方法相当于设置prototype,所以创建出来的属性和方法也是共享的</li>
-</ul>
-<h1 id="ES6中的继承实现">ES6中的继承实现</h1><p>Es6中有了extends 关键字可以实现继承,而不用在关心借用构造函数或者原型链来实现.</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</div><div class="line">    constructor(name, age)&#123;</div><div class="line">        public name = name;</div><div class="line">        public age  = age;</div><div class="line">        </div><div class="line">        sayName()&#123;</div><div class="line">            console.log(<span class="keyword">this</span>.name);     </div><div class="line">        &#125;</div><div class="line">        getOlder(years)&#123;</div><div class="line">            <span class="keyword">this</span>.age += years;  </div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Employee</span> <span class="keyword">extends</span> <span class="title">Person</span></span>&#123;</div><div class="line">	constructor(name,age)&#123;</div><div class="line">		<span class="keyword">super</span>(name,age); <span class="comment">//借用Person的构造函数</span></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>上面的代码与西面的代码实现了相同的继承效果</p>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Employee</span><span class="params">(name,age)</span></span>&#123;</div><div class="line">	Person.call(<span class="keyword">this</span>,name,age);</div><div class="line">&#125;</div><div class="line">Employee.prototype = <span class="keyword">new</span> Person;</div></pre></td></tr></table></figure>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1622,7 +1615,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">60</span>
+              <span class="site-state-item-count">61</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1636,7 +1629,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>

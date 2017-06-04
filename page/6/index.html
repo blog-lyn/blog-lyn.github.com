@@ -211,6 +211,111 @@
             
             
               
+                <a class="post-title-link" href="/2015/11/13/nodejs-note-09/" itemprop="url">
+                  How to learn Node.js - Node working with Mongodb
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-11-13T14:44:51+08:00" content="2015-11-13">
+              2015-11-13
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="Installation_of_Mongodb">Installation of Mongodb</h1><p>install homebrew first</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Lyn-Cheung-<span class="symbol">MBP:</span>~ Lyn<span class="variable">$ </span>ruby -e <span class="string">"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"</span></div><div class="line"></div><div class="line">Lyn-Cheung-<span class="symbol">MBP:</span>~ Lyn<span class="variable">$ </span>brew doctor</div><div class="line"></div><div class="line">Lyn-Cheung-<span class="symbol">MBP:</span>~ Lyn<span class="variable">$ </span>brew update</div><div class="line"></div><div class="line">Lyn-Cheung-<span class="symbol">MBP:</span>~ Lyn<span class="variable">$ </span>brew install mongodb</div></pre></td></tr></table></figure>
+<h1 id="Start_mongodb_in_your_Src_folder">Start mongodb in your Src folder</h1><p>it will create db under ./data/db directory</p>
+<p>or  using  mongod –dbpath  </p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Lyn-Cheung-MBP:<span class="keyword">node</span><span class="title">-08</span> Lyn$ mongod</div></pre></td></tr></table></figure>
+<h1 id="Install_mongoose">Install  mongoose</h1><p> edit package.json add mongoose dependenices</p>
+ <figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"> &#123;</div><div class="line">  <span class="attr">"name"</span>: <span class="string">"node-mongodb"</span>,</div><div class="line">  <span class="attr">"version"</span>: <span class="string">"1.0.0"</span>,</div><div class="line">  <span class="attr">"description"</span>: <span class="string">"first express app"</span>,</div><div class="line">  <span class="attr">"main"</span>: <span class="string">"index.js"</span>,</div><div class="line">  <span class="attr">"scripts"</span>: &#123;</div><div class="line">    <span class="attr">"test"</span>: <span class="string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span></div><div class="line">  &#125;,</div><div class="line">  <span class="attr">"author"</span>: <span class="string">"lyn"</span>,</div><div class="line">  <span class="attr">"license"</span>: <span class="string">"MIT"</span>,</div><div class="line">  <span class="attr">"dependencies"</span>: &#123;</div><div class="line">    <span class="attr">"method-override"</span>: <span class="string">"2.3.5"</span>,</div><div class="line">    <span class="attr">"express"</span>: <span class="string">"^4.13.3"</span>,</div><div class="line">    <span class="attr">"body-parser"</span>:<span class="string">"1.14.1"</span>,</div><div class="line">    <span class="attr">"cookie-session"</span>:<span class="string">"2.0.0-alpha.1"</span>,</div><div class="line">    <span class="attr">"cookie-parser"</span>:<span class="string">"1.4.0"</span>,</div><div class="line">    <span class="attr">"express-handlebars"</span>:<span class="string">"2.0.1"</span>,</div><div class="line">    <span class="attr">"mongoose"</span>:<span class="string">"4.2.*"</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="Test_connection_with_Mongodb">Test connection with Mongodb</h1><p>create a test connection file : ./config/database.js</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">var</span> mongoose = require (<span class="string">'mongoose'</span>)</div><div class="line"></div><div class="line">function connect(connectionString)&#123;</div><div class="line">	mongoose.connect(connectionString)</div><div class="line"></div><div class="line">	<span class="selector-tag">var</span> db= mongoose<span class="selector-class">.connection</span></div><div class="line">	db.on(<span class="string">'error'</span>, console<span class="selector-class">.error</span><span class="selector-class">.bind</span>(console, <span class="string">'connection error'</span>))</div><div class="line">	db.once(<span class="string">'open'</span>, function callback()&#123;</div><div class="line"></div><div class="line">	console.log(<span class="string">'Mongoose connected at:'</span>, connectionString)</div><div class="line">	&#125;)</div><div class="line">&#125;</div><div class="line"></div><div class="line">module<span class="selector-class">.exports</span> = connect</div><div class="line"></div><div class="line"><span class="function"><span class="title">connect</span><span class="params">(<span class="string">'mongodb://localhost/nodemongodb_development'</span>)</span></span></div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line">  <span class="keyword">var</span> mongoose = <span class="built_in">require</span> (<span class="string">'mongoose'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">connect</span>(<span class="params">connectionString</span>)</span>&#123;</div><div class="line">	mongoose.connect(connectionString)</div><div class="line"></div><div class="line">	<span class="keyword">var</span> db= mongoose.connection</div><div class="line">	db.on(<span class="string">'error'</span>, <span class="built_in">console</span>.error.bind(<span class="built_in">console</span>, <span class="string">'connection error'</span>))</div><div class="line">	db.once(<span class="string">'open'</span>, <span class="function"><span class="keyword">function</span> <span class="title">callback</span>(<span class="params"></span>)</span>&#123;</div><div class="line"></div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'Mongoose connected at:'</span>, connectionString)</div><div class="line"></div><div class="line">	<span class="keyword">var</span> schema = mongoose.Schema(&#123;</div><div class="line">		<span class="attr">name</span>: <span class="built_in">String</span></div><div class="line">	   ,<span class="attr">description</span>: <span class="built_in">String</span>  </div><div class="line">	&#125;)</div><div class="line"></div><div class="line">	<span class="keyword">var</span> Model = mongoose.model(<span class="string">'ItemTemplate'</span>, schema)</div><div class="line">	<span class="keyword">var</span> itemTemplate = <span class="keyword">new</span> Model(&#123;<span class="attr">name</span>: <span class="string">'Oger-slaying knife'</span>, <span class="attr">description</span>: <span class="string">'It\'s got +9 against orges!'</span>&#125;)</div><div class="line"></div><div class="line"></div><div class="line">	itemTemplate.save(<span class="function"><span class="keyword">function</span>(<span class="params">err</span>)</span>&#123;</div><div class="line"></div><div class="line">		<span class="keyword">if</span>(err) <span class="keyword">return</span> <span class="built_in">console</span>.log(<span class="string">'error:'</span>, err.message)</div><div class="line"></div><div class="line">		<span class="built_in">console</span>.log(<span class="string">'it saved:'</span>, ItemTemplate.name)	</div><div class="line"></div><div class="line"></div><div class="line">		itemTemplate.name = <span class="string">'Ogre-slaying knife'</span></div><div class="line">		itemTemplate.save(<span class="function"><span class="keyword">function</span>(<span class="params">err</span>)</span>&#123;</div><div class="line">			<span class="keyword">if</span>(err) <span class="keyword">return</span> <span class="built_in">console</span>.log(<span class="string">'problem saving:'</span> err.message)</div><div class="line"></div><div class="line">			getKnife()</div><div class="line"></div><div class="line">		&#125;)</div><div class="line">	&#125;)</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">getknife</span>(<span class="params"></span>)</span>&#123;</div><div class="line">		Model.find(&#123;<span class="attr">name</span>: <span class="string">'Orger-slaying knife'</span>&#125;,<span class="function"><span class="keyword">function</span>(<span class="params">err,records</span>)</span>&#123;</div><div class="line">			<span class="keyword">if</span>(err) <span class="keyword">return</span> <span class="built_in">console</span>.log(<span class="string">'Error retrieving knife'</span>, err.message)</div><div class="line"></div><div class="line">			<span class="built_in">console</span>.log(<span class="string">'we got the'</span>, records[<span class="number">0</span>].name, <span class="string">'!'</span>)</div><div class="line"></div><div class="line">		&#125;)</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">		</div><div class="line"></div><div class="line"></div><div class="line">	&#125;)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = connect</div><div class="line"></div><div class="line">connect(<span class="string">'mongodb://localhost/nodemongodb_development'</span>)</div></pre></td></tr></table></figure>
+<p>Run ‘node /config/database.js’  to save instance data to Mongodb</p>
+<p>Now,let’s put the connection  function into our previous express app</p>
+<p>Clean the database.js code first </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> mongoose = <span class="built_in">require</span> (<span class="string">'mongoose'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">connect</span>(<span class="params">connectionString</span>)</span>&#123;</div><div class="line">	mongoose.connect(connectionString)</div><div class="line"></div><div class="line">	<span class="keyword">var</span> db = mongoose.connection</div><div class="line">	db.on(<span class="string">'error'</span>, <span class="built_in">console</span>.error.bind(<span class="built_in">console</span>, <span class="string">'connection error'</span>))</div><div class="line">	db.once(<span class="string">'open'</span>, <span class="function"><span class="keyword">function</span> <span class="title">callback</span>(<span class="params"></span>)</span>&#123;</div><div class="line"></div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'Mongoose connected at:'</span>, connectionString)</div><div class="line"></div><div class="line">	</div><div class="line"></div><div class="line">	&#125;)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = connect</div></pre></td></tr></table></figure>
+<p>create a model file  named itemTemplate.js udner ./model direction</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">var</span> mongoose =<span class="built_in">require</span>(<span class="string">'mongoose'</span>)</div><div class="line"></div><div class="line"><span class="keyword">var</span> schema =mongoose.Schema(&#123;</div><div class="line">	<span class="attr">name</span>: <span class="built_in">String</span></div><div class="line">	,<span class="attr">description</span>: <span class="built_in">String</span></div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="keyword">var</span> Model = mongoose.model(<span class="string">'itemTemplate'</span>, schema)</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(<span class="string">'model is loading'</span>);</div><div class="line"><span class="built_in">module</span>.exports = Model</div></pre></td></tr></table></figure>
+<p>Quote our model folder path in application.js and bootstrap our DB </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> env         = process.env.NODE_ENV || <span class="string">'development'</span></div><div class="line"><span class="keyword">var</span> packageJson = <span class="keyword">require</span>(<span class="string">'../package.json'</span>)</div><div class="line"><span class="keyword">var</span> path        = <span class="keyword">require</span>(<span class="string">'path'</span>)</div><div class="line"><span class="keyword">var</span> express     = <span class="keyword">require</span>(<span class="string">'express'</span>)</div><div class="line"><span class="keyword">var</span> bodyParser     = <span class="keyword">require</span>(<span class="string">'body-parser'</span>)</div><div class="line"><span class="keyword">var</span> methodOverride = <span class="keyword">require</span>(<span class="string">'method-override'</span>)</div><div class="line"><span class="keyword">var</span> cookieParser   = <span class="keyword">require</span>(<span class="string">'cookie-parser'</span>)</div><div class="line"><span class="keyword">var</span> cookieSession  = <span class="keyword">require</span>(<span class="string">'cookie-session'</span>) </div><div class="line"><span class="keyword">var</span> exphbs  	   = <span class="keyword">require</span>(<span class="string">'express-handlebars'</span>); </div><div class="line"></div><div class="line"></div><div class="line">console.log(<span class="string">'loading App in '</span> + env + <span class="string">'node.'</span>)</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">global</span>.App = &#123;</div><div class="line"></div><div class="line">	app: express()</div><div class="line">,   port: process.env.PORT || <span class="number">3000</span></div><div class="line">,   version: packageJson.version</div><div class="line">,   root: path.join(__dirname, <span class="string">'..'</span>)</div><div class="line">,   appPath: <span class="function"><span class="keyword">function</span><span class="params">(path)</span></span>&#123;</div><div class="line">	  <span class="keyword">return</span> this.root + <span class="string">'/'</span> + path</div><div class="line">	&#125;</div><div class="line"></div><div class="line">,   <span class="keyword">require</span>: <span class="function"><span class="keyword">function</span><span class="params">(path)</span></span>&#123;</div><div class="line">	  <span class="keyword">return</span> <span class="keyword">require</span>(this.appPath(path))	</div><div class="line">	&#125;</div><div class="line"></div><div class="line">,   env: env</div><div class="line"></div><div class="line">,  start: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line"></div><div class="line">		<span class="keyword">if</span>(!this.started)&#123;</div><div class="line"></div><div class="line">			this.started = <span class="keyword">true</span></div><div class="line">			this.app.listen(this.port)</div><div class="line">			console.log( <span class="string">"running App version"</span> + App.version + <span class="string">" on port:"</span> + App.port + <span class="string">" in "</span>  + App.env + <span class="string">" mode"</span> )</div><div class="line">		</div><div class="line">			&#125;</div><div class="line">	  	&#125;</div><div class="line">,	model: <span class="function"><span class="keyword">function</span><span class="params">(path)</span></span>&#123;</div><div class="line">		<span class="keyword">return</span> this.<span class="keyword">require</span>(<span class="string">"app/models/"</span> + path)</div><div class="line">	&#125;	</div><div class="line">,	routes: <span class="function"><span class="keyword">function</span><span class="params">(path)</span></span>&#123;</div><div class="line">		<span class="keyword">return</span> this.<span class="keyword">require</span>(<span class="string">"app/routes/"</span> + path)</div><div class="line">	&#125;	</div><div class="line"></div><div class="line">&#125;	</div><div class="line"></div><div class="line">App.app.engine(<span class="string">'hbs'</span>, exphbs(&#123;extname:<span class="string">'hbs'</span>, defaultLayout:<span class="string">'main.hbs'</span>&#125;));</div><div class="line">App.app.set(<span class="string">'view engine'</span>, <span class="string">'hbs'</span>);</div><div class="line"></div><div class="line"><span class="comment">// bootstrap the  DB</span></div><div class="line">App.<span class="keyword">require</span>(<span class="string">'config/database'</span>)(process.env.DATABASE_URL || <span class="string">'mongodb://localhost/nodemongodb_development'</span>)</div><div class="line"></div><div class="line"><span class="comment">//middlewares</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">var</span> indexRouter =  App.<span class="keyword">require</span>(<span class="string">"./config/routes.js"</span>)</div><div class="line">App.app.<span class="keyword">use</span>(bodyParser.urlencoded(&#123;     <span class="comment">// to support URL-encoded bodies</span></div><div class="line">	  extended: <span class="keyword">false</span></div><div class="line">	&#125;)); </div><div class="line">App.app.<span class="keyword">use</span>(methodOverride(<span class="string">'_method'</span>));</div><div class="line">App.app.<span class="keyword">use</span>(cookieParser())</div><div class="line">App.app.<span class="keyword">use</span>(cookieSession(&#123;secret: <span class="string">"it's a secret to  everybody"</span>, key:<span class="string">"session"</span>&#125;))</div><div class="line">App.app.<span class="keyword">use</span>(<span class="string">'/images'</span>, express.<span class="keyword">static</span>( App.appPath(<span class="string">'images'</span>)));</div><div class="line"></div><div class="line">App.app.<span class="keyword">use</span>(<span class="string">'/'</span>,indexRouter)</div></pre></td></tr></table></figure>
+<p>edit our lootroutes.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> ItemTemplate =App.model(<span class="string">'itemTemplate'</span>)</div><div class="line"></div><div class="line">exports.index = <span class="function"><span class="keyword">function</span> <span class="title">index</span>(<span class="params">req, res</span>)</span>&#123;</div><div class="line"></div><div class="line">	ItemTemplate.find(&#123;&#125;,<span class="function"><span class="keyword">function</span>(<span class="params">err, records</span>)</span>&#123;</div><div class="line"></div><div class="line">		<span class="keyword">if</span>(err) <span class="keyword">return</span> res.status(<span class="number">422</span>).send(<span class="string">'problem laoding the records:'</span>, err.message)</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">'itemTemplate running'</span>);	</div><div class="line">	</div><div class="line">		<span class="keyword">var</span> data = &#123;<span class="attr">loots</span>: records&#125; </div><div class="line">		<span class="built_in">console</span>.log(data);</div><div class="line">		res.render(<span class="string">'loot/index'</span>,data)</div><div class="line"></div><div class="line">	&#125;)</div><div class="line"></div><div class="line">&#125;</div><div class="line">exports.show = <span class="function"><span class="keyword">function</span> <span class="title">showLoot</span>(<span class="params">req, res</span>)</span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">var</span> id   = req.params.id</div><div class="line"></div><div class="line">	ItemTemplate.findById(id, <span class="function"><span class="keyword">function</span>(<span class="params">err, loot</span>)</span>&#123;</div><div class="line"></div><div class="line">		<span class="keyword">if</span>(err) <span class="keyword">return</span> res.status(<span class="number">422</span>).send(<span class="string">'Problem loding the loot:'</span>, err.message)</div><div class="line">		<span class="keyword">if</span>(!loot) <span class="keyword">return</span> res.status(<span class="number">404</span>).send(<span class="string">'could not find the loot'</span>)	</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">'itemTemplate_find_by_id running'</span>);	</div><div class="line">		<span class="keyword">var</span> data = &#123;<span class="attr">loot</span>: loot&#125;</div><div class="line">		res.render(<span class="string">'loot/show'</span>,data)</div><div class="line"></div><div class="line"></div><div class="line">	&#125;)</div><div class="line"></div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>add index.js for loot path </p>
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="xml"> <span class="tag">&lt;<span class="name">h1</span>&gt;</span> Loot Table<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"> </div><div class="line"><span class="tag">&lt;<span class="name">table</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">thead</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">tr</span>&gt;</span></div><div class="line">			<span class="tag">&lt;<span class="name">th</span>&gt;</span>Name<span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">			<span class="tag">&lt;<span class="name">th</span>&gt;</span>Description<span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">		<span class="tag">&lt;/<span class="name">tr</span>&gt;</span></div><div class="line"></div><div class="line">	<span class="tag">&lt;/<span class="name">thead</span>&gt;</span></div><div class="line"></div><div class="line">	<span class="tag">&lt;<span class="name">tbody</span>&gt;</span></div><div class="line">			<span class="template-tag">&#123;&#123;#<span class="name"><span class="builtin-name">each</span></span> loots&#125;&#125;</span><span class="xml"></span></div><div class="line"> 			 <span class="tag">&lt;<span class="name">tr</span>&gt;</span></div><div class="line"> 			 <span class="tag">&lt;<span class="name">td</span>&gt;</span>	<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"/loot/</span></span><span class="template-variable">&#123;&#123;id&#125;&#125;</span><span class="xml"><span class="tag"><span class="string">"</span>&gt;</span></span><span class="template-variable">&#123;&#123;name&#125;&#125;</span><span class="xml"><span class="tag">&lt;/<span class="name">a</span>&gt;</span> <span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></div><div class="line"> 			 												</div><div class="line"> 			 <span class="tag">&lt;<span class="name">td</span>&gt;</span>	<span class="template-variable">&#123;&#123;description&#125;&#125;</span><span class="xml"> <span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></div><div class="line">  </div><div class="line">			<span class="template-tag">&#123;&#123;/<span class="name"><span class="builtin-name">each</span></span>&#125;&#125;</span><span class="xml"></span></div><div class="line"></div><div class="line">	<span class="tag">&lt;/<span class="name">tbody</span>&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>update show.js  for loot path</p>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="xml"></span></div><div class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Check out your loot details<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span> <span class="template-variable">&#123;&#123;loot.name&#125;&#125;</span><span class="xml"><span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span> there is a line on this loot:" <span class="template-variable">&#123;&#123;loot.description&#125;&#125;</span><span class="xml"> "<span class="tag">&lt;/<span class="name">p</span>&gt;</span>  </span></div><div class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span> Your loot id is: <span class="template-variable">&#123;&#123;loot.id&#125;&#125;</span><span class="xml"></span></div></pre></td></tr></table></figure>
+<p>We also need add loot index function into Express router function </p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line"><span class="stylus"><span class="selector-tag">var</span> express       =  require(<span class="string">"express"</span>)</span></div><div class="line"><span class="selector-tag">var</span> indexRouter   =  express.Router()</div><div class="line"></div><div class="line"> </div><div class="line"><span class="selector-tag">var</span> homeRoutes    =  App.routes(<span class="string">'homeRoutes'</span>)	</div><div class="line">indexRouter.get(<span class="string">'/'</span>, homeRoutes.home)</div><div class="line"></div><div class="line"></div><div class="line"><span class="selector-tag">var</span> adventuresRoutes = App.routes(<span class="string">'adventruesRoutes'</span>)</div><div class="line"></div><div class="line">indexRouter.route(<span class="string">'/adventures'</span>)</div><div class="line">	.get(adventuresRoutes.index)</div><div class="line">	.post(adventuresRoutes.create)</div><div class="line">	.put(adventuresRoutes.update)</div><div class="line"></div><div class="line"></div><div class="line"><span class="selector-tag">var</span> lootRoutes = App.routes(<span class="string">'lootRoutes'</span>)</div><div class="line">indexRouter.get(<span class="string">'/loot'</span>, lootRoutes.index)</div><div class="line">indexRouter.get(<span class="string">'/loot/:id'</span>, lootRoutes.show)</div><div class="line"></div><div class="line"> </div><div class="line">module<span class="selector-class">.exports</span> = indexRouter</div></pre></td></tr></table></figure>
+<p>Here we go !</p>
+<p>these code retrive  what we have in Mongodb collection and  show  loots on index page </p>
+<p>on /loot/:id path we could catch Mongodb id from the link params and show all loot detail infomation!  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">Lyn-Cheung-MBP:node-08 Lyn$ mongo nodemongodb_development</div><div class="line"></div><div class="line">MongoDB shell version: 3.0.7</div><div class="line">connecting to: nodemongodb_development</div><div class="line">Welcome to the MongoDB shell.</div><div class="line">For interactive <span class="keyword">help</span>, <span class="keyword">type</span> <span class="string">"help"</span>.</div><div class="line"><span class="keyword">For</span> more comprehensive documentation, see</div><div class="line">	<span class="keyword">http</span>://docs.mongodb.org/</div><div class="line">Questions? Try the support <span class="keyword">group</span></div><div class="line">	<span class="keyword">http</span>://groups.google.com/<span class="keyword">group</span>/mongodb-<span class="keyword">user</span></div><div class="line"><span class="keyword">Server</span> has <span class="keyword">startup</span> <span class="keyword">warnings</span>:</div><div class="line"><span class="number">2015</span><span class="number">-11</span><span class="number">-13</span>T14:<span class="number">40</span>:<span class="number">20.398</span>+<span class="number">0800</span> I CONTROL  [initandlisten]</div><div class="line"><span class="number">2015</span><span class="number">-11</span><span class="number">-13</span>T14:<span class="number">40</span>:<span class="number">20.398</span>+<span class="number">0800</span> I CONTROL  [initandlisten] ** <span class="keyword">WARNING</span>: soft rlimits too low. <span class="built_in">Number</span> <span class="keyword">of</span> files <span class="keyword">is</span> <span class="number">256</span>, should be <span class="keyword">at</span> <span class="keyword">least</span> <span class="number">1000</span></div><div class="line">&gt; db.itemtemplates.find()</div><div class="line">&#123; <span class="string">"_id"</span> : ObjectId(<span class="string">"5645acece25bb56b3cec4c10"</span>), <span class="string">"name"</span> : <span class="string">"Oger-slaying knife"</span>, <span class="string">"description"</span> : <span class="string">"It's got +9 against orges!"</span>, <span class="string">"__v"</span> : <span class="number">0</span> &#125;</div><div class="line">&#123; <span class="string">"_id"</span> : ObjectId(<span class="string">"5645ada7df30bb723cbd2f3e"</span>), <span class="string">"name"</span> : <span class="string">"Oger-slaying knife"</span>, <span class="string">"description"</span> : <span class="string">"It's got +9 against orges!"</span>, <span class="string">"__v"</span> : <span class="number">0</span> &#125;</div></pre></td></tr></table></figure>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2015/11/10/nodejs-note-08-1/" itemprop="url">
                   How to learn Node.js - express with template engine
                 </a>
@@ -1112,98 +1217,11 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2014/12/26/hello-world/" itemprop="url">
-                  My first blog post launched with my new blog
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2014-12-26T16:46:25+08:00" content="2014-12-26">
-              2014-12-26
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <p>Finally I launched my personal blog after years of delay.</p>
-<h1 id="why?">why?</h1><p>Sereral years ago when I was opreating some websites in compus,</p>
-<p>I was thinking to launch my personal blog someday in the future,</p>
-<p>however after the social websites developing  these years, my most time was comsumed on Weibo.com(Chinese twiter) and Weixin.</p>
-<p>but after time as the social network in China is no longer as popular as it used to be(as be regulated heavily by Gov) and I think a place can be used to recording my ideas as part of my knowledge bases is realy useful.</p>
-<p>Now, here we go, a wholly new blog, afetr I compared hexo, ghost blog, Jekyll, I finanly chose ghost blog to launch my blog. because nodejs now is really hot in github. secondly, Ghost blog  can be edited on smartphone. I spend some time to rewrite theme files. I will keep adding new features on this current version.</p>
-<p>meanwhile I chose to host ghostblog on my VPS to keep updating my server opreating skills.</p>
-<h1 id="Wishes_for_the_future">Wishes for the future</h1><p>I hope this blog would become a dual-lingual blog.</p>
-<p>so that I could get in touch with people around the world. </p>
-<p>hope I could have a  nice time here and  write and update my posts as much as possible. </p>
-<p>Looking forward that I could meet some friends who share mutral intrests and values. </p>
-<p>any good advise is highly welcomed, please feel free to contact me :D</p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1244,7 +1262,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">60</span>
+              <span class="site-state-item-count">61</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1258,7 +1276,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
