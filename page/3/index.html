@@ -211,6 +211,173 @@
             
             
               
+                <a class="post-title-link" href="/2016/05/30/installEsxiOnGen8/" itemprop="url">
+                  Mac 环境下 Hp Gen8 microServer安装 Esxi Synology DSM
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-05-30T20:33:03+08:00" content="2016-05-30">
+              2016-05-30
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="结构设计">结构设计</h1><ul>
+<li>ESXI安装在TF卡/U盘上(8gb肯定足够用了)</li>
+<li>SSD上装虚拟机</li>
+<li>raid1直通虚拟机作数据存储</li>
+</ul>
+<blockquote>
+<p>esxi读取是在启动时读取一次的,启动完成后，ESXi就在内存中运行了。<br>所以Esxi直接安装在MicroSD上。安装完毕后把卡拔下来，做一个完整的克隆备份或者直接克隆一个MicroSD实体卡以备不测</p>
+</blockquote>
+<h1 id="HP_gen8_相关工具">HP gen8 相关工具</h1><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/8170796.jpg" alt=""></p>
+<blockquote>
+<p>HP Gen8有自己的一套底层的管理系统,这里先讲一个小故事:<br>Gen8是当时在淘宝上买的,结果卖家亲自开车过来送货,同时还在淘宝卖家那里买了内存条,当时就说插上看看有没有问题(卖家车上自带电源逆变器,没有显示器). 结果开机半天了都还没有听到蜂鸣器的声音,于是我们拿着Gen8去路边的打印店借用显示器看下是什么原因.结果打印店的显示器都不方便拆线,卖家就问有没有网线,只要有网线就够了.<br>结果我们就插了一根网线到Gen8的ILO console口.在浏览器上访问gen8的ip地址,用机箱上自带的账号密码就登陆上ILO管理系统.发现确实是卡在了内存自检上.于是卖家就换了一根新的内存条给我.</p>
+</blockquote>
+<p>这就是服务器和普通PC相比的的神奇之处了吧.即使内存条有问题,Gen8底层的管理系统也可以启动起来,然后我们就可以方便的远程连接到ILO上看到服务器当前的状况.<br>可以查看服务器的各种信息.还可以在web页面上启动.net或者Java的远程桌面.(要在ie或者Safari下面打开ILO才行.)<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/90646810.jpg" alt=""></p>
+<p>ILO的高级功能需要输入一个license-key 可以到淘宝去购买,很便宜.</p>
+<h2 id="ILO">ILO</h2><h2 id="ADM">ADM</h2><h1 id="安装_ESXI_6-0_u2">安装 ESXI 6.0 u2</h1><h2 id="准备一个USB键盘">准备一个USB键盘</h2><p>因为mac的键盘和esxi还是ilo的映射不太正确,在安装过程中会出现F11按了不能被识别的情况,这时候就需要使用直接连接在Gen8上面的物理键盘按一下F11了.</p>
+<h2 id="下载HPE_Custom_Image_for_ESXi_6-0_U2">下载HPE Custom Image for ESXi 6.0 U2</h2><ul>
+<li><a href="https://my.vmware.com/web/vmware/details?downloadGroup=OEM-ESXI60U2-HPE&amp;productId=491" target="_blank" rel="external">https://my.vmware.com/web/vmware/details?downloadGroup=OEM-ESXI60U2-HPE&amp;productId=491</a> </li>
+<li>Version: 6.0 U2</li>
+<li>Release Date:2016-04-07</li>
+</ul>
+<p>下载好了以后,在Windows下就是在系统里挂载这个iSO然后像下面一样的勾选.<br>然而Hp的ILO对mac支持不是很好,能运行起来但是看不见选择加载的ISO.所以变通一下:把刚下载的esxi的ISO文件作为光驱挂载在Mac的PD9里的Windows上.(是不是特别绕?)还是直接看图:<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-30/87630709.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-30/78457314.jpg" alt=""></p>
+<p>然后输入GEN8 dhcp或得到的ip启动ILO.选择virtual device 加载刚才的光驱.</p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-30/79146767.jpg" alt=""></p>
+<p>然后插上Usb键盘. 这时候就可以开机了</p>
+<p>然后如果BIOS里的启动顺序是出厂的设置的话,那么等漫长的自检过了以后就会开始读取虚拟DVD里的镜像了.(注意 你的mac最好是使用网线,而且要和ilo在同一局域网内.不然加载会很慢,因为这里加载的iso实际上是在你的mac硬盘上的)</p>
+<p>然后就会出现启动选择界面,当然选择install ESXI 然后就会开始加载了</p>
+<p>加载好了以后就会要你选择安装的磁盘位置,设置管理员密码,然后就会按F11确认就开始安装了,因为ISO文件都只有300多MB所以安装的速度还是很快的.(这里为了防止装错.我是只插上了U盘其他的设备都没有接.)<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/83348189.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/31566859.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/41675492.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/78129151.jpg" alt=""></p>
+<p>安装好了以后会提示重启.这时候就需要把网线接进Gen8的另外两个网口上了(或者其中之一),然后在管理界面就会提示你去浏览器上打开esxi的ip地址配置虚拟机.<br>接下来的就比较简单了:<br>和普通的VMware配置虚拟机没有什么区别.因为VMware的客户端只有Windows的,所以我就没有安装专业的配置客户端,而是全部都在VMware的web管理页面上操作的.对了,这个时候就需要输入你的VMwarelicense了.<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/6061113.jpg" alt=""></p>
+<p>这时候就可以在开机自检的时候按F5去HPSSA(HP smart storage Administrator)中初始化你的磁盘了,如果是单块硬盘就只能加载成raid0才能识别.</p>
+<h3 id="RDM">RDM</h3><p>磁盘直通,也就是把完整的一块Raid或者一块SATA 直接映射成为一个VMdk,然后虚拟机可以通过加载这个vmdk硬盘文件,实现passthrough. </p>
+<p>在配置好虚拟机以后,在web管理页面或者ilo中按F2进入管理界面,启用SSH<br>然后ssh 上esxi<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">ssh</span> <span class="selector-tag">root</span>@<span class="keyword">192</span>.<span class="keyword">168</span>.<span class="keyword">1</span>.<span class="keyword">222</span>(你的<span class="keyword">esxi</span>的<span class="keyword">dhcpIP</span>地址)</div></pre></td></tr></table></figure></p>
+<p>然后使用以下的命令获取到你要RDM的磁盘信息</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"> ls <span class="regexp">/dev/</span>disks</div><div class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span>L0</div><div class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span><span class="string">L0:</span><span class="number">1</span></div><div class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span><span class="string">L0:</span><span class="number">5</span></div><div class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span><span class="string">L0:</span><span class="number">6</span></div><div class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span><span class="string">L0:</span><span class="number">7</span></div><div class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span><span class="string">L0:</span><span class="number">8</span></div><div class="line">mpx.<span class="string">vmhba32:</span><span class="string">C0:</span><span class="string">T0:</span><span class="string">L0:</span><span class="number">9</span></div><div class="line">naa<span class="number">.600508</span>b1001c0f178bbb175b496a3f68</div><div class="line">naa<span class="number">.600508</span><span class="string">b1001c0f178bbb175b496a3f68:</span><span class="number">1</span></div><div class="line">naa<span class="number">.600508</span>b1001c2031e2eb51ae0420a11f</div></pre></td></tr></table></figure>
+<p>通过下面的命令获取到volumes下面的SSD系统盘的名称</p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">ls vmfs/volumes/ -l</div><div class="line">total 1792</div><div class="line">drwxr-xr-t   <span class="number"> 1 </span>root     root         <span class="number"> 2100 </span>Jul<span class="number"> 19 </span>23:57 55a7da09-6a7727f6-d50b-70106f3eb224</div><div class="line">drwxr-xr-x   <span class="number"> 1 </span>root     root            <span class="number"> 8 </span>Jan <span class="number"> 1 </span><span class="number"> 1970 </span>55a834d9-c3bb963e-218c-70106f3eb224</div><div class="line">lrwxr-xr-x   <span class="number"> 1 </span>root     root           <span class="number"> 35 </span>Jul<span class="number"> 20 </span>00:35 SSD-&gt; 55a7da09-6a7727f6-d50b-70106f3eb224</div><div class="line">drwxr-xr-x   <span class="number"> 1 </span>root     root            <span class="number"> 8 </span>Jan <span class="number"> 1 </span><span class="number"> 1970 </span>e052ace5-bc3d44fd-4b45-39d0f75d754e</div><div class="line">drwxr-xr-x   <span class="number"> 1 </span>root     root            <span class="number"> 8 </span>Jan <span class="number"> 1 </span><span class="number"> 1970 </span>f0811cef-d4c5ddf9-1088-94015e0ad7d9</div></pre></td></tr></table></figure>
+<p>请自行替换磁盘（naa.xxx）、ssd系统盘（system）、虚拟磁盘文件（*.vmdk）的名称，创建成功后会在ssd系统目录下出现于磁盘容量相同的vmdk文件。然后就可以添加这个vmdk作为现有硬盘到虚拟机使用了.</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vmkfstools -z <span class="regexp">/vmfs/</span>devices<span class="regexp">/disks/</span>naa.<span class="number">600508</span>b1001c94879db735b10944bfc2<span class="regexp">/vmfs/</span>volumes<span class="regexp">/system/</span>raid0.vmdk</div></pre></td></tr></table></figure>
+<p>查看vmdk映射内容</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">[root@localhost:/vmfs/volumes/<span class="number">55</span>a7da09-<span class="number">6</span>a7727f6-d50b-<span class="number">70106</span>f3eb224] cat Raid1.vmdk</div><div class="line"><span class="comment"># Disk DescriptorFile</span></div><div class="line"><span class="attr">version=1</span></div><div class="line"><span class="attr">encoding="UTF-8"</span></div><div class="line"><span class="attr">CID=fffffffe</span></div><div class="line"><span class="attr">parentCID=ffffffff</span></div><div class="line"><span class="attr">isNativeSnapshot="no"</span></div><div class="line"><span class="attr">createType="vmfsPassthroughRawDeviceMap"</span></div><div class="line"></div><div class="line"><span class="comment"># Extent description</span></div><div class="line">RW <span class="number">5860467632</span> VMFSRDM <span class="string">"Raid1-rdmp.vmdk"</span></div><div class="line"></div><div class="line"><span class="comment"># The Disk Data Base</span></div><div class="line"><span class="comment">#DDB</span></div><div class="line"></div><div class="line">ddb.<span class="attr">adapterType</span> = <span class="string">"lsilogic"</span></div><div class="line">ddb.geometry.<span class="attr">cylinders</span> = <span class="string">"364797"</span></div><div class="line">ddb.geometry.<span class="attr">heads</span> = <span class="string">"255"</span></div><div class="line">ddb.geometry.<span class="attr">sectors</span> = <span class="string">"63"</span></div><div class="line">ddb.<span class="attr">longContentID</span> = <span class="string">"b1655129dd033737e3ead76ffffffffe"</span></div><div class="line">ddb.<span class="attr">uuid</span> = <span class="string">"60 00 C2 94 d1 90 d9 b1-11 6e 14 90 58 0d 39 0f"</span></div><div class="line">ddb.<span class="attr">virtualHWVersion</span> = <span class="string">"11"</span></div></pre></td></tr></table></figure>
+<h3 id="RDM官方文档参考:">RDM官方文档参考:</h3><p>要使用 ESXi/ESX 主机配置本地存储上的 RDM，需要满足以下两个条件：</p>
+<ul>
+<li><p>候选设备必须支持 SCSI Inquiry 重要产品数据 (VPD) 页面代码 0x83，该代码用于直接寻址和与 RDM 设备通信。有关 SCSI 感知代码的详细信息，请参见 Understanding SCSI Check Conditions in VMkernel logs during rescan operations (1010244)。</p>
+</li>
+<li><p>候选设备必须导出可使 ESXi/ESX 主机唯一标识用作 RDM 的设备的全局序列号。<br>注意：充当 RDM 的此功能可能在一些本地控制器及其连接的存储上不可用。请联系您的硬件供应商以确认您的控制器是否支持所需条件，并寻求任何技术支持。</p>
+</li>
+</ul>
+<p>如果您有合适的控制器，则可以将本地设备配置为 RDM。必须使用命令行界面 (CLI) 将本地存储设备配置为 RDM，无法通过 vSphere Client 执行此操作。</p>
+<p>要将本地设备配置为 RDM 磁盘，请执行以下操作：<br>打开与 ESXi/ESX 主机的 SSH 会话。<br>运行以下命令列出已连接到 ESXi 主机的磁盘：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ls -l <span class="regexp">/vmfs/</span>devices<span class="regexp">/disks</span></div></pre></td></tr></table></figure>
+<p>在列表中，标识要配置为 RDM 的本地设备，并复制设备名称。</p>
+<p><strong>注意</strong>：设备名称将很可能使用 t10. 前缀，类似于以下名称：<code>t10.F405E46494C4540046F455B64787D285941707D203F45765</code></p>
+<p>要将设备配置为 RDM，并将 RDM 指针文件输出到您所选的目标，请运行以下命令：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vmkfstools -z <span class="regexp">/vmfs/</span>devices<span class="regexp">/disks/</span>diskname<span class="regexp">/vmfs/</span>volumes<span class="regexp">/datastorename/</span>vmfolder<span class="regexp">/vmname.vmdk</span></div></pre></td></tr></table></figure>
+<p>例如：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vmkfstools -z <span class="regexp">/vmfs/</span>devices<span class="regexp">/disks/</span>t10.F405E46494C4540046F455B64787D285941707D203F45765 <span class="regexp">/vmfs/</span>volumes<span class="regexp">/Datastore2/</span>localrdm1<span class="regexp">/localrdm1.vmdk</span></div></pre></td></tr></table></figure>
+<p>注意：新创建的 RDM 指针文件的大小显示为与其映射到的裸设备相同的大小，它是一个虚拟文件，不占用任何存储空间。</p>
+<p>如果已创建 RDM 指针文件，请使用 vSphere Client 将 RDM 连接到虚拟机：</p>
+<ol>
+<li>右键单击要将 RDM 磁盘添加到的虚拟机。</li>
+<li>单击编辑设置。</li>
+<li>单击添加…</li>
+<li>选择硬盘。</li>
+<li>选择使用现有虚拟磁盘。</li>
+<li>浏览到步骤 5 中保存 RDM 指针的目录，选择 RDM 指针文件，然后单击下一步。</li>
+<li>选择要将磁盘连接到的虚拟 SCSI 控制器，然后单击下一步。</li>
+<li>单击完成。</li>
+</ol>
+<p>现在，虚拟机清单中的新硬盘应显示为映射的裸 LUN。</p>
+<p><strong>注意:</strong></p>
+<ul>
+<li>由于此虚拟机现有已连接的本地磁盘迁移，因此无法使用 vMotion。</li>
+<li>如果需要从虚拟机中移除本地 RDM 映射，只需对共享存储 RDM 应用相同步骤。在 vSphere Client 中，右键单击虚拟机，单击编辑设置，选择 RDM 然后单击从磁盘删除。此操作不会删除磁盘中的数据，而仅删除 RDM 映射文件。</li>
+</ul>
+<h3 id="ESXI磁盘分区(不是必须的)">ESXI磁盘分区(不是必须的)</h3><p>如果你的磁盘之前安装过别的系统导致esxi下无法正确加载 可以参考以下方法 重新分区.</p>
+<p>ssh到esxi 上后使用 Fdisk 或者 esxi 提供的分区工具 可以删除原有分区,然后直接在虚拟机中进行格式化</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">[root@localhost:~] fdisk /dev/disks/naa.<span class="number">600508</span>b1001c2031e2eb51ae0420a11f</div><div class="line">Command Action</div><div class="line">a	toggle a bootable flag</div><div class="line">b	edit bsd disklabel</div><div class="line">c	toggle the dos compatibility flag</div><div class="line">d	delete a partition</div><div class="line">l	list known partition types</div><div class="line">n	add a <span class="keyword">new</span> partition</div><div class="line">o	create a <span class="keyword">new</span> empty DOS partition table</div><div class="line">p	print the partition table</div><div class="line">q	quit without saving changes</div><div class="line">s	create a <span class="keyword">new</span> empty Sun disklabel</div><div class="line">t	change a partition<span class="symbol">'s</span> system id</div><div class="line">u	change display/<span class="keyword">entry</span> units</div><div class="line">v	verify the partition table</div><div class="line">w	write table to disk <span class="keyword">and</span> <span class="keyword">exit</span></div><div class="line">x	extra functionality (experts only)</div><div class="line"></div><div class="line">[root@localhost:~] ls /vmfs/devices/disks/</div><div class="line"></div><div class="line">[root@localhost:~] partedUtil getptbl /vmfs/devices/disks/naa.<span class="number">600508</span>b1001c2031e2eb51ae0420a11f</div><div class="line">msdos</div><div class="line"><span class="number">364797</span> <span class="number">255</span> <span class="number">63</span> <span class="number">5860467632</span></div><div class="line"><span class="number">1</span> <span class="number">63</span> <span class="number">4294961684</span> <span class="number">131</span> <span class="number">0</span></div><div class="line">Usage:</div><div class="line"> Get Partitions : <span class="type">get</span> &lt;diskName&gt;</div><div class="line"> Set Partitions : <span class="type">set</span> &lt;diskName&gt; [<span class="string">"partNum startSector endSector type attr"</span>]*</div><div class="line"> Delete Partition : <span class="type">delete</span> &lt;diskName&gt; &lt;partNum&gt;</div><div class="line"> Resize Partition : <span class="type">resize</span> &lt;diskName&gt; &lt;partNum&gt; &lt;start&gt; &lt;<span class="keyword">end</span>&gt;</div><div class="line"> Get Partitions : <span class="type">getptbl</span> &lt;diskName&gt;</div><div class="line"> Set Partitions : <span class="type">setptbl</span> &lt;diskName&gt; &lt;label&gt; [<span class="string">"partNum startSector endSector type/guid attr"</span>]*</div><div class="line"> Fix Partition Table : <span class="type">fix</span> &lt;diskName&gt;</div><div class="line"> Create <span class="keyword">New</span> Label (<span class="keyword">all</span> existing data will be lost): mklabel &lt;diskName&gt; &lt;label&gt;</div><div class="line"> Show commonly used partition <span class="keyword">type</span> <span class="type">guids </span>: showGuids</div><div class="line"> Get usable first <span class="keyword">and</span> last sectors : <span class="type">getUsableSectors</span> &lt;diskName&gt;</div><div class="line"> Fix GPT Table interactively : <span class="type">fixGpt</span> &lt;diskName&gt;</div><div class="line"></div><div class="line">[root@localhost:~] partedUtil delete /vmfs/devices/disks/naa.<span class="number">600508</span>b1001c2031e2eb51ae0420a11f <span class="number">1</span></div><div class="line"></div><div class="line">[root@localhost:~] partedUtil showGuids</div><div class="line"> Partition <span class="keyword">Type</span>       <span class="type">GUID</span></div><div class="line"> vmfs                 AA31E02A400F11DB9590000C2911D1B8</div><div class="line"> vmkDiagnostic        <span class="number">9</span>D27538040AD11DBBF97000C2911D1B8</div><div class="line"> vsan                 <span class="number">381</span>CFCCC728811E092EE000C2911D0B2</div><div class="line"> virsto               <span class="number">77719</span>A0CA4A011E3A47E000C29745A24</div><div class="line"> VMware Reserved      <span class="number">9198</span>EFFC31C011DB8F78000C2911D1B8</div><div class="line"> Basic Data           EBD0A0A2B9E5443387C068B6B72699C7</div><div class="line"> Linux Swap           <span class="number">0657</span>FD6DA4AB43C484E50933C84B4F4F</div><div class="line"> Linux Lvm            E6D6D379F50744C2A23C238F2A3DF928</div><div class="line"> Linux Raid           A19D880F05FC4D3BA006743F0F84911E</div><div class="line"> Efi System           C12A7328F81F11D2BA4B00A0C93EC93B</div><div class="line"> Microsoft Reserved   E3C9E3160B5C4DB8817DF92DF00215AE</div><div class="line"> Unused <span class="keyword">Entry</span>         <span class="number">00000000000000000000000000000000</span></div></pre></td></tr></table></figure>
+<h2 id="黑群辉的安装">黑群辉的安装</h2><p>到下面的网址上去下载两个文件:</p>
+<blockquote>
+<p>xpenology.me/downloads/</p>
+</blockquote>
+<ul>
+<li>第一个是DSM_DS3615xs_5644.pat,这个是群辉的升级文件,一会儿在配置群辉的时候会用上.</li>
+<li>第二个是XPEnoboot_DS3615xs_5.2-5644.4.vmdk的启动文件</li>
+</ul>
+<ol>
+<li>先上传vmdk文件到服务器的磁盘上,在虚拟机里加载vmdk文件作为第二块硬盘(注意添加的时候选择现有的硬盘).</li>
+<li>选择启动虚拟机</li>
+<li>在群辉助手中去配置和升级DSM系统记得选择PAT文件的时候选择我们刚才下载的那个Pat文件.(不想下载群辉助手也可以直接在群辉的ip地址后面加上端口号:5000去访问web管理页面.)<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-5-29/70593634.jpg" alt=""></li>
+<li>升级设置完毕以后会要求重启,这时候可能会出现黑裙启动不起来的问题,报missing operating Syetem的错.这时候检查一下虚拟机的硬盘启动顺序.或者直接删除刚才添加的第二块20mb的硬盘,按照步骤一重新添加一次群辉的启动vmdk文件.</li>
+</ol>
+<h3 id="加载RDM的Raid1作为数据储存">加载RDM的Raid1作为数据储存</h3><p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/75391528.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/95718109.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/88694438.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/4528211.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/97145984.jpg" alt=""><br>Raid1就没必要检查磁盘奇偶了 因为实在太慢了…..<br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/28774652.jpg" alt=""><br><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-2/19661986.jpg" alt=""></p>
+<h1 id="测试">测试</h1><p>上传写入速度 55mb/s 下载速度117Mb/s</p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/05/26/addNativeJavaSciptsInterface/" itemprop="url">
                   JS与Native交互接口定义 Native JavaScipts Interface
                 </a>
@@ -1478,98 +1645,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/03/10/nodejs-gulp-01/" itemprop="url">
-                  Node.js gulp notes
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-03-10T21:43:06+08:00" content="2016-03-10">
-              2016-03-10
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="Your_first_gulp_file">Your first  gulp file</h1><p>new gulpfile.js  in your PWD </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> gulp =  <span class="built_in">require</span>(<span class="string">'gulp'</span>);</div><div class="line"></div><div class="line">gulp.task(<span class="string">'default'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'hello world!'</span>);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-<h1 id="install_Gulp">install  Gulp</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// <span class="keyword">install</span> gulp  gloablly</div><div class="line">sudo npm <span class="keyword">install</span> -g gulp</div><div class="line"></div><div class="line">// <span class="keyword">then</span> chang <span class="keyword">to</span> your pwd</div><div class="line">npm <span class="keyword">install</span> <span class="comment">--save-dev gulp</span></div><div class="line"></div><div class="line">// run gulp  <span class="keyword">in</span> your pwd </div><div class="line">gulp</div><div class="line">[<span class="number">21</span>:<span class="number">41</span>:<span class="number">05</span>] <span class="keyword">Using</span> gulpfile ~/src/node/casher/gulpfile.js</div><div class="line">[<span class="number">21</span>:<span class="number">41</span>:<span class="number">05</span>] <span class="keyword">Starting</span> <span class="string">'default'</span>...</div><div class="line">hello world!</div><div class="line">[<span class="number">21</span>:<span class="number">41</span>:<span class="number">05</span>] Finished <span class="string">'default'</span> <span class="keyword">after</span> <span class="number">90</span> μs</div></pre></td></tr></table></figure>
-<h1 id="install_plugins_form_http://gulpjs-com/plugins/">install  plugins  form <a href="http://gulpjs.com/plugins/" target="_blank" rel="external">http://gulpjs.com/plugins/</a></h1><p>minify the Js file size  is  the most common things, when we are using  gulp</p>
-<h2 id="Installation">Installation</h2><p>Install package with NPM and add it to your development dependencies:<br><figure class="highlight q"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install --<span class="built_in">save</span>-<span class="built_in">dev</span> gulp-uglify</div></pre></td></tr></table></figure></p>
-<h2 id="Usage">Usage</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> uglify = <span class="built_in">require</span>(<span class="string">'gulp-uglify'</span>);</div><div class="line"> </div><div class="line">gulp.task(<span class="string">'compress'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> gulp.src(<span class="string">'lib/*.js'</span>)</div><div class="line">    .pipe(uglify())</div><div class="line">    .pipe(gulp.dest(<span class="string">'dist'</span>));</div><div class="line">&#125;);check the Api https:<span class="comment">//www.npmjs.com/package/gulp-uglify/</span></div></pre></td></tr></table></figure>
-<h2 id="running_in_our_PWD">running in our PWD</h2><p>gulpfile.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> gulp =  <span class="built_in">require</span>(<span class="string">'gulp'</span>);</div><div class="line"><span class="keyword">var</span> uglify = <span class="built_in">require</span>(<span class="string">'gulp-uglify'</span>);	</div><div class="line"></div><div class="line">gulp.task(<span class="string">'scripts'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	 gulp.src(<span class="string">'src/*.js'</span>)</div><div class="line">	  .pipe(uglify())</div><div class="line">	  .pipe(gulp.dest(<span class="string">'dist'</span>));</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>run our  code </p>
-<figure class="highlight prolog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">gulp scripts</div><div class="line"></div><div class="line">[<span class="number">22</span>:<span class="number">14</span>:<span class="number">54</span>] <span class="symbol">Using</span> gulpfile ~/src/node/casher/gulpfile.js</div><div class="line">[<span class="number">22</span>:<span class="number">14</span>:<span class="number">54</span>] <span class="symbol">Starting</span> <span class="string">'scripts'</span>...</div><div class="line">[<span class="number">22</span>:<span class="number">14</span>:<span class="number">54</span>] <span class="symbol">Finished</span> <span class="string">'scripts'</span> after <span class="number">8.18</span> ms</div></pre></td></tr></table></figure>
-<p>I copy gulpfile.js  to src folder</p>
-<p>and in ./dest/ folder it trim all the blank  and turn all the codes into one line.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> gulp=<span class="built_in">require</span>(<span class="string">"gulp"</span>),uglify=<span class="built_in">require</span>(<span class="string">"gulp-uglify"</span>);gulp.task(<span class="string">"scripts"</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;gulp.src(<span class="string">"src/*.js"</span>).pipe(uglify()).pipe(gulp.dest(<span class="string">"dist"</span>))&#125;);</div></pre></td></tr></table></figure>
-<h2 id="gulp-concat:_Concat_your_js_file">gulp-concat: Concat your js file</h2><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">npm</span> <span class="selector-tag">install</span> <span class="selector-tag">gulp-concat</span> <span class="selector-tag">--save-dev</span></div><div class="line"></div><div class="line"><span class="selector-tag">gulp-concat</span>@<span class="selector-tag">2</span><span class="selector-class">.6</span><span class="selector-class">.0</span> <span class="selector-tag">node_modules</span>/<span class="selector-tag">gulp-concat</span></div><div class="line">├── <span class="selector-tag">concat-with-sourcemaps</span>@<span class="selector-tag">1</span><span class="selector-class">.0</span><span class="selector-class">.4</span> (source-map<span class="variable">@0</span>.<span class="number">5.3</span>)</div><div class="line">├── <span class="selector-tag">through2</span>@<span class="selector-tag">0</span><span class="selector-class">.6</span><span class="selector-class">.5</span> (xtend<span class="variable">@4</span>.<span class="number">0.1</span>, readable-stream<span class="variable">@1</span>.<span class="number">0.33</span>)</div><div class="line">└── <span class="selector-tag">gulp-util</span>@<span class="selector-tag">3</span><span class="selector-class">.0</span><span class="selector-class">.7</span> (array-differ<span class="variable">@1</span>.<span class="number">0.0</span>, array-uniq<span class="variable">@1</span>.<span class="number">0.2</span>, beeper<span class="variable">@1</span>.<span class="number">1.0</span>, object-assign<span class="variable">@3</span>.<span class="number">0.0</span>, lodash._reevaluate<span class="variable">@3</span>.<span class="number">0.0</span>, lodash._reinterpolate<span class="variable">@3</span>.<span class="number">0.0</span>, lodash._reescape<span class="variable">@3</span>.<span class="number">0.0</span>, replace-ext<span class="variable">@0</span>.<span class="number">0.1</span>, minimist<span class="variable">@1</span>.<span class="number">2.0</span>, multipipe<span class="variable">@0</span>.<span class="number">1.2</span>, has-gulplog<span class="variable">@0</span>.<span class="number">1.0</span>, fancy-log<span class="variable">@1</span>.<span class="number">2.0</span>, vinyl<span class="variable">@0</span>.<span class="number">5.3</span>, gulplog<span class="variable">@1</span>.<span class="number">0.0</span>, through2<span class="variable">@2</span>.<span class="number">0.1</span>, lodash.template<span class="variable">@3</span>.<span class="number">6.2</span>, chalk<span class="variable">@1</span>.<span class="number">1.1</span>, dateformat<span class="variable">@1</span>.<span class="number">0.12</span>)</div></pre></td></tr></table></figure>
-<p>gulpfile.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"> <span class="comment">//config file</span></div><div class="line"><span class="keyword">var</span> gulp =  <span class="built_in">require</span>(<span class="string">'gulp'</span>);</div><div class="line"><span class="keyword">var</span> uglify = <span class="built_in">require</span>(<span class="string">'gulp-uglify'</span>);	</div><div class="line"><span class="keyword">var</span> concat = <span class="built_in">require</span>(<span class="string">'gulp-concat'</span>);</div><div class="line"></div><div class="line">gulp.task(<span class="string">'scripts'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	 gulp.src(<span class="string">'src/*.js'</span>)</div><div class="line">	  .pipe(concat(<span class="string">'all.min.js'</span>))</div><div class="line">	  .pipe(uglify())</div><div class="line">	  .pipe(gulp.dest(<span class="string">'dist'</span>));</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
-<p>Running results: &gt; all.min.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">myFirstFunction</span>(<span class="params"></span>)</span>&#123;<span class="keyword">return</span><span class="string">"first"</span>&#125;<span class="function"><span class="keyword">function</span> <span class="title">mySecondFunction</span>(<span class="params"></span>)</span>&#123;<span class="keyword">return</span><span class="string">"Second"</span>&#125;<span class="keyword">var</span> gulp=<span class="built_in">require</span>(<span class="string">"gulp"</span>),uglify=<span class="built_in">require</span>(<span class="string">"gulp-uglify"</span>);gulp.task(<span class="string">"scripts"</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;gulp.src(<span class="string">"src/*.js"</span>).pipe(uglify()).pipe(gulp.dest(<span class="string">"dist"</span>))&#125;);</div></pre></td></tr></table></figure>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1615,7 +1690,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">61</span>
+              <span class="site-state-item-count">62</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1629,7 +1704,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">標籤</span>
               </a>
           </div>
