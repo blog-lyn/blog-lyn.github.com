@@ -67,7 +67,7 @@
 <meta property="og:description" content="在设计模式这本书里的第二章就提到OOP中尽量应该多用组合少用继承.那么在JavaScript中怎么实现组合模式呢? 先来看一下通常继承是怎么实现的: 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152// 父类function Human(name, age)">
 <meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/17-8-19/57988022.jpg">
 <meta property="og:image" content="http://7xnuw0.com1.z0.glb.clouddn.com/17-8-19/70371324.jpg">
-<meta property="og:updated_time" content="2017-08-19T14:05:51.000Z">
+<meta property="og:updated_time" content="2017-08-19T14:06:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何在JavaScript中使用组合">
 <meta name="twitter:description" content="在设计模式这本书里的第二章就提到OOP中尽量应该多用组合少用继承.那么在JavaScript中怎么实现组合模式呢? 先来看一下通常继承是怎么实现的: 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152// 父类function Human(name, age)">
@@ -257,7 +257,8 @@
 <p>Developer.prototype.introSkill = function () {<br>  console.log(‘my skill is:’, this.skill)<br>}</p>
 <p>const lyn = new Developer(‘lyn’, 28, ‘coding’)<br>lyn.greeting()<br>lyn.introSkill()<br>lyn.learnSkill(‘cooking’)<br>lyn.introSkill()</p>
 <p>// 声明一个飞机类<br>const Plane = (obj) =&gt; ({<br>  fly: () =&gt; {<br>    console.log(‘My name is:’,obj.name’)<br>    console.log(‘but now I can fly`)<br>  }<br>})</p>
-<p>// 把鸟类的对象和实例合并<br>Object.assign(lyn, Plane(lyn))<br>lyn.fly()<br>// 输出:<br>// My name is lyn<br>// but now I can fly<br>```</p>
+<p>// 把鸟类的对象和实例合并<br>Object.assign(lyn, Plane(lyn))</p>
+<p>lyn.fly()<br>// 输出:<br>// My name is lyn<br>// but now I can fly<br>```  </p>
 <p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/17-8-19/70371324.jpg" alt=""></p>
 <p>完成</p>
 </span>
