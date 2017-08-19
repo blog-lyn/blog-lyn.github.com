@@ -211,6 +211,277 @@
             
             
               
+                <a class="post-title-link" href="/2016/03/18/JS-execution-context/" itemprop="url">
+                  Javascript 中的 运行环境(Execution Context),  作用域链(Scope Chain), this & 闭包(Closure)概念
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-03-18T09:31:55+08:00" content="2016-03-18">
+              2016-03-18
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.</p>
+<h1 id="运行环境(Execution_Context)">运行环境(Execution Context)</h1><p>在 ECMA 262 3rd edition中: Execution Context决定了在执行栈中运行的代码所能访问的变量,函数.很多人总是把这个概念和作用域链混淆,而实际上作用域链ScopeChain只是Execution Context的一部分.</p>
+<ul>
+<li><p>可以暂时简单地理解为能在执行栈中独立完整运行的代码,它由三个部分的内容组成:</p>
+<ul>
+<li>作用域链(Scope Chain) </li>
+<li>变量对象(Variable Object) </li>
+<li>Execution Context的this指针.</li>
+</ul>
+</li>
+<li><p>下面三种情况都会生成一个新的Execution Context:</p>
+<ul>
+<li>初始化全局环境时</li>
+<li>声明一个函数时</li>
+<li>执行Eval()时</li>
+</ul>
+</li>
+</ul>
+<h2 id="作用域链(scope_Chain)">作用域链(scope Chain)</h2><p>当声明一个function时,就会自动生成的这个function的<code>[[scope]]</code>属性.<code>[[scope]</code>]会把当前Execution Context的 AO或VO添加到function<code>[[scope]]</code>属性的最前端(也就是作用域链的最前端).所以内部的[[scope]]是如何被定义的对于我们理解Execution Conetext来说很重要.</p>
+<p>在 ECMAScript 中所定义的函数都可以看成是object对象,他们是在从实例化代码中声明的函数,执行函数表达式或者调用构造函数的时候中被创建的.这里分成两种情况:</p>
+<ul>
+<li><p>当调用构造函数创建实例对象时. 构造函数中会包含一个[[scope]]属性指向一个只包含了全局对象(global object)的作用域链(scope chain).</p>
+</li>
+<li><p>当函数对象是被函数声明或函数表达式创建的,会创建一个函数内部的<code>[[scope]]</code>属性,<br>函数内部的<code>[[scope]]</code> 指向全局对象的<code>[[scope]]</code>属性, 最后形成一个作用域链(scope chain).</p>
+</li>
+</ul>
+<p>最简单的一个例子,在全局环境下声明一个函数:</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">exampleFunc</span><span class="params">(formalParameter)</span></span>&#123;</div><div class="line">    ...   <span class="comment">// 函数体 function body code</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>在全局执行环境声明变量的时候会生成相关联的函数对象,全局执行环境包含一个简单的scopeChain,指向的就是全局对象(global object 作为VO使用).</li>
+<li>因此在创建的函数对象时(就是在<code>global object</code>中创建一个名字为<code>exampleFunc</code>的方法属性时),函数对象实例的<code>[[scope]]</code>内部属性会指向一个只包含<code>global object</code>的作用域链. </li>
+<li>当像下面的函数表达式在一个全局的execution context中执行的时候,也会分配一个类似的作用域链.</li>
+</ul>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> exampleFuncRef = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">    ...   <span class="comment">// 函数体 function body code</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在一个函数内部函数声明或函数表达式会使新建的内部函数的<code>[[scope]]</code>属性指向外部部函数的<code>execution context</code>.</p>
+<p>参考以下代码:</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">outerFunc</span><span class="params">(formalParameter)</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">innerFunc</span><span class="params">()</span></span>&#123;</div><div class="line">        ... <span class="comment">// innerfunc的函数体 </span></div><div class="line">    &#125;</div><div class="line">    ...  <span class="comment">// outerFunc的函数体 the rest of the outer function body.</span></div><div class="line">&#125;</div><div class="line">outerFunc( <span class="number">5</span> );</div></pre></td></tr></table></figure>
+<ul>
+<li><p>外部的函数对象是在<code>global execution context</code>中的创建VO的时候创建的,所以它的<code>[[scope]]</code>属性会指向<code>global object</code>.</p>
+</li>
+<li><p>当全局环境下的代码执行到调用 <code>outerFunc</code>函数的时候,创建一个新的执行环境(execution context)和outerFunc函数对象的AO/VO, outerFunc的<code>scopechain</code>(作用域链)的前端会指向outerFunc函数对象的AO/VO.链的后端指向outerFunc的函数对象的<code>[[scope]]</code>属性(这里就是 global object).</p>
+</li>
+<li><p>在为outerFunc生成VO/AO的时候,就会创建innerFunc的函数对象,而这个函数对象的<code>[[scope chain]]</code>会指向innerFunc被创建时的execution context的作用域链(也就是outerFunc的<code>scopechain</code>(作用域链)).  </p>
+</li>
+<li><p>所有的这些步骤都是自动的而且是决定于代码的结构和代码执行所处的环境.execution context的作用域链定义了函数对象的[[scope]]属性.而函数的[[scope]]属性定义了函数的execution context的范围.</p>
+</li>
+<li>当执行代码时需要查找指定的变量或者函数时,会顺着作用域链一层一层的向上查找每一层的AO/VO对象,直到global层位置,如果global的VO中都没有包含执行所需的变量或者函数,就会返回undefined.</li>
+</ul>
+<h2 id="Execution_Context中的AO和VO:">Execution Context中的AO和VO:</h2><p>变量对象(Variable Object)和激活/活动对象(Activation Object)</p>
+<h3 id="变量对象(Variable_Object)">变量对象(Variable Object)</h3><p>在不同的环境是指的下面二者中的一个:</p>
+<ul>
+<li><p>global object,储存着所有的全局变量(像是: 浏览器里的 document或console对象)</p>
+</li>
+<li><p>Activation object:在一个函数的局部环境下是使用的AO作为VO,定义了ECMAScript的作用域 (这时候: <code>AO===VO //true</code>)</p>
+</li>
+</ul>
+<h3 id="活动对象(Activation_Object)">活动对象(Activation Object)</h3><p>Activation object对象中包含:</p>
+<ol>
+<li>变量 (var, VariableDeclaration);</li>
+<li>函数声明 (FunctionDeclaration, 缩写为FD);</li>
+<li>函数的形参(Function formal parameters)和实参(actual parameters/arguments),如果函数被调用时具有实参,形参会在这时就赋值,否则形参被赋值为undefined,注意参数是:按值传参而不是引用).    </li>
+</ol>
+<p>这就可以解释: 为什么在全局下声明的函数会成为window/global对象的一个属性.</p>
+<h3 id="AO和VO区别">AO和VO区别</h3><ul>
+<li>global下的VO比函数局部execution context中的AO只是缺少了函数的形参这个属性(因为全局变量不是一个函数,没有参数~).</li>
+</ul>
+<p>Tips: node.js下全局对象是global,而在浏览器JavaScript中全局对象通常是window.</p>
+<p>通过以下代码就可以验证:在全局的execution Context的下的时候,Global object就被当做VO对象使用.</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">var GLOBAL_OBJECT = this;</div><div class="line"></div><div class="line"> /* create global <span class="keyword">property</span><span class="title"> </span>via variable declaration; <span class="keyword">property</span><span class="title"> </span>has DontDelete */</div><div class="line"> var foo = <span class="number">1</span>;</div><div class="line"></div><div class="line"> /* create global <span class="keyword">property</span><span class="title"> </span>via undeclared assignment; <span class="keyword">property</span><span class="title"> </span>has no DontDelete */</div><div class="line"> bar = <span class="number">2</span>;</div><div class="line"></div><div class="line"> delete foo; // <span class="literal">false</span></div><div class="line"> typeof foo; // <span class="string">"number"</span></div><div class="line"></div><div class="line"> delete bar; // <span class="literal">true</span></div><div class="line"> typeof bar; // <span class="string">"undefined"</span></div></pre></td></tr></table></figure>
+<p>谈到Execution context,就不能不谈Execution context stack(栈),因为Execution Context的就是在在stack中运行的.</p>
+<h2 id="执行栈(Execution_Context_Stack)">执行栈(Execution Context Stack)</h2><p>这个栈有如下几个特点:</p>
+<ul>
+<li>单线程运行的(Single threaded).</li>
+<li>同步执行的(Synchronous execution).</li>
+<li>栈只有一个全局环境在栈的底部(Global context).</li>
+<li>在这一个全局的执行环境下,他可以创建无限多的子函数的执行环境 </li>
+<li>每一个函数都会在运行的时候创建一个新的执行环境push进这个栈中.</li>
+</ul>
+<h3 id="代码验证:">代码验证:</h3><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">(<span class="function">function <span class="title">foo</span><span class="params">(i)</span> </span>&#123;</div><div class="line">    var n = i; <span class="comment">//i赋值给n,保存被调用时的参数,在函数最后输出.</span></div><div class="line">    console.log(<span class="string">'start run foo(%s):'</span>,i);</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (i === <span class="number">3</span>) &#123;</div><div class="line">    	  console.log(<span class="string">'foo(%s) done &amp; start return '</span>,i);</div><div class="line">          <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> &#123;</div><div class="line">        foo(++i);</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">    console.log(<span class="string">'foo(%s) done:'</span>,n); </div><div class="line">    <span class="keyword">return</span>;</div><div class="line">&#125;(<span class="number">0</span>));</div><div class="line"></div><div class="line"><span class="comment">// result:</span></div><div class="line">start run foo(<span class="number">0</span>):  //开始运行时 i=0 接着调用自己 foo(++i) 这时候参数是1了;</div><div class="line">start run foo(<span class="number">1</span>):  //在<span class="keyword">else</span>里 调用 foo(2);</div><div class="line">start run foo(<span class="number">2</span>):  //在<span class="keyword">else</span>里 调用 foo(3);</div><div class="line">start run foo(<span class="number">3</span>):  // foo(3)被调用</div><div class="line">foo(3) done &amp; start <span class="keyword">return</span>  // foo(3)函数结束 最晚被调用的函数 最先被执行完.</div><div class="line">foo(2) done: // foo(2) 接着运行 foo(++i)后面的语句</div><div class="line">foo(1) done: // foo(1) 接着运行 foo(++i);后面的语句</div><div class="line">foo(<span class="number">0</span>) done: // foo(0) 接着运行 foo(++i);后面的语句</div></pre></td></tr></table></figure>
+<p>运行栈里执行的过程:</p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-18/73084259.jpg" alt=""></p>
+<p>每当有function被执行时，就会产生一个新的上下文，这一上下文会被压入Js的上下文堆栈（context stack）中，function执行结束后则被弹出，因此Js解释器总是在栈顶上下文中执行。</p>
+<h2 id="Execution_Context_生成的过程:">Execution Context 生成的过程:</h2><h3 id="ES5中的解释说明:">ES5中的解释说明:</h3><p>ECMAScript 5的标准中，关于变量声明和作用域（第12.2.2节）的内容:</p>
+<blockquote>
+<p>如果在一个函数中声明变量，这些变量就被定义在了在该函数的函数作用域中，见第10.1.3所述。不然它们就是被定义在全局的作用域内（即，它们被创建为全局对象的成员，见第10.1.3所述），当进入执行环境的时候，变量就被创建。一个语句块不能定义一个新的作用域。只有一个程序或者函数声明能够产生一个新的作用域。创建变量时，被初始化为undefined。如果变量声明语句里面带有赋值操作，则赋值操作只有被执行到声明语句的时候才会发生，而不是创建的时候。</p>
+</blockquote>
+<ul>
+<li>创建execution context是分为两个阶段被执行的: 创建阶段和运行阶段.</li>
+</ul>
+<h3 id="创建阶段(Creation_Stage)">创建阶段(Creation Stage)</h3><p>这个阶段是:当函数被调用时,且在执行其中任何一行代码之前时,包括以下三个步骤: </p>
+<ol>
+<li>初始化作用域链(Scope Chain)</li>
+<li>这个阶段会创建一个VO对象(具体内容参考前面1.2的内容).</li>
+<li>给Execution Context对应的this指针赋值. </li>
+</ol>
+<h3 id="执行/赋值阶段(Activation_/_Code_Execution_Stage)">执行/赋值阶段(Activation / Code Execution Stage)</h3><p>解释器解析代码,一行一行的执行代码,并且根据执行的代码,为之前声明创建的变量赋值.(比如:执行到var i =0  时,才为i赋值).</p>
+<h3 id="例子:">例子:</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">(i)</span> </span>&#123;</div><div class="line">    <span class="keyword">var</span> a = <span class="string">'hello'</span>;</div><div class="line">    <span class="keyword">var</span> b = <span class="function"><span class="keyword">function</span> <span class="title">funcB</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    &#125;;</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">c</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">foo(<span class="number">123</span>);</div></pre></td></tr></table></figure>
+<ul>
+<li><p>创建阶段</p>
+<p>这里用代码来描述解析器的创建逻辑:</p>
+</li>
+</ul>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">fooExecutionContext = &#123;</div><div class="line"><span class="symbol">    scopeChain:</span> &#123; ... &#125;, <span class="comment">//生成作用域</span></div><div class="line"><span class="symbol">    variableObject:</span> &#123;</div><div class="line"><span class="symbol">        arguments:</span> &#123;</div><div class="line">            <span class="number">0</span>: <span class="number">123</span>, <span class="comment">//这里直接赋值了 arguments优先级比函数的声明的优先级更高</span></div><div class="line"><span class="symbol">            length:</span> <span class="number">1</span></div><div class="line">        &#125;,</div><div class="line"><span class="symbol">        i:</span> <span class="number">123</span>,  <span class="comment">//这里也已经赋值了</span></div><div class="line"><span class="symbol">        c:</span> pointer to function c()</div><div class="line"><span class="symbol">        a:</span> undefined,</div><div class="line"><span class="symbol">        b:</span> undefined</div><div class="line">    &#125;, <span class="comment">//创建 声明变量和函数和函数的参数,同时要给函数的参数赋值</span></div><div class="line"><span class="symbol">    this:</span> &#123; ... &#125; <span class="comment">//给this 指针赋值</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>PS: 函数的内置变量arguments看起来应该是在普通的函数参数之后才声明，但其实是在函数声明之前。如果参数里面有名称为arguments的参数，它会比内置的那个优先级高，即使它是undefined。所以不要使用arguments作为为函数参数的名称。</p>
+<ul>
+<li><p>执行/赋值阶段:</p>
+<p>这里用代码来描述解析器的赋值执行过程:</p>
+</li>
+</ul>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">fooExecutionContext = &#123;</div><div class="line">    scopeChain: &#123; ... &#125;,</div><div class="line">    variableObjec<span class="variable">t:</span> &#123;</div><div class="line">        <span class="keyword">argument</span><span class="variable">s:</span> &#123;</div><div class="line">            <span class="number">0</span>: <span class="number">123</span>,</div><div class="line">            length: <span class="number">1</span></div><div class="line">        &#125;,</div><div class="line">        i: <span class="number">123</span>,</div><div class="line">        <span class="keyword">c</span>: pointer <span class="keyword">to</span> <span class="function"><span class="keyword">function</span> <span class="title">c</span><span class="params">()</span> </span></div><div class="line">        <span class="variable">a:</span> <span class="string">'hello'</span>, // <span class="keyword">a</span>被赋值</div><div class="line">        <span class="variable">b:</span> pointer <span class="keyword">to</span> <span class="function"><span class="keyword">function</span> <span class="title">funcB</span><span class="params">()</span> //这时候<span class="title">funcB</span>才赋值给<span class="title">b</span></span></div><div class="line">    &#125;,</div><div class="line">    thi<span class="variable">s:</span> &#123; ... &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里给this赋值的时候，当function是定义在global/window中时，this指向global/window；当function作为Object的一个方法时，this指向该Object：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> x = <span class="number">1</span>;  </div><div class="line"><span class="keyword">var</span> f1 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>.x);</div><div class="line">&#125;</div><div class="line">f1();  <span class="comment">// -&gt; 1</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> f2 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">  <span class="keyword">this</span>.x = <span class="number">2</span>;</div><div class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>.x);</div><div class="line">&#125;</div><div class="line">f2(); <span class="comment">// -&gt; 2    //这里因为this定义在global/window中, 所以this.x 实际上指向的global.x</span></div><div class="line">x     <span class="comment">// -&gt; 2    // 这里输出2 证明全局中的x的值被this.x 修改了.</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> o = &#123;<span class="attr">x</span>: <span class="string">"abc"</span>, <span class="attr">f</span>: f1&#125;; <span class="comment">//这里把f赋值为:f1变量所指向的函数 </span></div><div class="line">o.f(); <span class="comment">// "abc"   //因为this指向的是o 所有 this.x 输出abc</span></div></pre></td></tr></table></figure>
+<h2 id="变量声明提升(Hoisting)">变量声明提升(Hoisting)</h2><blockquote>
+<p>通过上面的代码,我们可以知道:由于变量声明（或其他声明）总是在所有代码执行之前被处理的，所以在代码中的任意位置声明变量总是等效于在代码开头声明。这意味着变量可以在声明或是赋值之前就被初始化，这个行为叫做“hoisting”。“hoisting”就感觉就像是我们是把所有的变量声明移动到函数或者全局代码的开头位置。</p>
+</blockquote>
+<ul>
+<li>参考下面的例子:</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">   </div><div class="line"><span class="built_in">console</span>.log(foo); <span class="comment">// function的指针, 输出: foo()&#123;return 'hello';&#125;</span></div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> foo); <span class="comment">//输出 function  </span></div><div class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> bar); <span class="comment">//输出 undefined </span></div><div class="line"><span class="comment">//因为这里只是声明了变量bar 但是还没有运算到赋值的那行 所以输出 undefined.</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> foo = <span class="string">'hello'</span>;</div><div class="line"><span class="built_in">console</span>.log(foo);  </div><div class="line"><span class="comment">//输出 hello,因为这里又给foo赋值为字符串'hello',覆盖了之前的函数指针.  </span></div><div class="line">    </div><div class="line"><span class="keyword">var</span> bar = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="string">'world'</span>;</div><div class="line">&#125;;</div><div class="line"> 	</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="string">'hello'</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="闭包Closure">闭包Closure</h1><p>由上面可以知道JavaScript中只有在三种情况下才会新建一个Execution Context,而不像其他语言那样:{}包裹的代码块都会生成自己的Execution Context作为块级作用域.然而理解了JS的Execution Context后,我们可以使用闭包来模仿块级作用域.</p>
+<ul>
+<li>如果理解了上文中提到的Execution Context与作用域链(Scope Chain)的机制，再来看闭包(Closure)的概念就很清楚了。每个function在调用时会创建新的Execution Context，而Execution Content中创建的作用域链就是将外层（上层）上下文所绑定的变量对象逐一串连起来，使当前function可以获取外层的Execution Context的VO,this和scopeChain。</li>
+<li>如果我们在一个function中定义一个新的function，同时将内层function作为值返回，那么内层function所包含的Exxcution Context将会一起返回，即使内层function在其他Execution Context中执行，其内部的作用域链仍然保持原有的VO对象，而且在运行时,外部的变量无法接触原先内层function中的数据，使得function内部的execution context被保护起来，从而形成“闭包”。</li>
+</ul>
+<p>看下面的例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">var</span> x =  <span class="number">99</span>;  </div><div class="line"><span class="keyword">var</span> inc = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">  <span class="keyword">var</span> x = <span class="number">0</span>;</div><div class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(x++);</div><div class="line">  &#125;;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> inc1 = inc();  </div><div class="line"><span class="keyword">var</span> inc2 = inc();</div><div class="line"></div><div class="line">inc1();  <span class="comment">// -&gt; 0  </span></div><div class="line">inc1();  <span class="comment">// -&gt; 1  </span></div><div class="line">inc2();  <span class="comment">// -&gt; 0  </span></div><div class="line">inc1();  <span class="comment">// -&gt; 2  </span></div><div class="line">inc2();  <span class="comment">// -&gt; 1  </span></div><div class="line">x;       <span class="comment">// -&gt; 99</span></div></pre></td></tr></table></figure>
+<p>执行过程如下图所示，inc内部返回的匿名function在创建时生成的作用域链包括了inc中的x，即使后来赋值给inc1和inc2之后，直接在global context下调用，它们的作用域链仍然是由定义中所处的上下文环境决定，而且由于x是在function inc中定义的，无法被外层的global context所改变，从而实现了闭包的效果：</p>
+<h2 id="理解作用域中的this">理解作用域中的this</h2><p>function中的this是由调用function时当前所处的Object环境所决定的,this对象只会在一个函数中需要确定，如果是在全局域下，this永远为Global对象，在浏览器中通常就是window对象。</p>
+<h3 id="四种函数调用模式">四种函数调用模式</h3><p><strong>在javascript中，函数的调用一共有4种方式</strong>：</p>
+<ol>
+<li><p>Function Invocation Pattern (函数直接调用模式)</p>
+<p>诸如<code>foo()</code>的调用形式被称为Function Invocation Pattern，是函数最直接的使用形式，注意这里的foo是作为单独的变量出现，而不是属性。<br>在这种模式下，foo函数体中的this永远为Global对象，在浏览器中就是window对象。</p>
+</li>
+<li><p>Method Invocation Pattern  (对象方法调用模式)</p>
+<p>诸如<code>foo.bar()</code>的调用形式被称为Method Invocation Pattern，注意其特点是被调用的函数作为一个对象的属性出现，必然会有“.”或者“[]”这样的关键符号。<br>在这种模式下，bar函数体中的this永远为“.”或“[”前的那个对象，如上例中就一定是foo对象。</p>
+</li>
+<li><p>Constructor Pattern  (构造函数模式)</p>
+<p><code>new foo()</code>这种形式的调用被称为Constructor Pattern，其关键字<code>new</code>就很能说明问题，非常容易识别。<br>在这种模式下，foo函数内部的this永远是new foo()返回的对象。</p>
+</li>
+<li><p>Apply Pattern  (apply模式)</p>
+<p><code>foo.call(thisObject)</code>和<code>foo.apply(thisObject)</code>的形式被称为Apply Pattern，使用了内置的<code>call</code>和<code>apply</code>函数。<br>在这种模式下，<code>call</code>和<code>apply</code>的第一个参数就是foo函数体内的this，如果thisObject是<code>null</code>或<code>undefined</code>，那么会变成Global对象。</p>
+</li>
+</ol>
+<p>所以其实this对象并不像作用域链,它没有一个“查找”的过程。这也是this最容易被混淆用错的一点。记住了上面四种情况,我们来实际验证下是不是这样的.</p>
+<p>参考下面的一些例子：</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> name = <span class="string">"global"</span>;  </div><div class="line"><span class="keyword">var</span> obj = &#123;  </div><div class="line">  name: <span class="string">"lyn"</span>,</div><div class="line">  getName: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.name</div><div class="line">  &#125;</div><div class="line">&#125;;</div><div class="line"><span class="comment">//Method Invocation Pattern  对象方法调用模式</span></div><div class="line">obj.getName();  <span class="comment">// -&gt; 输出"lyn"</span></div></pre></td></tr></table></figure>
+<p>由于执行obj.getName()时getName所绑定的this是obj，所以此时this == obj；</p>
+<p>更容易搞混的是在closure条件下：</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> name = <span class="string">"window"</span>;  </div><div class="line"><span class="keyword">var</span> obj = &#123;  </div><div class="line">  name: <span class="string">"lyn"</span>,</div><div class="line">  getName: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.name;</div><div class="line">    &#125;;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">obj.getName()();  <span class="comment">// -&gt; 输出"window"</span></div></pre></td></tr></table></figure>
+<p>此时闭包函数被return后调用相当于：</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">getName = obj.getNameFunc();</div><div class="line">//<span class="keyword">Function</span> <span class="title">Invocation</span> Pattern 函数直接调用模式  </div><div class="line">getName();  // -&gt; <span class="string">"global/window"</span>  因为调用时是在全局下</div></pre></td></tr></table></figure>
+<p>换一个更明显的例子：</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> obj = &#123;  </div><div class="line">  name: <span class="string">"lyn"</span>,</div><div class="line">  getName: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.name;</div><div class="line">    &#125;;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> obj2 = &#123;  </div><div class="line">  name: <span class="string">"Cheung"</span>,</div><div class="line">  getName: obj.getName() <span class="comment">// 此时闭包函数的this和obj对象绑定在一起</span></div><div class="line">&#125;;</div><div class="line">obj2.getName();  <span class="comment">// -&gt; "Cheung"</span></div></pre></td></tr></table></figure>
+<p>当然，有时候为了避免闭包中的this在执行时被替换，可以采取下面的方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> name = <span class="string">"global"</span>;  </div><div class="line"><span class="keyword">var</span> obj = &#123;  </div><div class="line">  name: <span class="string">"lyn"</span>,</div><div class="line">  </div><div class="line">  getName: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">var</span> <span class="keyword">self</span> = this;</div><div class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">       <span class="keyword">return</span> <span class="keyword">self</span>.name;</div><div class="line">    &#125;;</div><div class="line">  &#125;</div><div class="line">&#125;;</div><div class="line">obj.getName()(); <span class="comment">// -&gt; "lyn"</span></div></pre></td></tr></table></figure>
+<p>下面这种就是构造函数模式:</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Fn</span><span class="params">(name)</span></span>&#123;</div><div class="line">    <span class="keyword">this</span>.name = name;</div><div class="line">    <span class="keyword">this</span>.getName=<span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">     	<span class="keyword">return</span> <span class="keyword">this</span>.name;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">//Constructor Pattern  (构造函数模式) 带有new关键字</span></div><div class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> Fn(<span class="string">'lyn'</span>);</div><div class="line">a.getName();<span class="comment">//lyn</span></div></pre></td></tr></table></figure>
+<p>或者是在调用时强行定义执行的Object：</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> name = <span class="string">"global"</span>;  </div><div class="line"><span class="keyword">var</span> obj = &#123;  </div><div class="line">  name: <span class="string">"lyn"</span>,</div><div class="line">  getNameFunc: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.name;</div><div class="line">    &#125;;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line">obj.getNameFunc()();  <span class="comment">// -&gt; "global"  </span></div><div class="line">obj.getNameFunc().bind(obj)(); <span class="comment">// -&gt; "lyn"</span></div></pre></td></tr></table></figure>
+<h2 id="使用call,apply和bind的区别">使用call,apply和bind的区别</h2><p>call(),apply(),和bind()方法被用来帮我们定义this的值和传递给函数的参数值。<br>他们的第一个参数都是this，如果thisObject是<code>null</code>或<code>undefined</code>，那么this就会变成Global对象。</p>
+<h3 id="区别如下:">区别如下:</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//第二个参数有区别,一个是任意数量的参数 一个是数组</span></div><div class="line"><span class="keyword">var</span> arguments = [arg1,arg2,arg3];</div><div class="line">foo.call(<span class="keyword">this</span>, arg1,arg2,arg3) == foo.apply(<span class="keyword">this</span>, arguments) == <span class="keyword">this</span>.foo(arg1, arg2, arg3)</div></pre></td></tr></table></figure>
+<ul>
+<li>Function.prototype.call 可以有任意数量的参数，第一个参数被分配给this，剩下的被传递给调用函数。</li>
+</ul>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Array.prototype.slice.call([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">0</span>,<span class="number">2</span>)</div><div class="line"><span class="comment">// 返回 [1, 2]</span></div></pre></td></tr></table></figure>
+<ul>
+<li>Function.prototype.apply 的行为和.call类似，但它传递给函数的参数是一个数组而不是任意参数。</li>
+</ul>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">String</span>.prototype.split.apply(<span class="string">'13.12.02'</span>, [<span class="string">'.'</span>])</div><div class="line">// &lt;- [<span class="string">'13'</span>, <span class="string">'12'</span>, <span class="string">'02'</span>]</div></pre></td></tr></table></figure>
+<ul>
+<li>Function.prototype.bind 创建一个特殊的函数，该函数将永远使用传递给.bind的参数作为this的值，以及能够分配部分参数，创建原函数的咖喱化（currided）版本。</li>
+</ul>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, <span class="number">2</span>];</div><div class="line"><span class="keyword">var</span> <span class="keyword">add</span> = <span class="keyword">Array</span>.prototype.push.bind(arr, <span class="number">3</span>);</div><div class="line"></div><div class="line"><span class="comment">// effectively the same as arr.push(3)</span></div><div class="line"><span class="keyword">add</span>();</div><div class="line"></div><div class="line"><span class="comment">// effectively the same as arr.push(3, 4)</span></div><div class="line"><span class="keyword">add</span>(<span class="number">4</span>);</div><div class="line"></div><div class="line">console.log(arr);</div><div class="line"><span class="comment">// &lt;- [1, 2, 3, 3, 4]</span></div></pre></td></tr></table></figure>
+<h1 id="关于函数参数传值的问题:">关于函数参数传值的问题:</h1><p>函数调用时候的参数究竟是传递的按引用传递的还是按值传递的呢?<br>这里我们先要搞清楚jJavaScript中的变量分为两种:基本类型 和引用类型</p>
+<h2 id="基本类型">基本类型</h2><p>基本类型指的是简单的数据段,包括:</p>
+<ul>
+<li>undefined</li>
+<li>Null</li>
+<li>Boolean </li>
+<li>Number</li>
+<li>String </li>
+</ul>
+<p>这五种类型是按值访问的,因此可以操作保存在变量的实际值.复制基本类型变量时,原有变量和新建的变量之间是相互独立的,不会相互影响.</p>
+<h2 id="引用类型">引用类型</h2><p>引用类型的值是指那些可能由多个基本类型构成的对象,所以引用类型可以看做是是保存在内存中的对象.<br>当从一个变量向另一个变量复制引用类型的值得时候,会将原有的储存在变量对象中的值复制一份到新对象分配的空间中去.而复制的值其实就是一个内存指针,这个指针指向储存在堆中的一个对象.复制完成后,两个变量实际上引用的是相同的一个对象.改变一个变量的值就会影响到另外一个变量.这就是为什么称之为引用类型.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> obj1 =  <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line"><span class="keyword">var</span> obj2 =  obj1;</div><div class="line">obj1.name=<span class="string">"lyn"</span>;</div><div class="line"><span class="built_in">console</span>.log(obj2.name)<span class="comment">//输出lyn</span></div></pre></td></tr></table></figure>
+<h2 id="参数的传值是传递的值而非引用">参数的传值是传递的值而非引用</h2><p>参考下面的例子:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">setName</span>(<span class="params">obj</span>)</span>&#123;</div><div class="line">	obj.name = <span class="string">"lyn"</span>; <span class="comment">//这是obj的值可以看做person对象的内存地址</span></div><div class="line">	obj = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">	obj.name =<span class="string">"cheung"</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> person = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">serName(person);</div><div class="line"><span class="built_in">console</span>.log(person.name); </div><div class="line"><span class="comment">//输出 lyn 因为当在函数中new Object的时候. </span></div><div class="line"><span class="comment">//obj原来储存的person的内存地址的值就被新的对象的内存地址覆盖了,</span></div><div class="line"><span class="comment">//这时候obj引用的就是一个局部变量了,</span></div><div class="line"><span class="comment">//就无法再修改函数外的person的name了.所以函数传值是按值传递的而不是按引用传值的.</span></div></pre></td></tr></table></figure>
+<p>参考:</p>
+<ul>
+<li><a href="http://modernweb.com/2013/12/09/demystifying-this-in-javascript/" target="_blank" rel="external">http://modernweb.com/2013/12/09/demystifying-this-in-javascript/</a></li>
+<li><a href="http://davidshariff.com/blog/what-is-the-execution-context-in-javascript/" target="_blank" rel="external">http://davidshariff.com/blog/what-is-the-execution-context-in-javascript/</a></li>
+<li><a href="http://blog.rainy.im/2015/07/04/scope-chain-and-prototype-chain-in-js/" target="_blank" rel="external">http://blog.rainy.im/2015/07/04/scope-chain-and-prototype-chain-in-js/</a></li>
+<li><a href="http://jibbering.com/faq/notes/closures/" target="_blank" rel="external">http://jibbering.com/faq/notes/closures/</a></li>
+<li><a href="http://perfectionkills.com/understanding-delete/#activation_object_variable_object" target="_blank" rel="external">http://perfectionkills.com/understanding-delete/#activation_object_variable_object</a></li>
+<li><a href="http://dmitrysoshnikov.com/ecmascript/chapter-2-variable-object/" target="_blank" rel="external">http://dmitrysoshnikov.com/ecmascript/chapter-2-variable-object/</a></li>
+</ul>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/03/14/nodeJs-iOnic-Config/" itemprop="url">
                   iOnic Cordova Mac下的开发环境部署
                 </a>
@@ -1288,157 +1559,6 @@ You have <span class="built_in">to</span> <span class="built_in">add</span> pare
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/02/06/nodejs-note-22/" itemprop="url">
-                  TCP programing
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-02-06T00:16:43+08:00" content="2016-02-06">
-              2016-02-06
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <p>index.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span>  server = <span class="built_in">require</span>(<span class="string">'./server05'</span>);</div><div class="line"></div><div class="line">server.listen(<span class="number">8000</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'TCP server listening on %j'</span>, server.address());</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p> var net = require(‘net’);</p>
-<p> var server = net.createServer();</p>
-<p> server.on(‘connection’, function(conn){</p>
-<pre><code><span class="built_in">console</span>.log(<span class="string">'new connection'</span>);
-conn.once(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>{
-    <span class="built_in">console</span>.log(<span class="string">'connection closed'</span>);
-});
-
-<span class="keyword">var</span> emit =conn.emit;
-conn.emit = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>{
-    <span class="built_in">console</span>.log(<span class="string">'connetion emitted  event type %s'</span>, event);
-    emit.apply(conn, <span class="built_in">arguments</span>);
-};
-</code></pre><p> }); </p>
-<p> module.exports = server ;<br><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">```</div><div class="line">server03.js</div></pre></td></tr></table></figure></p>
-<p> var net = require(‘net’);</p>
-<p> var server = net.createServer();</p>
-<p> server.on(‘connection’, function(conn){</p>
-<pre><code><span class="built_in">console</span>.log(<span class="string">'new connection'</span>);
-
-conn.setEncoding(<span class="string">'utf8'</span>);
-
-conn.once(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>{
-    <span class="built_in">console</span>.log(<span class="string">'connection closed'</span>);
-});
-
-conn.on(<span class="string">'data'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">buf</span>)</span>{
-    process.stdout.write(<span class="string">'data'</span> + buf);
-});
-</code></pre><p> }); </p>
-<p> module.exports = server ;<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">server04</span><span class="selector-class">.js</span></div></pre></td></tr></table></figure></p>
-<p> var net = require(‘net’);</p>
-<p> var server = net.createServer();</p>
-<p> server.on(‘connection’, function(conn){</p>
-<pre><code>console.<span class="built_in">log</span>(<span class="string">'new connection'</span>);
-
-conn.setEncoding(<span class="string">'utf8'</span>);
-
-conn.once(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span>{</span>
-    console.<span class="built_in">log</span>(<span class="string">'connection closed'</span>);
-});
-
-conn.<span class="keyword">on</span>(<span class="string">'data'</span>, <span class="function"><span class="keyword">function</span><span class="params">(buf)</span>{</span>
-    process.stdout.<span class="keyword">write</span>(<span class="string">'User send message: '</span> + buf);
-    conn.<span class="keyword">write</span>(<span class="string">'Server send message: '</span>+ buf);
-    conn.<span class="keyword">write</span>(<span class="string">'Server capitalize your message:'</span> + buf.toUpperCase());
-});
-</code></pre><p> }); </p>
-<p> module.exports = server ;</p>
-<p> #through2</p>
- <figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">fs.createReadStream(<span class="string">'ex.txt'</span>)</div><div class="line"> .pipe(through2(<span class="function"><span class="keyword">function</span> <span class="params">(chunk, enc, callback)</span> </span>&#123;</div><div class="line">   <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; chunk.length; i++)</div><div class="line">     <span class="keyword">if</span> (chunk[i] == <span class="number">97</span>)</div><div class="line">       chunk[i] = <span class="number">122</span> <span class="comment">// swap 'a' for 'z'</span></div><div class="line"></div><div class="line">   <span class="keyword">this</span>.push(chunk)</div><div class="line"></div><div class="line">   <span class="keyword">callback</span>()</div><div class="line">  &#125;))</div><div class="line"> .pipe(fs.createWriteStream(<span class="string">'out.txt'</span>))</div></pre></td></tr></table></figure>
-<p>Or object streams:</p>
-<figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> all = []</div><div class="line"></div><div class="line">fs.createReadStream(<span class="string">'data.csv'</span>)</div><div class="line">  .pipe(csv2())</div><div class="line">  .pipe(through2.obj(<span class="function"><span class="keyword">function</span> <span class="params">(chunk, enc, callback)</span> </span>&#123;</div><div class="line">    <span class="keyword">var</span> data = &#123;</div><div class="line">        name    : chunk[<span class="number">0</span>]</div><div class="line">      , address : chunk[<span class="number">3</span>]</div><div class="line">      , phone   : chunk[<span class="number">10</span>]</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">this</span>.push(data)</div><div class="line"></div><div class="line">    <span class="keyword">callback</span>()</div><div class="line">  &#125;))</div><div class="line">  .on(<span class="string">'data'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(data)</span> </span>&#123;</div><div class="line">    all.push(data)</div><div class="line">  &#125;)</div><div class="line">  .on(<span class="string">'end'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</div><div class="line">    doSomethingSpecial(all)</div><div class="line">  &#125;)</div></pre></td></tr></table></figure>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">server05</div></pre></td></tr></table></figure>
-<p> var through = require(‘through2’);<br> var net = require(‘net’);</p>
-<p> var server = net.createServer();</p>
-<p> server.on(‘connection’, function(conn){</p>
-<pre><code><span class="built_in">console</span>.log(<span class="string">'new connection'</span>);
-
-conn.setEncoding(<span class="string">'utf8'</span>);
-
-conn.once(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>{
-    <span class="built_in">console</span>.log(<span class="string">'connection closed'</span>);
-});
-
-<span class="keyword">var</span> upperCasing = through.obj(<span class="function"><span class="keyword">function</span>(<span class="params">str, enc, cb</span>)</span>{
-    <span class="keyword">this</span>.push(str.toUpperCase());
-    cb();
-});
-
-conn.pipe(upperCasing).pipe(conn);
-<span class="comment">// conn.pipe(conn);</span>
-</code></pre><p> }); </p>
-<p> module.exports = server ;<br>```</p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1484,7 +1604,7 @@ conn.pipe(upperCasing).pipe(conn);
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">63</span>
+              <span class="site-state-item-count">64</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

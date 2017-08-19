@@ -211,6 +211,129 @@
             
             
               
+                <a class="post-title-link" href="/2016/06/09/ios8-cors-prefilght/" itemprop="url">
+                  iOS8下CORS请求返回504错误的Dubug记录
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-06-09T23:53:46+08:00" content="2016-06-09">
+              2016-06-09
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>放假前遇到一个奇葩的问题,做了一个移动端使用原生JS写的一个互动的的web页面,这个页面需要通过ajax调用对后台的接口,结果出现了很诡异的现象:</p>
+<blockquote>
+<p>在Chrome浏览器上模拟手机或者是在安卓上都可以请求到后台的数据,但是在公司几台iOS的测试机(因为不想升级OS和xcode所以都还是iOS8的版本)上请求后台数据的时候,在Safari的开发调试中都会看到,http请求都会返回一个504网关超时的报错(然后还提示是CORS错误).具体现象就是请求发出去一分钟以后超时,返回504错误.</p>
+</blockquote>
+<h1 id="Debug过程:">Debug过程:</h1><h2 id="第一步_排除后台原因">第一步 排除后台原因</h2><p>因为上午的时候就发现了后台接口返回的<code>ResponseHeader</code>里没有对cors header的 <code>access-control-allow-origin</code>属性进行配置,导致请求接口被拒绝的情况,所以先怀疑是后台服务器的在中午更新之后又出了什么问题.</p>
+<p>于是就让后台查一下服务器日志,看是不是接收到了这个请求(但是他们告诉我没有这个请求的日志).所以他们认为我这边请求没有发出来.(而且安卓都可以只有iOS不行,他们就觉得更不可能是他们的问题了)</p>
+<ul>
+<li>结论: 可能和他们没有关系.</li>
+</ul>
+<h2 id="第二步_排除iOS代码原因">第二步 排除iOS代码原因</h2><p>当时因为JS和iOS之间的调用接口是使用的是github上的开源库”WebViewJavascriptBridge”实现的.而这个库的原理就是在web页面中建立带有特定Url连接的iframe,然后在iOS端用webview的delegate来拦截带有特定标志的请求作为调用信号的.<br>所以就找到iOS开发的同学,问他们是不是有这种不正确的拦截的可能,以及是不是在他们代码中有其他的拦截http请求的设置? 答案也是没有.他们认为是我的代码有兼容性问题,或者是后台的问题.</p>
+<p>这时候为了排除是不是iOS APP拦截造成的,于是就把web页面的url放进iPhone的Safari浏览器里运行,结果还是相同的504错误!这时候为了排除是App的干扰,索性把设备上的App都删掉了结果还是相同的错误!这说明确实不是iOS APP代码造成的!于是我又在自己的iPhone上的Safari中进行同样的测试,结果发现错误消失了!</p>
+<ul>
+<li>结论: 确实不是iOS APP代码的问题!</li>
+</ul>
+<h2 id="第三步_抓包分析">第三步 抓包分析</h2><p>这时候为了验证我的请求确实是发出了,就使用了Charles进行抓包(在iPhone的wifi中设置Charles的proxy代理地址),结果发现在公司的测试机上确实是有发出了一个请求,但是请求类型却是OPTIONS.然后Http请求就一直等待返回然后就超时了! 这时候后这个坑才要浮现出他的真面目!</p>
+<h1 id="原因分析">原因分析</h1><ol>
+<li>原来我们公司的服务器是基于Apache Mina Server(一个网络通信应用框架)自己开发的一个关网服务器来对Http请求进行处理,然而他们在实现中只接受post的Http请求!所以当接收到一个Options的请求的时候,当然置之不理了!更别说会在日志中记录这次请求!!!</li>
+<li><p>那为什么我的ajax里面明明是post请求但在iOS8为什么发出的却是OPTIONS请求呢?!</p>
+<p>查资料得知:原来都是<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS" target="_blank" rel="external">预请求(preflight)</a>挖的坑.</p>
+</li>
+</ol>
+<blockquote>
+<p>跨源资源共享标准通过新增一系列 HTTP 头，让服务器能声明哪些来源可以通过浏览器访问该服务器上的资源。另外，对那些会对服务器数据造成破坏性影响的 HTTP 请求方法（特别是 GET 以外的 HTTP 方法，或者搭配某些MIME类型的POST请求），标准强烈要求浏览器必须先以 OPTIONS 请求方式发送一个预请求(preflight request)，从而获知服务器端对跨源请求所支持 HTTP 方法。在确认服务器允许该跨源请求的情况下，以实际的 HTTP 请求方法发送那个真正的请求。服务器端也可以通知客户端，是不是需要随同请求一起发送信用信息（包括 Cookies 和 HTTP 认证相关数据）。</p>
+</blockquote>
+<p>那为什么在iOS9下就不存在这个问题呢? 还要抓包分析才能知道了.</p>
+<p>正确的预请求和响应:</p>
+<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-12/81504459.jpg" alt=""></p>
+<h2 id="iOS8中web页面的CORS_http请求过程:">iOS8中web页面的CORS http请求过程:</h2><figure class="highlight ldif"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">//OPTIONS 请求</div><div class="line"><span class="attribute">OPTIONS /editor/get_info' HTTP/1.1</span></div><div class="line">Host: 192.168.8.64:5555</div><div class="line"><span class="attribute">Accept-Language</span>: zh-cn</div><div class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (iPhone; CPU iPhone OS 8_4_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12H321 Safari/600.1.4</div><div class="line"><span class="attribute">Accept</span>: */*</div><div class="line"><span class="attribute">Referer</span>: http://resource.domain.com/284671214/284671249/app.html</div><div class="line"><span class="attribute">Access-Control-Request-Method</span>: POST</div><div class="line"><span class="attribute">Connection</span>: keep-alive</div><div class="line"><span class="attribute">Access-Control-Request-Headers</span>: origin, content-type</div><div class="line"><span class="attribute">Content-Length</span>: 0</div><div class="line"><span class="attribute">Origin</span>: http://resource.domain.com/</div><div class="line"><span class="attribute">Accept-Encoding</span>: gzip, deflate</div><div class="line"></div><div class="line">//服务器响应 OPTIONS请求的Header信息</div><div class="line"><span class="attribute">HTTP/1.1 200 OK</span></div><div class="line">Server: nginx/1.9.0</div><div class="line"><span class="attribute">Date</span>: Sun, 12 Jun 2016 01:58:13 GMT</div><div class="line"><span class="attribute">Content-Type</span>: text/html; charset=UTF-8</div><div class="line"><span class="attribute">Content-Length</span>: 30</div><div class="line"><span class="attribute">Connection</span>: keep-alive</div><div class="line"><span class="attribute">Access-Control-Allow-Origin</span>: *</div><div class="line"><span class="attribute">Access-Control-Allow-Headers</span>: Origin,X-Requested-With,Content-Type,Accept</div><div class="line"><span class="attribute">Access-Control-Allow-Methods</span>: GET,POST,OPTIONS</div><div class="line"><span class="attribute">Access-Control-Allow-Credentials</span>: true</div><div class="line"></div><div class="line">//接下来就是像正常的POST请求一样发送</div><div class="line"><span class="attribute">POST /editor/get_info HTTP/1.1</span></div><div class="line">Host: 192.168.8.64:5555</div><div class="line"><span class="attribute">Referer</span>: http://resource.domain.com/284671214/284671249/app.html?appId=5078b48f8dbb3b8a14e8d86df1c6691d5142</div><div class="line"><span class="attribute">Accept</span>: */*</div><div class="line"><span class="attribute">Content-Type</span>: application/xml</div><div class="line"><span class="attribute">Accept-Language</span>: zh-cn</div><div class="line"><span class="attribute">Accept-Encoding</span>: gzip, deflate</div><div class="line"><span class="attribute">Origin</span>: http://resource.domain.com/</div><div class="line"><span class="attribute">Content-Length</span>: 31</div><div class="line"><span class="attribute">Connection</span>: keep-alive</div><div class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (iPhone; CPU iPhone OS 8_4_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12H321 Safari/600.1.4</div></pre></td></tr></table></figure>
+<h2 id="Chrome中web页面CORS请求">Chrome中web页面CORS请求</h2><figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">POST</span> <span class="string">/editor/get_vote_info</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: service.domain.com</div><div class="line"><span class="attribute">Connection</span>: keep-alive</div><div class="line"><span class="attribute">Content-Length</span>: 74</div><div class="line"><span class="attribute">Cache-Control</span>: max-age=0</div><div class="line"><span class="attribute">Origin</span>: http://resource.domain.com</div><div class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.23 Mobile Safari/537.36</div><div class="line"><span class="attribute">Content-Type</span>: text/plain;charset=UTF-8</div><div class="line"><span class="attribute">Accept</span>: */*</div><div class="line"><span class="attribute">Referer</span>: http://resource.domain.com/268441891/268441895/app.html?appId=ed60a4c24aae8026e96402f83e097036edff</div><div class="line"><span class="attribute">Accept-Encoding</span>: gzip, deflate</div><div class="line"><span class="attribute">Accept-Language</span>: zh-CN,zh;q=0.8,en;q=0.6,ja;q=0.4,zh-TW;q=0.2</div></pre></td></tr></table></figure>
+<h2 id="iOS9中的CORS请求">iOS9中的CORS请求</h2><p>和 Chrome 一致</p>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Content-<span class="built_in">Type</span>:	<span class="built_in">text</span>/plain;charset=UTF-<span class="number">8</span></div></pre></td></tr></table></figure>
+<h2 id="区别:">区别:</h2><p>原来都是Content-type没有设置,导致浏览器给设置了不同的content-type导致的.<br>参考w3中http1.1的关于<a href="https://www.w3.org/Protocols/rfc1341/4_Content-Type.html" target="_blank" rel="external">Content-Type</a>的定义:<br>Content-type的值必须要设置,如果没有设置的情况下会被当做”application/octet-stream”类型来处理,在这个bug中由虽然没有设置xhr的Content-Type但是浏览器设定了这个字段.</p>
+<h1 id="解决方法:">解决方法:</h1><h2 id="让服务器对OPTIONS请求返回合适值">让服务器对OPTIONS请求返回合适值</h2><ol>
+<li>处理OPTIONS请求</li>
+<li>给OPTIONS正确的response(让浏览器知道服务器支持CORS的POST请求).<code>Access-Control-Allow-Methods: GET,POST,OPTIONS</code></li>
+<li>返回正确的 <code>Access-Control-Allow-Headers: Content-Type</code></li>
+</ol>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line"><span class="string">Server:</span> nginx/<span class="number">1.9</span><span class="number">.0</span></div><div class="line"><span class="string">Date:</span> Sun, <span class="number">12</span> Jun <span class="number">2016</span> <span class="number">01</span>:<span class="number">58</span>:<span class="number">13</span> GMT</div><div class="line">Content-<span class="string">Type:</span> text/html; charset=UTF<span class="number">-8</span></div><div class="line">Content-<span class="string">Length:</span> <span class="number">30</span></div><div class="line"><span class="string">Connection:</span> keep-alive</div><div class="line">Access-Control-Allow-<span class="string">Origin:</span> *</div><div class="line">Access-Control-Allow-<span class="string">Headers:</span> Origin,X-Requested-With,Content-Type,Accept</div><div class="line">Access-Control-Allow-<span class="string">Methods:</span> GET,POST,OPTIONS <span class="comment">//这里要接受OPTIONS </span></div><div class="line">Access-Control-Allow-<span class="string">Credentials:</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
+<h2 id="设置XHR的RequestHeader">设置XHR的RequestHeader</h2><p>这里大神的书里也有偏差,道神写的书里记载着跨域的xhr的不能使用setRequestHeader.但实际上是可以的:</p>
+<p>由于:</p>
+<blockquote>
+<p>从Gecko 2.0开始，text/plain, application/x-www-form-urlencoded 和 multipart/form-data 类型的数据都可以直接用于跨站请求，而不需要先发起“预请求”了</p>
+</blockquote>
+<p>所以可以把请求的类型强制设置为这三种之中的一种,但是也需要后台的接口能正确的处理这三种中的一种才可以选择这个解决方法.</p>
+<h3 id="方法一:">方法一:</h3><figure class="highlight accesslog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">xhr = new XMLHttpRequest();</div><div class="line">xhr.open(<span class="string">"<span class="keyword">POST</span>"</span>, url, true);</div><div class="line">xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded'); //模拟form提交的数据</div><div class="line">xhr.send(paramStr);</div></pre></td></tr></table></figure>
+<h3 id="方法二:">方法二:</h3><p>如果是使用formData,默认是把<code>Content-Type</code>设置为:<code>multipart/form-data</code>的. 但可以使用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Blob" target="_blank" rel="external">Blob</a>作为构造函数指定要生成的对象的<code>Content-Type</code> 但是比起前面一种略麻烦:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> formData = <span class="built_in">new</span> FormData();</div><div class="line">formData.<span class="built_in">append</span>(<span class="string">'items'</span>, <span class="built_in">new</span> Blob([JSON.stringify(&#123;</div><div class="line">    name: <span class="string">"Book"</span>,</div><div class="line">    quantity: <span class="string">"12"</span></div><div class="line">&#125;)], &#123;</div><div class="line">    <span class="keyword">type</span>: <span class="string">"application/x-www-form-urlencoded"</span></div><div class="line">&#125;));</div></pre></td></tr></table></figure>
+<h1 id="总结:">总结:</h1><p>如果一开始的时候就去抓包分析,只要发现了OPTIONS请求类型和我设置的不一致,再展开去查找,而不是去胡乱猜想,一定会更快找到这个bug的原因.</p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/05/30/installEsxiOnGen8/" itemprop="url">
                   Mac 环境下 Hp Gen8 microServer安装 Esxi Synology DSM
                 </a>
@@ -378,6 +501,102 @@
             
             
               
+                <a class="post-title-link" href="/2016/05/26/配置 ubuntu/" itemprop="url">
+                  Ubuntu 开启 BBR配置
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-05-26T23:05:54+08:00" content="2016-05-26">
+              2016-05-26
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="配置_ubuntu">配置 ubuntu</h1><ul>
+<li>Apt-get can’t connect to ‘security.ubuntu.com’</li>
+</ul>
+<p>Open <code>vi /etc/gai.conf</code></p>
+<p>Uncomment the following line:</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">#</span></div><div class="line"><span class="meta"># For sites which prefer IPv4 connections change the last line to</span></div><div class="line"><span class="meta">#</span></div><div class="line">precedence ::ffff:<span class="number">0</span>:<span class="number">0</span>/<span class="number">96</span> <span class="number">100</span></div></pre></td></tr></table></figure>
+<h2 id="配置hostname">配置hostname</h2><figure class="highlight dsconfig"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">hostnamectl </span><span class="built_in">set-hostname</span> <span class="string">sever1024</span></div></pre></td></tr></table></figure>
+<h2 id="配置证书登录">配置证书登录</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//生成key</span></div><div class="line">ssh-keygen -<span class="selector-tag">b</span> <span class="number">4096</span></div><div class="line"><span class="comment">// 生成文件夹</span></div><div class="line">mkdir -<span class="selector-tag">p</span> ~/<span class="selector-class">.ssh</span> &amp;&amp; sudo chmod -R <span class="number">700</span> ~/.ssh/</div><div class="line"><span class="comment">// 在本地执行</span></div><div class="line">scp ~/.ssh/id_rsa<span class="selector-class">.pub</span> example_user@<span class="number">203.0</span>.<span class="number">113.10</span>:~/.ssh/authorized_keys</div><div class="line"></div><div class="line">sudo chmod <span class="number">700</span> -R ~/<span class="selector-class">.ssh</span> &amp;&amp; chmod <span class="number">600</span> ~/.ssh/authorized_keys</div></pre></td></tr></table></figure>
+<ul>
+<li>配置ssh 端口 禁用密码登录</li>
+</ul>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sudo vi /etc/ssh/sshd_config</div><div class="line"></div><div class="line">port <span class="number">22</span> <span class="comment">//修改为不常见的端口号</span></div><div class="line">PermitRootLogin <span class="keyword">no</span> <span class="comment">//禁用root 登录</span></div><div class="line">PasswordAuthentication <span class="keyword">no</span> <span class="comment">// 禁用密码登录</span></div></pre></td></tr></table></figure>
+<h2 id="配置_ufw">配置 ufw</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo apt-get <span class="keyword">install</span> ufw</div><div class="line">sudo ufw <span class="keyword">default</span> <span class="keyword">allow</span> outgoing</div><div class="line">sudo ufw <span class="keyword">default</span> deny incoming</div><div class="line">sudo ufw <span class="keyword">allow</span> ssh</div></pre></td></tr></table></figure>
+<h2 id="安装fail2ban">安装fail2ban</h2><p>Ubuntu</p>
+<h3 id="Ensure_your_system_is_up_to_date:">Ensure your system is up to date:</h3><figure class="highlight q"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-<span class="built_in">get</span> <span class="keyword">update</span> &amp;&amp; apt-<span class="built_in">get</span> upgrade -y</div></pre></td></tr></table></figure>
+<h3 id="Install_Fail2ban:">Install Fail2ban:</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-<span class="keyword">get</span> install fail2ban</div></pre></td></tr></table></figure>
+<p>The service will automatically start.<br>(Optional) If you would like email support, install Sendmail:</p>
+<h3 id="install_Sendmail">install Sendmail</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-<span class="keyword">get</span> install sendmail</div></pre></td></tr></table></figure>
+<h3 id="Allow_SSH_access_through_UFW_and_then_enable_the_firewall:">Allow SSH access through UFW and then enable the firewall:</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ufw allow ssh</div><div class="line">ufw <span class="built_in">enable</span></div></pre></td></tr></table></figure>
+<h3 id="config">config</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">cp /etc/fail2ban/fail2ban<span class="selector-class">.conf</span> /etc/fail2ban/fail2ban<span class="selector-class">.local</span></div><div class="line"></div><div class="line">cp /etc/fail2ban/jail<span class="selector-class">.conf</span> /etc/fail2ban/jail<span class="selector-class">.local</span></div><div class="line"></div><div class="line">sudo vi /etc/fail2ban/jail.local</div></pre></td></tr></table></figure>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="section">[ssh]</span></div><div class="line">    </div><div class="line"><span class="attr">enabled</span>  = <span class="literal">true</span></div><div class="line"><span class="attr">port</span>     = ssh // 这里修改成你的ssh port</div><div class="line"><span class="attr">filter</span>   = sshd</div><div class="line"><span class="attr">logpath</span>  = /var/log/auth.log</div><div class="line"><span class="attr">maxretry</span> = <span class="number">6</span></div></pre></td></tr></table></figure>
+<h3 id="安装内核">安装内核</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">wget http:<span class="comment">//kernel.ubuntu.com/~kernel-ppa/mainline/v4.10.10/linux-image-4.10.10-041010-generic_4.10.10-041010.201704120813_amd64.deb</span></div><div class="line">dpkg -i linux-image-4.10.10-041010-generic_4.10.10-041010.201704120813_amd64.deb</div><div class="line"></div><div class="line"><span class="comment">// 检查文件</span></div><div class="line"><span class="keyword">ls</span> /<span class="keyword">boot</span>/vmlinuz* </div><div class="line"><span class="comment">//update</span></div><div class="line"><span class="keyword">update</span>-grub</div><div class="line"></div><div class="line"><span class="keyword">su</span></div><div class="line"><span class="comment">//检查版本</span></div><div class="line">uname -<span class="built_in">r</span></div><div class="line"></div><div class="line"><span class="comment">// 启动</span></div><div class="line">echo <span class="string">"net.core.default_qdisc=fq"</span> &gt;&gt; /etc/sysctl.<span class="keyword">conf</span></div><div class="line">echo <span class="string">"net.ipv4.tcp_congestion_control=bbr"</span> &gt;&gt; /etc/sysctl.<span class="keyword">conf</span></div><div class="line"><span class="comment">// 生效</span></div><div class="line">sysctl -p</div><div class="line"><span class="comment">//重启</span></div><div class="line">reboot</div></pre></td></tr></table></figure>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/05/26/addNativeJavaSciptsInterface/" itemprop="url">
                   JS与Native交互接口定义 Native JavaScipts Interface
                 </a>
@@ -469,102 +688,6 @@
 </ul>
 <h3 id="代码实现:">代码实现:</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="built_in">String</span> call = <span class="string">"javascript:helloWorld(1,2)"</span>;</div><div class="line">WebView.loadUrl(<span class="string">"http://www.hs.com"</span>);  </div><div class="line"></div><div class="line"><span class="comment">//先加载页面后就可以load JavaScript代码.</span></div><div class="line"></div><div class="line">WebView.loadUrl(call);    </div><div class="line">  </div><div class="line"><span class="xml"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="actionscript"></span></span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">helloWorld</span><span class="params">(num1, num2)</span> </span>&#123;</div><div class="line">	   sum =num1+num2;</div><div class="line">       alert(<span class="string">"helloWord!"</span>+sum); </div><div class="line">	<span class="comment">//这里也可以在java中定义一个方法接受js返回的参数.</span></div><div class="line">	<span class="comment">//参考上面的js调用java的代码    </span></div><div class="line">&#125; </div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
 
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/05/26/配置 ubuntu/" itemprop="url">
-                  Ubuntu 开启 BBR配置
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-05-26T23:05:54+08:00" content="2016-05-26">
-              2016-05-26
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="配置_ubuntu">配置 ubuntu</h1><ul>
-<li>Apt-get can’t connect to ‘security.ubuntu.com’</li>
-</ul>
-<p>Open <code>vi /etc/gai.conf</code></p>
-<p>Uncomment the following line:</p>
-<figure class="highlight vala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">#</span></div><div class="line"><span class="meta"># For sites which prefer IPv4 connections change the last line to</span></div><div class="line"><span class="meta">#</span></div><div class="line">precedence ::ffff:<span class="number">0</span>:<span class="number">0</span>/<span class="number">96</span> <span class="number">100</span></div></pre></td></tr></table></figure>
-<h2 id="配置hostname">配置hostname</h2><figure class="highlight dsconfig"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">hostnamectl </span><span class="built_in">set-hostname</span> <span class="string">sever1024</span></div></pre></td></tr></table></figure>
-<h2 id="配置证书登录">配置证书登录</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//生成key</span></div><div class="line">ssh-keygen -<span class="selector-tag">b</span> <span class="number">4096</span></div><div class="line"><span class="comment">// 生成文件夹</span></div><div class="line">mkdir -<span class="selector-tag">p</span> ~/<span class="selector-class">.ssh</span> &amp;&amp; sudo chmod -R <span class="number">700</span> ~/.ssh/</div><div class="line"><span class="comment">// 在本地执行</span></div><div class="line">scp ~/.ssh/id_rsa<span class="selector-class">.pub</span> example_user@<span class="number">203.0</span>.<span class="number">113.10</span>:~/.ssh/authorized_keys</div><div class="line"></div><div class="line">sudo chmod <span class="number">700</span> -R ~/<span class="selector-class">.ssh</span> &amp;&amp; chmod <span class="number">600</span> ~/.ssh/authorized_keys</div></pre></td></tr></table></figure>
-<ul>
-<li>配置ssh 端口 禁用密码登录</li>
-</ul>
-<figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sudo vi /etc/ssh/sshd_config</div><div class="line"></div><div class="line">port <span class="number">22</span> <span class="comment">//修改为不常见的端口号</span></div><div class="line">PermitRootLogin <span class="keyword">no</span> <span class="comment">//禁用root 登录</span></div><div class="line">PasswordAuthentication <span class="keyword">no</span> <span class="comment">// 禁用密码登录</span></div></pre></td></tr></table></figure>
-<h2 id="配置_ufw">配置 ufw</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo apt-get <span class="keyword">install</span> ufw</div><div class="line">sudo ufw <span class="keyword">default</span> <span class="keyword">allow</span> outgoing</div><div class="line">sudo ufw <span class="keyword">default</span> deny incoming</div><div class="line">sudo ufw <span class="keyword">allow</span> ssh</div></pre></td></tr></table></figure>
-<h2 id="安装fail2ban">安装fail2ban</h2><p>Ubuntu</p>
-<h3 id="Ensure_your_system_is_up_to_date:">Ensure your system is up to date:</h3><figure class="highlight q"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-<span class="built_in">get</span> <span class="keyword">update</span> &amp;&amp; apt-<span class="built_in">get</span> upgrade -y</div></pre></td></tr></table></figure>
-<h3 id="Install_Fail2ban:">Install Fail2ban:</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-<span class="keyword">get</span> install fail2ban</div></pre></td></tr></table></figure>
-<p>The service will automatically start.<br>(Optional) If you would like email support, install Sendmail:</p>
-<h3 id="install_Sendmail">install Sendmail</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-<span class="keyword">get</span> install sendmail</div></pre></td></tr></table></figure>
-<h3 id="Allow_SSH_access_through_UFW_and_then_enable_the_firewall:">Allow SSH access through UFW and then enable the firewall:</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ufw allow ssh</div><div class="line">ufw <span class="built_in">enable</span></div></pre></td></tr></table></figure>
-<h3 id="config">config</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">cp /etc/fail2ban/fail2ban<span class="selector-class">.conf</span> /etc/fail2ban/fail2ban<span class="selector-class">.local</span></div><div class="line"></div><div class="line">cp /etc/fail2ban/jail<span class="selector-class">.conf</span> /etc/fail2ban/jail<span class="selector-class">.local</span></div><div class="line"></div><div class="line">sudo vi /etc/fail2ban/jail.local</div></pre></td></tr></table></figure>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="section">[ssh]</span></div><div class="line">    </div><div class="line"><span class="attr">enabled</span>  = <span class="literal">true</span></div><div class="line"><span class="attr">port</span>     = ssh // 这里修改成你的ssh port</div><div class="line"><span class="attr">filter</span>   = sshd</div><div class="line"><span class="attr">logpath</span>  = /var/log/auth.log</div><div class="line"><span class="attr">maxretry</span> = <span class="number">6</span></div></pre></td></tr></table></figure>
-<h3 id="安装内核">安装内核</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">wget http:<span class="comment">//kernel.ubuntu.com/~kernel-ppa/mainline/v4.10.10/linux-image-4.10.10-041010-generic_4.10.10-041010.201704120813_amd64.deb</span></div><div class="line">dpkg -i linux-image-4.10.10-041010-generic_4.10.10-041010.201704120813_amd64.deb</div><div class="line"></div><div class="line"><span class="comment">// 检查文件</span></div><div class="line"><span class="keyword">ls</span> /<span class="keyword">boot</span>/vmlinuz* </div><div class="line"><span class="comment">//update</span></div><div class="line"><span class="keyword">update</span>-grub</div><div class="line"></div><div class="line"><span class="keyword">su</span></div><div class="line"><span class="comment">//检查版本</span></div><div class="line">uname -<span class="built_in">r</span></div><div class="line"></div><div class="line"><span class="comment">// 启动</span></div><div class="line">echo <span class="string">"net.core.default_qdisc=fq"</span> &gt;&gt; /etc/sysctl.<span class="keyword">conf</span></div><div class="line">echo <span class="string">"net.ipv4.tcp_congestion_control=bbr"</span> &gt;&gt; /etc/sysctl.<span class="keyword">conf</span></div><div class="line"><span class="comment">// 生效</span></div><div class="line">sysctl -p</div><div class="line"><span class="comment">//重启</span></div><div class="line">reboot</div></pre></td></tr></table></figure>
             
           </span>
         
@@ -1343,277 +1466,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/03/18/JS-execution-context/" itemprop="url">
-                  Javascript 中的 运行环境(Execution Context),  作用域链(Scope Chain), this & 闭包(Closure)概念
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-03-18T09:31:55+08:00" content="2016-03-18">
-              2016-03-18
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <p>在JS中想要真正搞明白Closure(闭包)这个概念,必须先要把Execution Context,Scope Chain和this这三个概念搞清楚.</p>
-<h1 id="运行环境(Execution_Context)">运行环境(Execution Context)</h1><p>在 ECMA 262 3rd edition中: Execution Context决定了在执行栈中运行的代码所能访问的变量,函数.很多人总是把这个概念和作用域链混淆,而实际上作用域链ScopeChain只是Execution Context的一部分.</p>
-<ul>
-<li><p>可以暂时简单地理解为能在执行栈中独立完整运行的代码,它由三个部分的内容组成:</p>
-<ul>
-<li>作用域链(Scope Chain) </li>
-<li>变量对象(Variable Object) </li>
-<li>Execution Context的this指针.</li>
-</ul>
-</li>
-<li><p>下面三种情况都会生成一个新的Execution Context:</p>
-<ul>
-<li>初始化全局环境时</li>
-<li>声明一个函数时</li>
-<li>执行Eval()时</li>
-</ul>
-</li>
-</ul>
-<h2 id="作用域链(scope_Chain)">作用域链(scope Chain)</h2><p>当声明一个function时,就会自动生成的这个function的<code>[[scope]]</code>属性.<code>[[scope]</code>]会把当前Execution Context的 AO或VO添加到function<code>[[scope]]</code>属性的最前端(也就是作用域链的最前端).所以内部的[[scope]]是如何被定义的对于我们理解Execution Conetext来说很重要.</p>
-<p>在 ECMAScript 中所定义的函数都可以看成是object对象,他们是在从实例化代码中声明的函数,执行函数表达式或者调用构造函数的时候中被创建的.这里分成两种情况:</p>
-<ul>
-<li><p>当调用构造函数创建实例对象时. 构造函数中会包含一个[[scope]]属性指向一个只包含了全局对象(global object)的作用域链(scope chain).</p>
-</li>
-<li><p>当函数对象是被函数声明或函数表达式创建的,会创建一个函数内部的<code>[[scope]]</code>属性,<br>函数内部的<code>[[scope]]</code> 指向全局对象的<code>[[scope]]</code>属性, 最后形成一个作用域链(scope chain).</p>
-</li>
-</ul>
-<p>最简单的一个例子,在全局环境下声明一个函数:</p>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">exampleFunc</span><span class="params">(formalParameter)</span></span>&#123;</div><div class="line">    ...   <span class="comment">// 函数体 function body code</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ul>
-<li>在全局执行环境声明变量的时候会生成相关联的函数对象,全局执行环境包含一个简单的scopeChain,指向的就是全局对象(global object 作为VO使用).</li>
-<li>因此在创建的函数对象时(就是在<code>global object</code>中创建一个名字为<code>exampleFunc</code>的方法属性时),函数对象实例的<code>[[scope]]</code>内部属性会指向一个只包含<code>global object</code>的作用域链. </li>
-<li>当像下面的函数表达式在一个全局的execution context中执行的时候,也会分配一个类似的作用域链.</li>
-</ul>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> exampleFuncRef = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">    ...   <span class="comment">// 函数体 function body code</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>在一个函数内部函数声明或函数表达式会使新建的内部函数的<code>[[scope]]</code>属性指向外部部函数的<code>execution context</code>.</p>
-<p>参考以下代码:</p>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">outerFunc</span><span class="params">(formalParameter)</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">innerFunc</span><span class="params">()</span></span>&#123;</div><div class="line">        ... <span class="comment">// innerfunc的函数体 </span></div><div class="line">    &#125;</div><div class="line">    ...  <span class="comment">// outerFunc的函数体 the rest of the outer function body.</span></div><div class="line">&#125;</div><div class="line">outerFunc( <span class="number">5</span> );</div></pre></td></tr></table></figure>
-<ul>
-<li><p>外部的函数对象是在<code>global execution context</code>中的创建VO的时候创建的,所以它的<code>[[scope]]</code>属性会指向<code>global object</code>.</p>
-</li>
-<li><p>当全局环境下的代码执行到调用 <code>outerFunc</code>函数的时候,创建一个新的执行环境(execution context)和outerFunc函数对象的AO/VO, outerFunc的<code>scopechain</code>(作用域链)的前端会指向outerFunc函数对象的AO/VO.链的后端指向outerFunc的函数对象的<code>[[scope]]</code>属性(这里就是 global object).</p>
-</li>
-<li><p>在为outerFunc生成VO/AO的时候,就会创建innerFunc的函数对象,而这个函数对象的<code>[[scope chain]]</code>会指向innerFunc被创建时的execution context的作用域链(也就是outerFunc的<code>scopechain</code>(作用域链)).  </p>
-</li>
-<li><p>所有的这些步骤都是自动的而且是决定于代码的结构和代码执行所处的环境.execution context的作用域链定义了函数对象的[[scope]]属性.而函数的[[scope]]属性定义了函数的execution context的范围.</p>
-</li>
-<li>当执行代码时需要查找指定的变量或者函数时,会顺着作用域链一层一层的向上查找每一层的AO/VO对象,直到global层位置,如果global的VO中都没有包含执行所需的变量或者函数,就会返回undefined.</li>
-</ul>
-<h2 id="Execution_Context中的AO和VO:">Execution Context中的AO和VO:</h2><p>变量对象(Variable Object)和激活/活动对象(Activation Object)</p>
-<h3 id="变量对象(Variable_Object)">变量对象(Variable Object)</h3><p>在不同的环境是指的下面二者中的一个:</p>
-<ul>
-<li><p>global object,储存着所有的全局变量(像是: 浏览器里的 document或console对象)</p>
-</li>
-<li><p>Activation object:在一个函数的局部环境下是使用的AO作为VO,定义了ECMAScript的作用域 (这时候: <code>AO===VO //true</code>)</p>
-</li>
-</ul>
-<h3 id="活动对象(Activation_Object)">活动对象(Activation Object)</h3><p>Activation object对象中包含:</p>
-<ol>
-<li>变量 (var, VariableDeclaration);</li>
-<li>函数声明 (FunctionDeclaration, 缩写为FD);</li>
-<li>函数的形参(Function formal parameters)和实参(actual parameters/arguments),如果函数被调用时具有实参,形参会在这时就赋值,否则形参被赋值为undefined,注意参数是:按值传参而不是引用).    </li>
-</ol>
-<p>这就可以解释: 为什么在全局下声明的函数会成为window/global对象的一个属性.</p>
-<h3 id="AO和VO区别">AO和VO区别</h3><ul>
-<li>global下的VO比函数局部execution context中的AO只是缺少了函数的形参这个属性(因为全局变量不是一个函数,没有参数~).</li>
-</ul>
-<p>Tips: node.js下全局对象是global,而在浏览器JavaScript中全局对象通常是window.</p>
-<p>通过以下代码就可以验证:在全局的execution Context的下的时候,Global object就被当做VO对象使用.</p>
-<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">var GLOBAL_OBJECT = this;</div><div class="line"></div><div class="line"> /* create global <span class="keyword">property</span><span class="title"> </span>via variable declaration; <span class="keyword">property</span><span class="title"> </span>has DontDelete */</div><div class="line"> var foo = <span class="number">1</span>;</div><div class="line"></div><div class="line"> /* create global <span class="keyword">property</span><span class="title"> </span>via undeclared assignment; <span class="keyword">property</span><span class="title"> </span>has no DontDelete */</div><div class="line"> bar = <span class="number">2</span>;</div><div class="line"></div><div class="line"> delete foo; // <span class="literal">false</span></div><div class="line"> typeof foo; // <span class="string">"number"</span></div><div class="line"></div><div class="line"> delete bar; // <span class="literal">true</span></div><div class="line"> typeof bar; // <span class="string">"undefined"</span></div></pre></td></tr></table></figure>
-<p>谈到Execution context,就不能不谈Execution context stack(栈),因为Execution Context的就是在在stack中运行的.</p>
-<h2 id="执行栈(Execution_Context_Stack)">执行栈(Execution Context Stack)</h2><p>这个栈有如下几个特点:</p>
-<ul>
-<li>单线程运行的(Single threaded).</li>
-<li>同步执行的(Synchronous execution).</li>
-<li>栈只有一个全局环境在栈的底部(Global context).</li>
-<li>在这一个全局的执行环境下,他可以创建无限多的子函数的执行环境 </li>
-<li>每一个函数都会在运行的时候创建一个新的执行环境push进这个栈中.</li>
-</ul>
-<h3 id="代码验证:">代码验证:</h3><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">(<span class="function">function <span class="title">foo</span><span class="params">(i)</span> </span>&#123;</div><div class="line">    var n = i; <span class="comment">//i赋值给n,保存被调用时的参数,在函数最后输出.</span></div><div class="line">    console.log(<span class="string">'start run foo(%s):'</span>,i);</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (i === <span class="number">3</span>) &#123;</div><div class="line">    	  console.log(<span class="string">'foo(%s) done &amp; start return '</span>,i);</div><div class="line">          <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> &#123;</div><div class="line">        foo(++i);</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">    console.log(<span class="string">'foo(%s) done:'</span>,n); </div><div class="line">    <span class="keyword">return</span>;</div><div class="line">&#125;(<span class="number">0</span>));</div><div class="line"></div><div class="line"><span class="comment">// result:</span></div><div class="line">start run foo(<span class="number">0</span>):  //开始运行时 i=0 接着调用自己 foo(++i) 这时候参数是1了;</div><div class="line">start run foo(<span class="number">1</span>):  //在<span class="keyword">else</span>里 调用 foo(2);</div><div class="line">start run foo(<span class="number">2</span>):  //在<span class="keyword">else</span>里 调用 foo(3);</div><div class="line">start run foo(<span class="number">3</span>):  // foo(3)被调用</div><div class="line">foo(3) done &amp; start <span class="keyword">return</span>  // foo(3)函数结束 最晚被调用的函数 最先被执行完.</div><div class="line">foo(2) done: // foo(2) 接着运行 foo(++i)后面的语句</div><div class="line">foo(1) done: // foo(1) 接着运行 foo(++i);后面的语句</div><div class="line">foo(<span class="number">0</span>) done: // foo(0) 接着运行 foo(++i);后面的语句</div></pre></td></tr></table></figure>
-<p>运行栈里执行的过程:</p>
-<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-18/73084259.jpg" alt=""></p>
-<p>每当有function被执行时，就会产生一个新的上下文，这一上下文会被压入Js的上下文堆栈（context stack）中，function执行结束后则被弹出，因此Js解释器总是在栈顶上下文中执行。</p>
-<h2 id="Execution_Context_生成的过程:">Execution Context 生成的过程:</h2><h3 id="ES5中的解释说明:">ES5中的解释说明:</h3><p>ECMAScript 5的标准中，关于变量声明和作用域（第12.2.2节）的内容:</p>
-<blockquote>
-<p>如果在一个函数中声明变量，这些变量就被定义在了在该函数的函数作用域中，见第10.1.3所述。不然它们就是被定义在全局的作用域内（即，它们被创建为全局对象的成员，见第10.1.3所述），当进入执行环境的时候，变量就被创建。一个语句块不能定义一个新的作用域。只有一个程序或者函数声明能够产生一个新的作用域。创建变量时，被初始化为undefined。如果变量声明语句里面带有赋值操作，则赋值操作只有被执行到声明语句的时候才会发生，而不是创建的时候。</p>
-</blockquote>
-<ul>
-<li>创建execution context是分为两个阶段被执行的: 创建阶段和运行阶段.</li>
-</ul>
-<h3 id="创建阶段(Creation_Stage)">创建阶段(Creation Stage)</h3><p>这个阶段是:当函数被调用时,且在执行其中任何一行代码之前时,包括以下三个步骤: </p>
-<ol>
-<li>初始化作用域链(Scope Chain)</li>
-<li>这个阶段会创建一个VO对象(具体内容参考前面1.2的内容).</li>
-<li>给Execution Context对应的this指针赋值. </li>
-</ol>
-<h3 id="执行/赋值阶段(Activation_/_Code_Execution_Stage)">执行/赋值阶段(Activation / Code Execution Stage)</h3><p>解释器解析代码,一行一行的执行代码,并且根据执行的代码,为之前声明创建的变量赋值.(比如:执行到var i =0  时,才为i赋值).</p>
-<h3 id="例子:">例子:</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">(i)</span> </span>&#123;</div><div class="line">    <span class="keyword">var</span> a = <span class="string">'hello'</span>;</div><div class="line">    <span class="keyword">var</span> b = <span class="function"><span class="keyword">function</span> <span class="title">funcB</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    &#125;;</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">c</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">foo(<span class="number">123</span>);</div></pre></td></tr></table></figure>
-<ul>
-<li><p>创建阶段</p>
-<p>这里用代码来描述解析器的创建逻辑:</p>
-</li>
-</ul>
-<figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">fooExecutionContext = &#123;</div><div class="line"><span class="symbol">    scopeChain:</span> &#123; ... &#125;, <span class="comment">//生成作用域</span></div><div class="line"><span class="symbol">    variableObject:</span> &#123;</div><div class="line"><span class="symbol">        arguments:</span> &#123;</div><div class="line">            <span class="number">0</span>: <span class="number">123</span>, <span class="comment">//这里直接赋值了 arguments优先级比函数的声明的优先级更高</span></div><div class="line"><span class="symbol">            length:</span> <span class="number">1</span></div><div class="line">        &#125;,</div><div class="line"><span class="symbol">        i:</span> <span class="number">123</span>,  <span class="comment">//这里也已经赋值了</span></div><div class="line"><span class="symbol">        c:</span> pointer to function c()</div><div class="line"><span class="symbol">        a:</span> undefined,</div><div class="line"><span class="symbol">        b:</span> undefined</div><div class="line">    &#125;, <span class="comment">//创建 声明变量和函数和函数的参数,同时要给函数的参数赋值</span></div><div class="line"><span class="symbol">    this:</span> &#123; ... &#125; <span class="comment">//给this 指针赋值</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>PS: 函数的内置变量arguments看起来应该是在普通的函数参数之后才声明，但其实是在函数声明之前。如果参数里面有名称为arguments的参数，它会比内置的那个优先级高，即使它是undefined。所以不要使用arguments作为为函数参数的名称。</p>
-<ul>
-<li><p>执行/赋值阶段:</p>
-<p>这里用代码来描述解析器的赋值执行过程:</p>
-</li>
-</ul>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">fooExecutionContext = &#123;</div><div class="line">    scopeChain: &#123; ... &#125;,</div><div class="line">    variableObjec<span class="variable">t:</span> &#123;</div><div class="line">        <span class="keyword">argument</span><span class="variable">s:</span> &#123;</div><div class="line">            <span class="number">0</span>: <span class="number">123</span>,</div><div class="line">            length: <span class="number">1</span></div><div class="line">        &#125;,</div><div class="line">        i: <span class="number">123</span>,</div><div class="line">        <span class="keyword">c</span>: pointer <span class="keyword">to</span> <span class="function"><span class="keyword">function</span> <span class="title">c</span><span class="params">()</span> </span></div><div class="line">        <span class="variable">a:</span> <span class="string">'hello'</span>, // <span class="keyword">a</span>被赋值</div><div class="line">        <span class="variable">b:</span> pointer <span class="keyword">to</span> <span class="function"><span class="keyword">function</span> <span class="title">funcB</span><span class="params">()</span> //这时候<span class="title">funcB</span>才赋值给<span class="title">b</span></span></div><div class="line">    &#125;,</div><div class="line">    thi<span class="variable">s:</span> &#123; ... &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里给this赋值的时候，当function是定义在global/window中时，this指向global/window；当function作为Object的一个方法时，this指向该Object：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> x = <span class="number">1</span>;  </div><div class="line"><span class="keyword">var</span> f1 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>.x);</div><div class="line">&#125;</div><div class="line">f1();  <span class="comment">// -&gt; 1</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> f2 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">  <span class="keyword">this</span>.x = <span class="number">2</span>;</div><div class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>.x);</div><div class="line">&#125;</div><div class="line">f2(); <span class="comment">// -&gt; 2    //这里因为this定义在global/window中, 所以this.x 实际上指向的global.x</span></div><div class="line">x     <span class="comment">// -&gt; 2    // 这里输出2 证明全局中的x的值被this.x 修改了.</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> o = &#123;<span class="attr">x</span>: <span class="string">"abc"</span>, <span class="attr">f</span>: f1&#125;; <span class="comment">//这里把f赋值为:f1变量所指向的函数 </span></div><div class="line">o.f(); <span class="comment">// "abc"   //因为this指向的是o 所有 this.x 输出abc</span></div></pre></td></tr></table></figure>
-<h2 id="变量声明提升(Hoisting)">变量声明提升(Hoisting)</h2><blockquote>
-<p>通过上面的代码,我们可以知道:由于变量声明（或其他声明）总是在所有代码执行之前被处理的，所以在代码中的任意位置声明变量总是等效于在代码开头声明。这意味着变量可以在声明或是赋值之前就被初始化，这个行为叫做“hoisting”。“hoisting”就感觉就像是我们是把所有的变量声明移动到函数或者全局代码的开头位置。</p>
-</blockquote>
-<ul>
-<li>参考下面的例子:</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">   </div><div class="line"><span class="built_in">console</span>.log(foo); <span class="comment">// function的指针, 输出: foo()&#123;return 'hello';&#125;</span></div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> foo); <span class="comment">//输出 function  </span></div><div class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> bar); <span class="comment">//输出 undefined </span></div><div class="line"><span class="comment">//因为这里只是声明了变量bar 但是还没有运算到赋值的那行 所以输出 undefined.</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> foo = <span class="string">'hello'</span>;</div><div class="line"><span class="built_in">console</span>.log(foo);  </div><div class="line"><span class="comment">//输出 hello,因为这里又给foo赋值为字符串'hello',覆盖了之前的函数指针.  </span></div><div class="line">    </div><div class="line"><span class="keyword">var</span> bar = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="string">'world'</span>;</div><div class="line">&#125;;</div><div class="line"> 	</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="string">'hello'</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="闭包Closure">闭包Closure</h1><p>由上面可以知道JavaScript中只有在三种情况下才会新建一个Execution Context,而不像其他语言那样:{}包裹的代码块都会生成自己的Execution Context作为块级作用域.然而理解了JS的Execution Context后,我们可以使用闭包来模仿块级作用域.</p>
-<ul>
-<li>如果理解了上文中提到的Execution Context与作用域链(Scope Chain)的机制，再来看闭包(Closure)的概念就很清楚了。每个function在调用时会创建新的Execution Context，而Execution Content中创建的作用域链就是将外层（上层）上下文所绑定的变量对象逐一串连起来，使当前function可以获取外层的Execution Context的VO,this和scopeChain。</li>
-<li>如果我们在一个function中定义一个新的function，同时将内层function作为值返回，那么内层function所包含的Exxcution Context将会一起返回，即使内层function在其他Execution Context中执行，其内部的作用域链仍然保持原有的VO对象，而且在运行时,外部的变量无法接触原先内层function中的数据，使得function内部的execution context被保护起来，从而形成“闭包”。</li>
-</ul>
-<p>看下面的例子：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">var</span> x =  <span class="number">99</span>;  </div><div class="line"><span class="keyword">var</span> inc = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;  </div><div class="line">  <span class="keyword">var</span> x = <span class="number">0</span>;</div><div class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(x++);</div><div class="line">  &#125;;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> inc1 = inc();  </div><div class="line"><span class="keyword">var</span> inc2 = inc();</div><div class="line"></div><div class="line">inc1();  <span class="comment">// -&gt; 0  </span></div><div class="line">inc1();  <span class="comment">// -&gt; 1  </span></div><div class="line">inc2();  <span class="comment">// -&gt; 0  </span></div><div class="line">inc1();  <span class="comment">// -&gt; 2  </span></div><div class="line">inc2();  <span class="comment">// -&gt; 1  </span></div><div class="line">x;       <span class="comment">// -&gt; 99</span></div></pre></td></tr></table></figure>
-<p>执行过程如下图所示，inc内部返回的匿名function在创建时生成的作用域链包括了inc中的x，即使后来赋值给inc1和inc2之后，直接在global context下调用，它们的作用域链仍然是由定义中所处的上下文环境决定，而且由于x是在function inc中定义的，无法被外层的global context所改变，从而实现了闭包的效果：</p>
-<h2 id="理解作用域中的this">理解作用域中的this</h2><p>function中的this是由调用function时当前所处的Object环境所决定的,this对象只会在一个函数中需要确定，如果是在全局域下，this永远为Global对象，在浏览器中通常就是window对象。</p>
-<h3 id="四种函数调用模式">四种函数调用模式</h3><p><strong>在javascript中，函数的调用一共有4种方式</strong>：</p>
-<ol>
-<li><p>Function Invocation Pattern (函数直接调用模式)</p>
-<p>诸如<code>foo()</code>的调用形式被称为Function Invocation Pattern，是函数最直接的使用形式，注意这里的foo是作为单独的变量出现，而不是属性。<br>在这种模式下，foo函数体中的this永远为Global对象，在浏览器中就是window对象。</p>
-</li>
-<li><p>Method Invocation Pattern  (对象方法调用模式)</p>
-<p>诸如<code>foo.bar()</code>的调用形式被称为Method Invocation Pattern，注意其特点是被调用的函数作为一个对象的属性出现，必然会有“.”或者“[]”这样的关键符号。<br>在这种模式下，bar函数体中的this永远为“.”或“[”前的那个对象，如上例中就一定是foo对象。</p>
-</li>
-<li><p>Constructor Pattern  (构造函数模式)</p>
-<p><code>new foo()</code>这种形式的调用被称为Constructor Pattern，其关键字<code>new</code>就很能说明问题，非常容易识别。<br>在这种模式下，foo函数内部的this永远是new foo()返回的对象。</p>
-</li>
-<li><p>Apply Pattern  (apply模式)</p>
-<p><code>foo.call(thisObject)</code>和<code>foo.apply(thisObject)</code>的形式被称为Apply Pattern，使用了内置的<code>call</code>和<code>apply</code>函数。<br>在这种模式下，<code>call</code>和<code>apply</code>的第一个参数就是foo函数体内的this，如果thisObject是<code>null</code>或<code>undefined</code>，那么会变成Global对象。</p>
-</li>
-</ol>
-<p>所以其实this对象并不像作用域链,它没有一个“查找”的过程。这也是this最容易被混淆用错的一点。记住了上面四种情况,我们来实际验证下是不是这样的.</p>
-<p>参考下面的一些例子：</p>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> name = <span class="string">"global"</span>;  </div><div class="line"><span class="keyword">var</span> obj = &#123;  </div><div class="line">  name: <span class="string">"lyn"</span>,</div><div class="line">  getName: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.name</div><div class="line">  &#125;</div><div class="line">&#125;;</div><div class="line"><span class="comment">//Method Invocation Pattern  对象方法调用模式</span></div><div class="line">obj.getName();  <span class="comment">// -&gt; 输出"lyn"</span></div></pre></td></tr></table></figure>
-<p>由于执行obj.getName()时getName所绑定的this是obj，所以此时this == obj；</p>
-<p>更容易搞混的是在closure条件下：</p>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> name = <span class="string">"window"</span>;  </div><div class="line"><span class="keyword">var</span> obj = &#123;  </div><div class="line">  name: <span class="string">"lyn"</span>,</div><div class="line">  getName: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.name;</div><div class="line">    &#125;;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">obj.getName()();  <span class="comment">// -&gt; 输出"window"</span></div></pre></td></tr></table></figure>
-<p>此时闭包函数被return后调用相当于：</p>
-<figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">getName = obj.getNameFunc();</div><div class="line">//<span class="keyword">Function</span> <span class="title">Invocation</span> Pattern 函数直接调用模式  </div><div class="line">getName();  // -&gt; <span class="string">"global/window"</span>  因为调用时是在全局下</div></pre></td></tr></table></figure>
-<p>换一个更明显的例子：</p>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> obj = &#123;  </div><div class="line">  name: <span class="string">"lyn"</span>,</div><div class="line">  getName: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.name;</div><div class="line">    &#125;;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> obj2 = &#123;  </div><div class="line">  name: <span class="string">"Cheung"</span>,</div><div class="line">  getName: obj.getName() <span class="comment">// 此时闭包函数的this和obj对象绑定在一起</span></div><div class="line">&#125;;</div><div class="line">obj2.getName();  <span class="comment">// -&gt; "Cheung"</span></div></pre></td></tr></table></figure>
-<p>当然，有时候为了避免闭包中的this在执行时被替换，可以采取下面的方法：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> name = <span class="string">"global"</span>;  </div><div class="line"><span class="keyword">var</span> obj = &#123;  </div><div class="line">  name: <span class="string">"lyn"</span>,</div><div class="line">  </div><div class="line">  getName: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">var</span> <span class="keyword">self</span> = this;</div><div class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">       <span class="keyword">return</span> <span class="keyword">self</span>.name;</div><div class="line">    &#125;;</div><div class="line">  &#125;</div><div class="line">&#125;;</div><div class="line">obj.getName()(); <span class="comment">// -&gt; "lyn"</span></div></pre></td></tr></table></figure>
-<p>下面这种就是构造函数模式:</p>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Fn</span><span class="params">(name)</span></span>&#123;</div><div class="line">    <span class="keyword">this</span>.name = name;</div><div class="line">    <span class="keyword">this</span>.getName=<span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">     	<span class="keyword">return</span> <span class="keyword">this</span>.name;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">//Constructor Pattern  (构造函数模式) 带有new关键字</span></div><div class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> Fn(<span class="string">'lyn'</span>);</div><div class="line">a.getName();<span class="comment">//lyn</span></div></pre></td></tr></table></figure>
-<p>或者是在调用时强行定义执行的Object：</p>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> name = <span class="string">"global"</span>;  </div><div class="line"><span class="keyword">var</span> obj = &#123;  </div><div class="line">  name: <span class="string">"lyn"</span>,</div><div class="line">  getNameFunc: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.name;</div><div class="line">    &#125;;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line">obj.getNameFunc()();  <span class="comment">// -&gt; "global"  </span></div><div class="line">obj.getNameFunc().bind(obj)(); <span class="comment">// -&gt; "lyn"</span></div></pre></td></tr></table></figure>
-<h2 id="使用call,apply和bind的区别">使用call,apply和bind的区别</h2><p>call(),apply(),和bind()方法被用来帮我们定义this的值和传递给函数的参数值。<br>他们的第一个参数都是this，如果thisObject是<code>null</code>或<code>undefined</code>，那么this就会变成Global对象。</p>
-<h3 id="区别如下:">区别如下:</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//第二个参数有区别,一个是任意数量的参数 一个是数组</span></div><div class="line"><span class="keyword">var</span> arguments = [arg1,arg2,arg3];</div><div class="line">foo.call(<span class="keyword">this</span>, arg1,arg2,arg3) == foo.apply(<span class="keyword">this</span>, arguments) == <span class="keyword">this</span>.foo(arg1, arg2, arg3)</div></pre></td></tr></table></figure>
-<ul>
-<li>Function.prototype.call 可以有任意数量的参数，第一个参数被分配给this，剩下的被传递给调用函数。</li>
-</ul>
-<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Array.prototype.slice.call([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">0</span>,<span class="number">2</span>)</div><div class="line"><span class="comment">// 返回 [1, 2]</span></div></pre></td></tr></table></figure>
-<ul>
-<li>Function.prototype.apply 的行为和.call类似，但它传递给函数的参数是一个数组而不是任意参数。</li>
-</ul>
-<figure class="highlight prolog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">String</span>.prototype.split.apply(<span class="string">'13.12.02'</span>, [<span class="string">'.'</span>])</div><div class="line">// &lt;- [<span class="string">'13'</span>, <span class="string">'12'</span>, <span class="string">'02'</span>]</div></pre></td></tr></table></figure>
-<ul>
-<li>Function.prototype.bind 创建一个特殊的函数，该函数将永远使用传递给.bind的参数作为this的值，以及能够分配部分参数，创建原函数的咖喱化（currided）版本。</li>
-</ul>
-<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, <span class="number">2</span>];</div><div class="line"><span class="keyword">var</span> <span class="keyword">add</span> = <span class="keyword">Array</span>.prototype.push.bind(arr, <span class="number">3</span>);</div><div class="line"></div><div class="line"><span class="comment">// effectively the same as arr.push(3)</span></div><div class="line"><span class="keyword">add</span>();</div><div class="line"></div><div class="line"><span class="comment">// effectively the same as arr.push(3, 4)</span></div><div class="line"><span class="keyword">add</span>(<span class="number">4</span>);</div><div class="line"></div><div class="line">console.log(arr);</div><div class="line"><span class="comment">// &lt;- [1, 2, 3, 3, 4]</span></div></pre></td></tr></table></figure>
-<h1 id="关于函数参数传值的问题:">关于函数参数传值的问题:</h1><p>函数调用时候的参数究竟是传递的按引用传递的还是按值传递的呢?<br>这里我们先要搞清楚jJavaScript中的变量分为两种:基本类型 和引用类型</p>
-<h2 id="基本类型">基本类型</h2><p>基本类型指的是简单的数据段,包括:</p>
-<ul>
-<li>undefined</li>
-<li>Null</li>
-<li>Boolean </li>
-<li>Number</li>
-<li>String </li>
-</ul>
-<p>这五种类型是按值访问的,因此可以操作保存在变量的实际值.复制基本类型变量时,原有变量和新建的变量之间是相互独立的,不会相互影响.</p>
-<h2 id="引用类型">引用类型</h2><p>引用类型的值是指那些可能由多个基本类型构成的对象,所以引用类型可以看做是是保存在内存中的对象.<br>当从一个变量向另一个变量复制引用类型的值得时候,会将原有的储存在变量对象中的值复制一份到新对象分配的空间中去.而复制的值其实就是一个内存指针,这个指针指向储存在堆中的一个对象.复制完成后,两个变量实际上引用的是相同的一个对象.改变一个变量的值就会影响到另外一个变量.这就是为什么称之为引用类型.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> obj1 =  <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line"><span class="keyword">var</span> obj2 =  obj1;</div><div class="line">obj1.name=<span class="string">"lyn"</span>;</div><div class="line"><span class="built_in">console</span>.log(obj2.name)<span class="comment">//输出lyn</span></div></pre></td></tr></table></figure>
-<h2 id="参数的传值是传递的值而非引用">参数的传值是传递的值而非引用</h2><p>参考下面的例子:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">setName</span>(<span class="params">obj</span>)</span>&#123;</div><div class="line">	obj.name = <span class="string">"lyn"</span>; <span class="comment">//这是obj的值可以看做person对象的内存地址</span></div><div class="line">	obj = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">	obj.name =<span class="string">"cheung"</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> person = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">serName(person);</div><div class="line"><span class="built_in">console</span>.log(person.name); </div><div class="line"><span class="comment">//输出 lyn 因为当在函数中new Object的时候. </span></div><div class="line"><span class="comment">//obj原来储存的person的内存地址的值就被新的对象的内存地址覆盖了,</span></div><div class="line"><span class="comment">//这时候obj引用的就是一个局部变量了,</span></div><div class="line"><span class="comment">//就无法再修改函数外的person的name了.所以函数传值是按值传递的而不是按引用传值的.</span></div></pre></td></tr></table></figure>
-<p>参考:</p>
-<ul>
-<li><a href="http://modernweb.com/2013/12/09/demystifying-this-in-javascript/" target="_blank" rel="external">http://modernweb.com/2013/12/09/demystifying-this-in-javascript/</a></li>
-<li><a href="http://davidshariff.com/blog/what-is-the-execution-context-in-javascript/" target="_blank" rel="external">http://davidshariff.com/blog/what-is-the-execution-context-in-javascript/</a></li>
-<li><a href="http://blog.rainy.im/2015/07/04/scope-chain-and-prototype-chain-in-js/" target="_blank" rel="external">http://blog.rainy.im/2015/07/04/scope-chain-and-prototype-chain-in-js/</a></li>
-<li><a href="http://jibbering.com/faq/notes/closures/" target="_blank" rel="external">http://jibbering.com/faq/notes/closures/</a></li>
-<li><a href="http://perfectionkills.com/understanding-delete/#activation_object_variable_object" target="_blank" rel="external">http://perfectionkills.com/understanding-delete/#activation_object_variable_object</a></li>
-<li><a href="http://dmitrysoshnikov.com/ecmascript/chapter-2-variable-object/" target="_blank" rel="external">http://dmitrysoshnikov.com/ecmascript/chapter-2-variable-object/</a></li>
-</ul>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1659,7 +1511,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">63</span>
+              <span class="site-state-item-count">64</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

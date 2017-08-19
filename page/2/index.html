@@ -211,6 +211,131 @@
             
             
               
+                <a class="post-title-link" href="/2016/10/15/functional_programming/" itemprop="url">
+                  函数式编程笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-10-15T14:48:55+08:00" content="2016-10-15">
+              2016-10-15
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="函数式编程?">函数式编程?</h1><blockquote>
+<p>函数式编程是和传统命令式编程区分的一种编程思想，“在函数式编程语言中，函数是第一类的对象，也就是说，函数 不依赖于任何其他的对象而可以独立存在，而在面向对象的语言中，函数 ( 方法 ) 是依附于对象的，属于对象的一部分。这一点决定了函数在函数式语言中的一些特别的性质，比如作为传出 / 传入参数，作为一个普通的变量等。[1]”</p>
+<p>函数式编程思想的源头可以追溯到 20 世纪 30 年代，数学家阿隆左 . 丘奇在进行一项关于问题的可计算性的研究，也就是后来的 lambda 演算。lambda 演算的本质为 一切皆函数，函数可以作为另外一个函数的输出或者 / 和输入，一系列的函数使用最终会形成一个表达式链，这个表达式链可以最终求得一个值，而这个过程，即为计算的本质。</p>
+<p>然而，这种思想在当时的硬件基础上很难实现，历史最终选择了同丘奇的 lambda 理论平行的另一种数学理论：图灵机作为计算理论，而采取另一位科学家冯 . 诺依曼的计算机结构，并最终被实现为硬件。由于第一台计算机即为冯 . 诺依曼的程序存储结构，因此运行在此平台的程序也继承了这种基因，程序设计语言如 C/Pascal 等都在一定程度上依赖于此体系。</p>
+<p>到了 20 世纪 50 年代，一位 MIT 的教授 John McCarthy 在冯 . 诺依曼体系的机器上成功的实现了 lambda 理论，取名为 LISP(LISt Processor), 至此函数式编程语言便开始活跃于计算机科学领域。</p>
+</blockquote>
+<h2 id="函数式编程的好处">函数式编程的好处</h2><h3 id="更少的Bug">更少的Bug</h3><p>函数式编程由于使用了高阶函数(Higher Order Function)通常来说比传统的命令式编程的代码,代码会少很多,每行代码也更容易被理解.这样出现bug的可能性会明显降低,代码的质量会明显更高一些.</p>
+<h3 id="更少的coding时间">更少的coding时间</h3><p>相比于传统的命令式编程,函数式编程因为代码更少,而且函数式编程的可以复用更多的函数和代码,所以编程需要的时间会更少一些.</p>
+<h1 id="环境配置">环境配置</h1><h2 id="package-json">package.json</h2><p>先配置一个package.json文件. 然后运行 <code>npm install</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"name"</span>: <span class="string">"test"</span>,</div><div class="line">  <span class="attr">"version"</span>: <span class="string">"1.0.0"</span>,</div><div class="line">  <span class="attr">"description"</span>: <span class="string">"es6"</span>,</div><div class="line">  <span class="attr">"main"</span>: <span class="string">"main.js"</span>,</div><div class="line">  <span class="attr">"scripts"</span>: &#123;</div><div class="line">    <span class="attr">"start"</span>: <span class="string">"babel-node main.js"</span>,</div><div class="line">    <span class="attr">"build"</span>: <span class="string">"babel src --out-dir lib"</span></div><div class="line">  &#125;,</div><div class="line">  <span class="attr">"author"</span>: <span class="string">""</span>,</div><div class="line">  <span class="attr">"license"</span>: <span class="string">"ISC"</span>,</div><div class="line">  <span class="attr">"devDependencies"</span>: &#123;</div><div class="line">    <span class="attr">"babel-cli"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-core"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-es2015-destructuring"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-es2015-modules-commonjs"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-es2015-parameters"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-es2015-spread"</span>: <span class="string">"^6.8.0"</span>,</div><div class="line">    <span class="attr">"babel-plugin-transform-strict-mode"</span>: <span class="string">"^6.18.0"</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="配置Babel">配置Babel</h2><p>在项目目录下新建 .babelrc:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"plugins"</span>: [</div><div class="line">    <span class="string">"transform-strict-mode"</span>,</div><div class="line">    <span class="string">"transform-es2015-modules-commonjs"</span>,</div><div class="line">    <span class="string">"transform-es2015-spread"</span>,</div><div class="line">    <span class="string">"transform-es2015-destructuring"</span>,</div><div class="line">    <span class="string">"transform-es2015-parameters"</span></div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<!--# why Fucntional programming
+
+ 1. lessCode = lessBug
+-->
+<h1 id="常用的函数:_filter,_map,_reduce:">常用的函数: filter, map, reduce:</h1><figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">var animals = [</div><div class="line">  &#123;name: <span class="string">'a'</span> , specie<span class="variable">s:</span> <span class="string">'dog'</span>, weigh<span class="variable">t:</span> <span class="number">11</span>&#125;,</div><div class="line">  &#123;name: <span class="string">'b'</span>, specie<span class="variable">s:</span> <span class="string">'cat'</span>, weigh<span class="variable">t:</span> <span class="number">10</span>&#125;,</div><div class="line">  &#123;name: <span class="string">'c'</span>, specie<span class="variable">s:</span> <span class="string">'fish'</span>, weigh<span class="variable">t:</span> <span class="number">1</span>&#125;,</div><div class="line">  &#123;name: <span class="string">'d'</span>, specie<span class="variable">s:</span> <span class="string">'cat'</span>, weigh<span class="variable">t:</span> <span class="number">8</span>&#125;,</div><div class="line">  &#123;name: <span class="string">'e'</span>, specie<span class="variable">s:</span> <span class="string">'rabbit'</span>, weigh<span class="variable">t:</span> <span class="number">3</span>&#125;</div><div class="line">]</div><div class="line">// 找到所有种类为猫的动物</div><div class="line">animals.<span class="built_in">filter</span>((animal) =&gt; animal.species === <span class="string">'cat'</span>)</div><div class="line">// [ &#123; name: <span class="string">'b'</span>, specie<span class="variable">s:</span> <span class="string">'cat'</span> &#125;, &#123; name: <span class="string">'d'</span>, specie<span class="variable">s:</span> <span class="string">'cat'</span> &#125; ]</div><div class="line"></div><div class="line">// 返回所有动物的名字</div><div class="line">animals.<span class="keyword">map</span>((animal) =&gt; animal.name)</div><div class="line">// [ <span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>, <span class="string">'e'</span> ]</div><div class="line"></div><div class="line">// 动物总重</div><div class="line">animals.reduce((<span class="keyword">pre</span>, animal) =&gt; <span class="keyword">pre</span> + animal.weight, <span class="number">0</span>)</div><div class="line">//<span class="number">33</span></div></pre></td></tr></table></figure>
+<p>怎么样? 如果用循环来写肯定不可能一行代码就搞定吧.</p>
+<h1 id="一个简单的例子:">一个简单的例子:</h1><h2 id="Task:读取data文件中的数据转化为对象:">Task:读取data文件中的数据转化为对象:</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mark johnson  waffle  iron  <span class="number">80</span>  <span class="number">2</span></div><div class="line">mark johnson  blender  <span class="number">200</span>  <span class="number">1</span></div><div class="line">mark johnson  knife  <span class="number">10</span>  <span class="number">4</span></div><div class="line">nikita Smith  waffle  iron  <span class="number">80</span>  <span class="number">1</span></div><div class="line">nikita Smith  knife <span class="number">10</span>  <span class="number">2</span></div><div class="line">nikita Smith  pot <span class="number">20</span>  <span class="number">3</span></div></pre></td></tr></table></figure>
+<ul>
+<li>把上面的data文件数据(每行不同属性之间由Tab制表符分割(或者两个空格)),转换成下面的对象格式:</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"mark johnson"</span>: [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"waffle"</span>, <span class="attr">"price"</span>: <span class="string">"iron"</span>,<span class="attr">"quantity"</span>: <span class="string">"80"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"blender"</span>,<span class="attr">"price"</span>: <span class="string">"200"</span>, <span class="attr">"quantity"</span>: <span class="string">"1"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"knife"</span>,<span class="attr">"price"</span>: <span class="string">"10"</span>,<span class="attr">"quantity"</span>: <span class="string">"4"</span></div><div class="line">    &#125;</div><div class="line">  ],</div><div class="line">  <span class="attr">"nikita Smith"</span>: [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"waffle"</span>,<span class="attr">"price"</span>: <span class="string">"iron"</span>,<span class="attr">"quantity"</span>: <span class="string">"80"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"knife"</span>, <span class="attr">"price"</span>: <span class="string">"10"</span>, <span class="attr">"quantity"</span>: <span class="string">"2"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"pot"</span>, <span class="attr">"price"</span>: <span class="string">"20"</span>,<span class="attr">"quantity"</span>: <span class="string">"3"</span></div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="1-首先,利用fs-readFileSync读取出文件中的内容">1.首先,利用<code>fs.readFileSync</code>读取出文件中的内容</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">'use strict'</span> </div><div class="line"><span class="keyword">import</span> fs <span class="keyword">from</span> <span class="string">'fs'</span>;</div><div class="line"><span class="keyword">var</span> output = fs.readFileSync(<span class="string">'data'</span>, <span class="string">'utf-8'</span>)</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'output: \n'</span>,output);</div></pre></td></tr></table></figure>
+<ul>
+<li>使用 <code>npm start</code> 运行main.js文件:</li>
+</ul>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">npm <span class="literal">start</span></div><div class="line"></div><div class="line">&gt; test@<span class="number">1.0</span>.<span class="number">0</span> <span class="literal">start</span> /src/<span class="keyword">node</span><span class="title">/fnProgramming</span></div><div class="line">&gt; babel-<span class="keyword">node</span> <span class="title">main</span>.js</div><div class="line"></div><div class="line">output:</div><div class="line">mark johnson  waffle iron <span class="number">80</span> <span class="number">2</span></div><div class="line">mark johnson  blender <span class="number">200</span> <span class="number">1</span></div><div class="line">mark johnson  knife <span class="number">10</span> <span class="number">4</span></div><div class="line">nikita Smith waffle  iron <span class="number">80</span> <span class="number">1</span></div><div class="line">nikita Smith knife  <span class="number">10</span> <span class="number">2</span></div><div class="line">nikita Smith pot <span class="number">20</span> <span class="number">3</span></div></pre></td></tr></table></figure>
+<h3 id="2-_根据换行符\n_进行分割字符串为数组-">2. 根据换行符<code>\n</code> 进行分割字符串为数组.</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">'use strict'</span> </div><div class="line"><span class="keyword">import</span> fs <span class="keyword">from</span> <span class="string">'fs'</span>;</div><div class="line"><span class="keyword">var</span> output = fs.readFileSync(<span class="string">'data'</span>, <span class="string">'utf-8'</span>)</div><div class="line">				  .split(<span class="string">'\n'</span>)</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'output: \n'</span>,output);</div></pre></td></tr></table></figure>
+<ul>
+<li>结果中数组最后一项为空是因为文件是以空行结尾的.可以使用trim()方法过滤掉掉头尾的空格</li>
+</ul>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="string">output:</span></div><div class="line"> [ <span class="string">'mark johnson  waffle iron 80 2'</span>,</div><div class="line">  <span class="string">'mark johnson  blender 200 1'</span>,</div><div class="line">  <span class="string">'mark johnson  knife 10 4'</span>,</div><div class="line">  <span class="string">'nikita Smith waffle  iron 80 1'</span>,</div><div class="line">  <span class="string">'nikita Smith knife  10 2'</span>,</div><div class="line">  <span class="string">'nikita Smith pot 20 3  '</span>,</div><div class="line">  <span class="string">''</span> ]</div></pre></td></tr></table></figure>
+<h3 id="3-_根据制表符对每行数据进行分割:">3.  根据制表符对每行数据进行分割:</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">'use strict'</span> </div><div class="line"></div><div class="line"><span class="keyword">import</span> fs <span class="keyword">from</span> <span class="string">'fs'</span>;</div><div class="line"></div><div class="line"><span class="keyword">var</span>  output = fs.readFileSync(<span class="string">'data'</span>, <span class="string">'utf-8'</span>)</div><div class="line">        .trim()</div><div class="line">        .split(<span class="string">'\n'</span>)</div><div class="line">        .map(<span class="function"><span class="params">line</span>=&gt;</span>line.split(<span class="string">'\t'</span>)) <span class="comment">//如果你的编辑器把tab制表符转换成两个空格 这里就应该使用2个空格作为分割点      </span></div><div class="line"><span class="built_in">console</span>.log(<span class="string">'output: \n'</span>,output);</div></pre></td></tr></table></figure>
+<ul>
+<li>输出结果:</li>
+</ul>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">output:</div><div class="line"> [ [ <span class="string">'mark johnson'</span>, <span class="string">'waffle'</span>, <span class="string">'iron'</span>, <span class="string">'80'</span>, <span class="string">'2'</span> ],</div><div class="line">  [ <span class="string">'mark johnson'</span>, <span class="string">'blender'</span>, <span class="string">'200'</span>, <span class="string">'1'</span> ],</div><div class="line">  [ <span class="string">'mark johnson'</span>, <span class="string">'knife'</span>, <span class="string">'10'</span>, <span class="string">'4'</span> ],</div><div class="line">  [ <span class="string">'nikita Smith'</span>, <span class="string">'waffle'</span>, <span class="string">'iron'</span>, <span class="string">'80'</span>, <span class="string">'1'</span> ],</div><div class="line">  [ <span class="string">'nikita Smith'</span>, <span class="string">'knife 10'</span>, <span class="string">'2'</span> ],</div><div class="line">  [ <span class="string">'nikita Smith'</span>, <span class="string">'pot 20'</span>, <span class="string">'3'</span> ] ]</div></pre></td></tr></table></figure>
+<h3 id="4-_使用reduce函数解析出每行的属性-">4. 使用reduce函数解析出每行的属性.</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">'use strict'</span> </div><div class="line"><span class="keyword">import</span> fs <span class="keyword">from</span> <span class="string">'fs'</span>;</div><div class="line"></div><div class="line"><span class="keyword">var</span>  output = fs.readFileSync(<span class="string">'data'</span>, <span class="string">'utf-8'</span>)</div><div class="line">        .trim()</div><div class="line">        .split(<span class="string">'\n'</span>)</div><div class="line">        .map(<span class="function"><span class="params">line</span>=&gt;</span>line.split(<span class="string">'  '</span>))      </div><div class="line">        .reduce(<span class="function">(<span class="params">customers,line</span>)=&gt;</span>&#123;</div><div class="line">           customers[line[<span class="number">0</span>]]=customers[line[<span class="number">0</span>]]||[] <span class="comment">//当customers为空时,用[]赋值.</span></div><div class="line">           customers[line[<span class="number">0</span>]].push(&#123;</div><div class="line">             <span class="attr">name</span>:line[<span class="number">1</span>],</div><div class="line">             <span class="attr">price</span>:line[<span class="number">2</span>],</div><div class="line">             <span class="attr">quantity</span>:line[<span class="number">3</span>],</div><div class="line">           &#125;)</div><div class="line">           <span class="keyword">return</span> customers</div><div class="line">        &#125;,&#123;&#125;) <span class="comment">//这里传入&#123;&#125;空对象作为 reduce的第一个参数也就是customers</span></div><div class="line">        </div><div class="line"><span class="built_in">console</span>.log(<span class="string">'output: \n'</span>,<span class="built_in">JSON</span>.stringify(output,<span class="literal">null</span>,<span class="number">2</span>));</div></pre></td></tr></table></figure>
+<ul>
+<li>结果:</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"> &#123;</div><div class="line">  <span class="attr">"mark johnson"</span>: [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"waffle"</span>,</div><div class="line">      <span class="attr">"price"</span>: <span class="string">"iron"</span>,</div><div class="line">      <span class="attr">"quantity"</span>: <span class="string">"80"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"blender"</span>,</div><div class="line">      <span class="attr">"price"</span>: <span class="string">"200"</span>,</div><div class="line">      <span class="attr">"quantity"</span>: <span class="string">"1"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"knife"</span>,</div><div class="line">      <span class="attr">"price"</span>: <span class="string">"10"</span>,</div><div class="line">      <span class="attr">"quantity"</span>: <span class="string">"4"</span></div><div class="line">    &#125;</div><div class="line">  ],</div><div class="line">  <span class="attr">"nikita Smith"</span>: [</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"waffle"</span>,</div><div class="line">      <span class="attr">"price"</span>: <span class="string">"iron"</span>,</div><div class="line">      <span class="attr">"quantity"</span>: <span class="string">"80"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"knife"</span>,</div><div class="line">      <span class="attr">"price"</span>: <span class="string">"10"</span>,</div><div class="line">      <span class="attr">"quantity"</span>: <span class="string">"2"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      <span class="attr">"name"</span>: <span class="string">"pot"</span>,</div><div class="line">      <span class="attr">"price"</span>: <span class="string">"20"</span>,</div><div class="line">      <span class="attr">"quantity"</span>: <span class="string">"3"</span></div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="常用高阶函数举例">常用高阶函数举例</h2><p> 让我们看一些更深入更有意思的例子吧.比如这道比较经典的算法题: </p>
+<h3 id="给定一个字符串”abcdaabc”统计每个字符的出现次数-">给定一个字符串”abcdaabc”统计每个字符的出现次数.</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 一般做法是这样的</span></div><div class="line"><span class="keyword">var</span> str=<span class="string">"abcdaabc"</span></div><div class="line"><span class="keyword">var</span> <span class="keyword">count</span> = &#123;&#125;;</div><div class="line"><span class="keyword">var</span> i;</div><div class="line"></div><div class="line"><span class="keyword">for</span>(i=0;i&lt;str.length;i++)&#123;</div><div class="line">    <span class="keyword">var</span> chr = str.charAt(i);</div><div class="line">    <span class="keyword">if</span>( <span class="keyword">typeof</span> <span class="keyword">count</span>[chr] === <span class="string">"undefined"</span>)&#123;</div><div class="line">        <span class="keyword">count</span>[chr] = 1;</div><div class="line">    &#125;<span class="keyword">else</span>&#123;</div><div class="line">        <span class="keyword">count</span>[chr]++;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>利用函数式编程思想的方法是这样的:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"> </div><div class="line">var <span class="keyword">res</span> = str.<span class="keyword">split</span>(<span class="string">''</span>)</div><div class="line">             .reduce((<span class="keyword">pre</span>, cur) =&gt; (<span class="keyword">pre</span>[cur]++ || (<span class="keyword">pre</span>[cur] = <span class="number">1</span>), <span class="keyword">pre</span>), &#123;&#125;)</div></pre></td></tr></table></figure>
+<p>由上面的例子可见, 高阶函数的特性让我们在处理这类问题时比普通的方法要方便的多. 在更实际的应用场景中函数式编程的便利性更能充分的体现, 其中一个经典的例子:</p>
+<h3 id="统计文本中出现频率最高的十个单词:">统计文本中出现频率最高的十个单词:</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</div><div class="line"><span class="keyword">var</span> content = fs.readFileSync(<span class="string">'words.txt'</span>).toString();</div><div class="line"><span class="keyword">var</span> words = content.split(<span class="regexp">/[\s.,\/:\n]+/</span>);</div><div class="line"></div><div class="line"><span class="comment">// 把单词全部变为小写并利用上一个例子的方法统计单词出现的次数</span></div><div class="line"><span class="keyword">var</span> tally = words.map(<span class="function">(<span class="params">word</span>) =&gt;</span> word.toLowerCase())</div><div class="line">                 .reduce(<span class="function">(<span class="params">pre, cur</span>) =&gt;</span> (pre[cur]++ || (pre[cur]=<span class="number">1</span>), pre), &#123;&#125;)</div><div class="line"><span class="comment">//把object的key变成数组并进行排序</span></div><div class="line"><span class="keyword">var</span> top10 = <span class="built_in">Object</span>.keys(tally)</div><div class="line">                  .map(<span class="function">(<span class="params">key</span>) =&gt;</span> &#123;</div><div class="line">                    <span class="keyword">return</span> &#123;<span class="attr">word</span>: key, <span class="attr">count</span>: tally[key]&#125;</div><div class="line">                  &#125;)</div><div class="line">                  .sort(<span class="function">(<span class="params">a, b</span>) =&gt;</span> b.count - a.count)</div><div class="line">                  .slice(<span class="number">0</span>, <span class="number">10</span>)</div><div class="line"><span class="built_in">console</span>.log(top10)</div></pre></td></tr></table></figure>
+<p>上面这个例子充分体现了函数式编程思想的魅力,代码精简并且可读性高!</p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/10/15/docker-notes-01/" itemprop="url">
                   docker 笔记记录
                 </a>
@@ -1353,129 +1478,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/06/09/ios8-cors-prefilght/" itemprop="url">
-                  iOS8下CORS请求返回504错误的Dubug记录
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-06-09T23:53:46+08:00" content="2016-06-09">
-              2016-06-09
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <p>放假前遇到一个奇葩的问题,做了一个移动端使用原生JS写的一个互动的的web页面,这个页面需要通过ajax调用对后台的接口,结果出现了很诡异的现象:</p>
-<blockquote>
-<p>在Chrome浏览器上模拟手机或者是在安卓上都可以请求到后台的数据,但是在公司几台iOS的测试机(因为不想升级OS和xcode所以都还是iOS8的版本)上请求后台数据的时候,在Safari的开发调试中都会看到,http请求都会返回一个504网关超时的报错(然后还提示是CORS错误).具体现象就是请求发出去一分钟以后超时,返回504错误.</p>
-</blockquote>
-<h1 id="Debug过程:">Debug过程:</h1><h2 id="第一步_排除后台原因">第一步 排除后台原因</h2><p>因为上午的时候就发现了后台接口返回的<code>ResponseHeader</code>里没有对cors header的 <code>access-control-allow-origin</code>属性进行配置,导致请求接口被拒绝的情况,所以先怀疑是后台服务器的在中午更新之后又出了什么问题.</p>
-<p>于是就让后台查一下服务器日志,看是不是接收到了这个请求(但是他们告诉我没有这个请求的日志).所以他们认为我这边请求没有发出来.(而且安卓都可以只有iOS不行,他们就觉得更不可能是他们的问题了)</p>
-<ul>
-<li>结论: 可能和他们没有关系.</li>
-</ul>
-<h2 id="第二步_排除iOS代码原因">第二步 排除iOS代码原因</h2><p>当时因为JS和iOS之间的调用接口是使用的是github上的开源库”WebViewJavascriptBridge”实现的.而这个库的原理就是在web页面中建立带有特定Url连接的iframe,然后在iOS端用webview的delegate来拦截带有特定标志的请求作为调用信号的.<br>所以就找到iOS开发的同学,问他们是不是有这种不正确的拦截的可能,以及是不是在他们代码中有其他的拦截http请求的设置? 答案也是没有.他们认为是我的代码有兼容性问题,或者是后台的问题.</p>
-<p>这时候为了排除是不是iOS APP拦截造成的,于是就把web页面的url放进iPhone的Safari浏览器里运行,结果还是相同的504错误!这时候为了排除是App的干扰,索性把设备上的App都删掉了结果还是相同的错误!这说明确实不是iOS APP代码造成的!于是我又在自己的iPhone上的Safari中进行同样的测试,结果发现错误消失了!</p>
-<ul>
-<li>结论: 确实不是iOS APP代码的问题!</li>
-</ul>
-<h2 id="第三步_抓包分析">第三步 抓包分析</h2><p>这时候为了验证我的请求确实是发出了,就使用了Charles进行抓包(在iPhone的wifi中设置Charles的proxy代理地址),结果发现在公司的测试机上确实是有发出了一个请求,但是请求类型却是OPTIONS.然后Http请求就一直等待返回然后就超时了! 这时候后这个坑才要浮现出他的真面目!</p>
-<h1 id="原因分析">原因分析</h1><ol>
-<li>原来我们公司的服务器是基于Apache Mina Server(一个网络通信应用框架)自己开发的一个关网服务器来对Http请求进行处理,然而他们在实现中只接受post的Http请求!所以当接收到一个Options的请求的时候,当然置之不理了!更别说会在日志中记录这次请求!!!</li>
-<li><p>那为什么我的ajax里面明明是post请求但在iOS8为什么发出的却是OPTIONS请求呢?!</p>
-<p>查资料得知:原来都是<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS" target="_blank" rel="external">预请求(preflight)</a>挖的坑.</p>
-</li>
-</ol>
-<blockquote>
-<p>跨源资源共享标准通过新增一系列 HTTP 头，让服务器能声明哪些来源可以通过浏览器访问该服务器上的资源。另外，对那些会对服务器数据造成破坏性影响的 HTTP 请求方法（特别是 GET 以外的 HTTP 方法，或者搭配某些MIME类型的POST请求），标准强烈要求浏览器必须先以 OPTIONS 请求方式发送一个预请求(preflight request)，从而获知服务器端对跨源请求所支持 HTTP 方法。在确认服务器允许该跨源请求的情况下，以实际的 HTTP 请求方法发送那个真正的请求。服务器端也可以通知客户端，是不是需要随同请求一起发送信用信息（包括 Cookies 和 HTTP 认证相关数据）。</p>
-</blockquote>
-<p>那为什么在iOS9下就不存在这个问题呢? 还要抓包分析才能知道了.</p>
-<p>正确的预请求和响应:</p>
-<p><img src="http://7xnuw0.com1.z0.glb.clouddn.com/16-6-12/81504459.jpg" alt=""></p>
-<h2 id="iOS8中web页面的CORS_http请求过程:">iOS8中web页面的CORS http请求过程:</h2><figure class="highlight ldif"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">//OPTIONS 请求</div><div class="line"><span class="attribute">OPTIONS /editor/get_info' HTTP/1.1</span></div><div class="line">Host: 192.168.8.64:5555</div><div class="line"><span class="attribute">Accept-Language</span>: zh-cn</div><div class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (iPhone; CPU iPhone OS 8_4_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12H321 Safari/600.1.4</div><div class="line"><span class="attribute">Accept</span>: */*</div><div class="line"><span class="attribute">Referer</span>: http://resource.domain.com/284671214/284671249/app.html</div><div class="line"><span class="attribute">Access-Control-Request-Method</span>: POST</div><div class="line"><span class="attribute">Connection</span>: keep-alive</div><div class="line"><span class="attribute">Access-Control-Request-Headers</span>: origin, content-type</div><div class="line"><span class="attribute">Content-Length</span>: 0</div><div class="line"><span class="attribute">Origin</span>: http://resource.domain.com/</div><div class="line"><span class="attribute">Accept-Encoding</span>: gzip, deflate</div><div class="line"></div><div class="line">//服务器响应 OPTIONS请求的Header信息</div><div class="line"><span class="attribute">HTTP/1.1 200 OK</span></div><div class="line">Server: nginx/1.9.0</div><div class="line"><span class="attribute">Date</span>: Sun, 12 Jun 2016 01:58:13 GMT</div><div class="line"><span class="attribute">Content-Type</span>: text/html; charset=UTF-8</div><div class="line"><span class="attribute">Content-Length</span>: 30</div><div class="line"><span class="attribute">Connection</span>: keep-alive</div><div class="line"><span class="attribute">Access-Control-Allow-Origin</span>: *</div><div class="line"><span class="attribute">Access-Control-Allow-Headers</span>: Origin,X-Requested-With,Content-Type,Accept</div><div class="line"><span class="attribute">Access-Control-Allow-Methods</span>: GET,POST,OPTIONS</div><div class="line"><span class="attribute">Access-Control-Allow-Credentials</span>: true</div><div class="line"></div><div class="line">//接下来就是像正常的POST请求一样发送</div><div class="line"><span class="attribute">POST /editor/get_info HTTP/1.1</span></div><div class="line">Host: 192.168.8.64:5555</div><div class="line"><span class="attribute">Referer</span>: http://resource.domain.com/284671214/284671249/app.html?appId=5078b48f8dbb3b8a14e8d86df1c6691d5142</div><div class="line"><span class="attribute">Accept</span>: */*</div><div class="line"><span class="attribute">Content-Type</span>: application/xml</div><div class="line"><span class="attribute">Accept-Language</span>: zh-cn</div><div class="line"><span class="attribute">Accept-Encoding</span>: gzip, deflate</div><div class="line"><span class="attribute">Origin</span>: http://resource.domain.com/</div><div class="line"><span class="attribute">Content-Length</span>: 31</div><div class="line"><span class="attribute">Connection</span>: keep-alive</div><div class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (iPhone; CPU iPhone OS 8_4_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12H321 Safari/600.1.4</div></pre></td></tr></table></figure>
-<h2 id="Chrome中web页面CORS请求">Chrome中web页面CORS请求</h2><figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">POST</span> <span class="string">/editor/get_vote_info</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: service.domain.com</div><div class="line"><span class="attribute">Connection</span>: keep-alive</div><div class="line"><span class="attribute">Content-Length</span>: 74</div><div class="line"><span class="attribute">Cache-Control</span>: max-age=0</div><div class="line"><span class="attribute">Origin</span>: http://resource.domain.com</div><div class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.23 Mobile Safari/537.36</div><div class="line"><span class="attribute">Content-Type</span>: text/plain;charset=UTF-8</div><div class="line"><span class="attribute">Accept</span>: */*</div><div class="line"><span class="attribute">Referer</span>: http://resource.domain.com/268441891/268441895/app.html?appId=ed60a4c24aae8026e96402f83e097036edff</div><div class="line"><span class="attribute">Accept-Encoding</span>: gzip, deflate</div><div class="line"><span class="attribute">Accept-Language</span>: zh-CN,zh;q=0.8,en;q=0.6,ja;q=0.4,zh-TW;q=0.2</div></pre></td></tr></table></figure>
-<h2 id="iOS9中的CORS请求">iOS9中的CORS请求</h2><p>和 Chrome 一致</p>
-<figure class="highlight sqf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Content-<span class="built_in">Type</span>:	<span class="built_in">text</span>/plain;charset=UTF-<span class="number">8</span></div></pre></td></tr></table></figure>
-<h2 id="区别:">区别:</h2><p>原来都是Content-type没有设置,导致浏览器给设置了不同的content-type导致的.<br>参考w3中http1.1的关于<a href="https://www.w3.org/Protocols/rfc1341/4_Content-Type.html" target="_blank" rel="external">Content-Type</a>的定义:<br>Content-type的值必须要设置,如果没有设置的情况下会被当做”application/octet-stream”类型来处理,在这个bug中由虽然没有设置xhr的Content-Type但是浏览器设定了这个字段.</p>
-<h1 id="解决方法:">解决方法:</h1><h2 id="让服务器对OPTIONS请求返回合适值">让服务器对OPTIONS请求返回合适值</h2><ol>
-<li>处理OPTIONS请求</li>
-<li>给OPTIONS正确的response(让浏览器知道服务器支持CORS的POST请求).<code>Access-Control-Allow-Methods: GET,POST,OPTIONS</code></li>
-<li>返回正确的 <code>Access-Control-Allow-Headers: Content-Type</code></li>
-</ol>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line"><span class="string">Server:</span> nginx/<span class="number">1.9</span><span class="number">.0</span></div><div class="line"><span class="string">Date:</span> Sun, <span class="number">12</span> Jun <span class="number">2016</span> <span class="number">01</span>:<span class="number">58</span>:<span class="number">13</span> GMT</div><div class="line">Content-<span class="string">Type:</span> text/html; charset=UTF<span class="number">-8</span></div><div class="line">Content-<span class="string">Length:</span> <span class="number">30</span></div><div class="line"><span class="string">Connection:</span> keep-alive</div><div class="line">Access-Control-Allow-<span class="string">Origin:</span> *</div><div class="line">Access-Control-Allow-<span class="string">Headers:</span> Origin,X-Requested-With,Content-Type,Accept</div><div class="line">Access-Control-Allow-<span class="string">Methods:</span> GET,POST,OPTIONS <span class="comment">//这里要接受OPTIONS </span></div><div class="line">Access-Control-Allow-<span class="string">Credentials:</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
-<h2 id="设置XHR的RequestHeader">设置XHR的RequestHeader</h2><p>这里大神的书里也有偏差,道神写的书里记载着跨域的xhr的不能使用setRequestHeader.但实际上是可以的:</p>
-<p>由于:</p>
-<blockquote>
-<p>从Gecko 2.0开始，text/plain, application/x-www-form-urlencoded 和 multipart/form-data 类型的数据都可以直接用于跨站请求，而不需要先发起“预请求”了</p>
-</blockquote>
-<p>所以可以把请求的类型强制设置为这三种之中的一种,但是也需要后台的接口能正确的处理这三种中的一种才可以选择这个解决方法.</p>
-<h3 id="方法一:">方法一:</h3><figure class="highlight accesslog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">xhr = new XMLHttpRequest();</div><div class="line">xhr.open(<span class="string">"<span class="keyword">POST</span>"</span>, url, true);</div><div class="line">xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded'); //模拟form提交的数据</div><div class="line">xhr.send(paramStr);</div></pre></td></tr></table></figure>
-<h3 id="方法二:">方法二:</h3><p>如果是使用formData,默认是把<code>Content-Type</code>设置为:<code>multipart/form-data</code>的. 但可以使用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Blob" target="_blank" rel="external">Blob</a>作为构造函数指定要生成的对象的<code>Content-Type</code> 但是比起前面一种略麻烦:</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> formData = <span class="built_in">new</span> FormData();</div><div class="line">formData.<span class="built_in">append</span>(<span class="string">'items'</span>, <span class="built_in">new</span> Blob([JSON.stringify(&#123;</div><div class="line">    name: <span class="string">"Book"</span>,</div><div class="line">    quantity: <span class="string">"12"</span></div><div class="line">&#125;)], &#123;</div><div class="line">    <span class="keyword">type</span>: <span class="string">"application/x-www-form-urlencoded"</span></div><div class="line">&#125;));</div></pre></td></tr></table></figure>
-<h1 id="总结:">总结:</h1><p>如果一开始的时候就去抓包分析,只要发现了OPTIONS请求类型和我设置的不一致,再展开去查找,而不是去胡乱猜想,一定会更快找到这个bug的原因.</p>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1521,7 +1523,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">63</span>
+              <span class="site-state-item-count">64</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

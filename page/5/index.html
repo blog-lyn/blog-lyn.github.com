@@ -211,6 +211,157 @@
             
             
               
+                <a class="post-title-link" href="/2016/02/06/nodejs-note-22/" itemprop="url">
+                  TCP programing
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-02-06T00:16:43+08:00" content="2016-02-06">
+              2016-02-06
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <p>index.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span>  server = <span class="built_in">require</span>(<span class="string">'./server05'</span>);</div><div class="line"></div><div class="line">server.listen(<span class="number">8000</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'TCP server listening on %j'</span>, server.address());</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p> var net = require(‘net’);</p>
+<p> var server = net.createServer();</p>
+<p> server.on(‘connection’, function(conn){</p>
+<pre><code><span class="built_in">console</span>.log(<span class="string">'new connection'</span>);
+conn.once(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>{
+    <span class="built_in">console</span>.log(<span class="string">'connection closed'</span>);
+});
+
+<span class="keyword">var</span> emit =conn.emit;
+conn.emit = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>{
+    <span class="built_in">console</span>.log(<span class="string">'connetion emitted  event type %s'</span>, event);
+    emit.apply(conn, <span class="built_in">arguments</span>);
+};
+</code></pre><p> }); </p>
+<p> module.exports = server ;<br><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">```</div><div class="line">server03.js</div></pre></td></tr></table></figure></p>
+<p> var net = require(‘net’);</p>
+<p> var server = net.createServer();</p>
+<p> server.on(‘connection’, function(conn){</p>
+<pre><code><span class="built_in">console</span>.log(<span class="string">'new connection'</span>);
+
+conn.setEncoding(<span class="string">'utf8'</span>);
+
+conn.once(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>{
+    <span class="built_in">console</span>.log(<span class="string">'connection closed'</span>);
+});
+
+conn.on(<span class="string">'data'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">buf</span>)</span>{
+    process.stdout.write(<span class="string">'data'</span> + buf);
+});
+</code></pre><p> }); </p>
+<p> module.exports = server ;<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">server04</span><span class="selector-class">.js</span></div></pre></td></tr></table></figure></p>
+<p> var net = require(‘net’);</p>
+<p> var server = net.createServer();</p>
+<p> server.on(‘connection’, function(conn){</p>
+<pre><code>console.<span class="built_in">log</span>(<span class="string">'new connection'</span>);
+
+conn.setEncoding(<span class="string">'utf8'</span>);
+
+conn.once(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span>{</span>
+    console.<span class="built_in">log</span>(<span class="string">'connection closed'</span>);
+});
+
+conn.<span class="keyword">on</span>(<span class="string">'data'</span>, <span class="function"><span class="keyword">function</span><span class="params">(buf)</span>{</span>
+    process.stdout.<span class="keyword">write</span>(<span class="string">'User send message: '</span> + buf);
+    conn.<span class="keyword">write</span>(<span class="string">'Server send message: '</span>+ buf);
+    conn.<span class="keyword">write</span>(<span class="string">'Server capitalize your message:'</span> + buf.toUpperCase());
+});
+</code></pre><p> }); </p>
+<p> module.exports = server ;</p>
+<p> #through2</p>
+ <figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">fs.createReadStream(<span class="string">'ex.txt'</span>)</div><div class="line"> .pipe(through2(<span class="function"><span class="keyword">function</span> <span class="params">(chunk, enc, callback)</span> </span>&#123;</div><div class="line">   <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; chunk.length; i++)</div><div class="line">     <span class="keyword">if</span> (chunk[i] == <span class="number">97</span>)</div><div class="line">       chunk[i] = <span class="number">122</span> <span class="comment">// swap 'a' for 'z'</span></div><div class="line"></div><div class="line">   <span class="keyword">this</span>.push(chunk)</div><div class="line"></div><div class="line">   <span class="keyword">callback</span>()</div><div class="line">  &#125;))</div><div class="line"> .pipe(fs.createWriteStream(<span class="string">'out.txt'</span>))</div></pre></td></tr></table></figure>
+<p>Or object streams:</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> all = []</div><div class="line"></div><div class="line">fs.createReadStream(<span class="string">'data.csv'</span>)</div><div class="line">  .pipe(csv2())</div><div class="line">  .pipe(through2.obj(<span class="function"><span class="keyword">function</span> <span class="params">(chunk, enc, callback)</span> </span>&#123;</div><div class="line">    <span class="keyword">var</span> data = &#123;</div><div class="line">        name    : chunk[<span class="number">0</span>]</div><div class="line">      , address : chunk[<span class="number">3</span>]</div><div class="line">      , phone   : chunk[<span class="number">10</span>]</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">this</span>.push(data)</div><div class="line"></div><div class="line">    <span class="keyword">callback</span>()</div><div class="line">  &#125;))</div><div class="line">  .on(<span class="string">'data'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(data)</span> </span>&#123;</div><div class="line">    all.push(data)</div><div class="line">  &#125;)</div><div class="line">  .on(<span class="string">'end'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</div><div class="line">    doSomethingSpecial(all)</div><div class="line">  &#125;)</div></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">server05</div></pre></td></tr></table></figure>
+<p> var through = require(‘through2’);<br> var net = require(‘net’);</p>
+<p> var server = net.createServer();</p>
+<p> server.on(‘connection’, function(conn){</p>
+<pre><code><span class="built_in">console</span>.log(<span class="string">'new connection'</span>);
+
+conn.setEncoding(<span class="string">'utf8'</span>);
+
+conn.once(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>{
+    <span class="built_in">console</span>.log(<span class="string">'connection closed'</span>);
+});
+
+<span class="keyword">var</span> upperCasing = through.obj(<span class="function"><span class="keyword">function</span>(<span class="params">str, enc, cb</span>)</span>{
+    <span class="keyword">this</span>.push(str.toUpperCase());
+    cb();
+});
+
+conn.pipe(upperCasing).pipe(conn);
+<span class="comment">// conn.pipe(conn);</span>
+</code></pre><p> }); </p>
+<p> module.exports = server ;<br>```</p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/02/05/nodejs-note-20/" itemprop="url">
                   Asynchronous Programming - 07 async.each .map .eachSeries .eachLimit .mapLimit
                 </a>
@@ -1057,92 +1208,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2015/12/03/nodejs-note-12/" itemprop="url">
-                  How to learn Node.js -- Using bootstrap
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2015-12-03T01:26:19+08:00" content="2015-12-03">
-              2015-12-03
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="Bootstrap">Bootstrap</h1><p>This is a framework which integrate CSS rules and Js files to  accelerate our development. </p>
-<p>After you import bootstrap, you only need add class and id into your html,then you can get a pretty Website.</p>
-<h1 id="Usage">Usage</h1><p>Import bootstrap js and css file in header.hbs</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"X-UA-Compatible"</span> <span class="attr">content</span>=<span class="string">"IE=edge"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Node.js<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">type</span>=<span class="string">"text/css"</span> <span class="attr">href</span>=<span class="string">"/css/bootstrap.min.css"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"/js/bootstrap.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>Put our links into our navigation bar (nav.hbs). </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&lt;nav <span class="class"><span class="keyword">class</span></span>=<span class="string">"navbar navbar-inverse"</span>&gt;</div><div class="line">  <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span></div><div class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"navbar-header"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">"navbar-toggle collapsed"</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">data-toggle</span>=<span class="string">"collapse"</span> <span class="attr">data-target</span>=<span class="string">"#main_site_nav"</span> &gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"sr-only"</span>&gt;</span>Toggle Navigation<span class="tag">&lt;/<span class="name">span</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"icon-bar"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"icon-bar"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"icon-bar"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">button</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">"navbar-brand"</span> <span class="attr">href</span>=<span class="string">"/"</span>&gt;</span> NodeSlash<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"collapse navbar-collapse"</span> <span class="attr">id</span>=<span class="string">"main_site_nav"</span>&gt;</span></div><div class="line">  </div><div class="line">      <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"nav navbar-nav"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"/about"</span>&gt;</span>About<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"/sign_in"</span>&gt;</span>Sign in<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"/sign_up"</span>&gt;</span>Sign up<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"/sign_out"</span>&gt;</span>Sign out<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span>    </div><div class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">&lt;<span class="regexp">/nav&gt;</span></div></pre></td></tr></table></figure>
-<p>Or you can use less-middleware to complie bootstrap less file :</p>
-<p>Simply put bootstrap less files under  app/stylesheets/bootstrap/  </p>
-<p>app/stylesheets/application.less</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@<span class="keyword">import</span> <span class="string">"bootstrap/bootstrap"</span>;</div></pre></td></tr></table></figure>
-<p>Then quote file in header </p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;link rel=<span class="string">"stylesheet"</span> <span class="class"><span class="keyword">type</span></span>=<span class="string">"text/css"</span> href=<span class="string">"/stylesheets/application.css"</span>&gt;</div></pre></td></tr></table></figure>
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1188,7 +1253,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">63</span>
+              <span class="site-state-item-count">64</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
