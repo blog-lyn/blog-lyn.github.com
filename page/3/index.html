@@ -505,6 +505,102 @@
             
             
               
+                <a class="post-title-link" href="/2016/05/26/配置 ubuntu/" itemprop="url">
+                  Ubuntu 开启 BBR配置
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2016-05-26T23:05:54+08:00" content="2016-05-26">
+              2016-05-26
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="配置_ubuntu">配置 ubuntu</h1><ul>
+<li>Apt-get can’t connect to ‘security.ubuntu.com’</li>
+</ul>
+<p>Open <code>vi /etc/gai.conf</code></p>
+<p>Uncomment the following line:</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">#</span></div><div class="line"><span class="meta"># For sites which prefer IPv4 connections change the last line to</span></div><div class="line"><span class="meta">#</span></div><div class="line">precedence ::ffff:<span class="number">0</span>:<span class="number">0</span>/<span class="number">96</span> <span class="number">100</span></div></pre></td></tr></table></figure>
+<h2 id="配置hostname">配置hostname</h2><figure class="highlight dsconfig"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">hostnamectl </span><span class="built_in">set-hostname</span> <span class="string">sever1024</span></div></pre></td></tr></table></figure>
+<h2 id="配置证书登录">配置证书登录</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//生成key</span></div><div class="line">ssh-keygen -<span class="selector-tag">b</span> <span class="number">4096</span></div><div class="line"><span class="comment">// 生成文件夹</span></div><div class="line">mkdir -<span class="selector-tag">p</span> ~/<span class="selector-class">.ssh</span> &amp;&amp; sudo chmod -R <span class="number">700</span> ~/.ssh/</div><div class="line"><span class="comment">// 在本地执行</span></div><div class="line">scp ~/.ssh/id_rsa<span class="selector-class">.pub</span> example_user@<span class="number">203.0</span>.<span class="number">113.10</span>:~/.ssh/authorized_keys</div><div class="line"></div><div class="line">sudo chmod <span class="number">700</span> -R ~/<span class="selector-class">.ssh</span> &amp;&amp; chmod <span class="number">600</span> ~/.ssh/authorized_keys</div></pre></td></tr></table></figure>
+<ul>
+<li>配置ssh 端口 禁用密码登录</li>
+</ul>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sudo vi /etc/ssh/sshd_config</div><div class="line"></div><div class="line">port <span class="number">22</span> <span class="comment">//修改为不常见的端口号</span></div><div class="line">PermitRootLogin <span class="keyword">no</span> <span class="comment">//禁用root 登录</span></div><div class="line">PasswordAuthentication <span class="keyword">no</span> <span class="comment">// 禁用密码登录</span></div></pre></td></tr></table></figure>
+<h2 id="配置_ufw">配置 ufw</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo apt-get <span class="keyword">install</span> ufw</div><div class="line">sudo ufw <span class="keyword">default</span> <span class="keyword">allow</span> outgoing</div><div class="line">sudo ufw <span class="keyword">default</span> deny incoming</div><div class="line">sudo ufw <span class="keyword">allow</span> ssh</div></pre></td></tr></table></figure>
+<h2 id="安装fail2ban">安装fail2ban</h2><p>Ubuntu</p>
+<h3 id="Ensure_your_system_is_up_to_date:">Ensure your system is up to date:</h3><figure class="highlight q"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-<span class="built_in">get</span> <span class="keyword">update</span> &amp;&amp; apt-<span class="built_in">get</span> upgrade -y</div></pre></td></tr></table></figure>
+<h3 id="Install_Fail2ban:">Install Fail2ban:</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-<span class="keyword">get</span> install fail2ban</div></pre></td></tr></table></figure>
+<p>The service will automatically start.<br>(Optional) If you would like email support, install Sendmail:</p>
+<h3 id="install_Sendmail">install Sendmail</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-<span class="keyword">get</span> install sendmail</div></pre></td></tr></table></figure>
+<h3 id="Allow_SSH_access_through_UFW_and_then_enable_the_firewall:">Allow SSH access through UFW and then enable the firewall:</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ufw allow ssh</div><div class="line">ufw <span class="built_in">enable</span></div></pre></td></tr></table></figure>
+<h3 id="config">config</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">cp /etc/fail2ban/fail2ban<span class="selector-class">.conf</span> /etc/fail2ban/fail2ban<span class="selector-class">.local</span></div><div class="line"></div><div class="line">cp /etc/fail2ban/jail<span class="selector-class">.conf</span> /etc/fail2ban/jail<span class="selector-class">.local</span></div><div class="line"></div><div class="line">sudo vi /etc/fail2ban/jail.local</div></pre></td></tr></table></figure>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="section">[ssh]</span></div><div class="line">    </div><div class="line"><span class="attr">enabled</span>  = <span class="literal">true</span></div><div class="line"><span class="attr">port</span>     = ssh // 这里修改成你的ssh port</div><div class="line"><span class="attr">filter</span>   = sshd</div><div class="line"><span class="attr">logpath</span>  = /var/log/auth.log</div><div class="line"><span class="attr">maxretry</span> = <span class="number">6</span></div></pre></td></tr></table></figure>
+<h3 id="安装内核">安装内核</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">wget http:<span class="comment">//kernel.ubuntu.com/~kernel-ppa/mainline/v4.10.10/linux-image-4.10.10-041010-generic_4.10.10-041010.201704120813_amd64.deb</span></div><div class="line">dpkg -i linux-image-4.10.10-041010-generic_4.10.10-041010.201704120813_amd64.deb</div><div class="line"></div><div class="line"><span class="comment">// 检查文件</span></div><div class="line"><span class="keyword">ls</span> /<span class="keyword">boot</span>/vmlinuz* </div><div class="line"><span class="comment">//update</span></div><div class="line"><span class="keyword">update</span>-grub</div><div class="line"></div><div class="line"><span class="keyword">su</span></div><div class="line"><span class="comment">//检查版本</span></div><div class="line">uname -<span class="built_in">r</span></div><div class="line"></div><div class="line"><span class="comment">// 启动</span></div><div class="line">echo <span class="string">"net.core.default_qdisc=fq"</span> &gt;&gt; /etc/sysctl.<span class="keyword">conf</span></div><div class="line">echo <span class="string">"net.ipv4.tcp_congestion_control=bbr"</span> &gt;&gt; /etc/sysctl.<span class="keyword">conf</span></div><div class="line"><span class="comment">// 生效</span></div><div class="line">sysctl -p</div><div class="line"><span class="comment">//重启</span></div><div class="line">reboot</div></pre></td></tr></table></figure>
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2016/05/19/JRE-setup-doc/" itemprop="url">
                   Setup Java Eclipse Tomcat & FreeMarker on Mac
                 </a>
@@ -1518,133 +1614,6 @@
 
 
     
-      
-
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                <a class="post-title-link" href="/2016/03/14/nodeJs-iOnic-Config/" itemprop="url">
-                  iOnic Cordova Mac下的开发环境部署
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            發表於
-            <time itemprop="dateCreated" datetime="2016-03-14T13:53:17+08:00" content="2016-03-14">
-              2016-03-14
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h1 id="Install_Node-js">Install Node.js</h1><blockquote>
-<p>@author: Lyn </p>
-</blockquote>
-<h2 id="安装Mac软件安装管理器：HomeBrew">安装Mac软件安装管理器：HomeBrew</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ruby <span class="_">-e</span> <span class="string">"<span class="variable">$(curl -fsSL -k https://raw.githubusercontent.com/Homebrew/install/master/install7)</span>"</span></div></pre></td></tr></table></figure>
-<h2 id="安装Node-js版本管理器_NVM">安装Node.js版本管理器 NVM</h2><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">brew </span><span class="keyword">install </span>nvm</div></pre></td></tr></table></figure>
-<h2 id="使用NVM安装Node-js">使用NVM安装Node.js</h2><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nvm install <span class="keyword">node</span> <span class="title">&amp;&amp; nvm</span> alias default <span class="keyword">node</span><span class="title"></span></div></pre></td></tr></table></figure>
-<h2 id="检查Node-js是否安装成功">检查Node.js是否安装成功</h2><p>在终端输入下面的命令检查Node和NPM的版本，安装成功的话会返回版本号：</p>
-<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">node</span> <span class="title">-v</span></div><div class="line">v4.<span class="number">2.1</span></div><div class="line">npm -v</div><div class="line"><span class="number">2.14</span>.<span class="number">7</span></div></pre></td></tr></table></figure>
-<h1 id="Install_Xcode">Install Xcode</h1><blockquote>
-<p>（iOS SDK）Apple 开发者网站可以下载Xcode 或者AppStore安装 </p>
-</blockquote>
-<h1 id="Install_Cordova,_Ionic">Install Cordova, Ionic</h1><figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta"><span class="meta-keyword">$sudo</span> npm install cordova ionic ios-sim -g</span></div></pre></td></tr></table></figure>
-<h1 id="Install_JAVA">Install JAVA</h1><p>Java SE Development  Kit</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http:<span class="regexp">//</span>www.oracle.com<span class="regexp">/technetwork/</span>java<span class="regexp">/javase/</span>downloads<span class="regexp">/jdk7-downloads-1880260.html</span></div></pre></td></tr></table></figure>
-<h1 id="Install_Android_sdk">Install Android sdk</h1><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">brew </span><span class="keyword">install </span><span class="keyword">android-sdk</span></div></pre></td></tr></table></figure>
-<h2 id="Android_Studio_(选装)">Android Studio (选装)</h2><blockquote>
-<p><a href="https://developer.android.com/sdk/index.html" target="_blank" rel="external">https://developer.android.com/sdk/index.html</a></p>
-</blockquote>
-<h1 id="Install_Git">Install Git</h1><p> 终端安装Git 如果安装过，请跳过。</p>
-<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">brew </span><span class="keyword">install </span>git</div></pre></td></tr></table></figure>
-<p>如果是想更新Git版本：</p>
-<p>先安装：</p>
-<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">brew </span><span class="keyword">install </span>git</div></pre></td></tr></table></figure>
-<p>然后新建一个目录，把原来的移动到这个目录去<br>命令如下：</p>
-<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo cd /usr/bin</div><div class="line">sudo mkdir old-git<span class="number">-1.7</span><span class="number">.5</span><span class="number">.4</span></div><div class="line">sudo mv git* old-git<span class="number">-1.7</span><span class="number">.5</span><span class="number">.4</span></div></pre></td></tr></table></figure>
-<h1 id="Install_Apache_Ant">Install Apache Ant</h1><blockquote>
-<p>还是使用 brew</p>
-</blockquote>
-<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">brew </span><span class="keyword">install </span>ant</div></pre></td></tr></table></figure>
-<h1 id="Add_Android_sdk_in_your_path">Add Android sdk in your path</h1><blockquote>
-<p>在终端打开和编辑: “.bash_profile” - 添加以下变量:</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> JAVA_HOME=$(/usr/libexec/java_home)</div><div class="line"><span class="built_in">export</span> PATH=<span class="variable">$&#123;JAVA_HOME&#125;</span>/bin:<span class="variable">$PATH</span></div><div class="line"><span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/bin:<span class="variable">$PATH</span></div><div class="line"><span class="built_in">export</span> JAVA_HOME=<span class="string">"/usr/libexec/java_home -v '1.7*'"</span></div><div class="line"><span class="built_in">export</span> ANDROID_HOME=/usr/<span class="built_in">local</span>/opt/android-sdk</div></pre></td></tr></table></figure>
-<p>如果还安装了Android Studio，还需要添加这一行： </p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">export PATH=<span class="variable">$&#123;PATH&#125;</span>:<span class="regexp">/Applications/</span>Android\ Studio.app<span class="regexp">/sdk/</span>platform-tools:<span class="regexp">/Applications/</span>Android\ Studio.app<span class="regexp">/sdk/</span>tools</div></pre></td></tr></table></figure>
-<h1 id="Restart_Ur_Mac">Restart Ur Mac</h1><p>或者使用这个命令重新加载环境变量：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">source</span> ~/.bash_profile</div></pre></td></tr></table></figure>
-<p>检查环境变量：</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">echo $PATH </div><div class="line"><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>Library<span class="regexp">/Java/</span>JavaVirtualMachines<span class="regexp">/jdk1.7.0_79.jdk/</span>Contents<span class="regexp">/Home/</span><span class="string">bin:</span><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>Library<span class="regexp">/Java/</span>JavaVirtualMachines<span class="regexp">/jdk1.7.0_79.jdk/</span>Contents<span class="regexp">/Home/</span><span class="string">bin:</span><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>Library<span class="regexp">/Java/</span>JavaVirtualMachines<span class="regexp">/jdk1.7.0_79.jdk/</span>Contents<span class="regexp">/Home/</span><span class="string">bin:</span><span class="regexp">/usr/</span>local<span class="regexp">/bin:/</span>usr<span class="regexp">/bin:/</span><span class="string">bin:</span><span class="regexp">/usr/</span><span class="string">sbin:</span><span class="regexp">/sbin:/</span>Development<span class="regexp">/android-sdk/</span>platform-<span class="string">tools:</span><span class="regexp">/Development/</span>android-sdk<span class="regexp">/tools:/</span>Development<span class="regexp">/android-sdk/</span><span class="string">tools:</span><span class="regexp">/Development/</span>android-sdk<span class="regexp">/tools:/</span>Development<span class="regexp">/android-sdk/</span><span class="string">tools:</span><span class="regexp">/Development/</span>android-sdk<span class="regexp">/tools:/</span>Development<span class="regexp">/android-sdk/</span>tools</div></pre></td></tr></table></figure>
-<h1 id="建立一个新的项目">建立一个新的项目</h1><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ ionic start oneApp</div><div class="line">$ cd oneApp</div><div class="line">$ ionic platform <span class="keyword">add</span><span class="bash"> ios</span></div><div class="line">$ ionic platform <span class="keyword">add</span><span class="bash"> android</span></div></pre></td></tr></table></figure>
-<p>编译这个空项目：</p>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">ionic</span> <span class="keyword">build </span>ios</div></pre></td></tr></table></figure>
-<p>启动模拟器来显示新建的项目：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ionic <span class="built_in">emulate</span> ios</div></pre></td></tr></table></figure>
-<p>如果遇到文件权限的问题，修改文件权限：</p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>sudo chmod -R <span class="number">777</span> ~<span class="regexp">/.yourfile</span></div></pre></td></tr></table></figure>
-<h1 id="其他的Cordova的命令：">其他的Cordova的命令：</h1><h2 id="Create_New_Project">Create New Project</h2> <figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>cordova create hello com.example.hello <span class="string">"HelloWorld"</span></div><div class="line"><span class="variable">$ </span>cd hello</div><div class="line"><span class="variable">$ </span>cordova platform add ios</div><div class="line"><span class="variable">$ </span>cordova prepare</div></pre></td></tr></table></figure>
-<h2 id="Deploy_the_app">Deploy the app</h2><figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>cordova build</div></pre></td></tr></table></figure>
-<h2 id="部署App到iOS设备:">部署App到iOS设备:</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ cordova <span class="built_in">run</span> ios <span class="comment">--device</span></div></pre></td></tr></table></figure>
-<h2 id="部署App到iOS_xCode模拟器">部署App到iOS xCode模拟器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ cordova <span class="built_in">emulate</span> ios</div></pre></td></tr></table></figure>
-<h2 id="查看所有可以用的模拟器列表">查看所有可以用的模拟器列表</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cordova <span class="built_in">run</span> ios <span class="comment">--list</span></div></pre></td></tr></table></figure>
-<h2 id="使用指定的手机模拟器">使用指定的手机模拟器</h2><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cordova <span class="keyword">run</span><span class="bash"> ios --target=target_name  </span></div><div class="line">cordova <span class="keyword">run</span><span class="bash"> ios --target=<span class="string">"iPhone-6"</span>) //指定使用iPhone6作为模拟器</span></div></pre></td></tr></table></figure>
-<h1 id="参考链接">参考链接</h1><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">http:<span class="regexp">//i</span>onicframework.com<span class="regexp">/getting-started/</span></div><div class="line">http:<span class="regexp">//</span>cordova.apache.org<span class="regexp">/docs/</span>en<span class="regexp">/latest/gui</span>de<span class="regexp">/platforms/</span>android<span class="regexp">/index.html</span></div></pre></td></tr></table></figure>
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1690,7 +1659,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">62</span>
+              <span class="site-state-item-count">63</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

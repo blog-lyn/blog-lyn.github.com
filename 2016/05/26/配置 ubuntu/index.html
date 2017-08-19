@@ -43,7 +43,7 @@
 
 
 
-  <meta name="keywords" content="TCP," />
+  <meta name="keywords" content="Lyn's blog" />
 
 
 
@@ -59,17 +59,16 @@
 
 
 
-<meta name="description" content="index.js 12345var  server = require(&apos;./server05&apos;);server.listen(8000, function()&amp;#123;	console.log(&apos;TCP server listening on %j&apos;, server.address());&amp;#125;);  var net = require(‘net’);  var server = net">
-<meta name="keywords" content="TCP">
+<meta name="description" content="配置 ubuntu Apt-get can’t connect to ‘security.ubuntu.com’  Open vi /etc/gai.conf Uncomment the following line: 12345## For sites which prefer IPv4 connections change the last line to#precedence ::ffff:">
 <meta property="og:type" content="article">
-<meta property="og:title" content="TCP programing">
-<meta property="og:url" content="http://lyn.s76.org/2016/02/06/nodejs-note-22/index.html">
+<meta property="og:title" content="Ubuntu 开启 BBR配置">
+<meta property="og:url" content="http://lyn.s76.org/2016/05/26/配置 ubuntu/index.html">
 <meta property="og:site_name" content="Lyn&#39;s Blog">
-<meta property="og:description" content="index.js 12345var  server = require(&apos;./server05&apos;);server.listen(8000, function()&amp;#123;	console.log(&apos;TCP server listening on %j&apos;, server.address());&amp;#125;);  var net = require(‘net’);  var server = net">
-<meta property="og:updated_time" content="2016-02-19T05:48:23.000Z">
+<meta property="og:description" content="配置 ubuntu Apt-get can’t connect to ‘security.ubuntu.com’  Open vi /etc/gai.conf Uncomment the following line: 12345## For sites which prefer IPv4 connections change the last line to#precedence ::ffff:">
+<meta property="og:updated_time" content="2017-08-19T07:25:26.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="TCP programing">
-<meta name="twitter:description" content="index.js 12345var  server = require(&apos;./server05&apos;);server.listen(8000, function()&amp;#123;	console.log(&apos;TCP server listening on %j&apos;, server.address());&amp;#125;);  var net = require(‘net’);  var server = net">
+<meta name="twitter:title" content="Ubuntu 开启 BBR配置">
+<meta name="twitter:description" content="配置 ubuntu Apt-get can’t connect to ‘security.ubuntu.com’  Open vi /etc/gai.conf Uncomment the following line: 12345## For sites which prefer IPv4 connections change the last line to#precedence ::ffff:">
 
 
 
@@ -81,7 +80,7 @@
   };
 </script>
 
-  <title> TCP programing | Lyn's Blog </title>
+  <title> Ubuntu 开启 BBR配置 | Lyn's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
@@ -211,7 +210,7 @@
             
             
               
-                TCP programing
+                Ubuntu 开启 BBR配置
               
             
           </h1>
@@ -220,8 +219,8 @@
         <div class="post-meta">
           <span class="post-time">
             發表於
-            <time itemprop="dateCreated" datetime="2016-02-06T00:16:43+08:00" content="2016-02-06">
-              2016-02-06
+            <time itemprop="dateCreated" datetime="2016-05-26T23:05:54+08:00" content="2016-05-26">
+              2016-05-26
             </time>
           </span>
 
@@ -244,109 +243,48 @@
       
 
       
-        <span itemprop="articleBody"><p>index.js</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span>  server = <span class="built_in">require</span>(<span class="string">'./server05'</span>);</div><div class="line"></div><div class="line">server.listen(<span class="number">8000</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'TCP server listening on %j'</span>, server.address());</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p> var net = require(‘net’);</p>
-<p> var server = net.createServer();</p>
-<p> server.on(‘connection’, function(conn){</p>
-<pre><code><span class="built_in">console</span>.log(<span class="string">'new connection'</span>);
-conn.once(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>{
-    <span class="built_in">console</span>.log(<span class="string">'connection closed'</span>);
-});
-
-<span class="keyword">var</span> emit =conn.emit;
-conn.emit = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>{
-    <span class="built_in">console</span>.log(<span class="string">'connetion emitted  event type %s'</span>, event);
-    emit.apply(conn, <span class="built_in">arguments</span>);
-};
-</code></pre><p> }); </p>
-<p> module.exports = server ;<br><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">```</div><div class="line">server03.js</div></pre></td></tr></table></figure></p>
-<p> var net = require(‘net’);</p>
-<p> var server = net.createServer();</p>
-<p> server.on(‘connection’, function(conn){</p>
-<pre><code><span class="built_in">console</span>.log(<span class="string">'new connection'</span>);
-
-conn.setEncoding(<span class="string">'utf8'</span>);
-
-conn.once(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>{
-    <span class="built_in">console</span>.log(<span class="string">'connection closed'</span>);
-});
-
-conn.on(<span class="string">'data'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">buf</span>)</span>{
-    process.stdout.write(<span class="string">'data'</span> + buf);
-});
-</code></pre><p> }); </p>
-<p> module.exports = server ;<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">server04</span><span class="selector-class">.js</span></div></pre></td></tr></table></figure></p>
-<p> var net = require(‘net’);</p>
-<p> var server = net.createServer();</p>
-<p> server.on(‘connection’, function(conn){</p>
-<pre><code>console.<span class="built_in">log</span>(<span class="string">'new connection'</span>);
-
-conn.setEncoding(<span class="string">'utf8'</span>);
-
-conn.once(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span>{</span>
-    console.<span class="built_in">log</span>(<span class="string">'connection closed'</span>);
-});
-
-conn.<span class="keyword">on</span>(<span class="string">'data'</span>, <span class="function"><span class="keyword">function</span><span class="params">(buf)</span>{</span>
-    process.stdout.<span class="keyword">write</span>(<span class="string">'User send message: '</span> + buf);
-    conn.<span class="keyword">write</span>(<span class="string">'Server send message: '</span>+ buf);
-    conn.<span class="keyword">write</span>(<span class="string">'Server capitalize your message:'</span> + buf.toUpperCase());
-});
-</code></pre><p> }); </p>
-<p> module.exports = server ;</p>
-<p> #through2</p>
- <figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">fs.createReadStream(<span class="string">'ex.txt'</span>)</div><div class="line"> .pipe(through2(<span class="function"><span class="keyword">function</span> <span class="params">(chunk, enc, callback)</span> </span>&#123;</div><div class="line">   <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; chunk.length; i++)</div><div class="line">     <span class="keyword">if</span> (chunk[i] == <span class="number">97</span>)</div><div class="line">       chunk[i] = <span class="number">122</span> <span class="comment">// swap 'a' for 'z'</span></div><div class="line"></div><div class="line">   <span class="keyword">this</span>.push(chunk)</div><div class="line"></div><div class="line">   <span class="keyword">callback</span>()</div><div class="line">  &#125;))</div><div class="line"> .pipe(fs.createWriteStream(<span class="string">'out.txt'</span>))</div></pre></td></tr></table></figure>
-<p>Or object streams:</p>
-<figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> all = []</div><div class="line"></div><div class="line">fs.createReadStream(<span class="string">'data.csv'</span>)</div><div class="line">  .pipe(csv2())</div><div class="line">  .pipe(through2.obj(<span class="function"><span class="keyword">function</span> <span class="params">(chunk, enc, callback)</span> </span>&#123;</div><div class="line">    <span class="keyword">var</span> data = &#123;</div><div class="line">        name    : chunk[<span class="number">0</span>]</div><div class="line">      , address : chunk[<span class="number">3</span>]</div><div class="line">      , phone   : chunk[<span class="number">10</span>]</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">this</span>.push(data)</div><div class="line"></div><div class="line">    <span class="keyword">callback</span>()</div><div class="line">  &#125;))</div><div class="line">  .on(<span class="string">'data'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(data)</span> </span>&#123;</div><div class="line">    all.push(data)</div><div class="line">  &#125;)</div><div class="line">  .on(<span class="string">'end'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</div><div class="line">    doSomethingSpecial(all)</div><div class="line">  &#125;)</div></pre></td></tr></table></figure>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">server05</div></pre></td></tr></table></figure>
-<p> var through = require(‘through2’);<br> var net = require(‘net’);</p>
-<p> var server = net.createServer();</p>
-<p> server.on(‘connection’, function(conn){</p>
-<pre><code><span class="built_in">console</span>.log(<span class="string">'new connection'</span>);
-
-conn.setEncoding(<span class="string">'utf8'</span>);
-
-conn.once(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>{
-    <span class="built_in">console</span>.log(<span class="string">'connection closed'</span>);
-});
-
-<span class="keyword">var</span> upperCasing = through.obj(<span class="function"><span class="keyword">function</span>(<span class="params">str, enc, cb</span>)</span>{
-    <span class="keyword">this</span>.push(str.toUpperCase());
-    cb();
-});
-
-conn.pipe(upperCasing).pipe(conn);
-<span class="comment">// conn.pipe(conn);</span>
-</code></pre><p> }); </p>
-<p> module.exports = server ;<br>```</p>
-</span>
+        <span itemprop="articleBody"><h1 id="配置_ubuntu">配置 ubuntu</h1><ul>
+<li>Apt-get can’t connect to ‘security.ubuntu.com’</li>
+</ul>
+<p>Open <code>vi /etc/gai.conf</code></p>
+<p>Uncomment the following line:</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">#</span></div><div class="line"><span class="meta"># For sites which prefer IPv4 connections change the last line to</span></div><div class="line"><span class="meta">#</span></div><div class="line">precedence ::ffff:<span class="number">0</span>:<span class="number">0</span>/<span class="number">96</span> <span class="number">100</span></div></pre></td></tr></table></figure>
+<h2 id="配置hostname">配置hostname</h2><figure class="highlight dsconfig"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">hostnamectl </span><span class="built_in">set-hostname</span> <span class="string">sever1024</span></div></pre></td></tr></table></figure>
+<h2 id="配置证书登录">配置证书登录</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//生成key</span></div><div class="line">ssh-keygen -<span class="selector-tag">b</span> <span class="number">4096</span></div><div class="line"><span class="comment">// 生成文件夹</span></div><div class="line">mkdir -<span class="selector-tag">p</span> ~/<span class="selector-class">.ssh</span> &amp;&amp; sudo chmod -R <span class="number">700</span> ~/.ssh/</div><div class="line"><span class="comment">// 在本地执行</span></div><div class="line">scp ~/.ssh/id_rsa<span class="selector-class">.pub</span> example_user@<span class="number">203.0</span>.<span class="number">113.10</span>:~/.ssh/authorized_keys</div><div class="line"></div><div class="line">sudo chmod <span class="number">700</span> -R ~/<span class="selector-class">.ssh</span> &amp;&amp; chmod <span class="number">600</span> ~/.ssh/authorized_keys</div></pre></td></tr></table></figure>
+<ul>
+<li>配置ssh 端口 禁用密码登录</li>
+</ul>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sudo vi /etc/ssh/sshd_config</div><div class="line"></div><div class="line">port <span class="number">22</span> <span class="comment">//修改为不常见的端口号</span></div><div class="line">PermitRootLogin <span class="keyword">no</span> <span class="comment">//禁用root 登录</span></div><div class="line">PasswordAuthentication <span class="keyword">no</span> <span class="comment">// 禁用密码登录</span></div></pre></td></tr></table></figure>
+<h2 id="配置_ufw">配置 ufw</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo apt-get <span class="keyword">install</span> ufw</div><div class="line">sudo ufw <span class="keyword">default</span> <span class="keyword">allow</span> outgoing</div><div class="line">sudo ufw <span class="keyword">default</span> deny incoming</div><div class="line">sudo ufw <span class="keyword">allow</span> ssh</div></pre></td></tr></table></figure>
+<h2 id="安装fail2ban">安装fail2ban</h2><p>Ubuntu</p>
+<h3 id="Ensure_your_system_is_up_to_date:">Ensure your system is up to date:</h3><figure class="highlight q"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-<span class="built_in">get</span> <span class="keyword">update</span> &amp;&amp; apt-<span class="built_in">get</span> upgrade -y</div></pre></td></tr></table></figure>
+<h3 id="Install_Fail2ban:">Install Fail2ban:</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-<span class="keyword">get</span> install fail2ban</div></pre></td></tr></table></figure>
+<p>The service will automatically start.<br>(Optional) If you would like email support, install Sendmail:</p>
+<h3 id="install_Sendmail">install Sendmail</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-<span class="keyword">get</span> install sendmail</div></pre></td></tr></table></figure>
+<h3 id="Allow_SSH_access_through_UFW_and_then_enable_the_firewall:">Allow SSH access through UFW and then enable the firewall:</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ufw allow ssh</div><div class="line">ufw <span class="built_in">enable</span></div></pre></td></tr></table></figure>
+<h3 id="config">config</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">cp /etc/fail2ban/fail2ban<span class="selector-class">.conf</span> /etc/fail2ban/fail2ban<span class="selector-class">.local</span></div><div class="line"></div><div class="line">cp /etc/fail2ban/jail<span class="selector-class">.conf</span> /etc/fail2ban/jail<span class="selector-class">.local</span></div><div class="line"></div><div class="line">sudo vi /etc/fail2ban/jail.local</div></pre></td></tr></table></figure>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="section">[ssh]</span></div><div class="line">    </div><div class="line"><span class="attr">enabled</span>  = <span class="literal">true</span></div><div class="line"><span class="attr">port</span>     = ssh // 这里修改成你的ssh port</div><div class="line"><span class="attr">filter</span>   = sshd</div><div class="line"><span class="attr">logpath</span>  = /var/log/auth.log</div><div class="line"><span class="attr">maxretry</span> = <span class="number">6</span></div></pre></td></tr></table></figure>
+<h3 id="安装内核">安装内核</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">wget http:<span class="comment">//kernel.ubuntu.com/~kernel-ppa/mainline/v4.10.10/linux-image-4.10.10-041010-generic_4.10.10-041010.201704120813_amd64.deb</span></div><div class="line">dpkg -i linux-image-4.10.10-041010-generic_4.10.10-041010.201704120813_amd64.deb</div><div class="line"></div><div class="line"><span class="comment">// 检查文件</span></div><div class="line"><span class="keyword">ls</span> /<span class="keyword">boot</span>/vmlinuz* </div><div class="line"><span class="comment">//update</span></div><div class="line"><span class="keyword">update</span>-grub</div><div class="line"></div><div class="line"><span class="keyword">su</span></div><div class="line"><span class="comment">//检查版本</span></div><div class="line">uname -<span class="built_in">r</span></div><div class="line"></div><div class="line"><span class="comment">// 启动</span></div><div class="line">echo <span class="string">"net.core.default_qdisc=fq"</span> &gt;&gt; /etc/sysctl.<span class="keyword">conf</span></div><div class="line">echo <span class="string">"net.ipv4.tcp_congestion_control=bbr"</span> &gt;&gt; /etc/sysctl.<span class="keyword">conf</span></div><div class="line"><span class="comment">// 生效</span></div><div class="line">sysctl -p</div><div class="line"><span class="comment">//重启</span></div><div class="line">reboot</div></pre></td></tr></table></figure></span>
       
     </div>
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/TCP/" rel="tag">#TCP</a>
-          
-        </div>
       
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/02/05/nodejs-note-20/" rel="next" title="Asynchronous Programming - 07 async.each .map .eachSeries .eachLimit .mapLimit">
-                <i class="fa fa-chevron-left"></i> Asynchronous Programming - 07 async.each .map .eachSeries .eachLimit .mapLimit
+              <a href="/2016/05/19/JRE-setup-doc/" rel="next" title="Setup Java Eclipse Tomcat & FreeMarker on Mac">
+                <i class="fa fa-chevron-left"></i> Setup Java Eclipse Tomcat & FreeMarker on Mac
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/02/06/nodejs-note-21/" rel="prev" title="Asynchronous Programming - 08 async.queue">
-                Asynchronous Programming - 08 async.queue <i class="fa fa-chevron-right"></i>
+              <a href="/2016/05/26/addNativeJavaSciptsInterface/" rel="prev" title="JS与Native交互接口定义 Native JavaScipts Interface">
+                JS与Native交互接口定义 Native JavaScipts Interface <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -459,7 +397,7 @@ conn.pipe(upperCasing).pipe(conn);
               
             
             
-              <p class="post-toc-empty">此文章未包含目錄</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#配置_ubuntu"><span class="nav-number">1.</span> <span class="nav-text">配置 ubuntu</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置hostname"><span class="nav-number">1.1.</span> <span class="nav-text">配置hostname</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置证书登录"><span class="nav-number">1.2.</span> <span class="nav-text">配置证书登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置_ufw"><span class="nav-number">1.3.</span> <span class="nav-text">配置 ufw</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装fail2ban"><span class="nav-number">1.4.</span> <span class="nav-text">安装fail2ban</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Ensure_your_system_is_up_to_date:"><span class="nav-number">1.4.1.</span> <span class="nav-text">Ensure your system is up to date:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Install_Fail2ban:"><span class="nav-number">1.4.2.</span> <span class="nav-text">Install Fail2ban:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#install_Sendmail"><span class="nav-number">1.4.3.</span> <span class="nav-text">install Sendmail</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Allow_SSH_access_through_UFW_and_then_enable_the_firewall:"><span class="nav-number">1.4.4.</span> <span class="nav-text">Allow SSH access through UFW and then enable the firewall:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#config"><span class="nav-number">1.4.5.</span> <span class="nav-text">config</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装内核"><span class="nav-number">1.4.6.</span> <span class="nav-text">安装内核</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

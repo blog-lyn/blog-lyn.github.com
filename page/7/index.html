@@ -211,6 +211,92 @@
             
             
               
+                <a class="post-title-link" href="/2015/06/28/hellowordnodejs/" itemprop="url">
+                  How to learn Node.js - 01 hello world !
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-06-28T00:40:11+08:00" content="2015-06-28">
+              2015-06-28
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="Try_Node-js_in_Read-Eval-Print_Loop_mode_first">Try Node.js in Read-Eval-Print Loop mode first</h1><figure class="highlight monkey"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"> Lyn-Cheung-MBP:node Lyn$ node</div><div class="line">&gt; <span class="number">50</span>+<span class="number">50</span></div><div class="line"><span class="number">100</span></div><div class="line">&gt; console</div><div class="line">Console &#123;</div><div class="line">  <span class="built_in">log</span>: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</div><div class="line">  info: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</div><div class="line">  warn: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</div><div class="line">  <span class="built_in">error</span>: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</div><div class="line">  dir: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</div><div class="line">  time: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</div><div class="line">  timeEnd: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</div><div class="line">  trace: [<span class="function"><span class="keyword">Function</span>:</span> bound trace],</div><div class="line">  assert: [<span class="function"><span class="keyword">Function</span>:</span> bound ],</div><div class="line">  Console: [<span class="function"><span class="keyword">Function</span>:</span> Console] &#125;</div><div class="line">&gt; console.<span class="built_in">log</span>(<span class="string">"hello REPL"</span>)</div><div class="line">hello REPL</div><div class="line">undefined</div><div class="line">&gt; var foo = <span class="string">"toy!"</span></div><div class="line">undefined</div><div class="line">&gt; foo</div><div class="line"><span class="comment">'toy!'</span></div><div class="line">&gt;</div><div class="line">(^C again <span class="keyword">to</span> quit)</div><div class="line">&gt;</div><div class="line">Lyn-Cheung-MBP:node Lyn$</div></pre></td></tr></table></figure>
+<h1 id="Run_Node-js_code_in_files">Run Node.js code in files</h1><figure class="highlight axapta"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim <span class="keyword">server</span>.js</div></pre></td></tr></table></figure>
+<p>Then enter insert mode to write your code </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</div><div class="line"></div><div class="line">http.createServer(<span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</div><div class="line">        res.writeHead(<span class="number">200</span>,&#123;<span class="string">'Content-Type'</span>:<span class="string">'text/plain'</span>&#125;);</div><div class="line">                res.end(<span class="string">'hello world \n'</span>);</div><div class="line">&#125;).listen(<span class="number">1337</span>);</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(<span class="string">'Server running at http://127.0.0.1:1337/'</span>);</div></pre></td></tr></table></figure>
+<p>then Save this file in VIM by type “w” </p>
+<p>after this, we can run Node.js file in another iTerm terminal(press command + shift + d)</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Lyn-Cheung-MBP:<span class="keyword">node</span> <span class="title">Lyn</span>$ <span class="keyword">node</span> <span class="title">hello</span>.js                  </div><div class="line"></div><div class="line">Server running at http://<span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">1337</span>/</div></pre></td></tr></table></figure>
+<p>then you can access to this server in your browser by <a href="http://127.0.0.1:1337/" target="_blank" rel="external">http://127.0.0.1:1337/</a> </p>
+<p>req = request<br>res = responde</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">var</span> http =<span class="built_in">require</span>(<span class="string">'http'</span>)</div><div class="line">	, handler =<span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>)</span>&#123;</div><div class="line">		res.writeHead(<span class="number">200</span>,&#123;<span class="string">'Content-Type'</span>:<span class="string">'text/plain'</span>&#125;);</div><div class="line">		res.end(<span class="string">'Hello World\n'</span>);</div><div class="line">		&#125;</div><div class="line">	, sever = http.createServer(handler)</div><div class="line"></div><div class="line">server.listen(<span class="number">1337</span>);</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(<span class="string">'Server running at http://127.0.0.1:1337/'</span>);</div></pre></td></tr></table></figure>
+<p>here is  a clear way  to explain the relation  between http (Node.js moduel), createServer (moduel function) and handler (the parameters of createServer)</p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
                 <a class="post-title-link" href="/2015/03/26/vagrant_gfw_errors/" itemprop="url">
                   How to modify puphpet file to avoid vagrant up errors
                 </a>
@@ -422,7 +508,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">62</span>
+              <span class="site-state-item-count">63</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
